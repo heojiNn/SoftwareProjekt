@@ -90,7 +90,7 @@ using Team14.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 28 "/Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/Shared/NavMenu.razor"
+#line 23 "/Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/Shared/NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

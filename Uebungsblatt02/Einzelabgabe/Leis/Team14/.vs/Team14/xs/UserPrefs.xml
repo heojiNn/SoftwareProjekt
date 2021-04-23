@@ -5,18 +5,18 @@
       <File FileName="Team14/Startup.cs" />
       <File FileName="Team14/appsettings.json" />
       <File FileName="Team14/App.razor" />
-      <File FileName="Team14/Pages/_Host.cshtml" Line="7" Column="1" />
+      <File FileName="Team14/Pages/_Host.cshtml" />
       <File FileName="Team14/_Imports.razor" />
-      <File FileName="Team14/Pages/Error.cshtml" Line="1" Column="1" />
-      <File FileName="Team14/Data/WeatherForecast.cs" Line="1" Column="1" />
+      <File FileName="Team14/Pages/Error.cshtml" />
+      <File FileName="Team14/Data/WeatherForecast.cs" />
       <File FileName="Team14/Properties/launchSettings.json" />
-      <File FileName="Team14/Shared/MainLayout.razor" Line="14" Column="18" />
-      <File FileName="Team14/Shared/NavMenu.razor" Line="14" Column="14" />
-      <File FileName="Team14/Shared/SurveyPrompt.razor" Line="7" Column="124" />
+      <File FileName="Team14/Shared/MainLayout.razor" />
+      <File FileName="Team14/Shared/NavMenu.razor" Line="12" Column="92" />
+      <File FileName="Team14/Shared/SurveyPrompt.razor" />
       <File FileName="Team14/wwwroot/css/site.css" />
-      <File FileName="Team14/Pages/Index.razor" Line="7" Column="102" />
-      <File FileName="Team14/Pages/FetchData.razor" Line="1" Column="1" />
-      <File FileName="Team14/Data/WeatherForecastService.cs" Line="1" Column="1" />
+      <File FileName="Team14/Pages/Index.razor" />
+      <File FileName="Team14/Pages/FetchData.razor" />
+      <File FileName="Team14/Data/WeatherForecastService.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -26,16 +26,15 @@
               <Node name="Data" expanded="True" />
               <Node name="Pages" expanded="True" />
               <Node name="Properties" expanded="True" />
-              <Node name="Shared" expanded="True" />
+              <Node name="Shared" expanded="True">
+                <Node name="NavMenu.razor" selected="True" />
+              </Node>
               <Node name="wwwroot" expanded="True">
                 <Node name="css" expanded="True" />
               </Node>
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>

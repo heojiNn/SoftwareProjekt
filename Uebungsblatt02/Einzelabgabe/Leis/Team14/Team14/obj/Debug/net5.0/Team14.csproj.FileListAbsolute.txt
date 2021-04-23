@@ -17,7 +17,6 @@
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Team14.MvcApplicationPartsAssemblyInfo.cache
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Team14.RazorComponent.input.cache
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/RazorDeclaration/App.razor.g.cs
-/Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/RazorDeclaration/Pages/Counter.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/RazorDeclaration/Pages/FetchData.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/RazorDeclaration/Pages/Index.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/RazorDeclaration/Shared/SurveyPrompt.razor.g.cs
@@ -30,7 +29,6 @@
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Team14.TagHelpers.output.cache
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Team14.RazorCoreGenerate.cache
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Razor/App.razor.g.cs
-/Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Razor/Pages/Counter.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Razor/Pages/FetchData.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Razor/Pages/Index.razor.g.cs
 /Users/jonathanleis/Desktop/Uni/SS21/Softwareprojekt/tutorium-g-team-14/Uebungsblatt02/Einzelabgabe/Leis/Team14/Team14/obj/Debug/net5.0/Razor/Shared/SurveyPrompt.razor.g.cs
