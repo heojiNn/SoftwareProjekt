@@ -53,3 +53,4 @@ C:\Users\giddi\source\repos\tutorium-g-team-14\Abgaben\Uebungsblatt02\Einzelabga
 C:\Users\giddi\source\repos\tutorium-g-team-14\Abgaben\Uebungsblatt02\Einzelabgabe\Glogger\Team14\obj\Debug\net5.0\Team14.pdb
 C:\Users\giddi\source\repos\tutorium-g-team-14\Abgaben\Uebungsblatt02\Einzelabgabe\Glogger\Team14\obj\Debug\net5.0\Team14.genruntimeconfig.cache
 C:\Users\giddi\source\repos\tutorium-g-team-14\Abgaben\Uebungsblatt02\Einzelabgabe\Glogger\Team14\obj\Debug\net5.0\Team14.csproj.CopyComplete
+C:\Users\giddi\source\repos\tutorium-g-team-14\Abgaben\Uebungsblatt02\Einzelabgabe\Glogger\Team14\obj\Debug\net5.0\Team14.csprojAssemblyReference.cache
