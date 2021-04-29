@@ -1,0 +1,56 @@
+body {
+  text-align: center;
+  background-color: #ddeedd;
+  font: 1em Arial, sans-serif;
+}
+
+header {
+  background-color: #27a820;
+  overflow: hidden;
+}
+
+main {
+  display: inline-block;
+  min-width: 500px;
+  text-align: left;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 300%;
+  line-height: 130%;
+  margin: 0;
+}
+
+
+
+/* menue */
+#top-nav {
+  display: inline-block;
+  min-width: 550px;
+}
+
+
+
+
+/* tables*/
+table {
+}
+
+th {
+  background-color: #27a820;
+  padding: 8px;
+  color: white;
+}
+
+td {
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #ffffff;
+}
+th:hover, td:hover {
+  background-color: #208810;
+}
+
