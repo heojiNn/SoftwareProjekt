@@ -1,12 +1,11 @@
 body {
   text-align: center;
   background-color: #ddeedd;
-  font: 1em Arial, sans-serif;
+  font: 1em Verdana, sans-serif;
 }
 
 header {
   background-color: #27a820;
-  overflow: hidden;
 }
 
 main {
@@ -17,8 +16,8 @@ main {
 
 h2 {
   font-weight: bold;
-  font-size: 300%;
-  line-height: 130%;
+  font-size: 250%;
+  line-height: 150%;
   margin: 0;
 }
 
@@ -30,12 +29,32 @@ h2 {
   min-width: 550px;
 }
 
+#top-nav ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+#top-nav li {
+  float: left;
+}
+
+#top-nav a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.3em;
+  padding: 5px 15px;
+}
+
+#top-nav a:hover {
+  background-color: #208810;
+}
+
 
 
 
 /* tables*/
-table {
-}
 
 th {
   background-color: #27a820;
@@ -51,6 +70,7 @@ tr:nth-child(even) {
   background-color: #ffffff;
 }
 th:hover, td:hover {
-  background-color: #208810;
+  background-color: rgb(107, 240, 86);
+  color: black;
 }
 
