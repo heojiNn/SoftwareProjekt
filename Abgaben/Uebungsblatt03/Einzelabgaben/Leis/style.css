@@ -1,0 +1,40 @@
+body {
+	background-color: rgb(187, 210, 155);
+}
+.nav{
+	background-color: rgb(100, 170, 0);
+	border-width: 1px;
+	list-style:none;
+	text-align:center;
+	margin:0;
+	padding:0;
+
+}
+.nav a{
+	display:inline-block;
+	color:white;
+	text-decoration:none;
+	padding:10px;
+}
+.nav li{
+	display:inline;
+}
+.Buchungen{
+	margin-left:40%;
+}
+table{
+	margin-left:40%;
+}
+.frame{
+	height: 200px;
+	display:flex;
+	justify-content:center; align
+}
+th{
+	background-color: rgb(100,180,0);
+	color:white;
+	border:1px;
+}
+.weiss{
+	background-color: rgb(255,255,255);
+}
