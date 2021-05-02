@@ -1,0 +1,52 @@
+body {
+    background-color: rgb(208, 240, 208);
+    text-align: center;
+    font: 1.1em Verdana;
+}
+
+#navbar ul {
+    list-style-type: none;
+    overflow: hidden;
+    color: #caf0ca;
+    background-color: rgb(1, 161, 1);
+}
+
+#navbar li {
+    display: inline;
+}
+
+#navbar a {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 14px 16px;
+}
+
+#navbar a:hover {
+    color: black;
+}
+
+table {
+    position: fixed;
+    left: 20%;
+    width: 60%;
+    font-size: 1.0em;
+    border-spacing: 2px;
+}
+
+th {
+    background-color: rgb(1, 161, 1);
+    color: white;
+    font-weight: 100;
+}
+
+tr:nth-child(even){
+    background-color: white;
+}
+
+tr:hover {
+    background-color:lightgrey;
+}
+
+
+
