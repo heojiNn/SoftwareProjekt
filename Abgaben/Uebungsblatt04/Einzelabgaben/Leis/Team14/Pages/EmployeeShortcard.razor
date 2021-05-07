@@ -1,0 +1,48 @@
+﻿@page "/EmployeeShortcard"
+
+@using Team14.Data
+
+    <thead>
+        <h1>Mitarbeiter:</h1>
+    </thead>
+    <tbody>
+        <div class="row">
+        @foreach (var Mitarbeitender in Mitarbeitende)
+        {
+            
+            <div class="card">
+                <div class="card-body">
+            <tr>
+                <h5 class="card-title">
+                    @Mitarbeitender.Vorname @Mitarbeitender.Nachname
+                </h5>
+                
+                    
+                    <p>@Mitarbeitender.Geburtstag.ToString("dd.MM.yyyy")</p>
+                    @foreach (var Project in Mitarbeitender.Projekte)
+                    {
+                        <ul>
+                            <li>@Project</li>
+                        </ul>
+                    }
+                    
+</tr>
+                    </div>
+            </div>
+
+        }
+            </div>
+    </tbody>
+
+
+@code {
+
+            List<Employee> Mitarbeitende = new List<Employee>() {
+        new Employee("Fabian", "Günaydin", new List<string>() { "Xitaso", "Ludofact" }, new DateTime(2001, 06, 22)),
+        new Employee("Moritz", "Boche", new List<string>() { "Xitaso", "Ludofact" }, new DateTime(1998, 02, 26)),
+        new Employee("Mario", "Melle", new List<string>() { "Xitaso" }, new DateTime(1900, 01, 01)),
+        new Employee("Phillip", "Wagner", new List<string>() { "Xitaso" }, new DateTime(1900, 01, 01)),
+        new Employee("Brigitte", "Glogger", new List<string>() { "Xitaso" }, new DateTime(1900, 01, 01)),
+        new Employee("Jonathan", "Leis", new List<string>() { "Xitaso", "Polyp Segmentation" }, new DateTime(2001, 02, 23))};
+
+}
