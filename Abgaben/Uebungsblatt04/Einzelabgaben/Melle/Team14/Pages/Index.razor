@@ -1,10 +1,62 @@
 @page "/"
+@using Team14.Data
 
 <h1>Mitarbeitendenübersicht, Team14</h1>
-
 <em>Hier entsteht in Kürze das Softwareprojekt des Team14</em>
 
 <p>in der Zwischenzeit können Sie sich gerne die
     <a href="FetchData">Wettervorhersage </a>
     anschauen.
-    </p>
+</p>
+
+<div class="card-columns">
+    @foreach (var emp in employees)
+    {
+    <EmployeeShortcard Content=@emp />
+    }
+</div>
+
+
+@code {
+    private List<Employee> employees = new List<Employee> {
+               new Employee{
+                Vorname = "Fabian",
+                Nachname ="Günaydin",
+                Projekte =  new List<string>{"ein Kleines"},
+                Birthday = new DateTime(2010, 01, 30)
+            },        
+               new Employee{
+                Vorname = "Moritz",
+                Nachname ="Boche",
+                Projekte =  new List<string>{"hi","ho"},
+                Birthday = new DateTime(1910, 01, 30)
+            },        
+               new Employee{
+                Vorname = "Mario",
+                Nachname ="Melle",
+                Projekte =  new List<string>{"Ein Software Projekt","sopro2021", "noch eines","usw."},
+                Birthday = new DateTime(1950, 02, 25)
+            },  
+               new Employee{
+                Vorname = "Philipp",
+                Nachname ="Wagner",
+                Birthday = new DateTime(1999, 01, 30)
+            },          
+               new Employee{
+                Vorname = "Brigitte",
+                Nachname ="Glogger",
+                Birthday = new DateTime(1999, 01, 30)
+            },        
+               new Employee{
+                Vorname = "Jonathan",
+                Nachname ="Leis",
+                Birthday = new DateTime(1999, 01, 30)
+            },        
+               new Employee{
+                Vorname = "Cris",
+                Nachname ="Geist",
+                Projekte =  new List<string>{"testet das Layout"},
+                Birthday = new DateTime(1999, 01, 30)
+            }
+        };
+}
