@@ -10,7 +10,7 @@
 </p>
 
 <div class="card-columns">
-    @foreach (var emp in employees)
+    @foreach (var emp in employees.OrderBy(s => s.Nachname))
     {
     <EmployeeShortcard Content=@emp />
     }
@@ -54,8 +54,8 @@
             },        
                new Employee{
                 Vorname = "Cris",
-                Nachname ="Geist",
-                Projekte =  new List<string>{"testet das Layout"},
+                Nachname ="Groß",
+                Projekte =  new List<string>{"testet das Layout genauer die Größe"},
                 Birthday = new DateTime(1999, 01, 30)
             }
         };
