@@ -19,8 +19,9 @@
 }
 
 .nav-item {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     padding-bottom: 0.5rem;
+    width: auto;
 }
 
     .nav-item:first-of-type {
@@ -50,7 +51,7 @@
     color: white;
 }
 
-@media (min-width: 641px) {
+@media (min-width: 600px) {
     .navbar-toggler {
         display: none;
     }
