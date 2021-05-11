@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 public class Employee
@@ -7,7 +7,7 @@ public class Employee
 
     public string Nachname { get; set; }
 
-    public List<string> Projekte { get; set; } 
+    public List<string> Projekte { get; set; }
 
     public DateTime Geburtstag { get; set; }
 
