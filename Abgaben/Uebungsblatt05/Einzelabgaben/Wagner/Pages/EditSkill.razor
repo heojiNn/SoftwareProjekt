@@ -1,0 +1,90 @@
+﻿@page "/skill/edit"
+@page "/skill/edit/{Id}"
+
+@using Team14.Data.Datatypes
+@using Team14.Data.Interfaces
+@inject SkillServiceSimple SkillService
+
+
+@if (Id == null)
+{
+    <h3>Neuen Skill erstellen: </h3>
+    <div class="input-group mb-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Skillname:</span>
+            <input type="text" class="form-control" placeholder="Skill" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+
+        <div class="form-floating">
+            <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+                <option selected>Skillkategorie auswählen:</option>
+                <option value=@Skill.SkillTyp.Hardskill>Hardskill</option>
+                <option value=@Skill.SkillTyp.Softskill>Softskill</option>
+            </select>
+        </div>
+    </div>
+
+    <a href="skill/index" class="btn btn-primary" role="button" data-bs-toggle="button">Neuen Skill speichern</a>
+}
+else
+{
+    if (SkillService.GetSkill(Convert(Id)) != null)
+    {
+        <h3>Bestehenden Skill bearbeiten: </h3>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Please insert your Id:</span>
+            <input type="number" @bind="@skill.Id" @oninput="@((i) => { strId = (string)i.Value; })" class="form-control" placeholder="SkillId" aria-label="SkillId" aria-describedby="basic-addon1">
+            <span class="input-group-text" id="basic-addon1">Please insert your Name:</span>
+            <input type="text" @bind="@skill.Name" @oninput="@((i) => { strName = (string)i.Value; })" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+        </div>
+        <h3>Id: @strId</h3>
+        <h3>Name: @strName</h3>
+
+        <a href="skill/index" class="btn btn-primary" role="button" data-bs-toggle="button">Skillbearbeitung speichern</a>
+    }
+
+}
+
+@code {
+
+    [Parameter]
+    public String Id { get; set; }
+
+    public Skill skill;
+
+
+
+
+    public string strId { get; set; }
+
+    public string strName { get; set; }
+
+
+
+  
+
+    private static int Convert(string value)
+    {
+        if (value == null)
+            return 0;
+        try
+        {
+            int number = Int32.Parse(value);
+            return number;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Unable to convert '{0}'.", value);
+            return 0;
+        }
+        catch (OverflowException)
+        {
+            Console.WriteLine("'{0}' is out of range of the Int32 type.", value);
+            return 0;
+        }
+    }
+
+    
+
+}
