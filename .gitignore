@@ -2,10 +2,16 @@
 # for more 'dotnet new gitignore'
 
 # non dotnet Files
-.DS_Store       # mac
-*.*~            # backup
-*.pyc           # python
+#   mac
+.DS_Store
+#   backup
+*.*~
+#   python
+*.pyc
 
+
+# like  Team14.csproj.user
+*.user
 
 # Build results
 [Bb]in/
