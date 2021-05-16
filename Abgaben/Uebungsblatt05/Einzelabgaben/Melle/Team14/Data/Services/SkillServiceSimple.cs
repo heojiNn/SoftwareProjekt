@@ -16,9 +16,9 @@ namespace Team14.Data
 
         //Gibt einen Skill basierend auf der gewuenschten ID zurueck
         //oder null,wenn kein Skill existiert.
-        public Skill GetSkill(int skillId)
+        public Skill GetSkill(int Id)
         {
-            return theSigelton.ToList().Find(x => x.SkillID == skillId);
+            return theSigelton.ToList().Find(x => x.Id == Id);
         }
         //Gibt alle verfuegbaren Skills zurueck.
         public IEnumerable<Skill> GetAllSkills()
@@ -29,9 +29,9 @@ namespace Team14.Data
         //oder fueg teinen Neuen ein,wenn die ID noch nicht
         public bool UpdateSkill(Skill skill)
         {
-            var isUpdating = null != GetSkill(skill.SkillID);
+            var isUpdating = null != GetSkill(skill.Id);
 
-            DeleteSkill(skill.SkillID);
+            DeleteSkill(skill.Id);
             theSigelton.Push(skill);
             //Console.WriteLine($"Update {isUpdating} nowhaving size\t{theSigelton.Count}");
             return isUpdating;
@@ -45,7 +45,7 @@ namespace Team14.Data
                 theSigelton.Clear();
                 foreach (Skill s in copy)
                 {
-                    if (s.SkillID != skillId)
+                    if (s.Id != skillId)
                         theSigelton.Push(s);
                 }
                 return true;

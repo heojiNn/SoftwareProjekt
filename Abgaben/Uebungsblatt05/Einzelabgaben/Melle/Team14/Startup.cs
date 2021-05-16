@@ -24,10 +24,10 @@ namespace Team14
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddScoped<ISkillService, SkillServiceSimple>();
+            services.AddScoped<ISkillService, SkillService>();
 
             Stack<Skill> theGlobalSkills = new();
-            theGlobalSkills.Push(new Skill { SkillID = 2, Name = "runnig", Catgeory = Skill.SkillCatgeory.Softskill });
+            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
             services.AddSingleton(theGlobalSkills);
         }
 
@@ -55,6 +55,10 @@ namespace Team14
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+
+
+            DatabaseUtils.CheckAndCreate(Configuration);
         }
     }
 }
