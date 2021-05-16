@@ -1,0 +1,92 @@
+﻿@page "/skill/edit/{Id}"
+@page "/skill/edit"
+
+@using Team14.Data
+@inject ISkillService skillService
+
+<h3>EditSkill</h3>
+@if (Id != null)
+{
+    int id = Int32.Parse(Id);
+    if (skillService.GetSkill(id) != null)
+    {
+        <h1>Skill bearbeiten</h1>
+
+        <EditForm Model="@skillWork" OnValidSubmit="@UpdateSkill">
+
+            <div class="form-group ">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" @bind="@skillWork.Name">
+            </div>
+            <div class="form-group ">
+                <label asp-for="Skill.Catgeory" class="control-label">hi</label>
+                <InputSelect @bind-Value="@skillWork.Kategorisierung">
+                    @foreach (var value in Enum.GetValues(typeof(Skill.SkillKategorie)))
+                            {
+                        <option value="@value">@value</option>
+                            }
+                </InputSelect>
+            </div>
+
+            <button type="submit" class="btn btn-success">updaten</button>
+
+        </EditForm>
+
+
+    }
+    else
+    {
+        <p>neuen SKill anlegen</p>
+
+        <form Model="@skillWork" OnValidSubmit="/Index.razor">
+
+            <div class="form-group ">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" @bind="@skillWork.Name">
+            </div>
+            <div class="form-group ">
+                <label asp-for="Skill.Catgeory" class="control-label">hi</label>
+                <InputSelect @bind-Value="@skillWork.Kategorisierung">
+                    @foreach (var value in Enum.GetValues(typeof(Skill.SkillKategorie)))
+                            {
+                        <option value="@value">@value</option>
+                            }
+                </InputSelect>
+            </div>
+
+            <button type="submit" class="btn btn-success">save</button>
+
+        </form>
+    }
+
+}
+else
+{
+    <p>neuen Skill anlegen</p>
+}
+
+
+
+@code {
+    [Parameter]
+    public String Id { get; set; }
+    private Skill skillWork, skillEnum;
+
+    protected override void OnInitialized()
+    {
+        skillEnum = skillService.GetSkill(Int32.Parse(Id));
+        skillWork = new Skill
+        {
+            Name = skillEnum.Name,
+            Kategorisierung = skillEnum.Kategorisierung
+        };
+
+    }
+
+    protected void UpdateSkill()
+    {
+        skillService.UpdateSkill(skillWork);
+    }
+
+
+}
