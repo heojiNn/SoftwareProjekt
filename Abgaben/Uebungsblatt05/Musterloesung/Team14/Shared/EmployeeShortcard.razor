@@ -1,0 +1,69 @@
+@using Team14.Data
+
+<div class="p-1">
+    <div class="card">
+        <div class="card-header">
+            @preservewhitespace true
+            @if (mitarbeiter.Vorname == null)
+            {@standard.Vorname}
+        else @mitarbeiter.Vorname
+
+            @if (mitarbeiter.Nachname == null)
+            {@standard.Nachname }
+        else @mitarbeiter.Nachname
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    Geburtstag:
+                </div>
+                <div class="col">
+
+                    @if (mitarbeiter.Geburtstag.Equals(default))
+                    {@standard.Geburtstag.ToString("dd.MM.yyyy") }
+                else @mitarbeiter.Geburtstag.ToString("dd.MM.yyyy")
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    Projekte:
+                </div>
+                <div class="col">
+                    @if (mitarbeiter.Projekte == null)
+                    {
+                        <ul>
+                            @foreach (var projekt in standard.Projekte)
+                            {
+                                <li> @projekt</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul>
+                            @foreach (var projekt in mitarbeiter.Projekte)
+                            {
+                                <li> @projekt </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Employee mitarbeiter { get; set; }
+    private Employee standard = new Employee
+    {
+        Vorname = "",
+        Nachname = "",
+        Geburtstag = new DateTime(2000, 01, 01),
+        Projekte = new List<string> { "" }
+    };
+
+}
+
