@@ -25,34 +25,7 @@ namespace Team14
                     webBuilder.UseStartup<Startup>();
                 });
     }
-    interface ISkillService
-    {
-        public Skill GetSkill(int skillId);
-        public List<Skill> GetAllSkills();
-        public bool UpdateSkill(Skill skill);
-        public bool DeleteSkill(int skillId);
-
-    }
-    class SkillServiceSimple : ISkillService
-    {
-        public Skill GetSkill(int skillId)
-        {
-            
-            
-        }
-        public List<Skill> GetAllSkills()
-        {
-            
-        }
-
-        public bool UpdateSkill(Skill skill)
-        {
-
-        }
-        public bool DeleteSkill(int skillId)
-        {
-
-        }
-    }
+    
+  
     
 }

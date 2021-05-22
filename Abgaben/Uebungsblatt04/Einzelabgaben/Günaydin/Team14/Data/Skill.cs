@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,8 +11,8 @@ namespace Team14.Data
 
         public String Name { get; set; }
 
-        public String Hardskill { get; set; }
+        public String Kategorisierung { get; set; }
 
-        public String Softskill { get; set; }
+        
     }
 }
