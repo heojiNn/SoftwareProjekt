@@ -1,8 +1,0 @@
-﻿//latest changes:
-
-added Employee.cs to Team14.Data
-added EmployeeShortcard.razor to Team14.Pages
-
-updated Team14.Index.razor 
-
-
