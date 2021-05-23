@@ -1,4 +1,8 @@
 @using Team14.Data
+@using System.IO;
+@using DocumentFormat.OpenXml;
+@using DocumentFormat.OpenXml.Packaging;
+@using DocumentFormat.OpenXml.Wordprocessing;
 
 <div class="p-1">
     <div class="card">
@@ -32,40 +36,35 @@
                 <div class="col">
                     @if (mitarbeiter.Projekte == null)
                     {
-                        <ul>
-                            @foreach (var projekt in standard.Projekte)
-                            {
-                                <li> @projekt</li>
-                            }
-                        </ul>
-                    }
-                    else
+                <ul>
+                    @foreach (var projekt in standard.Projekte)
                     {
-                        <ul>
-                            @foreach (var projekt in mitarbeiter.Projekte)
-                            {
-                                <li> @projekt </li>
-                            }
-                        </ul>
-                    }
+                <li> @projekt</li>}
+                </ul> }
+            else
+            {
+                <ul>
+                    @foreach (var projekt in mitarbeiter.Projekte)
+                    {
+                <li> @projekt </li>}
+                </ul>}
                 </div>
             </div>
-            <!--Hier kann bei name=... der Name der docx spezifiziert werden-->
-            <a class="form-control btn btn-primary" href="/download?name=Document.docx" target="_blank">Download</a>
+            <!--https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name - Texteingabe geht nicht -->
+            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", CreateWordprocessingDocument(),"application/octet-stream"))>
+                Download
+            </div>
+
+            <!--https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razor-->
+            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFileFromText("Mitarbeiter.doc", mitarbeiter.ToString(), "application/octet-stream"))>
+                Download
+            </div>
         </div>
     </div>
 </div>
 
-@code {
-    [Parameter]
-    public Employee mitarbeiter { get; set; }
-    private Employee standard = new Employee
-    {
-        Vorname = "",
-        Nachname = "",
-        Geburtstag = new DateTime(2000, 01, 01),
-        Projekte = new List<string> { "" }
-    };
-
-}
+@code { 
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+    [Parameter] public Employee mitarbeiter { get; set; }
+    }
 

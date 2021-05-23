@@ -19,7 +19,7 @@
     <div class="form-group ">
         <label> Type</label>
         <InputSelect @bind-Value="@workingSkill.Skilltype">
-            @foreach (var value in Enum.GetValues(typeof(Skill.SkillCatgeory)))
+            @foreach (var value in Enum.GetValues(typeof(SkillCategory)))
             {
                 <option value="@value">@value</option>
             }
@@ -53,7 +53,7 @@
             {
                 Id = GetFreeID(),
                 Name = "Neuer",
-                Skilltype = Skill.SkillCatgeory.Softskill
+                Skilltype = SkillCategory.Softskill
             };
 
         }
