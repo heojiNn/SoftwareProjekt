@@ -29,12 +29,14 @@ namespace Tests
             inpuField = driver.FindElement(By.Id("name"));
             inpuField.Clear();
             inpuField = driver.FindElement(By.Id("name"));
-            inpuField.SendKeys("Siiikl");
+            inpuField.SendKeys("ZweiterTest");
+
+
             Click(By.Id("sumitB"));
 
 
-            var result = driver.FindElement(By.XPath("//*[contains(., 'Siiikl')]"));
-            Console.WriteLine(result);
+            var result = driver.FindElement(By.XPath("//*[contains(., 'ZweiterTest')]"));
+
         }
 
         [TearDown]

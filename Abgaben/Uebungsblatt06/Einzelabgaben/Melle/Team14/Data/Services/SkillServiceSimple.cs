@@ -35,7 +35,7 @@ namespace Team14.Data
             {
 
 
-                var bd = JsonSerializer.Deserialize<BaseData>(File.ReadAllText("datenbasis.json"), option);
+                var bd = JsonSerializer.Deserialize<BaseData>(File.ReadAllText("datenbasis.json"));
                 for (int i = 0; i < bd.skills["Sprachen"].Count; i++)
                     UpdateSkill(new Skill() { Id = i, Name = bd.skills["Sprachen"][i] });
             }
