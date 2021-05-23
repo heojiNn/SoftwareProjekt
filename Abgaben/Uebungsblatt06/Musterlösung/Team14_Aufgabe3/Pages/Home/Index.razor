@@ -1,5 +1,6 @@
 @page "/"
-@inject IJSRuntime IJS
+@using System.IO
+
 <h1>Mitarbeitendenübersicht, Team14</h1>
 
 <em>Hier entsteht in Kürze das Softwareprojekt des Team14</em>
@@ -11,18 +12,15 @@
 </p>
 
 <div class="d-inline-flex">
-    <!--iterates over list defined in code-section-->
     @foreach (var _mitarbeiter in Mitarbeiter)
     {
-        <!--Routing tag linking to Team14.Shared.EmployeeShortcard.razor - Razor Component-->
         <EmployeeShortcard mitarbeiter=@_mitarbeiter />
     }
-    
 </div>
-<button type="submit" class="btn btn-success" @onclick="ExportClick">Export to Word</button>
+
 @code {
     //employee-instances
-    List<Employee> Mitarbeiter = new List<Employee>
+    public List<Employee> Mitarbeiter = new List<Employee>
 {
         new Employee{
             Vorname = "Moritz",
@@ -61,18 +59,4 @@
             Projekte = new List<string>{ "Xitaso"}
         }
     };
-    public async Task ExportClick()
-    {
-
-        await IJS.InvokeVoidAsync("exportHTML");
-    }
-
 }
-
-<!--b)
-    Code für die tatsächlichen Seiten in "Pages"
-    Code für einzelne Teil-(Razor)-Komponenten aus denen die "Pages" bestehen in "Shared"
-
-    Beide Varianten sollten verwendet werden zur Modularisierung des Codebestands
-
-    -->

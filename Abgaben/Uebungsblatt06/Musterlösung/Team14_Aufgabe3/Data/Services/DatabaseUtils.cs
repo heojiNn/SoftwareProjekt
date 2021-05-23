@@ -35,6 +35,4 @@ namespace Team14.Data
             }
         }
     }
-
-
 }
