@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -6,11 +7,13 @@ using System.Linq;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 
 namespace Team14.Data
 {
-    // 
-    //
+   
     public class SkillService : ISkillService
     {
 
@@ -61,6 +64,19 @@ namespace Team14.Data
                 }
 
             }
+
+            if (skills.Count() == 0)
+            {
+                var data = Newtonsoft.Json.Linq.JObject.Parse(File.ReadAllText("wwwroot/Datenbasis.json"));
+                var skillList = data.SelectToken("$['skills']['Sprachen und Frameworks']['Sprachen']");
+                int id = 0;
+                foreach(var skill in skillList)
+                {
+                    UpdateSkill(new Skill() { Id = id, Name = skill.ToString(), Skilltype = Skill.SkillCatgeory.Hardskill });
+                    id++;
+                }
+            }
+
             return skills;
         }
 

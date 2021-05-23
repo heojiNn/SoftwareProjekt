@@ -2,7 +2,11 @@
 @page "/skill/index"
 
 @inject NavigationManager NavigationManager
+
 @using Team14.Data
+@using System.IO
+@using System.Text.Json
+
 @inject ISkillService SkillService
 
 
@@ -18,9 +22,8 @@
     @if (skills == null)
     {
         <tr>
-            <td> keine Skills </td>
+            keine einträge
         </tr>
-
     }
     else
     {
@@ -45,11 +48,14 @@
 
 @code {
     IEnumerable<Skill> skills;
+
     protected override void OnInitialized()
     {
         skills = SkillService.GetAllSkills();
         if (skills.Count() == 0)
+        {
             skills = null;
+        }
     }
 
     protected void DeleteArticle(int id)
@@ -58,4 +64,10 @@
 
         NavigationManager.NavigateTo("Skill", true);
     }
+
+
+
+
+
+
 }

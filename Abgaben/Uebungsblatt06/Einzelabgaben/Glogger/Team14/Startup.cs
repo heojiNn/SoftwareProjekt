@@ -26,10 +26,10 @@ namespace Team14
             services.AddServerSideBlazor();
 
             services.AddScoped<ISkillService, SkillService>();
-
-            Stack<Skill> theGlobalSkills = new();
-            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
-            services.AddSingleton(theGlobalSkills);
+            services.AddSingleton<Stack<Skill>>();
+            //Stack<Skill> theGlobalSkills = new();
+            //theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
+            //services.AddSingleton(theGlobalSkills);
 
             //Änderung
 
