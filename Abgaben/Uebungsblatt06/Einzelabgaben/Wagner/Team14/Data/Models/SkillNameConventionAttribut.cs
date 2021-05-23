@@ -20,7 +20,7 @@ namespace Team14.Data
         private bool NameFormatMatch(string str)
         {
             if (str == null) return false;
-            return new Regex(@"^[A-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df\s\u0021]+$").IsMatch(str);
+            return new Regex(@"^[A-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df\s]+$").IsMatch(str);
         }
     }
 }

@@ -15,11 +15,7 @@ namespace UnitTestLibrary
         
         public static void Main(String[] args)
         {
-            //üöäß
-
-            string input = "üöäßüöäßüöäß     !!!!!!!!!!!!!!    IAUSFIGFIUGFUIDGFUSGIUFGD ";
-            string regex = @"^[A-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df\s]+$";
-            Regex regx = new Regex(regex);
+            string input = "Selbstorganisation !";
 
 
             if (!RegexFormatCheckerTest(input))
@@ -40,8 +36,8 @@ namespace UnitTestLibrary
         {
 
             if (str == null) return false;
-            Assert.IsNotNull(str, "Null value input");
-            Regex rgx = new Regex(@"^[A-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df\s\u0021]+$");
+            //Assert.IsNotNull(str, "Null value input");
+            Regex rgx = new Regex(@"^[a-zA-ZöÖäÄüÜ ]+");
             bool checker = rgx.IsMatch(str);
 
             /*
@@ -52,7 +48,7 @@ namespace UnitTestLibrary
             Assert.IsTrue(rgx.IsMatch("Teamfähigkeit"), "Teamfähigkeit falsely assumed false");
             Assert.IsTrue(rgx.IsMatch("Team"), "Team falsely assumed false");
             Assert.IsTrue(rgx.IsMatch("Mitarbeiterkoordination"), "Mitarbeiterkoordination falsely assumed false");
-            */
+           */
 
             return checker;
 
