@@ -1,0 +1,73 @@
+@page "/skill"
+@page "/skill/index"
+
+@inject NavigationManager NavigationManager
+
+@using Team14.Data
+@using System.IO
+@using System.Text.Json
+
+@inject ISkillService SkillService
+
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Skillname</th>
+        <th>Skilltyp</th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @if (skills == null)
+    {
+        <tr>
+            keine einträge
+        </tr>
+    }
+    else
+    {
+        @foreach (var skill in skills)
+        {
+            <tr>
+                <td>@skill.Id</td>
+                <td>@skill.Name</td>
+                <td>@skill.Skilltype</td>
+                <td>
+                    <a class="btn btn-info" href="skill/edit/@skill.Id">bearbeiten</a>
+                </td>
+                <td>
+                    <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.Id)">löschen</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+<a class="btn btn-success" href="skill/edit/new">erstellen</a>
+
+
+@code {
+    IEnumerable<Skill> skills;
+
+    protected override void OnInitialized()
+    {
+        skills = SkillService.GetAllSkills();
+        if (skills.Count() == 0)
+        {
+            skills = null;
+        }
+    }
+
+    protected void DeleteArticle(int id)
+    {
+        SkillService.DeleteSkill(id);
+
+        NavigationManager.NavigateTo("Skill", true);
+    }
+
+
+
+
+
+
+}
