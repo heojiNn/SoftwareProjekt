@@ -8,6 +8,8 @@
 
 <EditForm Model="@workingSkill" OnValidSubmit="@UpdateSkill">
     <DataAnnotationsValidator />
+    <ValidationSummary />
+    
     <div class="form-group">
         <label> Id</label>
         <input  @bind="@workingSkill.Id" disabled>
@@ -25,7 +27,7 @@
             }
         </InputSelect>
     </div>
-    
+
     <button id="sumitB" type="submit" class="btn btn-success">updaten</button>
 
 </EditForm>
