@@ -24,11 +24,9 @@ namespace Team14
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddScoped<ISkillService, SkillService>();
+            services.AddScoped<ISkillService, SkillServiceSimple>();
 
-            Stack<Skill> theGlobalSkills = new();
-            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
-            services.AddSingleton(theGlobalSkills);
+            services.AddSingleton<Stack<Skill>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +56,6 @@ namespace Team14
 
 
 
-            DatabaseUtils.CheckAndCreate(Configuration);
         }
     }
 }

@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Team14.Data
 {
@@ -23,6 +26,17 @@ namespace Team14.Data
         //Gibt alle verfuegbaren Skills zurueck.
         public IEnumerable<Skill> GetAllSkills()
         {
+            if (theSigelton.Count == 0)
+            {
+               var option= new JsonSerializerOptions()
+            {
+                ReadCommentHandling = JsonCommentHandling.Skip,
+            };
+
+                var bd = JsonSerializer.Deserialize<BaseData>(File.ReadAllText("datenbasis.json"), option);
+                for (int i = 0; i < bd.skills["Sprachen"].Count; i++)
+                    UpdateSkill(new Skill() { Id = i, Name = bd.skills["Sprachen"][i] });
+            }
             return theSigelton;
         }
         //Aktualisiert den gegeben Skill bei der Datenquelle
