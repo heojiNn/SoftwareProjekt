@@ -24,14 +24,16 @@ namespace Team14.Data
             return theSigelton.ToList().Find(x => x.Id == Id);
         }
         //Gibt alle verfuegbaren Skills zurueck.
+
+
+
+
+
         public IEnumerable<Skill> GetAllSkills()
         {
             if (theSigelton.Count == 0)
             {
-               var option= new JsonSerializerOptions()
-            {
-                ReadCommentHandling = JsonCommentHandling.Skip,
-            };
+
 
                 var bd = JsonSerializer.Deserialize<BaseData>(File.ReadAllText("datenbasis.json"), option);
                 for (int i = 0; i < bd.skills["Sprachen"].Count; i++)
@@ -39,6 +41,10 @@ namespace Team14.Data
             }
             return theSigelton;
         }
+
+
+
+
         //Aktualisiert den gegeben Skill bei der Datenquelle
         //oder fueg teinen Neuen ein,wenn die ID noch nicht
         public bool UpdateSkill(Skill skill)

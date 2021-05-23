@@ -50,7 +50,7 @@
       "Sprachen und Frameworks":{
          "Sprachen":[
             "C",
-            "C++",  /* removed comma*/
+            "C++", 
             "C#",
             "JavaScript",
             "TypeScript",
