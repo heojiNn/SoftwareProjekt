@@ -8,6 +8,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using NUnit.Framework;
 
+//Unvollständig, auf localhost kann nicht zugegriffen werden.
 
 namespace Test
 {
