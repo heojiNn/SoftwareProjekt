@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using NUnit.Framework;
 using Team14.Data;
 
-namespace Test_NUnit
+namespace Tests
 {
-    public class Tests
+    public class UnitTest1
     {
         [SetUp]
         public void Setup()
