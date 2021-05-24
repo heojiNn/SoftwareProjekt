@@ -1,0 +1,95 @@
+﻿@page "/"
+
+<h1>Mitarbeitendenübersicht, Team14</h1>
+
+<em>Hier entsteht in Kürze das Softwareprojekt des Team14</em>
+
+<p>
+    in der Zwischenzeit können Sie sich gerne die
+    <a href="FetchData">Wettervorhersage </a>
+    anschauen.
+</p>
+
+
+<!--iterates over list defined in code-section-->
+@foreach (var empl in employees)
+{
+    <!--Routing tag linking to Team14.Shared.EmployeeShortcard.razor - Razor Component-->
+    <EmployeeShortcard header=@("Member" + ++COUNTER)
+                       _Vorname=@empl.Vorname
+                       _Nachname=@empl.Nachname
+                       _Projekte=@empl.Projekte
+                       _Geburtstag=@empl.Geburtstag />
+}
+
+@code {
+    //used for "header-indexing"
+    public int COUNTER = 0;
+
+    //Employee-List
+    List<Employee> employees = new List<Employee>();
+
+    //initializes Employee-List with Employees
+    protected override void OnInitialized()
+    {
+        this.employees.Add(emp1);
+        this.employees.Add(emp2);
+        this.employees.Add(emp3);
+        this.employees.Add(emp4);
+        this.employees.Add(emp5);
+        this.employees.Add(emp6);
+    }
+
+    //Employee-instances
+    Employee emp1 = new Employee()
+    {
+        Vorname = "Fabian",
+        Nachname = "Günaydın",
+        Geburtstag = new DateTime(2001, 01, 01),
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+    Employee emp2 = new Employee()
+    {
+        Vorname = "Moritz",
+        Nachname = "Boche",
+        Geburtstag = new DateTime(2001, 01, 01).Date,
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+    Employee emp3 = new Employee()
+    {
+        Vorname = "Mario",
+        Nachname = "Melle",
+        Geburtstag = new DateTime(2001, 01, 01).Date,
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+    Employee emp4 = new Employee()
+    {
+        Vorname = "Brigitte",
+        Nachname = "Glogge",
+        Geburtstag = new DateTime(2001, 01, 01).Date,
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+    Employee emp5 = new Employee()
+    {
+        Vorname = "Jonathan",
+        Nachname = "Leis",
+        Geburtstag = new DateTime(2001, 01, 01).Date,
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+    Employee emp6 = new Employee()
+    {
+        Vorname = "Philipp",
+        Nachname = "Wagner",
+        Geburtstag = new DateTime(2001, 01, 01),
+        Projekte = new List<string> { "Softwareprojekt" }
+    };
+
+}
+
+<!--b)
+    Code für die tatsächlichen Seiten in "Pages"
+    Code für einzelne Teil-(Razor)-Komponenten aus denen die "Pages" bestehen in "Shared"
+
+    Beide Varianten sollten verwendet werden zur Modularisierung der Codeteile
+
+    -->

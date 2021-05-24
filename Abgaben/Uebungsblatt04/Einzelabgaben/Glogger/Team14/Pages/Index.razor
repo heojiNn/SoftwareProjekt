@@ -1,0 +1,57 @@
+﻿
+@page "/"
+@using Team14.Data
+
+<h1>Mitarbeitendenübersicht, Team14</h1>
+
+<em>Hier entsteht in Kürze das Softwareprojekt des Team14</em>
+
+<p>in der Zwischenzeit können Sie sich gerne die
+    <a href="FetchData">Wettervorhersage </a>
+    anschauen.
+    </p>
+
+
+    <div class="d-inline-flex">
+        @foreach(var _mitarbeiter in Mitarbeiter)
+            {
+                <EmployeeShortcard mitarbeiter =@_mitarbeiter />
+            }
+    </div>
+
+@code {
+    List<Employee> Mitarbeiter = new List<Employee>
+    {
+                new Employee{
+            Vorname = "Moritz",
+            Nachname = "Boche",
+            Geburtstag = new DateTime(1995, 02, 02),
+            Projekte = new List<string>{ "Xitaso", "Projekt B"}
+        },
+        new Employee(),
+        new Employee{
+            Vorname = "Fabian",
+            Nachname = "Günaydin",
+            Geburtstag = new DateTime(1998, 04, 04),
+            Projekte = new List<string>{ "Xitaso", "Projekt C", "Projekt D"}
+        },
+        new Employee{
+            Vorname = "Jonathan",
+            Nachname = "Leis",
+            Geburtstag = new DateTime(1999, 01, 01),
+            Projekte = new List<string>{ "Xitaso"}
+        },
+        new Employee{
+            Vorname = "Mario",
+            Nachname = "Melle",
+            Geburtstag = new DateTime(1993, 09, 17),
+            Projekte = new List<string>{ "Xitaso"}
+        },
+        new Employee{
+            Vorname = "Philipp",
+            Nachname = "Wagner",
+            Geburtstag = new DateTime(1994, 12, 07),
+            Projekte = new List<string>{ "Xitaso"}
+        }
+    };
+}
