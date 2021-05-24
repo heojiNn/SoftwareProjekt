@@ -1,5 +1,0 @@
-Methode 1: Über den @-Block in einem Razor component model
-Methode 2: Code ausgelagert in eine razor.cs Datei
-
-Vorteilhaft für größere Projekte wie unserem Softwareprojekt ist ein Auslagern des Codes in eine razor.cs Datei, da man somit auf git genauer die Veränderungen nachvollziehen kann.
-Außerdem trennt die Auslagerung Code für die Oberfläche (HTML/CSS Code) von funktionellem Code (C#)
