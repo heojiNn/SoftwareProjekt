@@ -16,11 +16,10 @@
     {
         <!--Routing tag linking to Team14.Shared.EmployeeShortcard.razor - Razor Component-->
         <EmployeeShortcard mitarbeiter=@_mitarbeiter />
-                        <button type="submit" class="btn btn-success" @onclick="ExportClick">Export to Word</button>
-                    }
-
+    }
+    
 </div>
-
+<button type="submit" class="btn btn-success" @onclick="ExportClick">Export to Word</button>
 @code {
     //employee-instances
     List<Employee> Mitarbeiter = new List<Employee>

@@ -1,45 +1,62 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Team14.Data
 {
     public class SkillServiceSimple : ISkillService
     {
-        public List<Skill> SkillListe;
-        public bool DeleteSkill(int skillId)
+        private readonly List<Skill> skills;
+        public SkillServiceSimple(List<Skill> _skills)
         {
-            if(SkillListe.Find(skill => skill.skillId == skillId) != null)
-            {
-                SkillListe.Remove(GetSkill(skillId));
+            skills = _skills;
+        }
+        //Gibt einen Skill basierend auf der gewünschten ID zurück oder null, wenn kein Skill existiert
+        public Skill GetSkill(int skillId)
+        {
+            return skills.Find(skill => skill.SkillId == skillId);
+        }
+
+        //Gibt alle verfügbaren Skills zurück
+        public List<Skill> GetAllSkills()
+        {
+            return skills;
+        }
+
+        //Akutalisiert den gegebenen Skill bei der Datenquelle (Identifikation über die ID) oder fügt Namen ein,
+        //wenn die ID noch nicht vorhanden ist
+        public bool UpdateSkill(Skill updateSkill)
+        {
+            if(updateSkill != null) {
+                foreach(Skill skill in skills)
+                {
+                    if(skill.SkillId == updateSkill.SkillId)
+                    {
+                        skills.Insert(skills.IndexOf(skill), updateSkill);
+                        return true;
+                    }
+                }
+                skills.Add(updateSkill);
                 return true;
             }
             return false;
         }
 
-
-        public List<Skill> GetAllSkills()
+        //Löscht einen Skill basierend auf der ID
+        public bool DeleteSkill(int skillId)
         {
-            return SkillListe;
-        }
-
-        public Skill GetSkill(int skillId)
-        {
-            return SkillListe.Find(skill => skill.skillId == skillId);
-        }
-
-        public bool UpdateSkill(Skill skill)
-        {
-            
-            
-            if((GetSkill(skill.skillId)) != null) {
-                return true;
-            }else
+            if(GetSkill(skillId) != null)
             {
-                return false;
+                foreach (Skill skill in skills)
+                {
+                    if (skill.SkillId != skillId)
+                    {
+                        continue;
+                    }
+                    skills.Remove(skill);
+                }
+                return true;
             }
 
+            return false;
         }
     }
 }

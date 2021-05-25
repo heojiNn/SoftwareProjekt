@@ -28,7 +28,16 @@ namespace Team14
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            // services.AddSingleton<WeatherForecastService>();
+
+            services.AddSingleton<ISkillService, SkillService>();
+
+            List<Skill> skill = new();
+
+            skill.Add(new Skill { SkillId = 1, Name = "Beispiel1", Type = Skill.SkillType.Hardskill });
+            skill.Add(new Skill { SkillId = 2, Name = "Beispiel2", Type = Skill.SkillType.Softskill });
+            skill.Add(new Skill { SkillId = 3, Name = "Beispiel3", Type = Skill.SkillType.Hardskill });
+            services.AddSingleton(skill);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,3 +67,4 @@ namespace Team14
         }
     }
 }
+

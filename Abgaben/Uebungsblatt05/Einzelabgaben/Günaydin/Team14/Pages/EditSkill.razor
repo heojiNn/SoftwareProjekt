@@ -1,32 +1,63 @@
-@page "/skill/edit/{Id: int}"
 @page "/skill/edit"
-@using Team14.Data
-@inject ISkillService skillService
+@page "/skill/edit/{Id}"
 
-<h3>EditSkill</h3>
+@using Team14.Data
+@inject ISkillService SkillService
+
+
 @if (Id != null)
 {
     int id = Int32.Parse(Id);
-        Skill skill = skillService.GetSkill(id);
-    if (skill!= null)
+    if (SkillService.GetSkill(id) != null)
     {
-                    <h1>Skill bearbeiten</h1>
-                }
-                else
-                {
-                       <p>neuen Skill anlegen</p>
-                }
+        <h3> Skill bearbeiten</h3>
+        <EditForm Model="@skill" OnValidSubmit="@UpdateSkill">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Name</label>
+                <input asp-for="Name" class="form-control" @bind="@skill.Name" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Skill.Type" class="control-label">Kategorie</label>
+                <InputSelect @bind-Value="@skill.Type">
+                    @foreach (var value in Enum.GetValues(typeof(Skill.SkillType)))
+                            {
+        <option value="@value">@value</option>}
+                </InputSelect>
+            </div>
 
-            }
-            else
-            {
-                <p>neuen Skill anlegen</p>
-            }
+            <a href="skill" class="btn btn-success"> Submit </a>
 
+        </EditForm>
+    }
 
+}
 
-@code {
+@code
+{
     [Parameter]
-    public String Id { get; set; }
-    
+    public string Id { get; set; }
+    private Skill skill;
+    private Skill urlSkill;
+
+    protected override void OnInitialized()
+    {
+        urlSkill = SkillService.GetSkill(Int32.Parse(Id));
+        if(urlSkill == null)
+        {
+
+        }
+        else {
+
+            skill = new Skill
+            {
+                Name = urlSkill.Name,
+                Type = urlSkill.Type
+            };
+        }
+    }
+    protected void UpdateSkill()
+    {
+        SkillService.UpdateSkill(skill);
+    }
+
 }

@@ -1,11 +1,12 @@
 @page "/skill"
 @page "/skill/index"
 @using System.Data
+@using System.IO
+@using System.Web
 @inject NavigationManager NavigationManager
 @using Team14.Data
 @inject ISkillService SkillService
-@using Newtonsoft.Json
-@using System.Net
+
 
 <table>
     <tr>
@@ -31,7 +32,7 @@
                 <td>@skill.Name</td>
                 <td>@skill.Skilltype</td>
                 <td>
-                    <a class="btn btn-info" href="skill/edit/@skill.Id">Edit</a>
+                    <a class="btn btn-info" href="skill/edit/@skill.Id">bearbeitn</a>
                 </td>
                 <td>
                     <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.Id)">Delete</a>
@@ -58,6 +59,4 @@
 
         NavigationManager.NavigateTo("Skill", true);
     }
-
-
-        }
+}

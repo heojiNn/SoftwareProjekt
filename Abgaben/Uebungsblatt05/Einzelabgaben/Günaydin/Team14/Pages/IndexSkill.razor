@@ -1,51 +1,51 @@
 @page "/skill"
 @page "/skill/index"
 
-@inject ISkillService SkillService
 @using Team14.Data
+@inject ISkillService SkillService
 
-<h3>IndexSkill</h3>
 
-@if (skills == null)
-{
-    <p>keine Skills vorhanden</p>
-}
-else
-{
+<div class="container">
+    
     <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Skilltyp</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach (var skills in skills)
-        {
+        <thead>
             <tr>
-                <td>@skills.Name</td>
-                <td>@skills.Kategorisierung</td>
-                <td>
-                    <a class="btn" href="skill/edit/@skills.skillId">edit</a>
-                </td>
-                <td>
-                    <a class="btn" @onclick="() => DeleteArticle(skills.skillId)">delete</a>
-                </td>
+                <th scope="col">Skillname</th>
+                <th scope="col">Skilltyp</th>
+                <th scope="col"></th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @if(SkillList != null)
+            {
+                @foreach(Skill skill in SkillList)
+                {
+                    <tr>
+                        <th scope="col"> @skill.Name</th>
+                        <th scope="col"> @skill.Type</th>
+                        <th scope="col">
+                            <a href="skill/edit/@skill.SkillId" class="btn btn-success"> New </a>
+                            <a href="skill/edit" class="btn btn-success"> Edit </a>
+                            <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.SkillId)"> Delete</a>
+                        </th>
+                    </tr>
+                }
+                
+            }
+        </tbody>
     </table>
-}
 
 
-@code {
-    IEnumerable<Skill> skills;
+</div>
+
+@code{
+    private List<Skill> SkillList;
     protected override void OnInitialized()
     {
-        skills = SkillService.GetAllSkills();
-        if (skills.Count() == 0)
-            skills = null;
+        SkillList = SkillService.GetAllSkills();
+        if (SkillList.Count() == 0)
+            SkillList = null;
     }
-
     protected void DeleteArticle(int id)
     {
         SkillService.DeleteSkill(id);
