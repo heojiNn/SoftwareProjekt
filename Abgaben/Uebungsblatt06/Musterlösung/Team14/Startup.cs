@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Team14.Data;
+using BlazorDownloadFile;
 
 namespace Team14
 {
@@ -29,6 +30,7 @@ namespace Team14
             Stack<Skill> theGlobalSkills = new();
             theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
             services.AddSingleton(theGlobalSkills);
+            services.AddBlazorDownloadFile();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

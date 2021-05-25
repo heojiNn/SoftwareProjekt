@@ -11,6 +11,11 @@ public class Employee
 
     public DateTime Geburtstag { get; set; }
 
+
+    public override string ToString()
+    {
+        return "Vorname: " + Vorname + "\nNachname: " + Nachname + "\nProjekte: " + String.Join(", ", Projekte.ToArray()) + "\nGeburstag: " + Geburtstag.ToString("dd.MM.yyyy");
+    }
 }
 
 

@@ -34,7 +34,7 @@ namespace Team14.Shared
                      new Paragraph(
                         new Run(
                            new Text(mitarbeiter.ToString())))));    //hier soll Mitarbeiter übergeben werden
-                return stream.ToArray();   //scheint den Bytestream nicht richtig zu erzeugen -> leeres Dokument
+                return stream.ToArray();
             }
         }
 
