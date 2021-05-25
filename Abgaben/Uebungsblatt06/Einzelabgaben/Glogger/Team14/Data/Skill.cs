@@ -8,7 +8,7 @@ namespace Team14.Data
         [Key]
         [Required]
         public int Id { get; set; }
-        [StringLength(40, ErrorMessage = "Der Name ist zu lang")]
+        [StringLength(40, ErrorMessage = "Der Name ist zu lang.")]
         [SkillNameConventionAttribut]
         public string Name { get; set; }
         public SkillCatgeory Skilltype { get; set; }
