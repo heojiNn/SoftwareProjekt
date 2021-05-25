@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Team14.Data;
-using Team14.Data.Datatypes;
 
 namespace Team14
 {
@@ -31,6 +30,10 @@ namespace Team14
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<SkillServiceSimple>();
+            services.AddTransient<ISkillService, SkillService>();
+            Stack<Skill> theGlobalSkills = new();
+            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = SkillCategory.Softskill });
+            services.AddSingleton(theGlobalSkills);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +60,8 @@ namespace Team14
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            DatabaseUtils.CheckAndCreate(Configuration);
         }
     }
 }
