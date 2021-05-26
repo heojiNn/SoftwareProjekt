@@ -4,67 +4,84 @@
 @using DocumentFormat.OpenXml.Packaging;
 @using DocumentFormat.OpenXml.Wordprocessing;
 
-<div class="p-1">
-    <div class="card">
-        <div class="card-header">
-            @preservewhitespace true
-            @if (mitarbeiter.Vorname == null)
-            {@standard.Vorname}
-        else @mitarbeiter.Vorname
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
-            @if (mitarbeiter.Nachname == null)
-            {@standard.Nachname }
-        else @mitarbeiter.Nachname
+<body id="source-html">
+    <div>
+        <div class="p-1">
+            <div class="card">
+                <div class="card-header">
+                    @preservewhitespace true
+                    @if (mitarbeiter.Vorname == null)
+                    {@standard.Vorname}
+                else @mitarbeiter.Vorname
 
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    Geburtstag:
-                </div>
-                <div class="col">
+                    @if (mitarbeiter.Nachname == null)
+                    {@standard.Nachname }
+                else @mitarbeiter.Nachname
 
-                    @if (mitarbeiter.Geburtstag.Equals(default))
-                    {@standard.Geburtstag.ToString("dd.MM.yyyy") }
-                else @mitarbeiter.Geburtstag.ToString("dd.MM.yyyy")
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    Projekte:
-                </div>
-                <div class="col">
-                    @if (mitarbeiter.Projekte == null)
-                    {
-                <ul>
-                    @foreach (var projekt in standard.Projekte)
-                    {
-                <li> @projekt</li>}
-                </ul> }
-            else
-            {
-                <ul>
-                    @foreach (var projekt in mitarbeiter.Projekte)
-                    {
-                <li> @projekt </li>}
-                </ul>}
-                </div>
-            </div>
-            <!--https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name - Texteingabe geht nicht -->
-            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", CreateWordprocessingDocument(),"application/octet-stream"))>
-                Download
-            </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            Geburtstag:
+                        </div>
+                        <div class="col">
 
-            <!--https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razor-->
-            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFileFromText("Mitarbeiter.doc", mitarbeiter.ToString(), "application/octet-stream"))>
-                Download
+                            @if (mitarbeiter.Geburtstag.Equals(default))
+                            {@standard.Geburtstag.ToString("dd.MM.yyyy") }
+                        else @mitarbeiter.Geburtstag.ToString("dd.MM.yyyy")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Projekte:
+                        </div>
+                        <div class="col">
+                            @if (mitarbeiter.Projekte == null)
+                            {
+                                <ul>
+                                    @foreach (var projekt in standard.Projekte)
+                                    {
+                                        <li> @projekt</li>
+                                    }
+                                </ul> }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var projekt in mitarbeiter.Projekte)
+                                    {
+                                        <li> @projekt </li>
+                                    }
+                                </ul>}
+                        </div>
+                    </div>
+                    <!--: https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razo  Text kann hier über die ToString-Methode leicht modifiziert werden aber wenig Möglichkeiten zur Formatierung
+                    <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFileFromText("Mitarbeiter.doc", mitarbeiter.ToString(), "application/octet-stream"))>
+                        Download
+                    </div>
+                    -->
+                    <!--Besser: https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name Bytestreamuebergabe und externe Erzeugung--> 
+                    <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", CreateWordprocessingDocument(),"application/octet-stream"))>
+                        Download
+                    </div>
+                        
+
+                </div>
             </div>
         </div>
     </div>
-</div>
+</body>
+</html>
 
-@code { 
+
+@code {
     [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
     [Parameter] public Employee mitarbeiter { get; set; }
-    }
+}
 

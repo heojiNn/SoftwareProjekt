@@ -16,7 +16,6 @@ public class Employee
     {
         return "Vorname: " + Vorname + "\nNachname: " + Nachname + "\nProjekte: " + String.Join(", ", Projekte.ToArray()) + "\nGeburstag: " + Geburtstag.ToString("dd.MM.yyyy");
     }
-
 }
 
 

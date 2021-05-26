@@ -61,16 +61,17 @@
                                 </ul>}
                         </div>
                     </div>
-                    <!--Wahl: https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razor-->
+                    <!--: https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razo  Text kann hier über die ToString-Methode leicht modifiziert werden aber wenig Möglichkeiten zur Formatierung
                     <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFileFromText("Mitarbeiter.doc", mitarbeiter.ToString(), "application/octet-stream"))>
                         Download
                     </div>
-
-                    <!--Alternative: https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name
+                    -->
+                    <!--Besser: https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name Bytestreamuebergabe und externe Erzeugung--> 
                     <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", CreateWordprocessingDocument(),"application/octet-stream"))>
                         Download
                     </div>
-                       -->
+                        
+
                 </div>
             </div>
         </div>

@@ -28,7 +28,7 @@ namespace Team14
             services.AddScoped<ISkillService, SkillService>();
 
             Stack<Skill> theGlobalSkills = new();
-            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = SkillCategory.Softskill });
+            theGlobalSkills.Push(new Skill { Id = 2, Name = "runnig", Skilltype = Skill.SkillCatgeory.Softskill });
             services.AddSingleton(theGlobalSkills);
             services.AddBlazorDownloadFile();
         }
@@ -57,6 +57,8 @@ namespace Team14
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+
 
             DatabaseUtils.CheckAndCreate(Configuration);
         }
