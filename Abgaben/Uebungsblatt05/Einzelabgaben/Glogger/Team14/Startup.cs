@@ -30,13 +30,13 @@ namespace Team14
             services.AddServerSideBlazor();
             // services.AddSingleton<WeatherForecastService>();
 
-            services.AddSingleton<ISkillService, SkillService>();
+            services.AddScoped<ISkillService, SkillService>();
 
             List<Skill> skill = new();
 
-            skill.Add(new Skill { SkillId = 1, Name = "Beispiel1", Type = Skill.SkillType.Hardskill });
-            skill.Add(new Skill { SkillId = 2, Name = "Beispiel2", Type = Skill.SkillType.Softskill });
-            skill.Add(new Skill { SkillId = 3, Name = "Beispiel3", Type = Skill.SkillType.Hardskill });
+            skill.Add(new Skill { Id = 1, Name = "Beispiel1", Skilltype = Skill.SkillCategory.Hardskill });
+            skill.Add(new Skill { Id = 2, Name = "Beispiel2", Skilltype = Skill.SkillCategory.Softskill });
+            skill.Add(new Skill { Id = 3, Name = "Beispiel3", Skilltype = Skill.SkillCategory.Hardskill });
             services.AddSingleton(skill);
         }
 
@@ -64,6 +64,8 @@ namespace Team14
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+
+            DatabaseUtils.CheckOnCreate(Configuration);
         }
     }
 }

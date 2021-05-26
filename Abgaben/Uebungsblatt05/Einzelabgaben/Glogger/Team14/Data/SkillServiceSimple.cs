@@ -12,7 +12,7 @@ namespace Team14.Data
         //Gibt einen Skill basierend auf der gewünschten ID zurück oder null, wenn kein Skill existiert
         public Skill GetSkill(int skillId)
         {
-            return skills.Find(skill => skill.SkillId == skillId);
+            return skills.Find(skill => skill.Id == skillId);
         }
 
         //Gibt alle verfügbaren Skills zurück
@@ -28,7 +28,7 @@ namespace Team14.Data
             if(updateSkill != null) {
                 foreach(Skill skill in skills)
                 {
-                    if(skill.SkillId == updateSkill.SkillId)
+                    if(skill.Id == updateSkill.Id)
                     {
                         skills.Insert(skills.IndexOf(skill), updateSkill);
                         return true;
@@ -47,7 +47,7 @@ namespace Team14.Data
             {
                 foreach (Skill skill in skills)
                 {
-                    if (skill.SkillId != skillId)
+                    if (skill.Id != skillId)
                     {
                         continue;
                     }

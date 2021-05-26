@@ -3,10 +3,11 @@
 
 @using Team14.Data
 @inject ISkillService SkillService
+@inject NavigationManager NavigationManager
 
 
 <div class="container">
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -16,25 +17,28 @@
             </tr>
         </thead>
         <tbody>
-            @if(SkillList != null)
+            @if (SkillList != null)
             {
-                @foreach(Skill skill in SkillList)
+                @foreach (Skill skill in SkillList)
                 {
                     <tr>
                         <th scope="col"> @skill.Name</th>
-                        <th scope="col"> @skill.Type</th>
+                        <th scope="col"> @skill.Skilltype</th>
                         <th scope="col">
-                            <a href="skill/edit/@skill.SkillId" class="btn btn-success"> New </a>
-                            <a href="skill/edit" class="btn btn-success"> Edit </a>
-                            <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.SkillId)"> Delete</a>
+                            <a href="skill/edit" class="btn btn-success"> New </a>
+                            <a href="skill/edit/@skill.Id" class="btn btn-success"> Edit </a>
+                            <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.Id)"> Delete</a>
                         </th>
                     </tr>
                 }
-                
-            }
-        </tbody>
-    </table>
 
+            }
+
+
+        </tbody>
+
+    </table>
+    <a href="skill/edit" class="btn btn-success"> New </a>
 
 </div>
 
@@ -49,6 +53,7 @@
     protected void DeleteArticle(int id)
     {
         SkillService.DeleteSkill(id);
+        NavigationManager.NavigateTo("Skill", true);
     }
 
 }
