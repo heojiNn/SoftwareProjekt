@@ -1,20 +1,19 @@
-using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace Team14.Data
 {
-    enum category
+    public class Skill
     {
-        Hardskill,
-        Softskill
-    }
+        [Key]
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public SkillCatgeory Skilltype { get; set; }
 
-    public struct Skill
-    {
-        public int ID { get; }
-        public string Name { get; }
-        public Enum category;
+        public enum SkillCatgeory
+        {
+            Hardskill,
+            Softskill,
+        }
 
-        public Skill(Enum category) : this() => this.category = category;
-        public Skill(string name) : this() => Name = name;
-        public Skill(int id) : this() => ID = id;
     }
 }
