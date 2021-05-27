@@ -11,6 +11,7 @@ namespace Team14.Data
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(50, ErrorMessage = "Der Name ist zu lang.")]
         [SkillNameConventionAttribut]
         public string Name { get; set; }
         public SkillCatgeory Skilltype { get; set; }
@@ -85,7 +86,7 @@ namespace Team14.Data
             string pattern = @"^[A-Za-zÄäÖöÜü ]+$";
             if (skill.Skilltype == Skill.SkillCatgeory.Softskill && !Regex.IsMatch(name, pattern))
             {
-                return new ValidationResult("nur deutsch");
+                return new ValidationResult("Es sind keine Sonderzeichen erlaubt.");
             }
 
             return ValidationResult.Success;

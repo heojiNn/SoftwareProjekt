@@ -32,7 +32,7 @@ namespace Tests
             inpuField.SendKeys("ZweiterTest");
 
 
-            Click(By.Id("sumitB"));
+            Click(By.Id("submit"));
 
 
             var result = driver.FindElement(By.XPath("//*[contains(., 'ZweiterTest')]"));
