@@ -9,26 +9,25 @@ namespace Team14.Data
     public class DatabaseUtils
     {
 
-        private static string SettingsConectString = "MyLocalConnection";
+        private static string ConnectionString = "MyLocalConnection";
 
         public static void CheckAndCreate(IConfiguration config)
         {
-            var conn = new SqlConnection(config.GetConnectionString(SettingsConectString));
-            using (conn)
+            var con = new SqlConnection(config.GetConnectionString(ConnectionString));
+            using (con)
             {
                 try
                 {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    int i = conn.Execute(@"IF OBJECT_ID('dbo.Skill', 'U') IS NULL
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    int i = con.Execute(@"IF OBJECT_ID('dbo.Skill', 'U') IS NULL
                                     CREATE TABLE dbo.Skill 
                                         (  Id INT NOT NULL IDENTITY(1,1) PRIMARY KEY,   Name VARCHAR(50),  Skilltype bit NOT NULL 
                                     );");
-                    Console.WriteLine($"is strangly always {i}");
                 }
                 catch (SqlException e)
                 {
-                    Console.WriteLine($"oNo{e}");
+                    Console.WriteLine($"DatabaseUtils error occured: {e}");
                 }
 
 

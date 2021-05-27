@@ -13,82 +13,84 @@ namespace Team14.Data
     //
     public class SkillService : ISkillService
     {
+        private readonly string ConnectionString = "MyLocalConnection";
+        private readonly IConfiguration __config;
 
-        private readonly IConfiguration _config;
-        private readonly string SettingsConectString = "MyLocalConnection";
         public SkillService(IConfiguration config)
         {
-            _config = config;
+            __config = config;
         }
 
 
 
         public DbConnection GetConnection()
         {
-            return new SqlConnection(_config.GetConnectionString(SettingsConectString));
+            return new SqlConnection(__config.GetConnectionString(ConnectionString));
         }
         public Skill GetSkill(int Id)
         {
             string query = @"select * from dbo.Skill WHERE ID=@ID";
 
-            using (var conn = GetConnection())
+            using (var con = GetConnection())
             {
-                return conn.QueryFirstOrDefault<Skill>(query, new { ID = Id });
+                return con.QueryFirstOrDefault<Skill>(query, new { ID = Id });
             }
         }
 
-        public IEnumerable<Skill> GetAllSkills()
-        {
-            IEnumerable<Skill> skills = null;
-            string query = @"select * from dbo.Skill";
+        
 
-            using (var conn = GetConnection())
-            {
-                try
-                {
-                    if (conn.State == ConnectionState.Closed)
-                        conn.Open();
-                    skills = conn.Query<Skill>(query);
-                }
-                catch (SqlException e)
-                {
-                    Console.WriteLine($"Database Problem oNo {e}");
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open)
-                        conn.Close();
-                }
-
-            }
-            return skills;
-        }
-
-
+        // can update existing skill and create a new skill
         public bool UpdateSkill(Skill skill)
         {
-            string query;
-            if (GetSkill(skill.Id) != null)
-                query = @"UPDATE dbo.Skill SET Name = @NAME, Skilltype = @STYPE  WHERE ID = @ID;";
-            else
+            string query = null;
+            if (GetSkill(skill.Id) == null){
                 query = @"INSERT INTO dbo.Skill (Name, Skilltype)  VALUES(@NAME, @STYPE);";
-
+            }
+            else{
+                query = @"UPDATE dbo.Skill SET Name = @NAME, Skilltype = @STYPE  WHERE ID = @ID;";
+            }
+            
             using (var conn = GetConnection())
             {
                 int i = conn.Execute(query, new { NAME = skill.Name, STYPE = skill.Skilltype, ID = skill.Id });
-
-                Console.WriteLine($"safdas {i}");
                 return true;
             }
         }
 
 
-
+        // deletes existing skill, if skill not existing then it does nothing
         public bool DeleteSkill(int skillId)
         {
             GetConnection().Execute($"DELETE dbo.Skill WHERE Id = {skillId}");
 
             return false;
+        }
+
+
+        // returns all existing skills
+        public IEnumerable<Skill> GetAllSkills()
+        {
+            IEnumerable<Skill> skills = null;
+            string query = @"SELECT * from dbo.Skill";
+
+            using (var con = GetConnection())
+            {
+                try
+                {
+                    if (con.State == ConnectionState.Closed)
+                        con.Open();
+                    skills = con.Query<Skill>(query);
+                }
+                catch (SqlException e)
+                {
+                    Console.WriteLine($"Database-Error occured: {e}");
+                }
+
+                if (con.State == ConnectionState.Open)
+                    con.Close();
+
+            }
+            return skills;
         }
     }
 }
