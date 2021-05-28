@@ -1,0 +1,6 @@
+Der Code kann entweder in einem @code Block innerhalb einer Razor-Komponente stehen, oder in eine externe Datei, als partielle Klasse ausgelagert werden.
+
+Grundsätzlich ist es besser, wenn man den Code in eine externe Datei auslagert, da man hierbei in Git, bei einer Änderung erkennen kann, ob nur die Oberfläche oder auch die dahinter steckende Logik geändert wurde. Dadurch kann es jedoch passieren, dass das Projekt schnell unübersichtlich wird.
+Bei kleinen Codeblöcken ist eine Auslagerung nicht notwendig.
+
+Man sollte sich allerdings für nur eine der beiden Alternativen entscheiden.
