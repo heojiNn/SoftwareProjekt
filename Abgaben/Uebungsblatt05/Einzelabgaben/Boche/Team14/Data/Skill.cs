@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace Team14.Data
 {
     public class Skill
@@ -8,15 +10,15 @@ namespace Team14.Data
         }
 
         [Key]
-        public int SkillId { get; }
+        public int iD { get; set; }
         public string Name { get; set; }
-        public SkillKategorie Kategorisierung { get; set; }
+        public Category Kategorisierung { get; set; }
 
-        public enum SkillKategorie
+        public enum Category
         {
             Hardskill,
             Softskill,
         }
 
-    }
+    }    
 }
