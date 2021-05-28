@@ -1,8 +1,9 @@
-@page "/skill"
+﻿@page "/skill"
 @page "/skill/index"
 
 @inject NavigationManager NavigationManager
 @using Team14.Data
+@using Team14.Interfaces
 @inject ISkillService SkillService
 
 
@@ -18,7 +19,7 @@
     @if (skills == null)
     {
         <p>
-            keine Skills
+            keine Skills vorhanden!
         </p>
     }
     else
@@ -26,20 +27,20 @@
         @foreach (var skill in skills)
         {
             <tr>
-                <td>@skill.Id</td>
+                <td>@skill.iD</td>
                 <td>@skill.Name</td>
-                <td>@skill.Skilltype</td>
+                <td>@skill.Kategorisierung</td>
                 <td>
-                    <a class="btn btn-info" href="skill/edit/@skill.Id">bearbeitn</a>
+                    <a class="btn btn-info" href="skill/edit/@skill.iD">Edit</a>
                 </td>
                 <td>
-                    <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.Id)">Delete</a>
+                    <a class="btn btn-danger" @onclick="() => DeleteArticle(skill.iD)">Delete</a>
                 </td>
             </tr>
         }
     }
 </table>
-<a class="btn btn-success" href="skill/edit/new">erstellen</a>
+<a class="btn btn-success" href="skill/edit/new">Add</a>
 
 
 @code {

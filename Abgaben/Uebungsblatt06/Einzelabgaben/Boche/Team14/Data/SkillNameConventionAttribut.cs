@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using Team14.Data;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using static Team14.Data.Skill;
 
 namespace Team14.Data
 {
@@ -13,7 +9,7 @@ namespace Team14.Data
         public override bool IsValid(object value)
         {
             var skill = (Skill)value;
-            if (skill.Skilltype.Equals(SkillCategory.Hardskill)) return true;
+            if (skill.Kategorisierung.Equals(Category.Hardskill)) return true;
             return NameFormatMatch(skill.Name); //if SkillCatgeory is Softskill check the Name
         }
 

@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using NUnit.Framework;
 
-namespace UnitTestLibrary
+namespace Team14.Data
 {
     [TestFixture]
     class TestProgram
     {
-        
+
         public static void Main(String[] args)
         {
             string input = "Selbstorganisation !";

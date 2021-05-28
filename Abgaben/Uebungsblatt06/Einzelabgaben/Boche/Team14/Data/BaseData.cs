@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,16 +11,11 @@ namespace Team14.Data
         public List<string> roles { get; set; }
         public List<string> languages { get; set; }
 
-
         [JsonConverter(typeof(quickDirtySomeSkills))]
         public Dictionary<string, List<string>> skills { get; set; }
         public List<string> Softskills { get; set; }
 
     }
-
-
-
-
 
     class quickDirtySomeSkills : JsonConverter<Dictionary<string, List<string>>>
     {
@@ -89,6 +84,5 @@ namespace Team14.Data
             throw new NotImplementedException();
         }
     }
-
-
 }
+

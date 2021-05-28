@@ -1,70 +1,72 @@
-@using Team14.Data
-@using System.IO;
-@using DocumentFormat.OpenXml;
-@using DocumentFormat.OpenXml.Packaging;
-@using DocumentFormat.OpenXml.Wordprocessing;
+﻿@using Team14.Data
 
-<div class="p-1">
-    <div class="card">
-        <div class="card-header">
-            @preservewhitespace true
-            @if (mitarbeiter.Vorname == null)
-            {@standard.Vorname}
-        else @mitarbeiter.Vorname
+<body>  
 
-            @if (mitarbeiter.Nachname == null)
-            {@standard.Nachname }
-        else @mitarbeiter.Nachname
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                @preservewhitespace true
+                @if (mitarbeiter.Vorname == null)
+                    {@standard.Vorname}
+                else
+                    {@mitarbeiter.Vorname}
 
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    Geburtstag:
-                </div>
-                <div class="col">
-
-                    @if (mitarbeiter.Geburtstag.Equals(default))
-                    {@standard.Geburtstag.ToString("dd.MM.yyyy") }
-                else @mitarbeiter.Geburtstag.ToString("dd.MM.yyyy")
-                </div>
+                @if (mitarbeiter.Nachname == null)
+                    {@standard.Nachname}
+                else
+                    {@mitarbeiter.Nachname}                
             </div>
-            <div class="row">
-                <div class="col">
-                    Projekte:
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm">
+                        Geburtsdatum
+                    </div>
+                    <div class="col-sm">
+                        @if (mitarbeiter.Geburtsdatum.Equals(default))
+                            {@standard.Geburtsdatum.ToString("dd.MM.yyyy")}
+                         else
+                            {@mitarbeiter.Geburtsdatum.ToString("dd.MM.yyyy")}
+                    </div>                    
                 </div>
-                <div class="col">
-                    @if (mitarbeiter.Projekte == null)
-                    {
-                <ul>
-                    @foreach (var projekt in standard.Projekte)
-                    {
-                <li> @projekt</li>}
-                </ul> }
-            else
-            {
-                <ul>
-                    @foreach (var projekt in mitarbeiter.Projekte)
-                    {
-                <li> @projekt </li>}
-                </ul>}
-                </div>
-            </div>
-            <!--https://docs.microsoft.com/en-us/office/open-xml/how-to-create-a-word-processing-document-by-providing-a-file-name - Texteingabe geht nicht -->
-            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", CreateWordprocessingDocument(),"application/octet-stream"))>
-                Download
-            </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm">
+                        Projekte
+                    </div>
+                    <div class="col-sm">
+                        @if (mitarbeiter.Projekte == null)
+                        {
+                            @foreach (var item in standard.Projekte)
+                            {
+                                @item <br />
+                            }
+                        }
+                        else {
 
-            <!--https://github.com/arivera12/BlazorDownloadFile/blob/master/BlazorDownloadFile.Demo/Pages/DownloadFileFromText.razor-->
-            <div class="form-control btn btn-primary" @onclick=@(async () => await BlazorDownloadFileService.DownloadFileFromText("Mitarbeiter.doc", mitarbeiter.ToString(), "application/octet-stream"))>
-                Download
+                            @foreach (var item in mitarbeiter.Projekte)
+                            {
+                                @item <br />
+                            }
+
+                        }
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@code { 
-    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
-    [Parameter] public Employee mitarbeiter { get; set; }
-    }
+
+</body>
+
+@code {
+    [Parameter]
+    public Employee mitarbeiter { get; set; }
+    private Employee standard = new Employee()
+    {
+        Vorname = "Moritz",
+        Nachname = "Boche",
+        Geburtsdatum = new DateTime(1998, 02, 26),
+        Projekte = new List<string> { "SoPro", "Projekt A" }
+    };
+}
 
