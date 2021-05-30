@@ -30,6 +30,8 @@ release:
 
 test:
   stage: test
+  tags:
+    - sopro
   only:
     - master
   script:
