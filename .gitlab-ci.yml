@@ -13,7 +13,7 @@ build:
   only:
     - master
   script:
-    - dotnet build Abgaben/Uebungsblatt05/Musterloesung/Team14/Team14.csproj
+    - dotnet build Abgaben/Uebungsblatt06/Musterlösung/Team14/Team14.csproj
 
 release:
   stage: build
@@ -25,15 +25,12 @@ release:
     paths:
       -   publishFolder/
   script:
-    - dotnet publish Abgaben/Uebungsblatt05/Musterloesung/Team14/Team14.csproj
+    - dotnet publish Abgaben/Uebungsblatt06/Musterlösung/Team14/Team14.csproj
 
 
 test:
   stage: test
   only:
     - master
-  artifacts:
-    paths:
-      -  Abgaben/Uebungsblatt06/Musterlösung/Tests
   script:
-    - dotnet test
+    - dotnet test Abgaben/Uebungsblatt06/Musterlösung/Tests/Tests.csproj
