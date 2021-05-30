@@ -1,0 +1,25 @@
+image : mcr.microsoft.com/dotnet/sdk:5.0
+
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  only:
+    - master
+  artifacts:
+    paths:
+      -  Abgaben/Uebungsblatt06/Musterlösung/Team14
+  script:
+    - dotnet build
+
+test:
+  stage: test
+  only:
+    - master
+  artifacts:
+    paths:
+      -  Abgaben/Uebungsblatt06/Musterlösung/Tests
+  script:
+    - dotnet test
