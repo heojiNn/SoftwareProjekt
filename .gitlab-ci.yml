@@ -3,7 +3,6 @@ image : mcr.microsoft.com/dotnet/sdk:5.0
 
 stages:
   - build
-  - release
   - test
 
 build:
@@ -15,17 +14,6 @@ build:
   script:
     - dotnet build Abgaben/Uebungsblatt06/Musterlösung/Team14/Team14.csproj
 
-release:
-  stage: build
-  tags:
-    - sopro
-  only:
-    - master
-  artifacts:
-    paths:
-      -   publishFolder/
-  script:
-    - dotnet publish Abgaben/Uebungsblatt06/Musterlösung/Team14/Team14.csproj
 
 
 test:
