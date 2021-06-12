@@ -26,12 +26,11 @@
                     <input @bind="formData.Password " class="form-control" id="Password" @onkeyup="LoginA" />
                 </div>
 
-                @* Wird in diesem Projekt immer angezeigt *@
                 <div class="alert alert-info" role="alert">
                     @validationInfo?.ErrorMessage
                 </div>
 
-                <button class="btn btn-primary" @onclick="LoginA">Login</button>
+                <button class="btn btn-secondary" @onclick="LoginA">Login</button>
             </div>
         </div>
         <table class="table table-sm">
