@@ -1,0 +1,66 @@
+﻿{
+  "PersoNumber": "00-01",
+  "Password": "00-01",
+  "AcRoles": [
+    0,
+    1
+  ],
+  "FirstName": "Max",
+  "LastName": "Mayer",
+  "Image": "",
+  "RCL": 5,
+  "WorkingSince": "2021-06-10T00:00:00+02:00",
+  "Roles": [
+    {
+      "Name": "Software Developer",
+      "Expirience": 0
+    }
+  ],
+  "Fields": [],
+  "Languages": [
+    {
+      "Name": "Deutsch",
+      "Level": "",
+      "PossibleLevels": []
+    },
+    {
+      "Name": "Französisch",
+      "Level": "",
+      "PossibleLevels": []
+    }
+  ],
+  "Abillities": [
+    {
+      "Name": "C++,",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "AngularJS",
+      "Category": "Frameworks",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "Interdisziplinärer Sachverstand",
+      "Category": "menschliches",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 1,
+      "HasDouble": false
+    },
+    {
+      "Name": "Problemlösungsfähigkeit",
+      "Category": "menschliches",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 1,
+      "HasDouble": false
+    }
+  ]
+}

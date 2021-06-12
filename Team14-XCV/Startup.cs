@@ -28,10 +28,17 @@ namespace Team14
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            services.AddScoped<AuthenticationStateProvider, CustomAuthentiProvider>();
-            services.AddScoped<CustomAuthentiProvider>();
+            services.AddTransient<AuthenticationStateProvider, CustomAuthentiProvider>();
+            services.AddTransient<CustomAuthentiProvider>();
+            services.AddTransient<IAccountService, EmployeeService>();
 
-            services.AddSingleton<IEmployeeService, EmployeeServiceCache>();
+            services.AddTransient<IProfileService, EmployeeService>();
+            services.AddTransient<IBasicDataSetService, BasicDataSetService>();
+
+            services.AddTransient<ISkillService, SkillService>();
+            services.AddTransient<IFieldService, FieldService>();
+            services.AddTransient<ILanguageService, LanguageService>();
+            services.AddTransient<IRoleService, RoleService>();
 
             // Nuget: BlazorDownloadFile for Worddownload.
             services.AddBlazorDownloadFile();

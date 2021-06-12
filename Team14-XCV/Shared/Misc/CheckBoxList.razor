@@ -1,0 +1,75 @@
+
+
+@typeparam TItem
+
+<div>
+    @if (Data != null)
+    {
+        foreach (var item in Data)
+        {
+            bool Checked = false;
+            if (SelectedValues.Contains(item))
+            {
+                Checked = true;
+            }
+            <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(item.ToString(), eventArgs.Value, item); }" />
+
+            var text = TextField?.Invoke(item);
+             @text
+
+            if (item is Language)
+            {
+                var inpu = item as Language;
+                <select>
+                    @foreach (var value in inpu.PossibleLevels)
+                    {
+                        <option value="@value">@value</option>
+                    }
+                </select>
+            }
+            if (item is Skill)
+            {
+                var inpu = item as Skill;
+                if (inpu.Type == SkillGroup.Hardskill)
+                {
+
+                    <select>
+                        @foreach (var value in inpu.PossibleLevels)
+                        {
+                            <option value="@value">@value</option>
+                        }
+                    </select>
+                }
+            }
+            if (item is Role)
+            {
+                <input type="text" id="fname" placeholder="... Jahre Berufserfahrung">
+            }
+            <br />
+        }
+    }
+</div>
+
+
+
+@code {
+    //To Show
+    //Data for the Checkbox
+    [Parameter] public IEnumerable<TItem> Data { get; set; }
+    // The field to be shown adjacent to checkbox
+    [Parameter] public Func<TItem, string> TextField { get; set; }
+
+    //To Send
+    // The array which contains the list of selected checkboxs
+    [Parameter] public ISet<TItem> SelectedValues { get; set; }
+
+    //Method to update the selected value on click on checkbox
+    public void CheckboxClicked(string aSelectedId, object aChecked, TItem itemm)
+    {
+        if ((bool)aChecked)
+            SelectedValues.Add(itemm);
+        else
+            SelectedValues.Remove(itemm);
+        //StateHasChanged();
+    }
+}

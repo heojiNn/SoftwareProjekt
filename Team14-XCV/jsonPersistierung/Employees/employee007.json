@@ -1,0 +1,32 @@
+﻿{
+  "PersoNumber": "007",
+  "Password": "007",
+  "AcRoles": [
+    0
+  ],
+  "FirstName": "Berta",
+  "LastName": "Besen",
+  "WorkingSince": "2021-06-10T00:00:00+02:00",
+  "Roles": [
+    {
+      "Name": "Software Developer",
+      "Expirience": 0
+    },
+    {
+      "Name": "UI/UX-Designer",
+      "Expirience": 0
+    }
+  ],
+  "Fields": [
+    { "Name": "Chemie" },
+    { "Name": "Beratung" }
+  ],
+  "Languages": [
+    {
+      "Name": "Deutsch",
+      "Level": "",
+      "PossibleLevels": []
+    }
+  ],
+  "Abillities": []
+}

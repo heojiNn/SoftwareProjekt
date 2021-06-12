@@ -1,0 +1,70 @@
+﻿{
+  "PersoNumber": "004",
+  "Password": "004",
+  "AcRoles": [],
+  "FirstName": "Bob",
+  "LastName": "Beispiel",
+  "WorkingSince": "2021-06-12T00:00:00+02:00",
+  "Roles": [
+    {
+      "Name": "UI/UX-Designer",
+      "Expirience": 0
+    }
+  ],
+  "Fields": [],
+  "Languages": [
+    {
+      "Name": "Deutsch",
+      "Level": "",
+      "PossibleLevels": []
+    },
+    {
+      "Name": "Arabisch",
+      "Level": "",
+      "PossibleLevels": []
+    }
+  ],
+  "Abillities": [
+    {
+      "Name": "C",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "JavaScript",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "TypeScript",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "CSS",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+
+    {
+      "Name": "Problemlösungsfähigkeit",
+      "Category": "menschliches",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 1,
+      "HasDouble": false
+    }
+  ]
+}

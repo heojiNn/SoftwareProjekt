@@ -1,5 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+.alert:empty {
+    display: none;
+}
+
 html, body {
     font: Antenna-light, sans-serif;
     background-color: #E9EBEE;

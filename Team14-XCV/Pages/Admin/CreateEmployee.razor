@@ -1,0 +1,108 @@
+@page "/create-employee"
+@attribute [Authorize(Roles = "admin")]
+
+@using Team14.Shared.Misc
+@inject IAccountService accountService
+
+<h2>MitarbeiterIn hinzufügen:</h2>
+
+<table class="table table-sm">
+    <tr>
+        <th>Personalnummer</th>
+        <th>Passwort</th>
+        <th>Zugriffsrollen</th>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Angestellt seit &nbsp; </th>
+    </tr>
+    @foreach (Employee registrAcc in accountService.ShowAllProfiles())
+    {
+        var roles = String.Join(", ", registrAcc.AcRoles);
+        <tr>
+            <td>@registrAcc.PersoNumber </td>
+            <td>@registrAcc.Password</td>
+            <td>@roles</td>
+            <td>@registrAcc.FirstName </td>
+            <td>@registrAcc.LastName</td>
+            <td>@registrAcc.WorkingSince</td>
+        </tr>
+    }
+    <tr>
+        <td class="form-group">
+            <label for="ps">PersoNumber</label>
+            <input @bind="@newOne.PersoNumber" class="form-control" id="ps" />
+        </td>
+        <td class="form-group">
+            <label for="pw">Password</label>
+            <input @bind="@newOne.Password" class="form-control" id="pw" />
+        </td>
+        <td @onclick="StateHasChanged">
+            @{
+                List<AccessRole> allRoles = new() { AccessRole.Sales, AccessRole.Admin };
+            }
+            <CheckBoxList Data="@allRoles" TextField="@((item)=>item.ToString())" SelectedValues="newOne.AcRoles" />
+        </td>
+        <td class="form-group">
+            <label for="fName">Vorname</label>
+            <input @bind="@newOne.FirstName" class="form-control" id="fName" />
+        </td>
+
+        <td class="form-group">
+            <label for="name">Nachname</label>
+            <input @bind="@newOne.LastName" class="form-control" id="name" />
+        </td>
+        <td>
+            <input @bind="@startDate" />
+        </td>
+    </tr>
+    <input type="submit" class="btn btn-primary" value="Hinzufügen:" @onclick="Create" />
+</table>
+
+<br>
+<br>
+<ul class="alert alert-info" role="alert">
+    @foreach (string line in changeInfo?.InfoMessages ?? new string[] { })
+    {
+        <li>@line</li>
+    }
+</ul>
+<div class="alert alert-success" role="alert">
+    @changeInfo?.SuccesMessage
+</div>
+<div class="alert alert-danger" role="alert">
+    @changeInfo?.ErrorMessage
+</div>
+
+
+@code {
+    private Employee newOne = new Employee();
+    private DateTime startDate = DateTime.Now.Date;
+    private ChangeResult changeInfo;
+
+    protected override void OnInitialized()
+    {
+        accountService.ChangeEventHandel += OnChangeReturn;
+    }
+
+
+    private void Create()
+    {
+        Employee copy = new()/// copy cause Working sinc is readonly(init)
+        {
+            PersoNumber = newOne.PersoNumber,
+            Password = newOne.Password,
+            FirstName = newOne.FirstName,
+            LastName = newOne.LastName,
+            AcRoles = newOne.AcRoles,
+            WorkingSince = startDate
+        };
+        accountService.CreateAccount(copy);
+    }
+
+
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+        StateHasChanged();
+    }
+}

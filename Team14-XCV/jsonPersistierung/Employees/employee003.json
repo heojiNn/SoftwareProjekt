@@ -1,0 +1,68 @@
+﻿{
+  "PersoNumber": "003",
+  "Password": "003",
+  "AcRoles": [],
+  "FirstName": "Tina",
+  "LastName": "Test",
+  "WorkingSince": "2021-06-12T00:00:00+02:00",
+  "Roles": [
+    {
+      "Name": "Software Developer",
+      "Expirience": 0
+    },
+    {
+      "Name": "Product Owner",
+      "Expirience": 0
+    }
+  ],
+  "Fields": [
+    { "Name": "Banken/Finanzsektor/Versicherung" },
+    { "Name": "Beratung" }
+  ],
+  "Languages": [
+    {
+      "Name": "Deutsch",
+      "Level": "",
+      "PossibleLevels": []
+    },
+    {
+      "Name": "Türkisch",
+      "Level": "",
+      "PossibleLevels": []
+    }
+  ],
+  "Abillities": [
+    {
+      "Name": "C",
+      "Category": "Sprachen",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": ".NET Core",
+      "Category": "Frameworks",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 0,
+      "HasDouble": false
+    },
+    {
+      "Name": "Kommunikationsfähigkeit",
+      "Category": "menschliches",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 1,
+      "HasDouble": false
+    },
+    {
+      "Name": "Problemlösungsfähigkeit",
+      "Category": "menschliches",
+      "Level": "",
+      "PossibleLevels": [],
+      "Type": 1,
+      "HasDouble": false
+    }
+  ]
+}

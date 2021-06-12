@@ -1,0 +1,36 @@
+@using Microsoft.AspNetCore.Components
+
+<div class="pb-3">
+   <div class="card">
+       <div class="card-header p-2">
+            <button @onclick="Toggle" type="button" class="btn btn-link px-1 py-0" style="text-decoration: none; color: darkred;">
+               <b>@CardHeaderTitle</b>
+            </button>
+
+            @CardHeader
+            <button @onclick="Toggle" type="button" class="btn btn-secondary btn-sm float-right">
+                <span class="@BtnClass"></span>
+            </button>
+        </div>
+        @if (ShowCardBody)
+        {
+            <div class="card-body p-2">
+                @CardBody
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment CardBody { get; set; }
+    [Parameter] public RenderFragment CardHeader { get; set; }
+    [Parameter] public string CardHeaderTitle { get; set; }
+
+
+    [Parameter] public bool ShowCardBody { get; set; } = false;
+    public string BtnClass => ShowCardBody ? "oi oi-chevron-top" : "oi oi-chevron-bottom";
+    public void Toggle()
+    {
+        ShowCardBody = !ShowCardBody;
+    }
+}

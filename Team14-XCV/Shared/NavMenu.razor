@@ -6,11 +6,11 @@
     <a class="navbar-brand">
         <img src="\css\XITASO_Logo_quer_weiss.png" width="159" height="40">
     </a>
-    
+
 </nav>
 
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    
+
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -23,8 +23,12 @@
                 <NavLink class="nav-link" href="offers">
                     <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
                 </NavLink>
+                <NavLink class="nav-link" href="employee-search">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarbeitersuche
+                </NavLink>
             </li>
         </AuthorizeView>
+
         <AuthorizeView Roles="sales, admin">
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="projects">
@@ -39,33 +43,27 @@
             </NavLink>
         </li>
 
-        <AuthorizeView Roles="admin, superadmin">
+        <AuthorizeView Roles="admin">
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="admin">
+                <NavLink class="nav-link" href="change-data-set">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis
                 </NavLink>
-            </li>
-        </AuthorizeView>
 
-        <AuthorizeView Roles="superadmin">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="super-admin">
+                <NavLink class="nav-link" href="create-employee">
                     <span class="oi oi-wrench" aria-hidden="true"></span> neue Mitarbeiter
                 </NavLink>
             </li>
         </AuthorizeView>
 
-        <AuthorizeView>
 
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="#" @onclick="Logout">
-                    <span class="oi oi-account-logout"></span>Logout
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="#" @onclick="Logout">
+                <span class="oi oi-account-logout"></span>Logout
 
-                </NavLink>
-            </li>
+            </NavLink>
+        </li>
 
 
-        </AuthorizeView>
 
     </ul>
 </div>
@@ -75,13 +73,18 @@
 
 
 @code {
-   
 
-
-    public void Logout()
+    private string persoNumber;
+    protected override async Task OnInitializedAsync()
     {
-        CustomAuthentiProvider.Logout();
-        NavigationManager.NavigateTo("/", forceLoad: true);
+        var authstate = await CustomAuthentiProvider.GetAuthenticationStateAsync();
+        persoNumber = authstate.User.Identity.Name;
     }
 
+
+    public async Task Logout()
+    {
+        await CustomAuthentiProvider.Logout();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    } 
 }

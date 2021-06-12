@@ -1,0 +1,122 @@
+﻿[
+  {
+    "Name": "Deutsch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Englisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Türkisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Französisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Spanisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Italienisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Russisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Arabisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Mandarin",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  },
+  {
+    "Name": "Japanisch",
+    "Level": "",
+    "PossibleLevels": [
+      "eloquent",
+      "kompetent",
+      "verhandlungssicher",
+      "fortgeschritten",
+      "Grundlagen",
+      "Anfänger"
+    ]
+  }
+]

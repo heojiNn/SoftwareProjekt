@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Misc\" />
-    <Folder Include="Data\Offer\" />
-    <Folder Include="Data\Project\" />
-    <Folder Include="Data\Login\" />
     <Folder Include="Pages\Misc\" />
     <Folder Include="Pages\Skill\" />
   </ItemGroup>

@@ -1,0 +1,34 @@
+﻿{
+  "PersoNumber": "002",
+  "Password": "002",
+  "AcRoles": [],
+  "FirstName": "Max",
+  "LastName": "Muster",
+  "WorkingSince": "2021-06-12T00:00:00+02:00",
+  "Roles": [
+    {
+      "Name": "Software Developer",
+      "Expirience": 0
+    },
+    {
+      "Name": "Agile Coach",
+      "Expirience": 0
+    }
+  ],
+  "Fields": [
+    { "Name": "Architektur/Bau/Immobilien" }
+  ],
+  "Languages": [
+    {
+      "Name": "Deutsch",
+      "Level": "",
+      "PossibleLevels": []
+    },
+    {
+      "Name": "Spanisch",
+      "Level": "",
+      "PossibleLevels": []
+    }
+  ],
+  "Abillities": []
+}

@@ -1,10 +1,9 @@
 @page "/login"
 
-@inject CustomAuthentiProvider CustomAuthentiProvider
+
+@inject CustomAuthentiProvider authentiProvider
+@inject IAccountService accountService
 @inject NavigationManager NavigationManager
-
-@inject IEmployeeService EmployeeService
-
 
 
 <div class="container">
@@ -14,57 +13,67 @@
         </div>
     </div>
     <div class="logMain">
-        <div class="jumbotron container">
+        <div class="jumbotron container" @onclick="LoginA">
             <div class="form login-form">
-                <EditForm Model="employee" OnSubmit="LoginMe">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <div class="form-group">
-                        <label for="PersNr">PersNr</label>
-                        <InputText type="text" placeholder="PersNr" id="PersNr" class="form-control input-lg" @bind-Value="employee.PersoNumber" />
-                    </div>
-                </EditForm>
-                <EditForm Model="employee" OnSubmit="LoginMe">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-                    <div class="form-group">
-                        <label for="Password">Password</label>
-                        <InputText type="password" placeholder="Password" id="Password" class="form-control input-lg" @bind-Value="employee.Password" />
-                    </div>
-                </EditForm>
-                @errorMessage
-                <br />
-                <button class="btn btn-secondary" @onclick="LoginMe">Login</button>
+
+                <div class="form-group">
+                    <label for="PersoNumber">PersNr</label>
+                    <input @bind="formData.PersoNumber " class="form-control" id="PersoNumber" @onkeyup="LoginA" />
+                </div>
+
+                <div class="form-group">
+                    <label for="PersoNumber">Password</label>
+                    <input @bind="formData.Password " class="form-control" id="Password" @onkeyup="LoginA" />
+                </div>
+
+                @* Wird in diesem Projekt immer angezeigt *@
+                <div class="alert alert-info" role="alert">
+                    @validationInfo?.ErrorMessage
+                </div>
+
+                <button class="btn btn-primary" @onclick="LoginA">Login</button>
             </div>
         </div>
         <table class="table table-sm">
-            <thead>
+            <tr>
+                <th>Personal Number</th>
+                <th>Password</th>
+                <th>Zugriffs Rollen</th>
+            </tr>
+            @foreach (Team14.Data.Employee ac in accountService.ShowAllProfiles())
+            {
+                var roles = String.Join(", ", ac.AcRoles);
                 <tr>
-                    <th>Personal-Nummer</th>
-                    <th>Passwort</th>
-                    <th>Rollen</th>
+                    <td @onclick="@(e => formData.PersoNumber = ac.PersoNumber)"> @ac.PersoNumber </td>
+                    <td @onclick="@(e => formData.Password = ac.Password)"> @ac.Password</td>
+                    <td> @roles</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (Employee account in EmployeeService.Employees)
-                {
-                    var roles = string.Join(", ", account.Roles);
-                    <tr>
-                        <td>@account.PersoNumber </td>
-                        <td>@account.Password</td>
-                        <td>@roles</td>
-                    </tr>
-                }
-            </tbody>
+            }
         </table>
     </div>
 </div>
 
 
+@code {
+    private Team14.Data.Employee formData = new Team14.Data.Employee();
+    private ValidationResult validationInfo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await authentiProvider.GetAuthenticationStateAsync();
+        formData.PersoNumber = authstate.User.Identity.Name;
+
+        authentiProvider.ValidationEventHandel += OnValidationReturn;
+    }
+
+
+    private async void LoginA()
+    {
+        if (await authentiProvider.Login(formData.PersoNumber, formData.Password))
+            NavigationManager.NavigateTo("/my-profile", forceLoad: true);
+    }
 
 
 
-
-
-
-
+    private void OnValidationReturn(object sender, ValidationResult e) => validationInfo = e;
+}

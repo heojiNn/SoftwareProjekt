@@ -1,0 +1,120 @@
+@page "/change-data-set"
+@attribute [Authorize(Roles = "admin")]
+<style>
+    .outerbox.invalid {
+        border: 2px solid orange;
+    }
+
+    .outerbox {
+        border: 2px solid green;
+        width: 805px;
+        height: 505px;
+    }
+
+    .editbox {
+        width: 800px;
+        height: 500px;
+        overflow: scroll;
+    }
+</style>
+
+
+@using Microsoft.AspNetCore.Hosting
+
+
+@inject IWebHostEnvironment Environment
+@inject IJSRuntime JS
+@inject IBasicDataSetService dataSetService
+
+
+
+<b>Datenbasis: ändern</b>
+<br>
+<button @onclick="LoadFromServer" class="btn btn-primary">letzte Version vom Server laden</button> &nbsp; &nbsp;
+oder &nbsp; &nbsp;
+<InputFile OnChange="@ShowUploadInEditArea" class="btn btn-sm btn-primary" />
+<br>
+<br>
+
+<div class="outerbox @(validJson ? "" : "invalid")">
+    <pre @ref="datenBField" @onkeyup="FieldChanged" class="editbox" contenteditable="true">
+
+<span style="color:#a00;">{</span>
+"Branchen" <span style="color:#a00;">:{</span>
+    "long" <span style="color:#a00;">:</span> "Branchenwissen"
+
+    </pre>
+</div>
+<button @onclick="Upload">Upload &nbsp; &nbsp; und aktualisieren</button>
+
+<br>
+<br>
+
+<div style="border: 1px solid gray; width: 600px; ">
+
+    <ul class="alert alert-info" role="alert">
+        @foreach (string line in changeInfo?.InfoMessages ?? new string[] { })
+        {
+            <li>@line</li>
+        }
+    </ul>
+    <div class="alert alert-success" role="alert">
+        @changeInfo?.SuccesMessage
+    </div>
+    <div class="alert alert-danger" role="alert">
+        @changeInfo?.ErrorMessage
+    </div>
+
+</div>
+
+
+
+@code {
+    private ElementReference datenBField;
+    private ChangeResult changeInfo;
+    private bool validJson = true;
+
+
+    protected override void OnInitialized()
+    {
+        dataSetService.ChangeEventHandel += OnChange;
+    }
+
+    private async Task LoadFromServer()
+    {
+        var latest = dataSetService.ShowCurrentDataSetAndCheck(); // might show ChangeInfo
+        await JS.InvokeVoidAsync("setElementText", datenBField, latest);
+    }
+    private async Task ShowUploadInEditArea(InputFileChangeEventArgs eventA)
+    {
+        var content = await dataSetService.ShowBrowserFileAsync(eventA.File); // might show ChangeInfo.Meesage
+                                                                              // or ChangeInfo.Error
+        await JS.InvokeVoidAsync("setElementText", datenBField, content);
+    }
+
+
+    private async Task FieldChanged()
+    {
+        var content = await JS.InvokeAsync<string>("getElementText", datenBField);
+        dataSetService.UpdateRoundtripCheck(content);// might show ChangeInfo
+    }
+    private async void Upload()
+    {
+        var content = await JS.InvokeAsync<string>("getElementText", datenBField);
+        dataSetService.CommitUpdate(content, true); // shows either ChangeInfo.Error o. ChangeInfo.Succes
+    }
+
+
+
+
+    // for Info and Error on LoadFromServer
+    // for Info and Error on Show upload file in EditArea
+    // for Info and Error on FieldChange
+    // for Error or Succes on Upload
+    private void OnChange(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+        validJson = (e?.ErrorMessage == null || e.ErrorMessage.Equals(""));
+        StateHasChanged();
+    }
+}
