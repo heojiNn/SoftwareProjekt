@@ -1,0 +1,127 @@
+@page "/Myproject"
+@attribute [Authorize]
+<div class="card my-1">
+    <div class="card-header text-center">
+        <h3>Meine Projekte</h3>
+    </div>
+</div>
+<br />
+<a href="" class="btn btn-secondary" type="submit">
+    Projekt hinzufügen
+</a>
+<br />
+<div class="container">
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Siemens @if (ProjektACollapsed)
+                        {
+                            <svg @onclick="@ProjektAToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>} @if (!ProjektACollapsed)
+                        {
+                            <svg @onclick="@ProjektAToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>}
+                        </h4>
+                    </div>
+
+                    @if (!ProjektACollapsed)
+                    {
+                        <div class="card-body">
+                            <p class="text-secondary"> Redesign der Siemens.de Homepage</p>
+                            <p class="text-secondary"> UI-Design</p>
+                            <p class="text-secondary"> 22.05.2019- 22.05.2022</p>
+                            <a href="project" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                            <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                        </div>}
+                </div>
+            </div>
+            <div class="col-sm-6 mb-3">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Xitaso @if (ProjektBCollapsed)
+                            {
+                                <svg @onclick="@ProjektBToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>} @if (!ProjektBCollapsed)
+                            {
+                                <svg @onclick="@ProjektBToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>}
+                            </h4>
+                        </div>
+
+                        @if (!ProjektBCollapsed)
+                        {
+                            <div class="card-body">
+                                <p class="text-secondary"> Einrichten eines unternehmensweiten SQL-Servers</p>
+                                <p class="text-secondary"> Datenbanken</p>
+                                <p class="text-secondary"> 30.01.2017-13.04.2018</p>
+                                <a href="project" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                            </div>}
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                BMW @if (ProjektCCollapsed)
+                                {
+                                    <svg @onclick="@ProjektCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>} @if (!ProjektCCollapsed)
+                                {
+                                    <svg @onclick="@ProjektCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>}
+                                </h4>
+                            </div>
+
+                            @if (!ProjektCCollapsed)
+                            {
+                                <div class="card-body">
+                                    <p class="text-secondary"> UI-Design BMW Fahrezugassistent</p>
+                                    <p class="text-secondary"> UI-Design</p>
+                                    <p class="text-secondary"> 25.05.2019-21.05.2023</p>
+                                    <a href="project" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            @code {
+                public bool ProjektACollapsed { get; set; }
+                public bool ProjektBCollapsed { get; set; }
+                public bool ProjektCCollapsed { get; set; }
+                void ProjektAToggle()
+                {
+                    ProjektACollapsed = !ProjektACollapsed;
+                }
+                void ProjektBToggle()
+                {
+                    ProjektBCollapsed = !ProjektBCollapsed;
+                }
+                void ProjektCToggle()
+                {
+                    ProjektCCollapsed = !ProjektCCollapsed;
+                }
+            }

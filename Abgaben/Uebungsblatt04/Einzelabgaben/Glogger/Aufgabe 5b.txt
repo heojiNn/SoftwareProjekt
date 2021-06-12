@@ -1,9 +1,0 @@
-Der Code kann entweder in einem @-code-Block in einer Razorkomponente geschrieben werden oder ausgelagert werden, 
-sodass in der Datei Beispiel.razor der HTML/-Teil definiert wird und der dazugehörige Code in der partiellen 
-Klasse Beispiel.razor.cs .
-
-Das Auslagern des Codes wird empfohlen, da über Gitlab direkt ersichtlich wird, ob lediglich die Oberfläche oder 
-die Logik der Komponente verändert wurde, die Übersichtlichkeit und damit auch die Wartbarkeit werden hierdurch verbessert. 
-Sind nur sehr kleine Codeblöcke vorhanden wirkt das Projekt jedoch die Auslagerung unnötig aufgebläht.
-Grundsätzlich sollte das ganze Projekt nach einer der beiden Möglichkeiten geschrieben werden, damit jeder möglichst 
-schnell gesuchte Ausschnitte des Projekts finden kann.

@@ -1,0 +1,101 @@
+@page "/offer-search-result"
+@attribute [Authorize(Roles = "sales, admin")]
+
+
+<div class="container">
+&lt;offer-name&gt;/ search/ result
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Mitarbeiter A
+                        @if (MitarbeiterACollapsed)
+                        {
+                            <span @onclick="@MitarbeiterAToggle" class="oi oi-plus" />}
+                    </h4>
+                </div>
+
+                @if (!MitarbeiterACollapsed)
+                {
+                    <span @onclick="@MitarbeiterAToggle" class="oi oi-minus mr-1" />
+                    <div class="card-body">
+                        <p class="text-secondary"> Anzahl erfüllter Kriterien: x</p>
+                        <p class="text-secondary"> Erfüllte Kriterien: Kriterium 1 Kriterium 2</p>
+                        <a href="profil" class="btn btn-secondary" type="submit"> Anzeigen </a>
+
+                    </div>}
+            </div>
+        </div>
+        <div class="col-sm-6 mb-3">
+
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Mitarbeiter B
+                        @if (MitarbeiterBCollapsed)
+                        {
+                            <span @onclick="@MitarbeiterBToggle" class="oi oi-plus" />}
+                    </h4>
+                </div>
+
+                @if (!MitarbeiterBCollapsed)
+                {
+                    <span @onclick="@MitarbeiterBToggle" class="oi oi-minus mr-1" />
+                    <div class="card-body">
+                        <p class="text-secondary"> Anzahl erfüllter Kriterien: x</p>
+                        <p class="text-secondary"> Erfüllte Kriterien: Kriterium 1 Kriterium 2</p>
+                        <a href="profil" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                    </div>}
+            </div>
+        </div>
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Mitarbeiter C
+                        @if (MitarbeiterCCollapsed)
+                        {
+                            <span @onclick="@MitarbeiterCToggle" class="oi oi-plus" />}
+                    </h4>
+                </div>
+
+                @if (!MitarbeiterCCollapsed)
+                {
+                    <span @onclick="@MitarbeiterCToggle" class="oi oi-minus mr-1" />
+                    <div class="card-body">
+                        <p class="text-secondary"> Anzahl erfüllter Kriterien: x</p>
+                        <p class="text-secondary"> Erfüllte Kriterien: Kriterium 1 Kriterium 2</p>
+                        <a href="profil" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                    </div>}
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+
+
+@code {
+    public bool MitarbeiterACollapsed { get; set; }
+    public bool MitarbeiterBCollapsed { get; set; }
+    public bool MitarbeiterCCollapsed { get; set; }
+
+    void MitarbeiterAToggle()
+    {
+        MitarbeiterACollapsed = !MitarbeiterACollapsed;
+    }
+    void MitarbeiterBToggle()
+    {
+        MitarbeiterBCollapsed = !MitarbeiterBCollapsed;
+    }
+    void MitarbeiterCToggle()
+    {
+        MitarbeiterCCollapsed = !MitarbeiterCCollapsed;
+    }
+
+}

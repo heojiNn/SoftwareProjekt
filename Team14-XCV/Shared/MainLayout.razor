@@ -1,0 +1,28 @@
+@inherits LayoutComponentBase
+@inject CustomAuthentiProvider CustomAuthentiProvider
+@inject NavigationManager NavigationManager
+
+
+<div class="page">
+    <div class="sidebar" style="background-color: #5E6B7A; background-image: none ">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+
+        
+
+        <div class="content px-4">
+            @Body
+        </div>
+
+    </div>
+</div>
+@code {
+    public void Logout()
+    {
+        CustomAuthentiProvider.Logout();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+
+}

@@ -1,0 +1,70 @@
+@page "/login"
+
+@inject CustomAuthentiProvider CustomAuthentiProvider
+@inject NavigationManager NavigationManager
+
+@inject IEmployeeService EmployeeService
+
+
+
+<div class="container">
+    <div class="sidenav">
+        <div class="login-main-text">
+            <img src="\css\XITASO_Logo_hoch_weiss.png" />
+        </div>
+    </div>
+    <div class="logMain">
+        <div class="jumbotron container">
+            <div class="form login-form">
+                <EditForm Model="employee" OnSubmit="LoginMe">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="PersNr">PersNr</label>
+                        <InputText type="text" placeholder="PersNr" id="PersNr" class="form-control input-lg" @bind-Value="employee.PersoNumber" />
+                    </div>
+                </EditForm>
+                <EditForm Model="employee" OnSubmit="LoginMe">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="Password">Password</label>
+                        <InputText type="password" placeholder="Password" id="Password" class="form-control input-lg" @bind-Value="employee.Password" />
+                    </div>
+                </EditForm>
+                @errorMessage
+                <br />
+                <button class="btn btn-secondary" @onclick="LoginMe">Login</button>
+            </div>
+        </div>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Personal-Nummer</th>
+                    <th>Passwort</th>
+                    <th>Rollen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Employee account in EmployeeService.Employees)
+                {
+                    var roles = string.Join(", ", account.Roles);
+                    <tr>
+                        <td>@account.PersoNumber </td>
+                        <td>@account.Password</td>
+                        <td>@roles</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+

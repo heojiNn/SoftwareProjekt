@@ -1,0 +1,241 @@
+@page "/offer"
+@attribute [Authorize(Roles = "sales, admin")]
+
+<div class="container">
+/offer &lt;offer-name&gt;
+
+    <div class="card my-1">
+        <div class="card-header">
+            <h3> Angebot A </h3>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <div class="mt-3">
+                <div class="row">
+                    <div class="col">
+                        <h4>
+                            Branche:
+                        </h4>
+                    </div>
+                    <div class="col">
+                        <p class="text-secondary">Branche</p>
+                        <p class="text-secondary"> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Hardskills
+
+                        @if (HardskillsCollapsed)
+                        {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!HardskillsCollapsed)
+                        {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+                </div>
+
+                @if (!HardskillsCollapsed)
+                {
+                    <div class="card-body">
+                        <ul>
+                            <li> Hardskill 1 </li>
+
+
+                            <li> Hardskill 2</li>
+
+
+                            <li> Hardskill 3</li>
+
+
+                            <li> Hardskill 4</li>
+                        </ul>
+
+                    </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Softskills
+
+                        @if (SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+                </div>
+
+                @if (!SoftskillsCollapsed)
+                {
+                    <div class="card-body">
+                        <ul>
+                            <li> Softskill 1 </li>
+                            <li> Softskill 2</li>
+                            <li> Softskill 3</li>
+                            <li> Softskill 4</li>
+                            <li> Softskill 5</li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Mitarbeiter
+
+                @if (MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+
+                }
+
+                @if (!MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
+
+            </h4>
+        </div>
+
+        @if (!MitarbeiterCollapsed)
+        {
+            <div class="card-body">
+                <div class="row">
+                    <div class="card">
+                        <div class="card-header">
+                            Mitarbeiter A
+                        </div>
+                        <div class="card-body">
+                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            Mitarbeiter B
+                        </div>
+                        <div class="card-body">
+                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            Mitarbeiter C
+                        </div>
+                        <div class="card-body">
+                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            Mitarbeiter D
+                        </div>
+                        <div class="card-body">
+                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen</a>
+            </div>}
+    </div>
+
+
+
+    <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em">Löschen </button>
+    <a href="offer-edittt" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten</a>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Kopieren </button>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", OpenAndModfiyWordprocessingDocument(false),"application/octet-stream"))>
+            Download
+    </button>
+
+
+</div>
+
+
+
+    @code {
+        [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+       // Create Employee.
+       // Define selection Booleans.
+
+
+
+
+        public bool HardskillsCollapsed { get; set; }
+        public bool SoftskillsCollapsed { get; set; }
+        public bool MitarbeiterCollapsed { get; set; }
+
+        void HardskillsToggle()
+        {
+            HardskillsCollapsed = !HardskillsCollapsed;
+        }
+        void SoftskillsToggle()
+        {
+            SoftskillsCollapsed = !SoftskillsCollapsed;
+        }
+        void MitarbeiterToggle()
+        {
+            MitarbeiterCollapsed = !MitarbeiterCollapsed;
+        }
+
+    }

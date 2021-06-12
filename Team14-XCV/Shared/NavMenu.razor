@@ -1,0 +1,87 @@
+@inject CustomAuthentiProvider CustomAuthentiProvider
+@inject NavigationManager NavigationManager
+
+
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand">
+        <img src="\css\XITASO_Logo_quer_weiss.png" width="159" height="40">
+    </a>
+    
+</nav>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home"></span> Profil/Home
+            </NavLink>
+        </li>
+
+        <AuthorizeView Roles="sales, admin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="offers">
+                    <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
+                </NavLink>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView Roles="sales, admin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="projects">
+                    <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
+                </NavLink>
+            </li>
+        </AuthorizeView>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="MyProject" Match="NavLinkMatch.All">
+                <span class="oi oi-box"></span>Meine Projekte
+            </NavLink>
+        </li>
+
+        <AuthorizeView Roles="admin, superadmin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis
+                </NavLink>
+            </li>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="superadmin">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="super-admin">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> neue Mitarbeiter
+                </NavLink>
+            </li>
+        </AuthorizeView>
+
+        <AuthorizeView>
+
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="#" @onclick="Logout">
+                    <span class="oi oi-account-logout"></span>Logout
+
+                </NavLink>
+            </li>
+
+
+        </AuthorizeView>
+
+    </ul>
+</div>
+
+
+
+
+
+@code {
+   
+
+
+    public void Logout()
+    {
+        CustomAuthentiProvider.Logout();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+
+}

@@ -1,0 +1,434 @@
+@page "/offer-one-maan-edit"
+@attribute [Authorize(Roles = "sales, admin")]
+
+
+<div class="container">
+/offer/edit-mitarbeiter-.....
+
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3> Mitarbeiter A</h3>
+        </div>
+
+    </div>
+    <div class="card">
+        <div class=card-body>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label>Rate Card Level: </label>
+                            </div>
+                            <div class="col">
+                                <input placeholder="x" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="checkbox" value="" />
+                    <label class="form-check-label"> Berufserfahrung: x Jahre</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Rollen
+                @if (RolleCollapsed)
+                {
+                    <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                         height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+
+                }
+
+
+                @if (!RolleCollapsed)
+                {
+                    <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                         height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+
+                }
+            </h4>
+        </div>
+
+        @if (!RolleCollapsed)
+        {
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Rolle 1</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Rolle 2</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Rolle 3</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Rolle 4</label>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Hardskills
+                        @if (HardskillsCollapsed)
+                        {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+                        @if (!HardskillsCollapsed)
+                        {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
+                </div>
+
+                @if (!HardskillsCollapsed)
+                {
+                    <div class="card-body">
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Hardskill 1</label>
+
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0"
+                                     aria-valuemax="100" style="width:25%">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Hardskill 2</label>
+
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                                     aria-valuemax="100" style="width:100%">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Hardskill 3</label>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                                     aria-valuemax="100" style="width:75%">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Hardskill 4</label>
+                            <div class="progress mb-3">
+                                <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="50" aria-valuemin="0"
+                                     aria-valuemax="100" style="width:50%">
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Softskills
+                        @if (SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+                        @if (!SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
+                </div>
+
+                @if (!SoftskillsCollapsed)
+                {
+                    <div class="card-body">
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 1</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 2</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 3</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 4</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 5</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Softskill 6</label>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Branchenwissen
+                        @if (BranchenwissenCollapsed)
+                        {
+                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+                        @if (!BranchenwissenCollapsed)
+                        {
+                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
+                </div>
+
+                @if (!BranchenwissenCollapsed)
+                {
+                    <div class="card-body">
+
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Branche 1</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Branche 2</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Branche 3</label>
+                        </div>
+                        <div class="col">
+
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Branche 4</label>
+                        </div>
+                        <div class="col">
+
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Branche 5</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Sprachen
+                        @if (SprachenCollapsed)
+                        {
+                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+                        @if (!SprachenCollapsed)
+                        {
+                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
+                </div>
+
+                @if (!SprachenCollapsed)
+                {
+                    <div class="card-body">
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Sprachen 1</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Sprachen 2</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Sprachen 3</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Sprachen 4</label>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Projekte
+                @if (ProjektCollapsed)
+                {
+                    <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                         height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!ProjektCollapsed)
+                {
+                    <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                         height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
+            </h4>
+        </div>
+
+        @if (!ProjektCollapsed)
+        {
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 1</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 2</label>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 3</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 4</label>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 5</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 6</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Projekt 7</label>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+    <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Bestätigen </button>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen </button>
+
+</div>
+
+
+
+
+
+
+@code {
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool RolleCollapsed { get; set; }
+    public bool BranchenwissenCollapsed { get; set; }
+    public bool SprachenCollapsed { get; set; }
+    public bool ProjektCollapsed { get; set; }
+
+    void RolleToggle()
+    {
+        RolleCollapsed = !RolleCollapsed;
+    }
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
+    }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void BranchenwissenToggle()
+    {
+        BranchenwissenCollapsed = !BranchenwissenCollapsed;
+    }
+    void SprachenToggle()
+    {
+        SprachenCollapsed = !SprachenCollapsed;
+    }
+    void ProjektToggle()
+    {
+        ProjektCollapsed = !ProjektCollapsed;
+    }
+}

@@ -1,0 +1,162 @@
+@page "/offers"
+@attribute [Authorize]
+
+<AuthorizeView Roles="sales">
+
+    <NotAuthorized>
+        <strong>Sie sind zwar eingeloggt, aber nicht Vetrieb</strong>
+    </NotAuthorized>
+
+
+
+    <Authorized>
+
+        <div class="container-fluid">
+
+
+            <div class="card my-1">
+                <div class="card-header text-center">
+                    <h3>Angebotsübersicht</h3>
+                </div>
+
+            </div>
+            <br />
+
+
+            <div class="input-group w-100 p-3">
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                       aria-describedby="search-addon" />
+                <button type="button" class="btn btn-secondary">search</button>
+            </div>
+
+            <div class="row gutters-sm">
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                AngebotA @if (AngebotACollapsed)
+                                {
+                                    <svg @onclick="@AngebotAToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>} @if (!AngebotACollapsed)
+                                {
+                                    <svg @onclick="@AngebotAToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>}
+                                </h4>
+                            </div>
+
+
+                            @if (!AngebotACollapsed)
+                            {                               
+                                <div class="card-body">
+                                    <p class="text-secondary"> Kunde: xyz</p>
+                                    <p class="text-secondary"> Branche: Branche 1</p>
+                                    <p class="text-secondary"> Erstellungsdatum: 01.01.2000</p>
+                                    <a href="offer" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="offer-edittt" class="btn btn-secondary" type="submit"> Bearbeiten</a>
+                                    <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                                </div>
+                            }
+                        
+                    </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                AngebotB @if (AngebotBCollapsed)
+                                {
+                                    <svg @onclick="@AngebotBToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>} @if (!AngebotBCollapsed)
+                                {
+                                    <svg @onclick="@AngebotBToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>}
+                                </h4>
+                            </div>
+
+
+                            @if (!AngebotBCollapsed)
+                            {
+                                <div class="card-body">
+                                    <p class="text-secondary"> Kunde: xyz</p>
+                                    <p class="text-secondary"> Branche: Branche 1</p>
+                                    <p class="text-secondary"> Erstellungsdatum: 01.01.2000</p>
+                                    <a href="offer" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="offer-edittt" class="btn btn-secondary" type="submit"> Bearbeiten</a>
+                                    <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                                </div>
+                            }
+
+                        </div>
+                </div>
+                <div class="col-sm-6 mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>
+                                AngebotC @if (AngebotCCollapsed)
+                                {
+                                    <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>} @if (!AngebotCCollapsed)
+                                {
+                                    <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>}
+                                </h4>
+                            </div>
+
+
+                            @if (!AngebotCCollapsed)
+                            {
+                                <div class="card-body">
+                                    <p class="text-secondary"> Kunde: xyz</p>
+                                    <p class="text-secondary"> Branche: Branche 1</p>
+                                    <p class="text-secondary"> Erstellungsdatum: 01.01.2000</p>
+                                    <a href="offer" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="offer-edittt" class="btn btn-secondary" type="submit"> Bearbeiten</a>
+                                    <a href="" class="btn btn-secondary" type="submit"> Löschen</a>
+                                </div>
+                            }
+
+                        </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+    public bool AngebotACollapsed { get; set; }
+    public bool AngebotBCollapsed { get; set; }
+    public bool AngebotCCollapsed { get; set; }
+
+    void AngebotAToggle()
+    {
+        AngebotACollapsed = !AngebotACollapsed;
+    }
+    void AngebotBToggle()
+    {
+        AngebotBCollapsed = !AngebotBCollapsed;
+    }
+    void AngebotCToggle()
+    {
+        AngebotCCollapsed = !AngebotCCollapsed;
+    }
+
+}

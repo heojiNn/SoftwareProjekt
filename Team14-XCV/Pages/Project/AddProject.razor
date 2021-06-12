@@ -1,0 +1,318 @@
+@page "/project-add"
+@attribute [Authorize(Roles = "sales, admin")]
+
+
+<div class="container">
+    /project/ edit &lt;project-name&gt;
+
+    <div class="card my-1">
+        <div class="card-header">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h3><label>Projekttitel: </label> </h3>
+                    </div>
+                    <div class="col">
+                        <h3><input placeholder="Projekt A" /></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="form-check">
+                    <div class="card-header">
+                        <h4>
+                            Branche
+                            @if (BrancheCollapsed)
+                            {
+                                <span @onclick="@BrancheToggle" class="oi oi-plus" />
+                            }
+                        </h4>
+
+                    </div>
+                    @if (!BrancheCollapsed)
+                    {
+                        <div class="card-body">
+                            <span @onclick="@BrancheToggle" class="oi oi-minus mr-1" />
+                            <div class="col">
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 1</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 2</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 3</label>
+                            </div>
+                            <div class="col">
+
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 4</label>
+                            </div>
+                            <div class="col">
+
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 5</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> Branche 6</label>
+                            </div>
+
+                        </div>
+                    }
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Laufzeit:
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p><label>Start: </label> </p>
+                                    </div>
+                                    <div class="col">
+                                        <p><input placeholder="01.01.2020" /></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <p><label>Dauer: </label> </p>
+                                    </div>
+                                    <div class="col">
+                                        <p><input placeholder="5 Monate" /></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Projektbeschreibung
+                @if (BeschreibungCollapsed)
+                {
+                    <span @onclick="@BeschreibungToggle" class="oi oi-plus" />}
+            </h4>
+        </div>
+
+        @if (!BeschreibungCollapsed)
+        {
+            <span @onclick="@BeschreibungToggle" class="oi oi-minus mr-1" />
+            <div class="card-body">
+                <div class="form-group">
+                    <textarea class="form-control"></textarea>
+                </div>
+            </div>}
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Projektzweck
+                @if (ZweckCollapsed)
+                {
+                    <span @onclick="@ZweckToggle" class="oi oi-plus" />}
+            </h4>
+        </div>
+
+        @if (!ZweckCollapsed)
+        {
+            <span @onclick="@ZweckToggle" class="oi oi-minus mr-1" />
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p><label>Zweck: </label> </p>
+                                </div>
+                                <div class="col">
+                                    <p><input placeholder="Zweck A" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p><label>Zweck: </label> </p>
+                                </div>
+                                <div class="col">
+                                    <p><input placeholder="Zweck A" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <p><label>Zweck: </label> </p>
+                                </div>
+                                <div class="col">
+                                    <p><input placeholder="Zweck A" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>}
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Projekttätigkeit
+                @if (TaetigkeitCollapsed)
+                {
+                    <span @onclick="@TaetigkeitToggle" class="oi oi-plus" />}
+            </h4>
+        </div>
+
+        @if (!TaetigkeitCollapsed)
+        {
+            <span @onclick="@TaetigkeitToggle" class="oi oi-minus mr-1" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 1</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 2</label>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 3</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 4</label>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 5</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 6</label>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="checkbox" value="" />
+                        <label class="form-check-label"> Tätigkeit 7</label>
+                    </div>
+                </div>
+            </div>}
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Mitarbeiter
+                @if (MitarbeiterCollapsed)
+                {
+                    <span @onclick="@MitarbeiterToggle" class="oi oi-plus" />}
+            </h4>
+        </div>
+
+        @if (!MitarbeiterCollapsed)
+        {
+            <span @onclick="@MitarbeiterToggle" class="oi oi-minus mr-1" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-5">
+                        Mitarbeiter A
+                    </div>
+                    <div class="col-sm-5">
+                        Funktion
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Mitarbeiter B
+                    </div>
+                    <div class="col-sm-5">
+                        Funktion B
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        Mitarbeiter C
+                    </div>
+                    <div class="col-sm-5">
+                        Funktion C
+                    </div>
+                </div>
+
+                <a href="" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Löschen </a>
+                <a href="suche" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
+            </div>}
+    </div>
+
+
+    <a href="project" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Speichern </a>
+    <a href="project" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen </a>
+
+</div>
+
+
+
+@code {
+    public bool BeschreibungCollapsed { get; set; }
+    public bool ZweckCollapsed { get; set; }
+    public bool MitarbeiterCollapsed { get; set; }
+    public bool TaetigkeitCollapsed { get; set; }
+    public bool BrancheCollapsed { get; set; }
+
+    void BeschreibungToggle()
+    {
+        BeschreibungCollapsed = !BeschreibungCollapsed;
+    }
+    void ZweckToggle()
+    {
+        ZweckCollapsed = !ZweckCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+    void TaetigkeitToggle()
+    {
+        TaetigkeitCollapsed = !TaetigkeitCollapsed;
+    }
+    void BrancheToggle()
+    {
+        BrancheCollapsed = !BrancheCollapsed;
+    }
+}
