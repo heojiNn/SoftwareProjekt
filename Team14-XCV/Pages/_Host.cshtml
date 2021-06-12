@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="Team14.styles.css" rel="stylesheet" />
+    <link href="_content/Blazored.Typeahead/blazored-typeahead.css" rel="stylesheet" />
+
+    <script>
+
+        window.setElementText = function afunkt(element, text) {
+            element.innerText = text;
+        }
+
+        window.getElementText = (element) => { return element.innerText; };
+
+    </script>
+
 </head>
 <body>
     <component type="typeof(App)" render-mode="ServerPrerendered" />
@@ -31,5 +43,7 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="_content/Blazored.Typeahead/blazored-typeahead.js"></script>
+
 </body>
 </html>

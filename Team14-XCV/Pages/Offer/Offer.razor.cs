@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Team14.Data;
 
 
 
@@ -16,7 +17,15 @@ namespace Team14.Pages.Offer
 {
     public partial class Offer
     {
+        // Create Employee.
+        public Employee emp;
 
+        // Define selection Booleans. Should later inherit from DocumentConfig.
+        public Boolean a { get; set; } = true;
+        public Boolean b { get; set; } = true;
+        public Boolean c { get; set; } = true;
+        public Boolean d { get; set; } = true;
+        public Boolean e { get; set; } = true;
 
         /*
         * Converts template from byte[] to stream, modify it and return the stream.

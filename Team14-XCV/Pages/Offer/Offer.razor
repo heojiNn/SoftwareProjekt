@@ -62,11 +62,11 @@
                 @if (!HardskillsCollapsed)
                 {
                     <div class="card-body scroll h-100">
-                        
-                            <p> WebStorm </p>
-                            <p> D3.JS</p>
-                            <p> C#</p>
-                        
+
+                        <p> WebStorm </p>
+                        <p> D3.JS</p>
+                        <p> C#</p>
+
 
                     </div>
                 }
@@ -105,11 +105,11 @@
                 @if (!SoftskillsCollapsed)
                 {
                     <div class="card-body scroll h-100">
-                        
-                            <p> Kommunikationsfähigkeit</p>
-                            <p> Problemlösungsfähigkeit</p>
-                            <p> Impulsgeben</p>
-                        
+
+                        <p> Kommunikationsfähigkeit</p>
+                        <p> Problemlösungsfähigkeit</p>
+                        <p> Impulsgeben</p>
+
                     </div>
                 }
             </div>
@@ -195,9 +195,21 @@
     <a href="offer-edittt" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten</a>
     <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Kopieren </button>
     <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", OpenAndModfiyWordprocessingDocument(false),"application/octet-stream"))>
-            Download
+        Download
     </button>
 
+    Simplifizierte Dokumentenkonfiguration:
+
+    Branchenwissen:
+    <input type="checkbox" @bind="@a" />
+    Softskills:
+    <input type="checkbox" @bind="@b" />
+    Hardskills:
+    <input type="checkbox" @bind="@c" />
+    Projekte:
+    <input type="checkbox" @bind="@d" />
+    Projektteilaufgaben:
+    <input type="checkbox" @bind="@e" />
 
 </div>
 

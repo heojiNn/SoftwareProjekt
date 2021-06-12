@@ -1,0 +1,220 @@
+@page "/employee-search"
+@attribute [Authorize(Roles = "sales, admin")]
+
+@inject IProfileService profileService
+@inject ISkillService skillService
+@inject IRoleService roleService
+@inject IFieldService fieldService
+@inject ILanguageService languageService
+@*_Host.cshtml muss hierfür erweitert werden, MIT-Lizenz vorhanden*@
+@using Blazored.Typeahead
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+
+
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3>Mitarbeitersuche</h3>
+        </div>
+    </div>
+    <br />
+    <br />
+
+    <div class="card">
+        <div class="container">
+
+            <br />
+            <br />
+
+            <BlazoredTypeahead SearchMethod="SearchName"
+                               @bind-Value="SelectedEmployee"
+                               EnableDropDown="true"
+                               placeholder="Name">
+                <SelectedTemplate>
+                    @context.FirstName @context.LastName
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.FirstName @context.LastName
+                </ResultTemplate>
+            </BlazoredTypeahead>
+
+            <BlazoredTypeahead SearchMethod="SearchRoles"
+                               @bind-Values="SelectedRoles"
+                               EnableDropDown="true"
+                               placeholder="Rollen">
+                <SelectedTemplate>
+                    @context.Name
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.Name
+                </ResultTemplate>
+            </BlazoredTypeahead>
+
+
+            <BlazoredTypeahead SearchMethod="SearchHardskills"
+                               @bind-Values="SelectedHardskills"
+                               EnableDropDown="true"
+                               placeholder="Hardskills">
+                <SelectedTemplate>
+                    @context.Name
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.Name
+                </ResultTemplate>
+            </BlazoredTypeahead>
+
+            <BlazoredTypeahead SearchMethod="SearchSoftskills"
+                               @bind-Values="SelectedSoftskills"
+                               EnableDropDown="true"
+                               placeholder="Softskills">
+                <SelectedTemplate>
+                    @context.Name
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.Name
+                </ResultTemplate>
+            </BlazoredTypeahead>
+
+
+            <BlazoredTypeahead SearchMethod="SearchFields"
+                               @bind-Values="SelectedFields"
+                               EnableDropDown="true"
+                               placeholder="Branchen">
+                <SelectedTemplate>
+                    @context.Name
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.Name
+                </ResultTemplate>
+            </BlazoredTypeahead>
+
+            <BlazoredTypeahead SearchMethod="SearchLanguages"
+                               @bind-Values="SelectedLanguages"
+                               EnableDropDown="true"
+                               placeholder="Sprachen">
+                <SelectedTemplate>
+                    @context.Name
+                </SelectedTemplate>
+                <ResultTemplate>
+                    @context.Name
+                </ResultTemplate>
+            </BlazoredTypeahead>
+        </div>
+
+        <input type="submit" class="btn btn-secondary" value="Suchen" style="float:right; margin: 3em 1em" @onclick="SearchEmployee">
+    </div>
+
+    @if (showSearch)
+    {
+
+        <div class="card">
+            <table id="myTable">
+
+                <tr class="header">
+                    <th style="width:30%;">Name</th>
+                    <th style="width:70%;"> Fähigkeiten </th>
+                </tr>
+
+                <tbody>
+                    @for (int i = resultList.Count() - 1; i >= 0; --i)
+                    {
+                        <tr>
+                            <td>
+                                <a href="offer-employee-detail-view" style="color:black; text-decoration:none">  @RealValues[i].FirstName @RealValues[i].LastName </a>
+                            </td>
+                            <td>
+                                @if (simpleCounter < 5 && SelectedRoles != null)
+                                {
+                                    @foreach (Role role in RealValues[i].Roles)
+                                    {
+                                        foreach (Role selectedRole in SelectedRoles)
+                                        {
+                                            if (role.Equals(selectedRole))
+                                            {
+                                                simpleAttributesAppend(role.Name);
+                                                simpleCount();
+                                            }
+
+                                        }
+                                    }
+                                }
+                                @if (simpleCounter < 5 && SelectedHardskills != null)
+                                {
+                                    @foreach (Skill skill in RealValues[i].Abilities)
+                                    {
+                                        foreach (Skill selectedSkill in SelectedHardskills)
+                                        {
+                                            if (skill.Equals(selectedSkill))
+                                            {
+                                                simpleAttributesAppend(skill.Name);
+                                                simpleCount();
+                                            }
+                                        }
+                                    }
+                                }
+                                @if (simpleCounter < 5 && SelectedFields != null)
+                                {
+                                    @foreach (Field field in RealValues[i].Fields)
+                                    {
+                                        foreach (Field selectedField in SelectedFields)
+                                        {
+                                            if (field.Equals(selectedField))
+                                            {
+                                                simpleAttributesAppend(field.Name);
+                                                simpleCount();
+                                            }
+                                        }
+                                    }
+                                }
+                                @if (simpleCounter < 5 && SelectedSoftskills != null)
+                                {
+                                    @foreach (Skill skill in RealValues[i].Abilities)
+                                    {
+                                        foreach (Skill selectedSkill in SelectedSoftskills)
+                                        {
+                                            if (skill.Equals(selectedSkill))
+                                            {
+                                                simpleAttributesAppend(skill.Name);
+                                                simpleCount();
+                                            }
+                                        }
+                                    }
+                                }
+                                @if (simpleCounter < 5 && SelectedLanguages != null)
+                                {
+                                    @foreach (Language language in RealValues[i].Languages)
+                                    {
+                                        foreach (Language selectedLanguage in SelectedLanguages)
+                                        {
+                                            if (language.Equals(selectedLanguage))
+                                            {
+                                                simpleAttributesAppend(language.Name);
+                                                simpleCount();
+                                            }
+                                        }
+                                    }
+                                }
+                                @simpleAttributes
+                            </td>
+                        </tr>
+                        simpleCountClear();
+                        simpleAttributeClear();
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    }
+
+</body>
+
+</html>
+
+
