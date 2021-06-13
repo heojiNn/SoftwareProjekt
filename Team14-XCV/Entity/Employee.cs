@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.DataProtection;
+
 
 namespace Team14.Data
 {
@@ -25,6 +25,7 @@ namespace Team14.Data
 
 
 
+        public string Description { get; set; } = "";
         public string Image { get; set; }
 
 
@@ -48,6 +49,10 @@ namespace Team14.Data
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
+
+
+        public bool MadeFirstChangesOnProfile = false;
+        public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>();
 
 
 

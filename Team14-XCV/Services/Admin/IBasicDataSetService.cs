@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -9,49 +8,61 @@ namespace Team14.Data
     public interface IBasicDataSetService
     {
         // Summary:
-        //     Checks the current file on the Server   and returns it.
-        //     will do a  "round trip check"   1-deseriallise 2-check 3-searialise and 4-format
-        //     before
-        //
+        //     Gets the current file from the Server
+        //     and uses ValidateUpdate
         // Returns:
         //     The .json form the server.
+        //
         // Raises:
         //   ChangeResultEvent:
-        //     Info: Der Aktuelle file hat Duplikate die aber nicht stören
-        //     Error: Aktuell ist eine Datein mit folgendem Fehler auf dem Server
-        //     Error: Aktuell ist ein invalid file auf dem Server
-        public string ShowCurrentDataSetAndCheck();
+        //       :  same as {ValidateUpdate(string json)}
+        public string ShowCurrentDataSet();
 
 
         // Summary:
         //     Reads the file and does a round trip validation check
+        //     and uses ValidateUpdate
         // Parameters:
         //   browserFile:
-        //     A File which was uploaded.
+        //
         // Returns:
-        //     the formated content of uploaded-file/
+        //     The formated content of uploaded-file.
+        //
         // Raises:
         //   ChangeResultEvent:
-        //     Info: Die ins Feld geladen Datei hat Duplikate die aber nicht stören
-        //     Error: Die ins Feld geladen Datei hat folgende Fehler
-        //     Error: Die Datei konnte einfach nicht seriallisiert werden
+        //       :  same as {ValidateUpdate(string json)}
         public Task<string> ShowBrowserFileAsync(IBrowserFile browserFile);
 
-        public string UpdateRoundtripCheck(string json);
 
 
         // Summary:
-        //     Checks for consistensy
-        // Parameters:
-        //   treeRoot:
-        //     A Root Category with all Children.
+        //     Checks for consistensy (doubles  format error)
         // Returns:
-        //     The Root Category with all Children.
+        //     the fomated Version of the input
+        //
         // Raises:
-        //   ChangeResultEvent:
-        //     Error: Änderung konnte nicht durchgeführt werden weil
-        //     Error: Änderung wurde übernommen/durchgeführt im System.
-        public void CommitUpdate(string json, bool newVers);
+        //   ChangeResult:
+        //     Info:  Akzeptables Dupllikat ...
+        //     Info:  Fähigkeiten in .. Kategorien
+        // and
+        //     Error: Bei der Deserilisation fiel auf: ...
+        //     Error: Inakzeptables Dupllikat ...
+        public string ValidateUpdate(string json);
+
+        // Summary:
+        //     Checks for consistensy
+        //     an strores a new Version on the Server  if somthing changed
+        // Parameters:
+        //   json:
+        //     a new json
+        //
+        // Raises:
+        //   ChangeResult:
+        //     Error:  same as {ValidateUpdate(string json)}
+        // or
+        //     Succes: "Update erfolgreich. gespeichert unter: {name}."
+        //             "Keine Änderungen zu übernehmen."
+        public void Update(string json);
 
 
         public event EventHandler<ChangeResult> ChangeEventHandel;

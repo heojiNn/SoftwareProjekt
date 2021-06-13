@@ -63,7 +63,14 @@
             </NavLink>
         </li>
 
-
+        <div>
+                <a class="nav-link"  href="fuktional/my-profile" style="font-size: 0.5em;">
+                   Profil
+                </a><br>
+                <a class="nav-link" href="fuktional/edit-profile" style="font-size: 0.5em;">
+                   Profil ändern
+                </a>
+        </div>
 
     </ul>
 </div>
@@ -86,5 +93,5 @@
     {
         await CustomAuthentiProvider.Logout();
         NavigationManager.NavigateTo("/", forceLoad: true);
-    } 
+    }
 }

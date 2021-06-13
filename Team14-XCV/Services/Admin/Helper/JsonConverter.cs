@@ -57,7 +57,7 @@ namespace Team14.Data
                     string categoryName = reader.GetString();
                     reader.Read();
                     if (reader.TokenType != JsonTokenType.StartObject)
-                        throw new JsonException($"Objekt-Schachtel Anfang bei {categoryName}");
+                        throw new JsonException($"fehlender Objekt-Begin({{)  bei {categoryName}");
                     var subCat = JsonSerializer.Deserialize<BasicDataNode>(ref reader, options);
                     // the advantage throu init (good domain) outweigh the extra copy work
                     children.Add(new BasicDataNode()
@@ -74,13 +74,13 @@ namespace Team14.Data
 
             reader.Read();
             if (reader.TokenType != JsonTokenType.EndObject)
-                throw new JsonException($"Objekt-Schachtel Ende");
+                throw new JsonException("fehlender Objekt-Ende (})");
             else
             {
                 return new BasicDataNode()
                 {
                     LongName = longName,
-                    LevelNames = levelNames,
+                    LevelNames = levelNames.ToArray(),
                     Extensions = extensions,
                     Children = elements.Count == 0 ? children : elements
                 };
@@ -141,7 +141,7 @@ namespace Team14.Data
     {
         public override BasicDataLeaf Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return new BasicDataLeaf() { Name = reader.GetString() };
+            return new BasicDataLeaf() { Name = reader.GetString().Trim() };
         }
 
         public override void Write(Utf8JsonWriter writer, BasicDataLeaf value, JsonSerializerOptions options)

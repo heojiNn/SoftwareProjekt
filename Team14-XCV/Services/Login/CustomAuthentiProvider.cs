@@ -82,10 +82,10 @@ namespace Team14.Data
 
 
 
-        public event EventHandler<ValidationResult> ValidationEventHandel;
-        protected virtual void OnValidation(ValidationResult e)
+        public event EventHandler<LoginResult> ValidationEventHandel;
+        protected virtual void OnValidation(LoginResult e)
         {
-            EventHandler<ValidationResult> handler = ValidationEventHandel;
+            EventHandler<LoginResult> handler = ValidationEventHandel;
             handler?.Invoke(this, e);
         }
     }

@@ -4,6 +4,7 @@
   "AcRoles": [],
   "FirstName": "Tina",
   "LastName": "Test",
+  "Description": "",
   "WorkingSince": "2021-06-12T00:00:00+02:00",
   "Roles": [
     {
@@ -16,53 +17,60 @@
     }
   ],
   "Fields": [
-    { "Name": "Banken/Finanzsektor/Versicherung" },
-    { "Name": "Beratung" }
+    {
+      "Name": "Banken/Finanzsektor/Versicherung"
+    },
+    {
+      "Name": "Beratung"
+    }
   ],
   "Languages": [
     {
       "Name": "Deutsch",
-      "Level": "",
-      "PossibleLevels": []
+      "Level": "Primärsprache"
     },
     {
       "Name": "Türkisch",
-      "Level": "",
-      "PossibleLevels": []
+      "Level": "Grundlagen"
     }
   ],
-  "Abillities": [
+  "Abilities": [
     {
       "Name": "C",
       "Category": "Sprachen",
-      "Level": "",
-      "PossibleLevels": [],
-      "Type": 0,
+      "Level": "regelmäßige",
+      "Type": "Hardskill",
       "HasDouble": false
     },
     {
       "Name": ".NET Core",
       "Category": "Frameworks",
-      "Level": "",
-      "PossibleLevels": [],
-      "Type": 0,
-      "HasDouble": false
-    },
-    {
-      "Name": "Kommunikationsfähigkeit",
-      "Category": "menschliches",
-      "Level": "",
-      "PossibleLevels": [],
-      "Type": 1,
+      "Level": "produktiv",
+      "Type": "Hardskill",
       "HasDouble": false
     },
     {
       "Name": "Problemlösungsfähigkeit",
-      "Category": "menschliches",
+      "Category": "",
       "Level": "",
-      "PossibleLevels": [],
-      "Type": 1,
+      "Type": "Softskill",
+      "HasDouble": false
+    },
+    {
+      "Name": "Kommunikationsfähigkeit",
+      "Category": "",
+      "Level": "",
+      "Type": "Softskill",
+      "HasDouble": false
+    },
+    {
+      "Name": "Soziale Kompetenz",
+      "Category": "",
+      "Level": "",
+      "Type": "Softskill",
       "HasDouble": false
     }
-  ]
+  ],
+  "DocumentSettingsList": {},
+  "MadeFirstChangesOnProfile": true
 }

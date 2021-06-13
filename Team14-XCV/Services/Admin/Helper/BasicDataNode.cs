@@ -6,14 +6,14 @@ namespace Team14.Data
 {
     public class BasicDataNode : BasicDataLeaf
     {
+        // Service checkes for not loger than 25
         public new string Name { get; init; } = ""; //set while deseriallising
         public string LongName { get; init; } = ""; //set while deseriallising
 
         public IEnumerable<BasicDataLeaf> Children { get; set; } = new List<BasicDataLeaf>(); //set while deseriallising
 
         public IEnumerable<SkillExtensionValue> Extensions { get; init; } = new List<SkillExtensionValue>(); //set while deseriallising
-
-        public IEnumerable<string> LevelNames{ get; set; } = new List<string>(); // heritage set while cleaning
+        public string [] LevelNames{ get; set; } // heritage set while CheckCombieFunction in Service
 
 
 

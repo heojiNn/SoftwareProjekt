@@ -1,34 +1,45 @@
 @using Microsoft.AspNetCore.Components
 
-<div class="pb-3">
-   <div class="card">
-       <div class="card-header p-2">
-            <button @onclick="Toggle" type="button" class="btn btn-link px-1 py-0" style="text-decoration: none; color: darkred;">
-               <b>@CardHeaderTitle</b>
-            </button>
+<style>
+    .small-inner {
+        padding: 0;
+    }
 
-            @CardHeader
-            <button @onclick="Toggle" type="button" class="btn btn-secondary btn-sm float-right">
-                <span class="@BtnClass"></span>
-            </button>
-        </div>
-        @if (ShowCardBody)
-        {
-            <div class="card-body p-2">
-                @CardBody
-            </div>
-        }
+    .nomall {
+        padding: 10px;
+    }
+</style>
+
+
+<div class="card m-1">
+
+    <div class="card-header @(SmallInner ? "small-inner" : "nomall")" @onclick="Toggle">
+        <span style="@(SmallInner ? "color: #7A212E; font-size: 0.7rem;" : "color: #7A212E; font-size: 1.5rem;")"  > @CardHeaderTitle</span>
+        <span class="@BtnClass"></span>
+        <span class="float-right"> @CardHeader </span>
+
     </div>
+
+    @if (ShowCardBody)
+    {
+        <div class="card-body p-0">
+            @CardBody
+        </div>
+    }
 </div>
 
 @code {
-    [Parameter] public RenderFragment CardBody { get; set; }
-    [Parameter] public RenderFragment CardHeader { get; set; }
     [Parameter] public string CardHeaderTitle { get; set; }
+    [Parameter] public RenderFragment CardHeader { get; set; }
+
+    [Parameter] public RenderFragment CardBody { get; set; }
 
 
+    [Parameter] public bool SmallInner { get; set; } = false;
     [Parameter] public bool ShowCardBody { get; set; } = false;
-    public string BtnClass => ShowCardBody ? "oi oi-chevron-top" : "oi oi-chevron-bottom";
+    
+    public string BtnClass => ShowCardBody ? "oi oi-caret-top" : "oi oi- oi-caret-bottom";
+
     public void Toggle()
     {
         ShowCardBody = !ShowCardBody;
