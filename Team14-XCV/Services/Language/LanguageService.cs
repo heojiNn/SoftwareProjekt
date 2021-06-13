@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
 
@@ -25,62 +25,43 @@ namespace Team14.Data
         }
 
 
+        //---------------------------------Buissines Logic-----------------------------------------
+        // empt
 
 
-        public void UpdateLanguage(IEnumerable<Language> languages)
-        {
-            var json = Serialize(languages);
-            var path = Path.Combine(env.ContentRootPath, subPath, $"languages.json");
-            log.LogWarning($"Language Persitenz wurde geschrieben  {path}");
-            File.WriteAllText(path, json, Encoding.UTF8);
-        }
+
+        //-------------------------------------Persistence-----------------------------------------with json
         //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
+        private readonly string subPath = Path.Combine("jsonPersistierung");
+        private readonly string fileName = "languages.json";
+        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
 
-
-
-
-
-        //-------------------------------------Persistence-----------------------------------------
+        //--read   --------------------------------------------------------------------------------
         public IEnumerable<Language> GetAllLanguages()
         {
-            string path = "";
-            try
-            {
-                path = env.ContentRootFileProvider.GetDirectoryContents(subPath)
-                                         .Where(x => x.Name.StartsWith(fileName))
-                                         .First()
-                                         .PhysicalPath;
-            }
-            catch (IOException e)
-            {
-                log.LogError($"IO Persistense Exception: \t{e.Message}");
-                OnEmptyResult(new() { Message = "Languages konnten nicht geladen werden" });
-            }
-            catch (Exception e) { log.LogError($"UNEXPECTED Exception{e.Message}"); }
-
-            return Deserialize(File.ReadAllText(path)); ;
+            var file = env.ContentRootFileProvider.GetDirectoryContents(subPath)
+                                     .Where(x => x.Name.Equals(fileName))
+                                     .FirstOrDefault();
+            if (file == null)
+                throw new Exception($"Could not reach Persistence: {subPath}/{fileName} \n");
+            return Deserialize(File.ReadAllText(file.PhysicalPath)); ;
         }
-
-        private readonly string subPath = Path.Combine("jsonPersistierung");
-        private readonly string fileName = "languages";
-        readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, };
-        //-------------------------------------------------------------------------------------------------------------
-        private string Serialize(IEnumerable<Language> languages) => JsonSerializer.Serialize(languages, options);
         private IEnumerable<Language> Deserialize(string json) => JsonSerializer.Deserialize<IEnumerable<Language>>(json, options);
 
-        //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
 
 
-
-
-        public event EventHandler<NoResult> SearchEventHandel;
-        protected virtual void OnEmptyResult(NoResult e)
+        //---write --------------------------------------------------------------------------------
+        public void UpdateAllLanguages(IEnumerable<Language> languages)
         {
-            EventHandler<NoResult> handler = SearchEventHandel;
-            handler?.Invoke(this, e);
-        }
+            var json = Serialize(languages);
+            var path = Path.Combine(env.ContentRootPath, subPath, fileName);
+            File.WriteAllText(path, json, Encoding.UTF8);
 
+            log.LogInformation($"All Language updated  Persitence  {fileName}");
+        }
+        private string Serialize(IEnumerable<Language> languages) => JsonSerializer.Serialize(languages, options);
+
+        //-----------------------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------------------
     }
 }

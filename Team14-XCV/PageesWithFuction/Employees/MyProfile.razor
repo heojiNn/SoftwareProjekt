@@ -1,0 +1,205 @@
+@page "/fuktional/my-profile"
+@attribute [Authorize]
+
+@using Team14.Shared.Misc
+
+@inject CustomAuthentiProvider authentiProvider
+@inject IProfileService profileService
+@inject ISkillService skillService
+@inject ILanguageService sprachenService
+
+
+<div class="container-fluid">
+
+
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3>Profil Übersicht von @myProfile.PersoNumber</h3>
+        </div>
+    </div>
+
+
+    @if (!myProfile.MadeFirstChangesOnProfile)
+    {
+        <br>
+        <div class="alert alert-warning" role="alert">
+            Sie habe noch keine Änderungen an ihrem Profil vorgenommen.<br>
+            Bitte tragen Sie die die Informationen möglichst bald ein.<br>
+        </div>
+    }
+
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4> Beschreibung </h4>
+        </div>
+
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="\css\Profil-black.png" alt="Profilbild" class="rounded" style="margin:1em; width:70%">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@myProfile.FirstName &nbsp; @myProfile.LastName</h5>
+                    <p class="card-text" style="min-height: 200px;">
+                    <pre>@myProfile.Description</pre>
+                    </p>
+                    <p class="card-text"><b>Rate Card Level: @myProfile.RCL</b></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row gutters-sm">
+
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Rollen" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Role role in myProfile.Roles)
+                {
+                        @role <br>
+                        }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Skill skill in myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill))
+                {
+                        var withPosLvel = skillService.GetAllSkills().Where(x => x.Name == skill.Name).FirstOrDefault();
+                        int lvlSele = withPosLvel.PossibleLevels.ToList().FindIndex(x => x == skill.Level);
+                        int lvlSelePro = ((int)lvlSele * 100 / (withPosLvel.PossibleLevels.Count() - 1));
+                        @if (skill.HasDouble)
+                        {
+                            @skill.Category<br>
+                        }
+                        @skill.Name
+
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0"
+                                aria-valuemax="100" style="width: @lvlSelePro%;">
+                                @skill.Level
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            <CollapsibleCard CardHeaderTitle="SoftSkills" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Skill skill in myProfile.Abilities.Where(x => x.Type == SkillGroup.Softskill))
+                {
+                        @skill.Name <br>
+                        }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Branchenwissen" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Field field in myProfile.Fields)
+                {
+                        @field <br>
+                        }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+
+
+        <div class="col-sm-6 mb-3">
+            <CollapsibleCard CardHeaderTitle="Sprachen" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Language lang in myProfile.Languages)
+                {
+                        var withPosLvel = sprachenService.GetAllLanguages().Where(x => x.Name ==
+                        lang.Name).FirstOrDefault();
+                        int lvlSele = withPosLvel.PossibleLevels.ToList().FindIndex(x => x == lang.Level);
+                        int lvlSelePro = ((int)lvlSele * 100 / (withPosLvel.PossibleLevels.Count() - 1));
+
+                        @lang.Name
+
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0"
+                                aria-valuemax="100" style="width: @lvlSelePro%;">
+                                @lang.Level
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col-sm-6 mb-3">
+            @{
+                var projects = new Dictionary<string, string[]>();
+                projects.Add("Simens", new string[] { "Projektleiter", "UI-Design" });
+                projects.Add("BMW", new string[] { "Projektleiter", "UI-Design" });
+            }
+            <CollapsibleCard CardHeaderTitle="Projekte" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Projekt</th>
+                                    <th class="text-center">Tätigkeit</th>
+                                </tr>
+                            </thead>
+                            @foreach (var pro in projects)
+                {
+                            <tr>
+                                <td class="pt-3-half"> @pro.Key</td>
+                                <td class="pt-3-half">
+                                    @foreach (var tet in pro.Value)
+                                    {
+                                        @tet <br>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </table>
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+
+        </div>
+    </div>
+
+</div>
+<a href="edit-profile" class="btn btn-secondary"
+    style="background-color: #7A212E; color: white; float: right; margin: 3em 1em"> Bearbeiten</a>
+
+<br>
+<br>
+
+
+@code {
+    private Employee myProfile = new Employee();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await authentiProvider.GetAuthenticationStateAsync();
+
+        myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
+    }
+
+
+
+}

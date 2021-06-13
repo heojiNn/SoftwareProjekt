@@ -19,12 +19,24 @@
 
     <script>
 
-        window.setElementText = function afunkt(element, text) {
+        function scrollTop() {
+            document.documentElement.scrollTop = 0;
+        }
+        function setElementTextId(selector, val) {
+            document.getElementById(selector).innerText = val;
+        }
+        function getSelector(selector) {
+            return document.getElementById(selector).value;
+        }
+
+
+        function setElementText(element, text) {
             element.innerText = text;
         }
 
-        window.getElementText = (element) => { return element.innerText; };
-
+        function getElementText(element) {
+            return element.innerText;
+        };
     </script>
 
 </head>

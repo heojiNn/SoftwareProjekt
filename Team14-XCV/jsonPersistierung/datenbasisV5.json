@@ -8,11 +8,11 @@
     "elements": ["Software Developer","Agile Coach","UI/UX-Designer","Product Owner"]
   },
   "Sprachen": {
-    "levels": ["eloquent","kompetent","verhandlungssicher","fortgeschritten","Grundlagen","Anfänger"],
+    "levels": ["Anfänger","Grundlagen","fortgeschritten","verhandlungssicher","kompetent","Primärsprache"],
     "elements": ["Deutsch","Englisch","Türkisch","Französisch","Spanisch","Italienisch","Russisch","Arabisch","Mandarin","Japanisch"]
   },
   "Skills": {
-    "levels": ["Experte","regelmäßige","produktiv","Hobby"],
+    "levels": ["Hobby","produktiv","regelmäßige","Experte"],
     "Sprachen und Frameworks": {
       "Sprachen": {
         "elements": ["C","C++,","C#","JavaScript","TypeScript","HTML 5","CSS","SASS","LESS","Java","Python","R","SQL","JQuery","Ruby","Visual Basic","Perl","PHP","Swift","CMPL","F#","Function block diagram","Go","GraphQL","Groovy","JML","Kotlin","Objective-C","RUST","ASP.NET Razor","Scala","Structured text","Tcl","MATLAB"]
@@ -49,7 +49,7 @@
       "Virtualisierung": {
         "elements": ["Hyper-V","Vagrant","VirtualBox"]
       },
-      "Server- und Infrastruktur-Management": {
+      "Server-/Infrastruktur-Management": {
         "elements": ["MS SQL Server Management Studio","Apache Tomcat","Puppet","Prometheus","Glassfish","Saltstack","Nagios","Ansible"]
       },
       "QA": {
@@ -88,10 +88,10 @@
         "elements": ["Design Thinking","Wireframes","Personas","Klick-Prototyp","Nutzungskontextanalyse","User-Interviews","User-Testing"]
       },
       "Software Engineering": {
-        "elements": ["REST API Design","Objektorientierte Entwicklung","TDD","Continuous Deployment","Continuous Integration","Agile architecture approach","SOLID","Entwurfsmuster (MVVM, MVC, MVP, GoF...) "]
+        "elements": ["REST API Design","Objektorientierte Entwicklung","TDD","Continuous Deployment","Continuous Integration","Agile architecture approach","SOLID","Entwurfsmuster (MVVM, MVC, MVP, GoF...)"]
       },
       "Modellierung": {
-        "elements": ["Business process modeling and system integration","Domain-driven Design"]
+        "elements": ["Business process modeling/system integration","Domain-driven Design"]
       },
       "Projektmanagement": {
         "elements": ["Riskomanagement","Kosten-Nutzen-Analyse","Change Management","Stakeholder Management","Data Analysis","Design Management","HR Management","Management 3.0","OKR","Liberating Structures","Design Sprint","PMI Projektmanagement","Agile Organisationsentwicklung","Agile Leadership","Systemisches Projektmanagement"]

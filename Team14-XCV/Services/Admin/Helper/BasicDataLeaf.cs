@@ -1,15 +1,14 @@
-using System.Collections.Generic;
 
 
 namespace Team14.Data
 {
     public class BasicDataLeaf
     {
-        // is ^[A-Za-z0-9 .\-_]{2,20}$ on Elements
-        public string Name { get; init; } = "";  //done while deseriallising
+        // Service checkes for not loger than 45
+        public string Name { get; init; } = ""; //set while deseriallising
 
-        public bool HasDouble { get; set; } // set while cleaning
+        public bool HasDouble { get; set; } // set while CheckFunction in Service
 
-        public override string ToString() => $"{Name}- node";
+        public override string ToString() => $"{Name}";
     }
 }

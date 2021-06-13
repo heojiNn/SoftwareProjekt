@@ -1,8 +1,22 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+
+/*hide Change , Validation and NoResult alert containers */
+.alert-container {
+    min-height: 50px;
+  }
+.alert-success, .alert-info {
+    width: 700px;
+    margin-bottom: 0;
+    /* max-width: 800px; */
+}
+.alert-danger {
+    width: 700px;
+}
 .alert:empty {
     display: none;
 }
+/* --- */
 
 html, body {
     font: Antenna-light, sans-serif;

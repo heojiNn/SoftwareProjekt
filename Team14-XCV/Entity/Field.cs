@@ -31,7 +31,7 @@ namespace Team14.Data
             if (obj is Field other)
                 return this.Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Brachen Vergliechen");
+                throw new ArgumentException("Kann nur mit Brachen Vergleichen");
         }
 
     }

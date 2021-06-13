@@ -1,7 +1,7 @@
+@inject IJSRuntime JS
 
 
 @typeparam TItem
-
 <div>
     @if (Data != null)
     {
@@ -9,43 +9,104 @@
         {
             bool Checked = false;
             if (SelectedValues.Contains(item))
-            {
                 Checked = true;
-            }
-            <input type="checkbox" checked=@Checked @onchange="eventArgs => { CheckboxClicked(item.ToString(), eventArgs.Value, item); }" />
+            var nameToShow = TextField.Invoke(item);
 
-            var text = TextField?.Invoke(item);
-             @text
 
-            if (item is Language)
+            if (item is Language langCast)
             {
-                var inpu = item as Language;
-                <select>
-                    @foreach (var value in inpu.PossibleLevels)
-                    {
-                        <option value="@value">@value</option>
-                    }
-                </select>
+                var lvlCount = langCast.PossibleLevels.Count() - 1;
+                var inSelcted = ((ISet<Language>)SelectedValues).Where(x => x.Name == langCast.Name).FirstOrDefault();
+                int lvlSele = inSelcted == null ? 0 : langCast.PossibleLevels.ToList().FindIndex(x => x == inSelcted.Level);
+                <div class="row" style="overflow-x: hidden;">
+
+                    <div class="col-md-5">
+                        <input type="checkbox" checked=@Checked @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                        <span style="min-width: 100px;"> @nameToShow</span>
+                    </div>
+
+                    <div class="col-md-6 @(Checked ? "" : "d-none")">
+                        <div class="form-inline @(lvlSele == -1 ? "bg-secondary" : " ")">
+                            <select class="form-control form-control-sm" id="@nameToShow"    @onchange="@(async e =>{await Refresh(item, e.Value); })">
+                                @for (int i = 0; i <= lvlCount; i++)
+                                {
+                                    <option value="@i"> @langCast.PossibleLevels[i]</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
             }
-            if (item is Skill)
+            if (item is Skill skillCast)
             {
-                var inpu = item as Skill;
-                if (inpu.Type == SkillGroup.Hardskill)
+                if (skillCast.Type == SkillGroup.Hardskill)
                 {
+                    var lvlCount = skillCast.PossibleLevels.Count() - 1;
+                    var inSelcted = ((ISet<Skill>)SelectedValues).Where(x => x.Name == skillCast.Name).FirstOrDefault();
+                    int lvlSele = inSelcted == null ? 0 : skillCast.PossibleLevels.ToList().FindIndex(x => x == inSelcted.Level);
+                    <div class="row m-1" style="overflow-x: hidden;">
 
-                    <select>
-                        @foreach (var value in inpu.PossibleLevels)
-                        {
-                            <option value="@value">@value</option>
-                        }
-                    </select>
+                        <div class="col-md-4  p-0">
+                            <input type="checkbox" checked=@Checked @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                            <span style="min-width: 100px;"> @nameToShow</span>
+                        </div>
+
+                        <div class="col-md-5  p-0 @(Checked ? "" : "d-none")">
+                             <input type="range" class="custom-range w-75 @(lvlSele == -1 ? "bg-secondary" : " ")" min="0"
+                                                                                max="@lvlCount" value="@lvlSele" @onchange="@(async e =>{await Refresh(item, e.Value); })">
+
+                        </div>
+                        <div class="col-md-3 p-0   @(Checked ? "" : "d-none")">
+                            <span id="@nameToShow">    </span>
+                        </div>
+                    </div>
+
                 }
+                else
+                {
+                    <div>
+                        <input type="checkbox" checked=@Checked @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                        <span style="min-width: 100px;"> @nameToShow</span>
+                    </div>
+
+                }
+                if (skillCast.Type == SkillGroup.Hardskill)
+                {
+                if (Checked)
+                {
+                    var inSelcted = ((ISet<Skill>)SelectedValues).Where(x => x.Name == skillCast.Name).FirstOrDefault();
+                    int lvlSele = inSelcted == null ? 0 : skillCast.PossibleLevels.ToList().FindIndex(x => x == inSelcted.Level);
+                    Refresh(item, lvlSele);
+                }
+                }
+
             }
             if (item is Role)
             {
-                <input type="text" id="fname" placeholder="... Jahre Berufserfahrung">
+                <div class="row m-1" style="overflow-x: hidden;">
+                    <div class="col-md-6  p-0">
+                        <input type="checkbox" checked=@Checked @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                        <span style="min-width: 100px;"> @nameToShow</span>
+                    </div>
+
+                    <div class="col-md-6  p-0">
+                        <input type="text" id="fname" disabled placeholder="... Jahrs Berufserfahrung">
+                    </div>
+                </div>
             }
-            <br />
+            if (item is Field) 
+            {
+                <div>
+                    <input type="checkbox" checked=@Checked @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                    <span style="min-width: 100px;"> @nameToShow</span>
+                </div>
+            }
+            if( !( (item is Language) || (item is Skill) || (item is Role) || (item is Field) ) )
+            {
+            <input type="checkbox" checked=@Checked   @onchange="e => { CheckboxClicked(e.Value, item); }" />  
+            @nameToShow <br>  
+            }
         }
     }
 </div>
@@ -62,14 +123,50 @@
     //To Send
     // The array which contains the list of selected checkboxs
     [Parameter] public ISet<TItem> SelectedValues { get; set; }
+    //public Dictionary<string, int> NameLevel { get; set; } = new();
+
+
+
+
+
+
+    public async Task Refresh(TItem itemm, Object val)
+    {
+        if (itemm is Skill skillCast)
+        {
+            foreach (var lvl in skillCast.PossibleLevels)
+                ((ISet<Skill>)SelectedValues).Remove(new Skill() { Category = skillCast.Category, Name = skillCast.Name, Level = lvl });
+
+            skillCast.Level = skillCast.PossibleLevels[Int32.Parse(val.ToString())];
+            ((ISet<Skill>)SelectedValues).Add(skillCast);
+            await JS.InvokeVoidAsync("setElementTextId", skillCast.Name, skillCast.Level);
+        }
+
+        if (itemm is Language lanCast)
+        {
+            foreach (var lvl in lanCast.PossibleLevels)
+                ((ISet<Language>)SelectedValues).Remove(new Language() { Name = lanCast.Name, Level = lvl });
+
+            lanCast.Level = lanCast.PossibleLevels[Int32.Parse(val.ToString())];
+            ((ISet<Language>)SelectedValues).Add(lanCast);
+            //await JS.InvokeVoidAsync("setElementTextId", lanCast.Name, lanCast.Level);
+        }
+    }
+
 
     //Method to update the selected value on click on checkbox
-    public void CheckboxClicked(string aSelectedId, object aChecked, TItem itemm)
+    public void CheckboxClicked(object marked, TItem itemm)
     {
-        if ((bool)aChecked)
-            SelectedValues.Add(itemm);
-        else
+        if (!(bool)marked)
+        {
             SelectedValues.Remove(itemm);
-        //StateHasChanged();
+        }
+        else
+            SelectedValues.Add(itemm);
+
+        Console.WriteLine(String.Join(", ", SelectedValues));
+        StateHasChanged();
     }
+
+
 }

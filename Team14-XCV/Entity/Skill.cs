@@ -42,7 +42,7 @@ namespace Team14.Data
             if (obj is Skill other)
                 return this.Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Skill Vergliechen");
+                throw new ArgumentException("Kann nur mit Skills Vergleichen");
         }
 
     }

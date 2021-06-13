@@ -4,6 +4,7 @@
   "AcRoles": [],
   "FirstName": "Max",
   "LastName": "Muster",
+  "Description": "tst",
   "WorkingSince": "2021-06-12T00:00:00+02:00",
   "Roles": [
     {
@@ -16,19 +17,21 @@
     }
   ],
   "Fields": [
-    { "Name": "Architektur/Bau/Immobilien" }
+    {
+      "Name": "Architektur/Bau/Immobilien"
+    }
   ],
   "Languages": [
     {
       "Name": "Deutsch",
-      "Level": "",
-      "PossibleLevels": []
+      "Level": "Primärsprache"
     },
     {
       "Name": "Spanisch",
-      "Level": "",
-      "PossibleLevels": []
+      "Level": "Anfänger"
     }
   ],
-  "Abillities": []
+  "Abilities": [],
+  "DocumentSettingsList": {},
+  "MadeFirstChangesOnProfile": true
 }

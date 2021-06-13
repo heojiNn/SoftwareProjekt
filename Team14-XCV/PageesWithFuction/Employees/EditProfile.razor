@@ -1,0 +1,306 @@
+@page "/fuktional/edit-profile"
+@attribute [Authorize]
+
+
+@using Team14.Shared.Misc
+
+@inject IJSRuntime JS
+@inject CustomAuthentiProvider authentiProvider
+@inject IProfileService profileService
+
+@inject ISkillService skillService
+@inject ILanguageService sprachenService
+@inject IFieldService fieldService
+@inject IRoleService roleService
+
+
+
+<div class="container-fluid">
+
+    <u><b>@myProfile.PersoNumber</b></u>
+    <div class="card my-1">
+        <div class="card-header">
+            <br>
+        </div>
+    </div>
+
+    <!--Beschreibung Beginn-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4> Beschreibung </h4>
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="\Profil-black2.png" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
+                    <button type="submit" class="btn btn-secondary" style="margin:1em;">Bild hochladen</button>
+                </div>
+                <div class="col-md-8">
+                    <!--Large lg ≥992px  Ist es eine Reihe -->
+                    <!-- Small sm ≥576px  Sind es 2 Reihen-->
+                    <div class="form-group row">
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname</label>
+                        <div class="col-md-6 col-xl-4 ">
+                            <input class="form-control" id="inputFirstName" @bind="@myProfile.FirstName"
+                                @onkeydown="KeyHandler">
+                        </div>
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputLastName">Nachname</label>
+                        <div class="col-md-6 col-xl-4">
+                            <input class="form-control" id="inputLastName" @bind="@myProfile.LastName"
+                                @onkeydown="KeyHandler">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputRcl">Profil Beschreibung</label>
+                        <textarea class="form-control rounded-0" id="inDescription" rows="6"
+                            @bind="@myProfile.Description"></textarea>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-3" for="inputRcl">Rate-Card-Level</label>
+                        <div class="col-3 ">
+                            <input @bind="@myProfile.RCL" class="form-control" id="inputRcl" @onkeydown="KeyHandler">
+                        </div>
+                    </div>
+                    Angestellt seit @myProfile.WorkingSince.Date.ToString("dd.MM.yyyy")
+                    <br>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            @{
+                var allRoles = roleService.GetAllRoles();
+            }
+            <CollapsibleCard CardHeaderTitle="Rollen">
+                <CardBody>
+                    <div class="scroll" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allRoles" TextField="@((item)=>item.Name.ToString())"
+                            SelectedValues="myProfile.Roles" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+        <div class="col-sm-6 mb-3">
+            @{
+                var allFields = fieldService.GetAllFields();
+            }
+            <CollapsibleCard CardHeaderTitle="Felder">
+                <CardBody>
+                    <div class="scroll" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allFields" TextField="@((item)=>item.Name.ToString())"
+                            SelectedValues="myProfile.Fields" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            @{
+                var allLanguages = sprachenService.GetAllLanguages();
+            }
+            <CollapsibleCard CardHeaderTitle="Sprachen">
+                <CardBody>
+                    <div class="scroll" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allLanguages" TextField="@((item)=>item.Name.ToString())"
+                            SelectedValues="myProfile.Languages" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+        <div class="col-sm-6 mb-3">
+            @{
+                var allSoftSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill);
+            }
+            <CollapsibleCard CardHeaderTitle="SoftSkils">
+                <CardBody>
+                    <div class="scroll" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allSoftSkills" TextField="@((item)=>item.Name.ToString())"
+                            SelectedValues="myProfile.Abilities" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            @{
+                var allHardSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill);
+                ISet<string> allCategories = allHardSkills.Select((x) => x.Category).ToHashSet();
+            }
+            <CollapsibleCard CardHeaderTitle="Skills ">
+                <CardHeader> <input type="text" id="skillsuche" disabled placeholder="durchsuchen"></CardHeader>
+                <CardBody>
+                    <div class="scroll2">
+                        @foreach (string catName in allCategories)
+                {
+                        var allinCat = allHardSkills.Where((x => x.Category.Equals(catName)));
+                        <CollapsibleCard CardHeaderTitle="@catName" SmallInner="true">
+                            <CardBody>
+                                <div class="scroll" style="overflow-x: hidden;">
+                                    <CheckBoxList Data="@allinCat" TextField="@((item)=>item.Name.ToString())"
+                                        SelectedValues="myProfile.Abilities" />
+                                </div>
+                            </CardBody>
+                        </CollapsibleCard>
+                        }
+                    </div>
+                </CardBody>
+
+            </CollapsibleCard>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            @{
+                var projects = new Dictionary<string, string[]>();
+                projects.Add("Simens", new string[] { "Projektleiter", "UI-Design" });
+                projects.Add("BMW", new string[] { "Projektleiter", "UI-Design" });
+            }
+            <CollapsibleCard CardHeaderTitle="Projekte ">
+                <CardBody>
+                    <div class="scroll">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Projekt</th>
+                                    <th class="text-center">Tätigkeit</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            @foreach (var pro in projects)
+                {
+                            <tr>
+                                <td class="pt-3-half"> @pro.Key</td>
+                                <td class="pt-3-half">
+                                    @foreach (var tet in pro.Value)
+                                    {
+                                        @tet <br>
+                                    }
+                                </td>
+                                <td>
+                                    <span class="table-remove">
+                                        <a href="" class="btn btn-secondary" type="submit">
+                                            Löschen
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            }
+                        </table>
+                    </div>
+                </CardBody>
+
+            </CollapsibleCard>
+        </div>
+    </div>
+</div>
+
+<button type="submit" class="btn btn-primary" @onclick="Validate">
+    Änderungen speichern
+</button>
+
+<br>
+<br>
+<br>
+
+<Modal @ref="modal">
+    <Title>Sie haben folgende Änderungen vogenommen</Title>
+
+    <Body>
+        <div class="alert alert-success" role="alert">
+            @changeInfo?.SuccesMessage
+        </div>
+        <ul class="alert alert-danger" role="alert">
+            @foreach (string line in changeInfo.ErrorMessages)
+                {
+            <li>
+                <pre>@line</pre>
+            </li>
+            }
+        </ul>
+        <ul class="alert alert-info" role="alert">
+            @foreach (string line in changeInfo.InfoMessages)
+                {
+            <li>
+                <pre>@line</pre>
+            </li>
+            }
+        </ul>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" @onclick="UpdateProfile">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+            @onclick="() => modal.Close()">Schliesen</button>
+    </Footer>
+</Modal>
+
+
+
+@code {
+
+    private Modal modal { get; set; }
+
+    private Employee myProfile = new Employee();
+    private ChangeResult changeInfo = new();
+
+
+    // Get current User
+    // and registrate to the profileService to get ChangeEvents
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await authentiProvider.GetAuthenticationStateAsync();
+
+        myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
+        profileService.ChangeEventHandel += OnChangeReturnEvent;
+    }
+
+
+    private void Validate()
+    {
+        profileService.ValidateUpdate(myProfile);
+        modal.Open();
+    }
+    private async void UpdateProfile()
+    {
+        if (changeInfo.InfoMessages.Any() && !changeInfo.ErrorMessages.Any())
+        {
+            profileService.Update(myProfile);
+            await JS.InvokeVoidAsync("scrollTop");
+        }
+    }
+
+
+    public void KeyHandler(KeyboardEventArgs e)
+    {
+        profileService.ValidateUpdate(myProfile);
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            if (changeInfo.InfoMessages.Any() && !changeInfo.ErrorMessages.Any())
+            {
+                Validate();
+            }
+        }
+    }
+
+
+
+
+
+
+
+    private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
+}

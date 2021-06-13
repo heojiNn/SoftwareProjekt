@@ -37,6 +37,8 @@
             <tr>
                 <th>Personal Number</th>
                 <th>Password</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
                 <th>Zugriffs Rollen</th>
             </tr>
             @foreach (Team14.Data.Employee ac in accountService.ShowAllProfiles())
@@ -45,6 +47,8 @@
                 <tr>
                     <td @onclick="@(e => formData.PersoNumber = ac.PersoNumber)"> @ac.PersoNumber </td>
                     <td @onclick="@(e => formData.Password = ac.Password)"> @ac.Password</td>
+                    <td> @ac.FirstName</td>
+                    <td> @ac.LastName</td>
                     <td> @roles</td>
                 </tr>
             }
@@ -54,8 +58,8 @@
 
 
 @code {
-    private Team14.Data.Employee formData = new Team14.Data.Employee();
-    private ValidationResult validationInfo;
+    private Employee formData = new Employee();
+    private LoginResult validationInfo;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,5 +78,5 @@
 
 
 
-    private void OnValidationReturn(object sender, ValidationResult e) => validationInfo = e;
+    private void OnValidationReturn(object sender, LoginResult e) => validationInfo = e;
 }

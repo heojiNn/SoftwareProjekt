@@ -37,10 +37,11 @@
             <input @bind="@newOne.Password" class="form-control" id="pw" />
         </td>
         <td @onclick="StateHasChanged">
+             <br>
             @{
                 List<AccessRole> allRoles = new() { AccessRole.Sales, AccessRole.Admin };
             }
-            <CheckBoxList Data="@allRoles" TextField="@((item)=>item.ToString())" SelectedValues="newOne.AcRoles" />
+            <CheckBoxList Data="@allRoles" TextField="@( item => item.ToString() )" SelectedValues="newOne.AcRoles" />
         </td>
         <td class="form-group">
             <label for="fName">Vorname</label>
@@ -52,33 +53,42 @@
             <input @bind="@newOne.LastName" class="form-control" id="name" />
         </td>
         <td>
+            <br>
             <input @bind="@startDate" />
+            <br>
         </td>
     </tr>
-    <input type="submit" class="btn btn-primary" value="Hinzufügen:" @onclick="Create" />
+    <input type="submit" class="btn btn-primary" value="Hinzufügen" @onclick="Create" />
 </table>
 
-<br>
-<br>
-<ul class="alert alert-info" role="alert">
-    @foreach (string line in changeInfo?.InfoMessages ?? new string[] { })
+
+<ul class="alert alert-danger" role="alert">
+    @foreach (string line in changeInfo.ErrorMessages)
     {
-        <li>@line</li>
+        <li>
+            <pre>@line</pre>
+        </li>
     }
 </ul>
-<div class="alert alert-success" role="alert">
-    @changeInfo?.SuccesMessage
+<div class="alert-container">
+    <div class="alert alert-success" role="alert">
+        @changeInfo?.SuccesMessage
+    </div>
 </div>
-<div class="alert alert-danger" role="alert">
-    @changeInfo?.ErrorMessage
-</div>
-
+<ul class="alert alert-info" role="alert">
+    @foreach (string line in changeInfo.InfoMessages)
+    {
+        <li>
+            <pre>@line</pre>
+        </li>
+    }
+</ul>
 
 @code {
     private Employee newOne = new Employee();
     private DateTime startDate = DateTime.Now.Date;
-    private ChangeResult changeInfo;
 
+    private ChangeResult changeInfo = new();
     protected override void OnInitialized()
     {
         accountService.ChangeEventHandel += OnChangeReturn;
@@ -87,7 +97,7 @@
 
     private void Create()
     {
-        Employee copy = new()/// copy cause Working sinc is readonly(init)
+        Employee copy = new()/// copy cause working-since is readonly(init)
         {
             PersoNumber = newOne.PersoNumber,
             Password = newOne.Password,

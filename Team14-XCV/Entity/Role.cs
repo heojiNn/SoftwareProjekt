@@ -37,7 +37,7 @@ namespace Team14.Data
             if (obj is Role other)
                 return this.Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Rolle Vergliechen");
+                throw new ArgumentException("Kann nur mit Rollen Vergleichen");
         }
 
     }

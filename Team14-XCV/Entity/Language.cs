@@ -1,8 +1,6 @@
 using System;
 
 
-
-
 namespace Team14.Data
 {
     public class Language : IComparable
@@ -10,7 +8,7 @@ namespace Team14.Data
         public string Name { get; init; } = "";
 
 
-        public string Level { get; init; } = "";
+        public string Level { get; set; } = "";
         public string[] PossibleLevels { get; set; }
 
 
@@ -18,9 +16,7 @@ namespace Team14.Data
 
 
 
-
-
-        public override string ToString() => $"{Name}-AufNive-{Level}";
+        public override string ToString() => $"{Name}-Niveau-{Level}";
 
         public override bool Equals(object obj)
         {
@@ -38,9 +34,9 @@ namespace Team14.Data
             if (obj is Language other)
                 return this.Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Sprachen Vergliechen");
+                throw new ArgumentException("Kann nur mit Sprachen Vergleichen");
         }
-
 
     }
 }
+
