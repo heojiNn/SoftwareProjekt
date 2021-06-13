@@ -1,7 +1,7 @@
-@page "/offer-edittt"
+@page "/create-offer"
 @attribute [Authorize(Roles = "sales, admin")]
 
-@page "/angebotbearbeiten"
+@page "/angeboterstellen"
 
 @inject ISkillService skillService
 @inject IFieldService fieldService
@@ -360,7 +360,7 @@
 
 
 
-    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
+    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Hinzufügen</a>
     <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
 
 
@@ -393,6 +393,5 @@
      function updateTextInput9(val) {
           document.getElementById('textInput9').value=val;
         }</script>
-
 
 

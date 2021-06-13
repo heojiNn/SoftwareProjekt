@@ -1,15 +1,7 @@
-.pt-3-half {
-    padding-top: 1.4rem;
-}
-
 #textInput1, #textInput2, #textInput3, #textInput4 {
     display: inline;
     background-color: white;
     border-style: none;
     font-weight: bold;
     color: black;
-}
-
-#RCLevel {
-    display: inline;
 }

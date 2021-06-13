@@ -3,7 +3,7 @@
 
 
 <div class="container">
-    /project/ edit &lt;project-name&gt;
+    <!--/project/ edit &lt;project-name&gt;-->
 
     <div class="card my-1">
         <div class="card-header">
@@ -13,76 +13,101 @@
                         <h3><label>Projekttitel: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input placeholder="Projekt A" /></h3>
+                        <h3><input class="form-control" placeholder="Projekt A" /></h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row gutters-sm">
-        <div class="col-sm-6 mb-3">
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">        
+        <div class="col">
             <div class="card">
-                <div class="form-check">
-                    <div class="card-header">
-                        <h4>
-                            Branche
-                            @if (BrancheCollapsed)
-                            {
-                                <span @onclick="@BrancheToggle" class="oi oi-plus" />
-                            }
-                        </h4>
 
-                    </div>
-                    @if (!BrancheCollapsed)
-                    {
-                        <div class="card-body">
-                            <span @onclick="@BrancheToggle" class="oi oi-minus mr-1" />
-                            <div class="col">
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 1</label>
-                            </div>
-                            <div class="col">
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 2</label>
-                            </div>
-                            <div class="col">
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 3</label>
-                            </div>
-                            <div class="col">
-
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 4</label>
-                            </div>
-                            <div class="col">
-
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 5</label>
-                            </div>
-                            <div class="col">
-                                <input type="checkbox" value="" />
-                                <label class="form-check-label"> Branche 6</label>
-                            </div>
-
-                        </div>
-                    }
-
-
+                <div class="card-header">
+                    <h4>
+                        Branche
+                        @if (BrancheCollapsed)
+                        {
+                            <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+                        @if (!BrancheCollapsed)
+                        {
+                            <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
 
                 </div>
+                @if (!BrancheCollapsed)
+                {
+                    <div class="card-body">
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Architektur/Bau/Immobilien</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Automobil</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Banken/Finanzierung/Versicherung</label>
+                        </div>
+                        <div class="col">
 
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Chemie</label>
+                        </div>
+                        <div class="col">
+
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Medizin</label>
+                        </div>
+                        <div class="col">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> Metallbau</label>
+                        </div>
+
+                    </div>
+                }
             </div>
         </div>
 
-        <div class="col-sm-6 mb-3">
+        <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <div class="row">
-                        <div class="col">
-                            <h4>
-                                Laufzeit:
-                            </h4>
-                        </div>
+
+                    <h4>
+                        Laufzeit
+                        @if (LaufzeitCollapsed)
+                        {
+                            <svg @onclick="@LaufzeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+                        @if (!LaufzeitCollapsed)
+                        {
+                            <svg @onclick="@LaufzeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                    </h4>
+                </div>
+                @if (!LaufzeitCollapsed)
+                {
+                    <div class="card-body">
                         <div class="col">
                             <div class="form-group">
                                 <div class="row">
@@ -90,7 +115,7 @@
                                         <p><label>Start: </label> </p>
                                     </div>
                                     <div class="col">
-                                        <p><input placeholder="01.01.2020" /></p>
+                                        <p><input class="form-control" type="date" placeholder="01.01.2020" /></p>
                                     </div>
                                 </div>
                             </div>
@@ -100,32 +125,320 @@
                                         <p><label>Dauer: </label> </p>
                                     </div>
                                     <div class="col">
-                                        <p><input placeholder="5 Monate" /></p>
+                                        <p><input class="form-control" placeholder="5 Monate" /></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                }
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card">
+
+                    <div class="card-header">
+                        <h4>
+                            Projektbeschreibung
+
+                            @if (BeschreibungCollapsed)
+                            {
+                                <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+
+                            }
+
+                            @if (!BeschreibungCollapsed)
+                            {
+                                <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+
+                        </h4>
+
+                    </div>
+                    @if (!BeschreibungCollapsed)
+                    {
+                        <div class="card-body">
+                            <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="8">
+Laufzeit: 22.05.2019- 22.05.2022
+Branche: UI-Design
+Ziel ist es, die Siemens.de Homepage auf ein aktuelles, dem Jahr 2022 gerechten Stand zu bringen, mit den aktuellsten JavaScript und Boostrap Funktionen
+                </textarea>
+                        </div>
+                    }
+
+
+
+
+
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Projektzweck
+
+                            @if (ZweckCollapsed)
+                            {
+                                <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+
+                            }
+
+                            @if (!ZweckCollapsed)
+                            {
+                                <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+
+                        </h4>
+                    </div>
+
+                    @if (!ZweckCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            <div class="card-body ">
+                                <b><label for="Projektzweck 1">Projektzweck 1</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Modernisierung" />
+                                <p></p>
+                                <b><label for="Projektzweck 2">Projektzweck 2</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Benutzerfreundlichkeit erhöhen" />
+                                <p></p>
+                                <b><label for="Proejktzweck 3">Projektzweck 3</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Effizienzverbesserung" />
+                                <p></p>
+                            </div>
+                        </div>}
+                </div>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Projekttätigkeit
+
+                            @if (TaetigkeitCollapsed)
+                            {
+                                <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+
+                            }
+
+                            @if (!TaetigkeitCollapsed)
+                            {
+                                <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+
+                        </h4>
+                    </div>
+
+                    @if (!TaetigkeitCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            <div class="card-body ">
+                                <b><label for="Projektzweck 1">Projekttätigkeit 1</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Frontendentwicklung mit Angular" />
+                                <p></p>
+                                <b><label for="Projektzweck 2">Projekttätigkeit 2</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Frontendentwicklung mit Typescript" />
+                                <p></p>
+                                <b><label for="Proejktzweck 3">Projekttätigkeit 3</label></b>
+                                <input type="text" class="form-control" style="width: 400px;"
+                                       placeholder="Redesign mit Materialize" />
+                                <p></p>
+                            </div>
+                        </div>}
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Mitarbeiter
+
+                            @if (MitarbeiterCollapsed)
+                            {
+                                <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+
+                            }
+
+                            @if (!MitarbeiterCollapsed)
+                            {
+                                <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+
+                        </h4>
+                    </div>
+
+                    @if (!MitarbeiterCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Mitarbeiter A
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Mitarbeiter B
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="offer-one-maan-edit" style="color:black"> Profil anzeigen</a>
+
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Mitarbeiter C
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header">
+                                        Mitarbeiter D
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em">
+                                Löschen
+                            </button>
+                            <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em">
+                                Hinzufügen
+                            </a>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
 
 
+    
 
-    </div>
-    <div class="card">
+
+
+    <a href="project" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Speichern </a>
+    <a href="project" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen </a>
+
+</div>
+
+
+
+@code {
+    public bool BeschreibungCollapsed { get; set; }
+    public bool ZweckCollapsed { get; set; }
+    public bool MitarbeiterCollapsed { get; set; }
+    public bool TaetigkeitCollapsed { get; set; }
+    public bool BrancheCollapsed { get; set; }
+    public bool LaufzeitCollapsed { get; set; }
+
+    void BeschreibungToggle()
+    {
+        BeschreibungCollapsed = !BeschreibungCollapsed;
+    }
+    void ZweckToggle()
+    {
+        ZweckCollapsed = !ZweckCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+    void TaetigkeitToggle()
+    {
+        TaetigkeitCollapsed = !TaetigkeitCollapsed;
+    }
+    void BrancheToggle()
+    {
+        BrancheCollapsed = !BrancheCollapsed;
+    }
+    void LaufzeitToggle()
+    {
+        LaufzeitCollapsed = !LaufzeitCollapsed;
+    }
+}
+
+
+<!--<div class="card">
         <div class="card-header">
             <h4>
                 Projektbeschreibung
                 @if (BeschreibungCollapsed)
                 {
-                    <span @onclick="@BeschreibungToggle" class="oi oi-plus" />}
+                    <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!BeschreibungCollapsed)
+                {
+                    <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
             </h4>
         </div>
 
         @if (!BeschreibungCollapsed)
         {
-            <span @onclick="@BeschreibungToggle" class="oi oi-minus mr-1" />
             <div class="card-body">
                 <div class="form-group">
                     <textarea class="form-control"></textarea>
@@ -135,16 +448,26 @@
     <div class="card">
         <div class="card-header">
             <h4>
-                Projektzweck
+                Projektzwecke
                 @if (ZweckCollapsed)
                 {
-                    <span @onclick="@ZweckToggle" class="oi oi-plus" />}
+                    <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!ZweckCollapsed)
+                {
+                    <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
             </h4>
         </div>
 
         @if (!ZweckCollapsed)
         {
-            <span @onclick="@ZweckToggle" class="oi oi-minus mr-1" />
             <div class="card-body">
                 <ul>
                     <li>
@@ -154,7 +477,7 @@
                                     <p><label>Zweck: </label> </p>
                                 </div>
                                 <div class="col">
-                                    <p><input placeholder="Zweck A" /></p>
+                                    <p><input placeholder="Zweck 1" /></p>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +489,7 @@
                                     <p><label>Zweck: </label> </p>
                                 </div>
                                 <div class="col">
-                                    <p><input placeholder="Zweck A" /></p>
+                                    <p><input placeholder="Zweck 2" /></p>
                                 </div>
                             </div>
                         </div>
@@ -178,7 +501,7 @@
                                     <p><label>Zweck: </label> </p>
                                 </div>
                                 <div class="col">
-                                    <p><input placeholder="Zweck A" /></p>
+                                    <p><input placeholder="Zweck 3" /></p>
                                 </div>
                             </div>
                         </div>
@@ -189,16 +512,26 @@
     <div class="card">
         <div class="card-header">
             <h4>
-                Projekttätigkeit
+                Projekttätigkeiten
                 @if (TaetigkeitCollapsed)
                 {
-                    <span @onclick="@TaetigkeitToggle" class="oi oi-plus" />}
+                    <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!TaetigkeitCollapsed)
+                {
+                    <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
             </h4>
         </div>
 
         @if (!TaetigkeitCollapsed)
         {
-            <span @onclick="@TaetigkeitToggle" class="oi oi-minus mr-1" />
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-3">
@@ -242,13 +575,23 @@
                 Mitarbeiter
                 @if (MitarbeiterCollapsed)
                 {
-                    <span @onclick="@MitarbeiterToggle" class="oi oi-plus" />}
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
             </h4>
         </div>
 
         @if (!MitarbeiterCollapsed)
         {
-            <span @onclick="@MitarbeiterToggle" class="oi oi-minus mr-1" />
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-5">
@@ -275,44 +618,7 @@
                     </div>
                 </div>
 
-                <a href="" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Löschen </a>
+                <a href="" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Entfernen </a>
                 <a href="suche" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
             </div>}
-    </div>
-
-
-    <a href="project" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Speichern </a>
-    <a href="project" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen </a>
-
-</div>
-
-
-
-@code {
-    public bool BeschreibungCollapsed { get; set; }
-    public bool ZweckCollapsed { get; set; }
-    public bool MitarbeiterCollapsed { get; set; }
-    public bool TaetigkeitCollapsed { get; set; }
-    public bool BrancheCollapsed { get; set; }
-
-    void BeschreibungToggle()
-    {
-        BeschreibungCollapsed = !BeschreibungCollapsed;
-    }
-    void ZweckToggle()
-    {
-        ZweckCollapsed = !ZweckCollapsed;
-    }
-    void MitarbeiterToggle()
-    {
-        MitarbeiterCollapsed = !MitarbeiterCollapsed;
-    }
-    void TaetigkeitToggle()
-    {
-        TaetigkeitCollapsed = !TaetigkeitCollapsed;
-    }
-    void BrancheToggle()
-    {
-        BrancheCollapsed = !BrancheCollapsed;
-    }
-}
+    </div>-->
