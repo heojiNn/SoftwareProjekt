@@ -1,5 +1,10 @@
 @page "/change-data-set"
 @attribute [Authorize(Roles = "admin,")]
+@using Microsoft.AspNetCore.Hosting
+
+@inject IWebHostEnvironment Environment
+@inject IJSRuntime JS
+@inject IBasicDataSetService dataSetService
 <style>
     .outerbox.invalid {
         border: 2px solid orange;
@@ -17,81 +22,84 @@
         overflow: scroll;
     }
 </style>
-
-@using Microsoft.AspNetCore.Hosting
-
-@inject IWebHostEnvironment Environment
-@inject IJSRuntime JS
-@inject IBasicDataSetService dataSetService
+<div class="container-fluid">
 
 
-<b>Datenbasis: ändern</b>
-
-<div class="alert-container">
-    <div class="alert alert-success" role="alert">
-        @changeInfo?.SuccesMessage
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3>Verwaltung der Datenbasis </h3>
+        </div>
     </div>
-</div>
-<button @onclick="LoadFromServer" class="btn btn-primary">letzte Version vom Server laden</button> &nbsp; &nbsp;
-oder &nbsp; &nbsp;
-<InputFile OnChange="@ShowUploadInEditArea" class="btn btn-sm btn-primary" />
-<br>
-<br>
 
-<div class="outerbox @(validJson ? "" : "invalid")">
-    <pre @ref="datenBField" @onkeyup="Validate" class="editbox" contenteditable="true">
+
+
+
+
+    <div class="alert-container">
+        <div class="alert alert-success" role="alert">
+            @changeInfo?.SuccesMessage
+        </div>
+    </div>
+    <button @onclick="LoadFromServer" class="btn btn-primary">letzte Version vom Server laden</button> &nbsp; &nbsp;
+    oder &nbsp; &nbsp;
+    <InputFile OnChange="@ShowUploadInEditArea" class="btn btn-sm btn-primary" />
+    <br>
+    <br>
+
+    <div class="outerbox @(validJson ? "" : "invalid")">
+        <pre @ref="datenBField" @onkeyup="Validate" class="editbox" contenteditable="true">
 
 
 <span style="color:#a00;">{</span>
   "Felder"<span style="color:#a00;">: {</span>
     "long": "Branchenwissen",
     "elements"<span style="color:#a00;">: [</span>"Architektur","Automobil","Banken"<span style="color:#a00;">]</span>
-  <span style="color:#a00;">}</span>,
+        <span style="color:#a00;">}</span>,
   "Rollen"<span style="color:#a00;">: {</span>
     "extensions"<span style="color:#a00;">: [</span>"Periode"<span style="color:#a00;">]</span>,
     "elements"<span style="color:#a00;">: [</span>"Software Developer","Agile Coach","UI/UX-Designer","Product Owner"<span style="color:#a00;">]</span>
-  <span style="color:#a00;">}</span>,
+        <span style="color:#a00;">}</span>,
   "Sprachen"<span style="color:#a00;">: </span>
     "elements"<span style="color:#a00;">: [</span>"Deutsch","Englisch"<span style="color:#a00;">]</span>
-  <span style="color:#a00;">}</span>,
+        <span style="color:#a00;">}</span>,
   "Skills"<span style="color:#a00;">: </span>
     "levels"<span style="color:#a00;">: [</span>"Experte","regelmäßige","produktiv","Hobby"<span style="color:#a00;">]</span>,
     "Sprachen und Frameworks"<span style="color:#a00;">: {</span>
       "Sprachen"<span style="color:#a00;">: {</span>
         "elements"<span style="color:#a00;">: [</span>"C","C++","C#","JavaScript","TypeScript"<span style="color:#a00;">]</span>
-      <span style="color:#a00;">}</span>
-    <span style="color:#a00;">}</span>
-  <span style="color:#a00;">}</span>
+        <span style="color:#a00;">}</span>
+        <span style="color:#a00;">}</span>
+        <span style="color:#a00;">}</span>
 <span style="color:#a00;">}</span>
     </pre>
+    </div>
+    <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
+        Version auf dem Server auswechseln
+    </button>
+    <br>
+
+    <ul class="alert alert-danger" role="alert">
+        @foreach (string line in changeInfo.ErrorMessages)
+        {
+            <li>
+                <pre>@line</pre>
+            </li>
+        }
+    </ul>
+    <ul class="alert alert-info" role="alert">
+        @foreach (string line in changeInfo.InfoMessages)
+        {
+            <li>
+                <pre>@line</pre>
+            </li>
+        }
+    </ul>
+
+
+    <br>
+    <br>
+
 </div>
-<button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
-    Version auf den Server auswechseln
-</button>
-<br>
-
-<ul class="alert alert-danger" role="alert">
-    @foreach (string line in changeInfo.ErrorMessages)
-    {
-        <li>
-            <pre>@line</pre>
-        </li>
-    }
-</ul>
-<ul class="alert alert-info" role="alert">
-    @foreach (string line in changeInfo.InfoMessages)
-    {
-        <li>
-            <pre>@line</pre>
-        </li>
-    }
-</ul>
-
-
-<br>
-<br>
-
-
 @code {
     private ElementReference datenBField;
     private ChangeResult changeInfo = new();
@@ -132,7 +140,7 @@ oder &nbsp; &nbsp;
     // for Info and Error on LoadFromServer
     // for Info and Error on Show upload file in EditArea
     // for Info and Error on FieldChange
-    
+
     // for Error or Succes on Upload
 
     private void OnChange(object sender, ChangeResult e)
