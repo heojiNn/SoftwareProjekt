@@ -17,24 +17,48 @@ namespace Team14.Pages.Offer
 {
     public partial class Offer
     {
-        // Create Employee.
-        public Employee emp;
+        //===========================================================================================================================================//
 
-        // Define selection Booleans. Should later inherit from DocumentConfig.
-        public Boolean a { get; set; } = true;
-        public Boolean b { get; set; } = true;
-        public Boolean c { get; set; } = true;
-        public Boolean d { get; set; } = true;
-        public Boolean e { get; set; } = true;
+        // Dokumentenkonfiguration: TODO: (needs: List of offers, List of employees contained in an offer)
 
-        /*
-        * Converts template from byte[] to stream, modify it and return the stream.
-        * - .docx-template included as project-resource.
-        * - Template can be modified easily, additional content (body.Append(...)) appears one line after the last line of the template (in the .xml body tag after last element).
-        * 
-        * @param: projekte: true if included in Document, false else
-        * @param: ...
-       */
+        // Access:
+            // Use access role to identify user. -> Access role returns employee-instance.
+            // Employee instance contains: "DocumentConfigurationList".
+            // Display the Configurations in a HTML element on the offer with the latest chosen Config being preselected.
+            // How to implement latest chosen Config? Persist in Employee as attribute?
+
+        // Functions:
+            // User can selected/deselect/delete/create/copy/rename a configuration
+            // select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
+            // deselect: deactivate the prior config -> in this state no config is selected
+            // delete: removes an item from the "DocumentConfigurationList"
+            // create: creates a new DocumentConfig instance
+            // copy: copies a certain DocumentConfig with a default description of "<name> (1)" or "<name> (2)", as long as the previous copynumber doesn't exist/ is unique
+            // rename: change of the description of DocumentConfig, must be unique
+
+        // States:
+            // User must have at least one DocumentConfig in order to generate a Document(else no Input can be processed) [Alternative: Define a copy of the generate Function that prints the defaults{all Employees with all data}] or to enter the OfferEmployeeConfigEdit page.
+            // User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
+
+
+        //===========================================================================================================================================//
+
+        // Dokumentengeneration: TODO: (needs: Dokumentenkonfiguration)
+
+        // Parameter:
+            // DocumentConfig config, contains all the EmployeeConfigs of the document which are to be iterated through individually and displayed in the document.
+
+        // Content:
+            // Good looking document structure for EmployeeConfigs
+            // "Good looking" := Information-display of individual Employees shoudln't bn displayed cross-page.
+
+        /// <summary>
+        /// Converts template from byte[] to stream, modifies it with Config-elements and returns the stream. <para></para>
+        /// - .docx-template included as project-resource. <para></para>
+        /// - Template can be modified easily, additional content (body.Append(...)) appears one line after the last line of the template (in the .xml body tag after last element). <para></para>
+        /// </summary>
+        /// <param name="projects"></param>
+        /// <returns></returns>
 
         public byte[] OpenAndModfiyWordprocessingDocument(Boolean projects)
         {

@@ -49,7 +49,7 @@ namespace Team14.Data
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
-
+        public ISet<Project> Projects { get; set; } = new SortedSet<Project>();
 
         public bool MadeFirstChangesOnProfile = false;
         public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>();
