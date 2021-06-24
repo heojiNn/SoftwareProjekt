@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using XCV.Data;
 
-namespace XCV.Pages.Employees
+namespace XCV.Pages.Offers
 {
-    public partial class EmployeeSearch
+    public partial class OfferSearchAdd
     {
         public string simpleAttributes;
         public int simpleCounter = 0;
@@ -208,4 +208,7 @@ namespace XCV.Pages.Employees
             simpleAttributes = "";
         }
     }
+
+
 }
+

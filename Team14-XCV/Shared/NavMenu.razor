@@ -1,7 +1,13 @@
 @inject CustomAuthentiProvider CustomAuthentiProvider
 @inject NavigationManager NavigationManager
 
+<style>
 
+    .nav-item a{
+        height: 2rem !important;
+    }
+
+</style>
 <nav class="navbar navbar-expand-lg">
     <a class="navbar-brand">
         <img src="\css\XITASO_Logo_quer_weiss.png" width="159" height="40">
@@ -12,45 +18,65 @@
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home"></span> Profil/Home
+
+
+        <li class="nav-item px-3 pb-4">
+            <NavLink class="nav-link text-success" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home"></span> Profil funktioniert
+            </NavLink>
+            <NavLink class="nav-link text-success" href="edit-profile">
+                <span class="oi oi-person"></span> (ProfilÄndern funkt)
             </NavLink>
         </li>
 
         <AuthorizeView Roles="sales, admin">
-            <li class="nav-item px-3">
+            <li class="nav-item px-3 pb-4">
                 <NavLink class="nav-link" href="offers">
                     <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
                 </NavLink>
+                <NavLink class="nav-link" href="offer">
+                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot)
+                </NavLink>
+                <NavLink class="nav-link" href="offer-edit">
+                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot ändern)
+                </NavLink>
                 <NavLink class="nav-link" href="employee-search">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarbeitersuche
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (Mitarbeitersuche)
+                </NavLink>
+                <NavLink class="nav-link" href="offer-search-result">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Suchergebnis
+                </NavLink>
+                <NavLink class="nav-link" href="offer-employee-detail-view">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarb. Details
+                </NavLink>
+                <NavLink class="nav-link" href="document-config-edit">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (DocConfig ändern)
                 </NavLink>
             </li>
         </AuthorizeView>
 
         <AuthorizeView Roles="sales, admin">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="projects">
+            <li class="nav-item px-3 pb-4">
+                <NavLink class="nav-link text-success" href="projects-overview">
                     <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
+                </NavLink>
+                <NavLink class="nav-link" href="project">
+                    <span class="oi oi-box" aria-hidden="true"></span> Project 
+                </NavLink>
+                <NavLink class="nav-link" href="project-search-add">
+                    <span class="oi oi-project" aria-hidden="true"></span> ProjektSuche?
                 </NavLink>
             </li>
         </AuthorizeView>
 
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="MyProject" Match="NavLinkMatch.All">
-                <span class="oi oi-box"></span>Meine Projekte
-            </NavLink>
-        </li>
 
         <AuthorizeView Roles="admin">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="change-data-set">
-                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis
+            <li class="nav-item px-3 pb-1">
+                <NavLink class="nav-link text-success" href="change-data-set">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis ändern
                 </NavLink>
-
-                <NavLink class="nav-link" href="create-employee">
-                    <span class="oi oi-wrench" aria-hidden="true"></span> neue Mitarbeiter
+                <NavLink class="nav-link text-success" href="create-employee">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
                 </NavLink>
             </li>
         </AuthorizeView>
@@ -63,15 +89,7 @@
             </NavLink>
         </li>
 
-        <div>
-                <a class="nav-link"  href="fuktional/my-profile" style="font-size: 0.5em;">
-                   Profil
-                </a><br>
-                <a class="nav-link" href="fuktional/edit-profile" style="font-size: 0.5em;">
-                   Profil ändern
-                </a>
-        </div>
-
+     <span class="text-success" > funktioniert</span>
     </ul>
 </div>
 

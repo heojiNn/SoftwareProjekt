@@ -1,8 +1,8 @@
 @page "/login"
 
-
 @inject CustomAuthentiProvider authentiProvider
 @inject IAccountService accountService
+
 @inject NavigationManager NavigationManager
 
 
@@ -41,24 +41,25 @@
                 <th>Nachname</th>
                 <th>Zugriffs Rollen</th>
             </tr>
-            @foreach (Team14.Data.Employee ac in accountService.ShowAllProfiles())
+            @foreach (XCV.Data.Employee ac in accountService.ShowAllProfiles())
             {
                 var roles = String.Join(", ", ac.AcRoles);
-                <tr>
-                    <td @onclick="@(e => formData.PersoNumber = ac.PersoNumber)"> @ac.PersoNumber </td>
-                    <td @onclick="@(e => formData.Password = ac.Password)"> @ac.Password</td>
-                    <td> @ac.FirstName</td>
-                    <td> @ac.LastName</td>
-                    <td> @roles</td>
-                </tr>
-            }
+<tr>
+    <td @onclick="@(e => formData.PersoNumber = ac.PersoNumber)"> @ac.PersoNumber </td>
+    <td @onclick="@(e => formData.Password = ac.Password)"> @ac.Password</td>
+    <td> @ac.FirstName</td>
+    <td> @ac.LastName</td>
+    <td> @roles</td>
+</tr>
+       }
         </table>
+
+
     </div>
 </div>
 
 
-@code {
-    private Employee formData = new Employee();
+@code { private Employee formData = new Employee();
     private LoginResult validationInfo;
 
     protected override async Task OnInitializedAsync()
@@ -78,5 +79,4 @@
 
 
 
-    private void OnValidationReturn(object sender, LoginResult e) => validationInfo = e;
-}
+    private void OnValidationReturn(object sender, LoginResult e) => validationInfo = e; }

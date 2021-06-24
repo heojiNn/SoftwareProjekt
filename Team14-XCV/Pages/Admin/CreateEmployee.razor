@@ -1,7 +1,7 @@
 @page "/create-employee"
 @attribute [Authorize(Roles = "admin")]
 
-@using Team14.Shared.Misc
+
 @inject IAccountService accountService
 
 <div class="container-fluid">
@@ -21,7 +21,7 @@
             <th>Vorname</th>
             <th>Nachname</th>
             <th>Angestellt seit  </th>
-            <th>Optionen</th>
+            <th></th>
         </tr>
         <tr>
             <td class="form-group">
@@ -58,17 +58,17 @@
             </td>
         </tr>
         
-        @foreach (Employee registrAcc in accountService.ShowAllProfiles())
+        @foreach (Employee account in accountService.ShowAllProfiles())
         {
-            var roles = String.Join(", ", registrAcc.AcRoles);
+            var roles = String.Join(", ", account.AcRoles);
             <tr>
-                <td>@registrAcc.PersoNumber </td>
-                <td>@registrAcc.Password</td>
+                <td>@account.PersoNumber </td>
+                <td>@account.Password</td>
                 <td>@roles</td>
-                <td>@registrAcc.FirstName </td>
-                <td>@registrAcc.LastName</td>
-                <td>@registrAcc.WorkingSince</td>
-                <td><input type="submit" class="btn btn-secondary" value="Entfernen"  /></td>
+                <td>@account.FirstName </td>
+                <td>@account.LastName</td>
+                <td>@account.WorkingSince</td>
+                <td> <button class="btn btn-secondary" @onclick="@(e => Delete(account))" >Entfernen </button> </td>
             </tr>
         }
 
@@ -98,7 +98,7 @@
     </ul>
 </div>
     @code {
-        private Employee newOne = new Employee();
+        private Employee newOne = new ();
         private DateTime startDate = DateTime.Now.Date;
 
         private ChangeResult changeInfo = new();
@@ -121,11 +121,11 @@
             };
             accountService.CreateAccount(copy);
         }
-
-
-        private void OnChangeReturn(object sender, ChangeResult e)
+        private void Delete(Employee e)
         {
-            changeInfo = e;
-            StateHasChanged();
+            accountService.Delete(e);
         }
+
+
+        private void OnChangeReturn(object sender, ChangeResult e) => changeInfo = e;
     }

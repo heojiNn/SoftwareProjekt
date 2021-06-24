@@ -1,152 +1,117 @@
 @page "/change-data-set"
-@attribute [Authorize(Roles = "admin,")]
+
+
 @using Microsoft.AspNetCore.Hosting
 
 @inject IWebHostEnvironment Environment
 @inject IJSRuntime JS
 @inject IBasicDataSetService dataSetService
-<style>
-    .outerbox.invalid {
-        border: 2px solid orange;
-    }
-
-    .outerbox {
-        border: 3px solid green;
-        width: 805px;
-        height: 505px;
-    }
-
-    .editbox {
-        width: 800px;
-        height: 500px;
-        overflow: scroll;
-    }
-</style>
-<div class="container-fluid">
+@inject IRoleService roleService
 
 
-    <div class="card my-1">
-        <div class="card-header text-center">
-            <h3>Verwaltung der Datenbasis </h3>
-        </div>
+<b>Datenbasis: ändern</b>
+<br>
+<div class="row ">
+    <div class="col-6">
+        fields:<br>
+            <textarea readonly class="form-control " rows="2" @bind="@textareas[1]">
+            </textarea>
+            <input id="name" />Brache hinzufügen<br>
+        roles:<br>
+            <textarea readonly class="form-control " rows="3" @bind="@textareas[2]">
+            </textarea>
+            <input id="name" /> wages ändern<br>
+        languages:<br>
+            <textarea readonly class="form-control " rows="2" @bind="@textareas[3]">
+            </textarea>
+            <input id="name" /> sprache hinzufügen<br>
+            <input id="name" /> sprach-lvl hinzufügen<br>
+        skills:<br>
+            <textarea readonly class="form-control " rows="3" @bind="@textareas[4]">
+            </textarea>
+            <input id="name" /> skill hinzufügen<br>
+            <input id="name" /> lvl-1 Namen ändern<br>
+            <input id="name" /> lvl-2 Namen ändern<br>
+            <input id="name" /> lvl-3 Namen ändern<br>
+            <input id="name" /> lvl-4 Namen ändern<br>
+
     </div>
-
-
-
-
-
-    <div class="alert-container">
-        <div class="alert alert-success" role="alert">
-            @changeInfo?.SuccesMessage
-        </div>
+    <div class="col-6">
+        <br><br>
+        <ul class="alert alert-danger" role="alert">
+            @foreach (string line in changeInfo.ErrorMessages)
+            {
+                    <li>
+                        <pre>@line</pre>
+                    </li>
+            }
+        </ul>
+        <ul class="alert alert-info" role="alert">
+            @foreach (string line in changeInfo.InfoMessages)
+            {
+                    <li>
+                        <pre>@line</pre>
+                    </li>
+            }
+        </ul>
     </div>
-    <button @onclick="LoadFromServer" class="btn btn-primary">letzte Version vom Server laden</button> &nbsp; &nbsp;
-    oder &nbsp; &nbsp;
-    <InputFile OnChange="@ShowUploadInEditArea" class="btn btn-sm btn-primary" />
-    <br>
-    <br>
-
-    <div class="outerbox @(validJson ? "" : "invalid")">
-        <pre @ref="datenBField" @onkeyup="Validate" class="editbox" contenteditable="true">
-
-
-<span style="color:#a00;">{</span>
-  "Felder"<span style="color:#a00;">: {</span>
-    "long": "Branchenwissen",
-    "elements"<span style="color:#a00;">: [</span>"Architektur","Automobil","Banken"<span style="color:#a00;">]</span>
-        <span style="color:#a00;">}</span>,
-  "Rollen"<span style="color:#a00;">: {</span>
-    "extensions"<span style="color:#a00;">: [</span>"Periode"<span style="color:#a00;">]</span>,
-    "elements"<span style="color:#a00;">: [</span>"Software Developer","Agile Coach","UI/UX-Designer","Product Owner"<span style="color:#a00;">]</span>
-        <span style="color:#a00;">}</span>,
-  "Sprachen"<span style="color:#a00;">: </span>
-    "elements"<span style="color:#a00;">: [</span>"Deutsch","Englisch"<span style="color:#a00;">]</span>
-        <span style="color:#a00;">}</span>,
-  "Skills"<span style="color:#a00;">: </span>
-    "levels"<span style="color:#a00;">: [</span>"Experte","regelmäßige","produktiv","Hobby"<span style="color:#a00;">]</span>,
-    "Sprachen und Frameworks"<span style="color:#a00;">: {</span>
-      "Sprachen"<span style="color:#a00;">: {</span>
-        "elements"<span style="color:#a00;">: [</span>"C","C++","C#","JavaScript","TypeScript"<span style="color:#a00;">]</span>
-        <span style="color:#a00;">}</span>
-        <span style="color:#a00;">}</span>
-        <span style="color:#a00;">}</span>
-<span style="color:#a00;">}</span>
-    </pre>
-    </div>
-    <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
-        Version auf dem Server auswechseln
-    </button>
-    <br>
-
-    <ul class="alert alert-danger" role="alert">
-        @foreach (string line in changeInfo.ErrorMessages)
-        {
-            <li>
-                <pre>@line</pre>
-            </li>
-        }
-    </ul>
-    <ul class="alert alert-info" role="alert">
-        @foreach (string line in changeInfo.InfoMessages)
-        {
-            <li>
-                <pre>@line</pre>
-            </li>
-        }
-    </ul>
-
-
-    <br>
-    <br>
-
 </div>
-@code {
-    private ElementReference datenBField;
-    private ChangeResult changeInfo = new();
-    private bool validJson = true;
 
+<div class="alert alert-success" role="alert">
+    @changeInfo?.SuccesMessage
+</div>
+eine komplette datenbasis in das Feld hochladen
+<InputFile OnChange="@ShowUpload" class="btn btn-sm btn-primary" />
+        <div class="outerbox @(validJson ? "" : "invalid")">
+            <textarea class="form-control" style="white-space: pre;" rows="6" @bind="@textareas[0]">
+            </textarea>
+        </div>  
+<button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
+    diese Version in die Datenbank laden
+</button>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+@code {
+    private string[] textareas = new string[5];
+    private bool validJson = true;
+    private ChangeResult changeInfo = new();
 
     protected override void OnInitialized()
     {
         dataSetService.ChangeEventHandel += OnChange;
+        textareas = dataSetService.ShowCurrentDataSet();
     }
 
-    private async Task LoadFromServer()
+    private async Task ShowUpload(InputFileChangeEventArgs eventA)
     {
-        var latest = dataSetService.ShowCurrentDataSet();
-        await JS.InvokeVoidAsync("setElementText", datenBField, latest);
+        textareas = await dataSetService.ShowBrowserFile(eventA.File);
+        StateHasChanged();
     }
-    private async Task ShowUploadInEditArea(InputFileChangeEventArgs eventA)
+
+
+    private void Validate()
     {
-        var content = await dataSetService.ShowBrowserFileAsync(eventA.File);
-        await JS.InvokeVoidAsync("setElementText", datenBField, content);
+        textareas = dataSetService.ValidateUpdate(textareas);// might show ChangeInfo and ChangeInfo.Error
+        StateHasChanged();
     }
-
-
-    private async Task Validate()
+    private void Upload()
     {
-        var content = await JS.InvokeAsync<string>("getElementText", datenBField);
-        dataSetService.ValidateUpdate(content);// might show ChangeInfo and ChangeInfo.Error
-    }
-    private async void Upload()
-    {
-        var content = await JS.InvokeAsync<string>("getElementText", datenBField);
-        dataSetService.Update(content); // shows either ChangeInfo.Error o. ChangeInfo.Succes
+        dataSetService.Update(textareas); // shows either ChangeInfo.Error o. ChangeInfo.Succes
     }
 
 
 
-
-    // for Info and Error on LoadFromServer
-    // for Info and Error on Show upload file in EditArea
-    // for Info and Error on FieldChange
-
-    // for Error or Succes on Upload
 
     private void OnChange(object sender, ChangeResult e)
     {
         changeInfo = e;
         validJson = (!e.ErrorMessages.Any());
-        StateHasChanged();
     }
 }

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using XCV.Data;
 
-namespace XCV.Pages.Employees
+namespace XCV.Pages.Projects
 {
-    public partial class EmployeeSearch
+    public partial class ProjectEmployeeSearch
     {
+
+
         public string simpleAttributes;
         public int simpleCounter = 0;
         public Boolean showSearch = false;
@@ -208,4 +210,10 @@ namespace XCV.Pages.Employees
             simpleAttributes = "";
         }
     }
+
+
+
+
+
+
 }

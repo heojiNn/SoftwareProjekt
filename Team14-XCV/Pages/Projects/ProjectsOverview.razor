@@ -1,0 +1,146 @@
+@page "/projects-overview"
+@attribute [Authorize(Roles = "sales, admin")]
+
+@inject IProjectService proService
+@inject NavigationManager navManager
+
+<div class="card my-1">
+    <div class="card-header text-center">
+        <h3>Projekte</h3>
+    </div>
+</div>
+<br />
+<br />
+
+<input class="form-control" placeholder="Search for projects.. and Press ENTER" id="search" @bind="@proSearch"
+    @onkeydown="@changeResule" />
+
+<table class="table table-hover">
+    <tr class="table-active">
+        <th>Id/Title</th>
+        <th>Beschreibu/Branche</th>
+        <th>Start/End</th>
+        <th>Zweck</th>
+        <th>Tätigkeiten</th>
+        <th></th>
+    </tr>
+    @foreach (Project pro1 in projects.ToList())
+    {
+        <tr>
+            <td><a  class="text-primary" href="detail-project/@pro1.Id"> @pro1.Id<br>
+                @pro1.Title </a>
+            </td>
+            <td class="form-group">
+                <a class="text-dark" href="detail-project/@pro1.Id"> @pro1.Description<br>
+                @pro1.Field  </a>
+            </td>
+
+            <td class="form-group">
+                @pro1.Start.ToString("dd.MM.yyyy")<br>
+                @pro1.Ende.ToString("dd.MM.yyyy")
+            </td>
+            <td class="form-group">
+                @foreach (var pur in pro1.Purpose)
+                {
+                    @pur<br>
+                }
+            </td>
+            <td>
+                @foreach (var key in pro1.ActivitiesWithEmployees.Keys.Where(x => x != ""))
+                {
+                    @key
+                    <button class="btn btn-secondary" @onclick="@(e => RemoveAct(pro1, key) )">
+                        <span class="oi oi-x"></span> </button><br>
+                }
+                <input @bind="@newAct" placeholder="Aktivität" id="activi"  style="width: 70%;"/>
+                <button class="btn btn-secondary" @onclick="@(e => AddAct(pro1, newAct) )"><span class="oi oi-plus"></span>
+                </button>
+            </td>
+
+            <td class="form-group">
+                <a href="project-edittt" class="btn btn-secondary" type="submit"> Bearbeiten</a>
+                <button class="btn btn-secondary" @onclick="@(e => Delete(pro1))"> löschen </button>
+
+            </td>
+        </tr>
+    }
+</table>
+
+<input @bind="@newTitle" placeholder="Titel" class="form-control" id="tit" style="width: 150px;" />
+<input type="submit" class="btn btn-secondary" value="Hinzufügen" @onclick="Create" />
+
+
+<ul class="alert alert-danger" role="alert">
+    @foreach (string line in changeInfo.ErrorMessages)
+    {
+        <li>
+            <pre>@line</pre>
+        </li>
+    }
+</ul>
+<div class="alert-container">
+    <div class="alert alert-success" role="alert">
+        @changeInfo?.SuccesMessage
+    </div>
+</div>
+<ul class="alert alert-info" role="alert">
+    @foreach (string line in changeInfo.InfoMessages)
+    {
+        <li>
+            <pre>@line</pre>
+        </li>
+    }
+</ul>
+
+
+
+@code {
+    private string proSearch = "";
+    private string newAct = "";
+    private string newTitle;
+    private IEnumerable<Project> projects;
+    private ChangeResult changeInfo = new();
+
+
+    protected override void OnInitialized()
+    {
+        proService.ChangeEventHandel += OnChangeReturn;
+        projects = proService.ShowAllProjects();
+    }
+
+    private void changeResule()
+    {
+        if (proSearch != "")
+            projects = proService.ShowAllProjects().Where(x => x.Title.ToLower().StartsWith(proSearch.ToLower()));
+    }
+
+
+
+    private void Create()
+    {
+        proService.Create(newTitle);
+    }
+    private void AddAct(Project p, string act)
+    {
+        proService.Add(p, act);
+        StateHasChanged();
+    }
+    private void RemoveAct(Project p, string act)
+    {
+        proService.Remove(p, act);
+        StateHasChanged();
+    }
+    private void Delete(Project p)
+    {
+        proService.Delete(p);
+    }
+
+
+
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+        if (changeInfo.InfoMessages.Any())
+            navManager.NavigateTo("/projects-overview", forceLoad: true);
+    }
+}

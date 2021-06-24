@@ -1,13 +1,12 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Team14.Data;
+using XCV.Data;
 
 
-namespace Team14.Pages.Offer
+namespace XCV.Pages.Offers
 {
-    public partial class CreateOffer
+    public partial class OfferEdit
     {
         private List<Skill> skills;
         private List<Field> fields;
@@ -73,5 +72,3 @@ namespace Team14.Pages.Offer
         }
     }
 }
-
-

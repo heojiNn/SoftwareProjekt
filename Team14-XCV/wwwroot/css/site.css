@@ -18,6 +18,17 @@
 }
 /* --- */
 
+/* for change-data-set */
+.outerbox.invalid {
+    border: 2px solid orange;
+}
+.outerbox {
+    border: 3px solid green;
+}
+/* --- */
+
+
+
 html, body {
     font: Antenna-light, sans-serif;
     background-color: #E9EBEE;

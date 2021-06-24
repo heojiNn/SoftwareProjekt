@@ -1,0 +1,207 @@
+@page "/detail-project"
+@page "/detail-project/{Id}"
+
+@attribute [Authorize(Roles = "sales, admin")]
+
+
+@inject IProfileService profileService
+@inject IProjectService proService
+@inject IFieldService fieldService
+
+
+<div class="container">
+    <!--/project/ edit &lt;project-name&gt;-->
+
+    <div class="card my-1">
+        <div class="card-header">
+            <h3><label>Projekttitel: @myPro.Title</label> </h3>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Branche" ShowCardBody=true>
+                <CardBody>
+
+                    <h4>
+                        @myPro.Field <br>
+                        @{
+                            var allFields = fieldService.GetAllFields().ToList();
+                        }
+                        <select class="form-control form-control-sm" value="@myPro.Field"
+                            @onchange="@(e => ChangeField(e.Value) )">
+                            @for (int i = 0; i <= allFields.Count; i++)
+                {
+                            if (i == allFields.Count)
+                            {
+                                <option value=""> </option>
+                            }
+                            else
+                            {
+                                <option value="@allFields[i]"> @allFields[i] </option>
+                            }
+                }
+                        </select>
+                    </h4>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Laufzeit" ShowCardBody=true>
+                <CardBody>
+                    Start:<input @bind="@myPro.Start" class="form-control" id="st" /><br>
+                    Ende:<input @bind="@myPro.Ende" class="form-control" id="en" />
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Projektbeschreibung" ShowCardBody=true>
+                <CardBody>
+                    <textarea class="form-control " rows="6" @bind="@myPro.Description">
+                        </textarea>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Projektzweck" ShowCardBody=true>
+                <CardBody>
+
+                    @foreach (var pur in myPro.Purpose)
+                {
+                    @pur<br>
+                    }
+                    <input @bind="@newPurp" class="form-control" id="purp" />
+                    <button class="btn btn-secondary" @onclick="@AddPurpose"><span class="oi oi-plus"></span>
+                    </button>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+    </div>
+
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Projekttätigkeiten" ShowCardBody=true>
+                <CardBody>
+                    @foreach (var key in myPro.ActivitiesWithEmployees.Keys.Where(x => x != ""))
+                {
+                    @key  
+                    <button class="btn btn-secondary" @onclick="@(e => RemoveAct(key) )">
+                        <span class="oi oi-x"></span> </button>
+                         <span>Mitarbeiter: </span>
+        @foreach (var persoNum in myPro.ActivitiesWithEmployees[key]){ <span>@persoNum , </span>  }
+        <br>
+                    }
+                    <input @bind="@newAct" placeholder="Aktivität"  id="activi"  style="width: 70%;"/>
+                    <button class="btn btn-secondary" @onclick="@(e => AddAct(newAct) )"><span
+                            class="oi oi-plus"></span>
+                    </button>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col">
+            <CollapsibleCard CardHeaderTitle="Mitarbeiter" ShowCardBody=true>
+                <CardBody>
+
+                    @foreach (var key in myPro.ActivitiesWithEmployees.Keys.Where(x => x != ""))
+                {
+                    <b> @key </b> <br>
+
+            @foreach (var persoNum in myPro.ActivitiesWithEmployees[key]){
+                    var emp = profileService.ShowProfile(persoNum);  
+                    <span>@emp.FirstName @emp.LastName </span><br>
+                    <img src="@emp.Image" alt="Profilbild" c style="margin:1em; max-width:30%"><br>
+                    }
+                    }
+                </CardBody>
+            </CollapsibleCard>
+
+        </div>
+    </div>
+
+<button class="btn btn-secondary" @onclick="@Update">Speichern</button>
+    <a href="" class="btn btn-secondary" > Abbrechen </a>
+
+
+<ul class="alert alert-danger" role="alert">
+    @foreach (string line in changeInfo.ErrorMessages)
+    {
+        <li>
+            <pre>@line</pre>
+        </li>
+    }
+</ul>
+    <div class="alert alert-success" role="alert">
+        @changeInfo?.SuccesMessage
+</div>
+<ul class="alert alert-info" role="alert">
+    @foreach (string line in changeInfo.InfoMessages)
+    {
+        <li>
+            <pre>@line</pre>
+        </li>
+    }
+</ul>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private ChangeResult changeInfo = new();
+
+    private Project myPro;
+    private string newPurp = "zweck";
+    private string newAct = "activi";
+
+
+    protected override void OnInitialized()
+    {
+        myPro = proService.ShowProject(int.Parse(Id));
+        myPro ??= new Project();
+        proService.ChangeEventHandel += OnChangeReturn;
+    }
+
+
+
+
+    private void Update()
+    {
+        proService.Update(myPro);
+    }
+
+    private void AddPurpose()
+    {
+        myPro.Purpose.Add(newPurp);
+        proService.Update(myPro);
+    }
+
+    private void AddAct(string act)
+    {
+        proService.Add(myPro, act);
+    }
+    private void RemoveAct(string act)
+    {
+        proService.Remove(myPro, act);
+    }
+    private void ChangeField(Object val)
+    {
+        myPro.Field = (string)val;
+        proService.Update(myPro);
+    }
+
+
+
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+    }
+}
