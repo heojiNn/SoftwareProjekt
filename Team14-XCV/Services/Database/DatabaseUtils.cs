@@ -252,7 +252,10 @@ namespace XCV.Data
                                             "Insert Into project Values " +
                                                 "('Brille', '', '2020-05-01', '2021-12-30', 'Beratung') ;");
                 rows = con.Execute("IF EXISTS (  SELECT Id " +
-                                                        "FROM project  WHERE Title = 'Brille' ) " +
+                                                        "FROM project  WHERE Title = 'Brille' ) And " +
+                                    " Not EXISTS (  SELECT * " +
+                                                        "FROM activitie  WHERE Project = (  SELECT Id " +
+                                                        "FROM project  WHERE Title = 'Brille' ) )" +
                                             "Insert Into activitie Values " +
                                                 "((  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ), ''), " +
