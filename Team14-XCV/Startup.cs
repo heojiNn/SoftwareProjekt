@@ -1,16 +1,14 @@
-
+using BlazorDownloadFile;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Team14.Data;
-
-using Microsoft.AspNetCore.Components.Authorization;
-using BlazorDownloadFile;
+using XCV.Data;
 
 
-namespace Team14
+namespace XCV
 {
     public class Startup
     {
@@ -33,24 +31,24 @@ namespace Team14
             services.AddTransient<IAccountService, EmployeeService>();
 
             services.AddTransient<IProfileService, EmployeeService>();
+            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IBasicDataSetService, BasicDataSetService>();
 
-            services.AddTransient<ISkillService, SkillService>();
+            services.AddSingleton<ISkillService, SkillService>();
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IRoleService, RoleService>();
 
+            services.AddTransient<DatabaseUtils>();
             // Nuget: BlazorDownloadFile for Worddownload.
             services.AddBlazorDownloadFile();
-
-
 
 
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseUtils dbu)
         {
             if (env.IsDevelopment())
             {
@@ -60,6 +58,11 @@ namespace Team14
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            dbu.CreateDatabase();
+            dbu.CreateTables();
+            dbu.Populate();
+
 
             app.UseStaticFiles();
 
