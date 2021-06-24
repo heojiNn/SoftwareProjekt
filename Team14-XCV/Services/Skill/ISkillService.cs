@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface ISkillService
 
@@ -23,7 +23,13 @@ namespace Team14.Data
         // Exceptions:
         //   Exception:
         //     Could not reach Persistence: {subPath}/{fileName}
+        public Skill GetSkill(string cat, string name, string lvl);
+
+
         public IEnumerable<Skill> GetAllSkills();
+        public IEnumerable<Skill> HangThemOnATree(IEnumerable<Skill> skills);
+
+        public string[] GetAllLevel();
 
 
         // Summary:
@@ -35,6 +41,10 @@ namespace Team14.Data
         // Loges:
         //   LogInformation:
         //     All Skill updated  Persitence  {fileName}
-        public void UpdateAllSkills(IEnumerable<Skill> skills);
+        public (int[] added, int[] removed) UpdateAllSkills(SkillCategory tree);
+        public (int added, int removed) UpdateAllLevels(string[] levels);
+
+
+        public event EventHandler<ChangeResult> ChangeEventHandel;
     }
 }

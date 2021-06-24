@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface IFieldService
     {
@@ -27,6 +26,7 @@ namespace Team14.Data
         // Loges:
         //   LogInformation:
         //     All Field updated  Persitence  {fileName}
-        public void UpdateAllFields(IEnumerable<Field> fields);
+        public (int added, int removed) UpdateAllFields(IEnumerable<Field> fields);
+
     }
 }

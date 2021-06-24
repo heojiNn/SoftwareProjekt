@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public class OfferService
     {

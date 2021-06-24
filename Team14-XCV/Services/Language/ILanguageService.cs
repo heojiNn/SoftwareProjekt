@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface ILanguageService
     {
@@ -16,17 +15,18 @@ namespace Team14.Data
         //   Exception:
         //     Could not reach Persistence: {subPath}/{fileName}
         public IEnumerable<Language> GetAllLanguages();
-
+        public string[] GetAllLevel();
 
         // Summary:
         //     UpdateAllLanguages in Persistece.
         // Parameters:
-        //   roles:
-        //     The roles to replace the old ones.
+        //   languages:
+        //     The languages to replace the old ones.
         //
         // Loges:
         //   LogInformation:
         //     All Language updated  Persitence  {fileName}
-        public void UpdateAllLanguages(IEnumerable<Language> roles);
+        public (int added, int removed) UpdateAllLanguages(IEnumerable<Language> languages);
+        public (int added, int removed) UpdateAllLevels(string[] levels);
     }
 }

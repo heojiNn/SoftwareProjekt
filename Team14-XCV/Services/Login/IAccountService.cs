@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface IAccountService
     {
@@ -13,17 +13,26 @@ namespace Team14.Data
 
 
         // Summary:
-        //     Updates creats an Employye Account   if valid
+        //     Creates an Employye Account
+        //       uses  private_CreatePersistence(Employee e)
+        //
+        // Parameters:
+        //   Employee: The new one.
         //
         // Raises:
         //   ChangeResult:
         //     Error:  Sie könne keinen Account überschreiben.
         //     Error:  Geben sie Vor-, Nachnamen und PersNr ein.
         // or
+        //
         //     Succes: Ein neuer Account wurde erstellt {PersoNumber}.
         // and
         //     Info:  Passwort und Personal-Number sollten gleich sein. Dies wurde koregiert.
         public void CreateAccount(Employee newAccount);
+
+        // Summary:
+        //     Deletes the Employee in persistence.
+        public void Delete(Employee toDelete);
 
 
         public event EventHandler<ChangeResult> ChangeEventHandel;

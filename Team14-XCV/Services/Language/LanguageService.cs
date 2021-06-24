@@ -1,66 +1,124 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Hosting;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 
-
-namespace Team14.Data
+namespace XCV.Data
 {
     public class LanguageService : ILanguageService
     {
-        private readonly IWebHostEnvironment env;
+        private readonly string connectionString;
         private readonly ILogger<LanguageService> log;
-        public LanguageService(IWebHostEnvironment environment, ILogger<LanguageService> logger)
+        public LanguageService(IConfiguration config, ILogger<LanguageService> logger)
         {
-            env = environment;
             log = logger;
+            connectionString = config.GetConnectionString("MyLocalConnection");
         }
 
 
         //---------------------------------Buissines Logic-----------------------------------------
-        // empt
+        // empty
 
 
 
-        //-------------------------------------Persistence-----------------------------------------with json
+
+
+
+
+        //-------------------------------------Persistence-----------------------------------------
         //-----------------------------------------------------------------------------------------
-        private readonly string subPath = Path.Combine("jsonPersistierung");
-        private readonly string fileName = "languages.json";
-        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
 
         //--read   --------------------------------------------------------------------------------
         public IEnumerable<Language> GetAllLanguages()
         {
-            var file = env.ContentRootFileProvider.GetDirectoryContents(subPath)
-                                     .Where(x => x.Name.Equals(fileName))
-                                     .FirstOrDefault();
-            if (file == null)
-                throw new Exception($"Could not reach Persistence: {subPath}/{fileName} \n");
-            return Deserialize(File.ReadAllText(file.PhysicalPath)); ;
+            IEnumerable<Language> languages = new List<Language>();
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                languages = con.Query<Language>("Select * From Language_Name");
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($" retrieving Languages from database: {e.Message} \n");
+            }
+            return languages;
         }
-        private IEnumerable<Language> Deserialize(string json) => JsonSerializer.Deserialize<IEnumerable<Language>>(json, options);
-
-
+        public string[] GetAllLevel()
+        {
+            var lvl = System.Array.Empty<string>();
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                lvl = con.Query<string>("Select Name From Language_Level Order By Level").ToArray();
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($" retrieving Fields from database: {e.Message} \n");
+            }
+            return lvl;
+        }
 
         //---write --------------------------------------------------------------------------------
-        public void UpdateAllLanguages(IEnumerable<Language> languages)
+        public (int added, int removed) UpdateAllLanguages(IEnumerable<Language> languages)
         {
-            var json = Serialize(languages);
-            var path = Path.Combine(env.ContentRootPath, subPath, fileName);
-            File.WriteAllText(path, json, Encoding.UTF8);
+            int addedRows = 0;
+            int removedRows = 0;
+            var newLanguages = languages.ToImmutableSortedSet();
+            var oldLanguages = GetAllLanguages().ToImmutableSortedSet();
+            var toAdd = newLanguages.Except(oldLanguages);
+            var toRemove = oldLanguages.Except(newLanguages);
 
-            log.LogInformation($"All Language updated  Persitence  {fileName}");
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                foreach (var language in toAdd)
+                    addedRows += con.Execute("Insert Into Language_Name Values (@Name)", new { language.Name });
+                foreach (var language in toRemove)
+                    removedRows += con.Execute("Delete From Language_Name Where Name = @Name", new { language.Name });
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"Error updating Languages in database: {e.Message} \n");
+            }
+            finally
+            {
+                con.Close();
+            }
+            return (addedRows, removedRows);
         }
-        private string Serialize(IEnumerable<Language> languages) => JsonSerializer.Serialize(languages, options);
-
+        public (int added, int removed) UpdateAllLevels(string[] levels)
+        {
+            int addedRows = 0;
+            int removedRows = 0;
+            if (GetAllLevel().SequenceEqual(levels))
+                return (0, 0);
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                removedRows = con.Execute($"Delete From Language_Level");
+                for (int i = 0; i < levels.Length; i++)
+                    addedRows += con.Execute($"Insert Into Language_Level (Name, Level) Values ('{levels[i]}', {i})");
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"Error updating Language Levels in database: {e.Message} \n");
+            }
+            finally
+            {
+                con.Close();
+            }
+            return (addedRows, removedRows);
+        }
         //-----------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------
     }

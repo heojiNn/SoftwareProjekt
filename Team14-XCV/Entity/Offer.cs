@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public class Offer
     {
@@ -14,17 +14,16 @@ namespace Team14.Data
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
 
-        //TODO
+
         public Object DocumentSettings { get; set; }
 
+
         // might be null
-        public Employee ProductOwner { get; set; }
-        public IEnumerable<Employee> Members { get; set; } = new List<Employee>();
+        public IEnumerable<(Role, Employee)> Members { get; set; } = new List<(Role, Employee)>();
 
 
         public IEnumerable<Field> Fields { get; set; } = new List<Field>();
         public IEnumerable<Skill> Requierments { get; set; } = new List<Skill>();
-
 
     }
 }

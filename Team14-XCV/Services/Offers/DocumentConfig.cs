@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Team14.Services.Offers
+namespace XCV.Services.Offers
 {
     // Inputparameter of Documentgenerator.
     public class DocumentConfig

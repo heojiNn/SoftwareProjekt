@@ -1,8 +1,7 @@
 using System;
 
 
-
-namespace Team14.Data
+namespace XCV.Data
 {
     public class Field : IComparable
     {
@@ -15,6 +14,8 @@ namespace Team14.Data
 
         public override string ToString() => Name;
 
+
+
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -24,16 +25,13 @@ namespace Team14.Data
             return false;
         }
         public override int GetHashCode() => HashCode.Combine(Name);
-
         public int CompareTo(object obj)
         {
             if (obj == null) return 1;
             if (obj is Field other)
                 return this.Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Brachen Vergleichen");
+                throw new ArgumentException("Kann nur mit Brachen vergleichen");
         }
-
     }
-
 }

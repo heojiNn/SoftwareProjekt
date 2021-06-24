@@ -1,66 +1,81 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Hosting;
+using System.Collections.Immutable;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 
-
-namespace Team14.Data
+namespace XCV.Data
 {
     public class FieldService : IFieldService
     {
-        private readonly IWebHostEnvironment env;
+        private readonly string connectionString;
         private readonly ILogger<FieldService> log;
-        public FieldService(IWebHostEnvironment environment, ILogger<FieldService> logger)
+        public FieldService(IConfiguration config, ILogger<FieldService> logger)
         {
-            env = environment;
             log = logger;
+            connectionString = config.GetConnectionString("MyLocalConnection");
         }
-
-
         //---------------------------------Buissines Logic-----------------------------------------
-        // empt
+        // empty
 
 
 
-        //-------------------------------------Persistence-----------------------------------------with json
+
+
+        //-------------------------------------Persistence-----------------------------------------
         //-----------------------------------------------------------------------------------------
-        private readonly string subPath = Path.Combine("jsonPersistierung");
-        private readonly string fileName = "fields.json";
-        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
 
         //--read   --------------------------------------------------------------------------------
         public IEnumerable<Field> GetAllFields()
         {
-            var file = env.ContentRootFileProvider.GetDirectoryContents(subPath)
-                                     .Where(x => x.Name.Equals(fileName))
-                                     .FirstOrDefault();
-            if (file == null)
-                throw new Exception($"Could not reach Persistence: {subPath}/{fileName} \n");
-            return Deserialize(File.ReadAllText(file.PhysicalPath)); ;
+            IEnumerable<Field> fields = new List<Field>();
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                fields = con.Query<Field>("Select * From Field");
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($" retrieving Fields from database: {e.Message} \n");
+            }
+            return fields;
         }
-        private IEnumerable<Field> Deserialize(string json) => JsonSerializer.Deserialize<IEnumerable<Field>>(json, options);
-
-
 
         //---write --------------------------------------------------------------------------------
-        public void UpdateAllFields(IEnumerable<Field> fields)
+        public (int added, int removed) UpdateAllFields(IEnumerable<Field> fields)
         {
-            var json = Serialize(fields);
-            var path = Path.Combine(env.ContentRootPath, subPath, fileName);
-            File.WriteAllText(path, json, Encoding.UTF8);
+            int addedRows = 0;
+            int removedRows = 0;
+            var newFields = fields.ToImmutableSortedSet();
+            var oldFields = GetAllFields().ToImmutableSortedSet();
+            var toAdd = newFields.Except(oldFields);
+            var toRemove = oldFields.Except(newFields);
 
-            log.LogInformation($"All Field updated  Persitence  {fileName}");
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                con.Execute("IF NOT EXISTS (  SELECT * FROM field  WHERE name = '' ) " +
+                                        "Insert Into field Values ('') ;"); ;
+                foreach (var field in toAdd)
+                    addedRows += con.Execute("Insert Into Field Values (@Name)", new { field.Name });
+                foreach (var field in toRemove)
+                    removedRows += con.Execute("Delete From Field Where Name = @Name", new { field.Name });
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"updating Fields in database: {e.Message} \n");
+            }
+            finally
+            {
+                con.Close();
+            }
+            return (addedRows, removedRows);
         }
-        private string Serialize(IEnumerable<Field> fields) => JsonSerializer.Serialize(fields, options);
-
         //-----------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------
     }

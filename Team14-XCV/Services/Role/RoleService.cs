@@ -1,67 +1,99 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Hosting;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 
-
-namespace Team14.Data
+namespace XCV.Data
 {
     public class RoleService : IRoleService
     {
-        private readonly IWebHostEnvironment env;
+        private readonly string connectionString;
         private readonly ILogger<RoleService> log;
-        public RoleService(IWebHostEnvironment environment, ILogger<RoleService> logger)
+        public RoleService(IConfiguration config, ILogger<RoleService> logger)
         {
-            env = environment;
             log = logger;
+            connectionString = config.GetConnectionString("MyLocalConnection");
         }
-
 
         //---------------------------------Buissines Logic-----------------------------------------
-        // empt
+        // empty
 
 
 
-        //-------------------------------------Persistence-----------------------------------------with json
+
+
+
+
+
+        //-------------------------------------Persistence-----------------------------------------
         //-----------------------------------------------------------------------------------------
-        private readonly string subPath = Path.Combine("jsonPersistierung");
-        private readonly string fileName = "roles.json";
-        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
 
         //--read   --------------------------------------------------------------------------------
-        public IEnumerable<Role> GetAllRoles()
+        public IEnumerable<Role> GetAllRoles(int rcl = 8)
         {
-            var file = env.ContentRootFileProvider.GetDirectoryContents(subPath)
-                                     .Where(x => x.Name.Equals(fileName))
-                                     .FirstOrDefault();
-            if (file == null)
-                throw new Exception($"Could not reach Persistence: {subPath}/{fileName} \n");
-            return Deserialize(File.ReadAllText(file.PhysicalPath)); ;
+            IEnumerable<Role> roles = new List<Role>();
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                if (rcl == 8)
+                    roles = con.Query<Role>("Select * From Role Where Rcl <> 0");
+                else
+                    roles = con.Query<Role>($"Select * From Role Where Rcl = {rcl}");
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($" retrieving Roles from database: {e.Message} \n");
+            }
+            return roles;
         }
-        private IEnumerable<Role> Deserialize(string json) => JsonSerializer.Deserialize<IEnumerable<Role>>(json, options);
-
-
 
         //---write --------------------------------------------------------------------------------
-        public void UpdateAllRoles(IEnumerable<Role> roles)
+        public (int added, int removed) UpdateAllRoles(IEnumerable<dataSetrole> roles)
         {
-            var json = Serialize(roles);
-            var path = Path.Combine(env.ContentRootPath, subPath, fileName);
-            File.WriteAllText(path, json, Encoding.UTF8);
+            int addedRows = 0;
+            int removedRows = 0;
 
-            log.LogInformation($"All Role updated  Persitence  {fileName}");
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                var oldRoles = con.Query<Role>("Select * From Role");
+                var anyChanged = false;
+                foreach (var role in roles)
+                    foreach (var wage in role.wages)
+                        if (!oldRoles.Where(x => x.Name == role.name && x.Wage == wage).Any())
+                            anyChanged = true;
+                if (anyChanged)
+                {
+                    removedRows = con.Execute($"Delete From Role");
+                    foreach (var role in roles)
+                    {
+                        for (int i = 0; i < role.wages.Length; i++)
+                            addedRows += con.Execute($"Insert Into Role  Values ('{role.name}', {i + 1}, {role.wages[i].ToString("F", CultureInfo.InvariantCulture)})");
+                        con.Execute($"Insert Into Role  Values ('{role.name}', 0, 0.0)");
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"updating Roles in database: {e.Message} \n");
+            }
+            finally
+            {
+                con.Close();
+            }
+            return (addedRows, removedRows);
         }
-        private string Serialize(IEnumerable<Role> roles) => JsonSerializer.Serialize(roles, options);
+
 
         //-----------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------
+
     }
 }

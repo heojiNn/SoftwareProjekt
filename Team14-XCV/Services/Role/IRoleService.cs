@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface IRoleService
     {
@@ -15,7 +14,7 @@ namespace Team14.Data
         // Exceptions:
         //   Exception:
         //     Could not reach Persistence: {subPath}/{fileName}
-        public IEnumerable<Role> GetAllRoles();
+        public IEnumerable<Role> GetAllRoles(int Rcl = 8);
 
 
         // Summary:
@@ -27,6 +26,6 @@ namespace Team14.Data
         // Loges:
         //   LogInformation:
         //     All Role updated  Persitence  {fileName}
-        public void UpdateAllRoles(IEnumerable<Role> roles);
+        public (int added, int removed) UpdateAllRoles(IEnumerable<dataSetrole> roles);
     }
 }

@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Team14.Data;
+using XCV.Data;
 
-namespace Team14.Services.Offers
+namespace XCV.Services.Offers
 {
     public class EmployeeConfig
     {

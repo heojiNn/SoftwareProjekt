@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public class CustomAuthentiProvider : AuthenticationStateProvider
     {
@@ -43,16 +43,16 @@ namespace Team14.Data
                 return false;
             }
 
-            await _jSRuntime.InvokeVoidAsync("sessionStorage.setItem", sessionStorageKey, JsonSerializer.Serialize(employee));  //set
-            _logger.LogInformation($"\"{employee.PersoNumber}\" \t stores his Login-date  in Browser Tab");
+            await _jSRuntime.InvokeVoidAsync("sessionStorage.setItem", sessionStorageKey, JsonSerializer.Serialize(employee.PersoNumber));  //set
+            _logger.LogInformation($"\"{employee.PersoNumber}\" \t stores his login-data in SessionStorage");
             return true;
         }
 
         public async Task Logout()
         {
             var authstate = await GetAuthenticationStateAsync();
-            await _jSRuntime.InvokeVoidAsync("sessionStorage.removeItem", sessionStorageKey);                                 //get
-            _logger.LogInformation($"\"{authstate.User.Identity.Name}\" \t loged out  and Data removedfrom Browser");
+            await _jSRuntime.InvokeVoidAsync("sessionStorage.removeItem", sessionStorageKey);                                 //remove
+            _logger.LogInformation($"\"{authstate.User.Identity.Name}\" \t Loged out  and data removed from SessionStorage");
         }
 
 
@@ -64,19 +64,19 @@ namespace Team14.Data
             var identity = new ClaimsIdentity();
             try            // ASP is the first few tiems to  fast   but will retry automaticlly
             {
-                var sessionData = await _jSRuntime.InvokeAsync<string>("sessionStorage.getItem", sessionStorageKey);           //remove
+                var sessionData = await _jSRuntime.InvokeAsync<string>("sessionStorage.getItem", sessionStorageKey);           //get
                 if (sessionData != null)
-                    identity = SetupClaimsForEmployee(JsonSerializer.Deserialize<Employee>(sessionData));
+                    identity = SetupClaimsForEmployee(JsonSerializer.Deserialize<string>(sessionData));
             }
             catch (InvalidOperationException) { }
 
             var claimsPrincipal = new ClaimsPrincipal(identity);
             return await Task.FromResult(new AuthenticationState(claimsPrincipal));
         }
-        private static ClaimsIdentity SetupClaimsForEmployee(Employee employee)
+        private ClaimsIdentity SetupClaimsForEmployee(string employeeNr)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, employee.PersoNumber) };
-            claims.AddRange(employee.AcRoles.Select(x => new Claim(ClaimTypes.Role, x.ToString().ToLower())));
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, employeeNr) };
+            claims.AddRange(_employeeService.ShowAllProfiles().First(u => u.PersoNumber == employeeNr).AcRoles.Select(x => new Claim(ClaimTypes.Role, x.ToString().ToLower())));
             return new ClaimsIdentity(claims, "apiauth_type");
         }
 

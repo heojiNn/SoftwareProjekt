@@ -1,52 +1,56 @@
 using System;
 
 
-
-namespace Team14.Data
+namespace XCV.Data
 {
-    public class Skill : IComparable
+    public class Skill : SkillCategory, IComparable
     {
-        public string Name { get; init; } = "";
-        public string Category { get; init; } = "";
-
+        public new string Name { get; init; } = "";
 
         public string Level { get; set; } = "";
-        public string[] PossibleLevels { get; set; }
-        public SkillGroup Type { get; init; } = SkillGroup.Hardskill;
+        public SkillGroup Type
+        {
+            get => Category.Name == "SoftSkills" ? SkillGroup.Softskill : SkillGroup.Hardskill;
+        }
 
 
         public bool HasDouble { get; set; }
+        public SkillCategory Category { get; set; }
 
 
 
 
+        public override string ToString()
+        {
+            var beginnig = HasDouble ? $"({Category.Name})-" : "";
+            return $"{beginnig}{Name}";
+        }
 
-
-
-        public override string ToString() => $"{Category}\\{Name}-{Level}";
 
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
             if (obj is Skill other)
-                return Name == other.Name;
+                return Category.Name == other.Category.Name && Name == other.Name;
             return false;
         }
-        public override int GetHashCode() => HashCode.Combine(Name);
-
-        public int CompareTo(object obj)
+        public override int GetHashCode() => HashCode.Combine(Category.Name, Name);
+        public new int CompareTo(object obj)
         {
             if (obj == null)
                 return 1;
             if (obj is Skill other)
-                return this.Name.CompareTo(other.Name);
+            {
+                var res = Category.Name.CompareTo(other.Category.Name);
+                if (res == 0)
+                    res = Name.CompareTo(other.Name);
+                return res;
+            }
             else
-                throw new ArgumentException("Kann nur mit Skills Vergleichen");
+                throw new ArgumentException("Kann nur mit Skills vergleichen");
         }
-
     }
-
 
 
 

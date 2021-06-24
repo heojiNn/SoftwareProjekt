@@ -3,304 +3,188 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
 
-namespace Team14.Data
+
+namespace XCV.Data
 {
     public class BasicDataSetService : IBasicDataSetService
     {
-        private readonly ILogger<BasicDataSetService> log;
-        private readonly IWebHostEnvironment env;
+        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new SCategoryConverter(), new SkillConverter() } };
 
         private readonly ISkillService _skillService;
         private readonly ILanguageService _languageService;
-        private readonly IFieldService _fildService;
+        private readonly IFieldService _fieldService;
         private readonly IRoleService _roleService;
 
-        public BasicDataSetService(ILogger<BasicDataSetService> logger, IWebHostEnvironment environment,
-                                   ISkillService skillService,
-                                   ILanguageService languageService,
-                                   IRoleService roleService,
-                                   IFieldService fildService)
+        public BasicDataSetService(ISkillService skillService, ILanguageService languageService,
+                                   IRoleService roleService, IFieldService fieldService)
         {
-            log = logger;
-            env = environment;
             _skillService = skillService;
+            _skillService.ChangeEventHandel += OnSkillServ;
             _languageService = languageService;
-            _fildService = fildService;
+            _fieldService = fieldService;
             _roleService = roleService;
         }
 
 
-        //---------------------------------IBasicDataSetService------------------------------------
         //-----------------------------------------------------------------------------------------
         //---------------------------------Buissines Logic-----------------------------------------
         //-----------------------------------------------------------------------------------------
-        // used by Layer above      for more information see    IBasicDataSetService Definition
-        // ChangeResultEvent from  ValidateUpdate() gets   passed through
-        public string ShowCurrentDataSet()
+        //---------------------------------IBasicDataSetService------------------------------------
+        public string[] ShowCurrentDataSet()      //returns eveytig as a json
         {
-            var path = GetLatestPersistence().PhysicalPath;
-            var content = File.ReadAllText(path);
+            var result = new string[5];
+            var allDset = new dataSet();
+            var fields = _fieldService.GetAllFields();
+            var fieldDset = fields.Select(x => x.Name).ToList();
+            allDset.fields = fieldDset;
 
-            content = ValidateUpdate(content);
-            return content;
+            var roles = _roleService.GetAllRoles();
+            List<dataSetrole> roleDset = new();
+            var roleNames = roles.Select(x => x.Name).Distinct();
+            foreach (var name in roleNames)
+            {
+                List<float> wages = new();
+                roles.Where(x => x.Name == name).ToList().ForEach(x => wages.Add(x.Wage));
+                roleDset.Add(new() { name = name, wages = wages.ToArray() });
+            }
+            allDset.roles = roleDset;
+
+            var languages = _languageService.GetAllLanguages();
+            var langLvls = _languageService.GetAllLevel();
+            var languageDset = new dataSetLanguages() { elements = languages.Select(x => x.Name), levels = langLvls };
+            allDset.languages = languageDset;
+
+            result[1] = Format(JsonSerializer.Serialize(fieldDset, options));
+            result[2] = Format(JsonSerializer.Serialize(roleDset, options));
+            result[3] = Format(JsonSerializer.Serialize(languageDset, options));
+
+
+
+            dataSetSkills skillsDset = new();
+            skillsDset.hardSkillLevels = _skillService.GetAllLevel();
+            var skills = _skillService.GetAllSkills();
+            if (!skills.Any())
+                return result;
+
+            var root = skills.First().Category.Parent;
+            if (root.Parent != null)
+                root = root.Parent;
+            if (root.Parent != null)
+                root = root.Parent;
+            var softCat = skills.FirstOrDefault(x => x.Category.Name == "SoftSkills").Category;
+            result[4] = Format(JsonSerializer.Serialize(root, options));
+            root.Children.Remove(softCat);
+            var hardCat = root.Children.First();
+            hardCat.Name = "";
+            skillsDset.HardSkills = hardCat;
+            skillsDset.SoftSkills = softCat.Children.Select(x => ((Skill)x).Name).ToArray();
+            allDset.skills = skillsDset;
+
+            result[0] = Format(JsonSerializer.Serialize(allDset, options));
+
+            return result;
         }
-
-
-        public async Task<string> ShowBrowserFileAsync(IBrowserFile browserFile)
+        public async Task<string[]> ShowBrowserFile(IBrowserFile browserFile)
         {
-            var uncheckedString = await (new StreamReader(browserFile.OpenReadStream()))
+            var cont = await new StreamReader(browserFile.OpenReadStream())
                                         .ReadToEndAsync();
-            var checkedString = ValidateUpdate(uncheckedString);
-            return checkedString;
+            var result = ShowCurrentDataSet();
+            result[0] = cont;
+            return result;
         }
 
-
-        public string ValidateUpdate(string json)
+        public string[] ValidateUpdate(string[] jsons, string[] newOnes = null) // delivers ChangeResult
         {
             infoMessages = new();
             errorMessages = new();
 
-            var tree = Deserialize(json);
-            if (!errorMessages.Any())
-                tree = MarkDouble(tree);
-            if (!errorMessages.Any())
-                json = Format(Serialize(tree));
+
+            var fieldsDataSet = JsonSerializer.Deserialize<string[]>(jsons[1], options);
+            var newFields = fieldsDataSet.Select(x => new Field() { Name = x });
+            if (newFields.Where(x => x.Name.Length > 40).Any())
+                errorMessages.Add($"Brachennamen dürfen nicht länger als 40 Zeichen sein");
+
 
             OnChange(new() { InfoMessages = infoMessages, ErrorMessages = errorMessages });
-            return json;
+            return jsons;
         }
-
-
-        public void Update(string json)
+        public void Update(string[] json)
         {
-            json = ValidateUpdate(json);
-            var oldVersion = File.ReadAllText(GetLatestPersistence().PhysicalPath);
+            ValidateUpdate(json);
             if (errorMessages.Any())
                 return;
 
-            if (json != oldVersion)
-                UpdatePersistence(json);
-            else
-                OnChange(new() { SuccesMessage = "Keine Änderungen zu übernehmen." });
+            var fieldsDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).fields;
+            var newFields = fieldsDataSet.Select(x => new Field() { Name = x.Trim() });
 
-            UpdateOtherServices(json);
+            var rolesDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).roles;
+
+            var languagesDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).languages;
+            var newLanguages = languagesDataSet.elements.Select(x => new Language() { Name = x.Trim() });
+            var newLangLvl = languagesDataSet.levels;
+
+            var dataSkillTree = JsonSerializer.Deserialize<dataSet>(json[0], options).skills;
+            var newSkillTree = new SkillCategory();
+            dataSkillTree.HardSkills.Name = "HardSkills";
+            dataSkillTree.HardSkills.Parent = newSkillTree;
+            var softSkills = new SkillCategory() { Name = "SoftSkills", Parent = newSkillTree };
+            IEnumerable<SkillCategory> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
+            softSkills.Children = softChildren.ToList();
+            newSkillTree.Children.Add(dataSkillTree.HardSkills);
+            newSkillTree.Children.Add(softSkills);
+            var newSkillLvl = dataSkillTree.hardSkillLevels;
+
+            int addedRows, removedRows;
+            (addedRows, removedRows) = _fieldService.UpdateAllFields(newFields);
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Brachen hinzugefügt/entfernt");
+
+            (addedRows, removedRows) = _roleService.UpdateAllRoles(rolesDataSet);
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} (Rollen,Lohn) hinzugefügt/entfernt");
+
+            (addedRows, removedRows) = _languageService.UpdateAllLanguages(newLanguages);
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen hinzugefügt/entfernt");
+            (addedRows, removedRows) = _languageService.UpdateAllLevels(newLangLvl);
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen Level Namen geändert");
+
+            (var added, var removed) = _skillService.UpdateAllSkills(newSkillTree);
+            infoMessages.Add($"Es wurden: {added[0]}/{removed[0]} Skills Kategorien hinzugefügt/entfernt");
+            infoMessages.Add($"Es wurden: {added[1]}/{removed[1]} Skills hinzugefügt/entfernt");
+            (addedRows, removedRows) = _skillService.UpdateAllLevels(newSkillLvl);
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Skill Level hinzugefügt/entfernt");
+
+            infoMessages = infoMessages.Concat(changeInfo.InfoMessages).ToList();
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+            OnChange(new() { SuccesMessage = "", InfoMessages = infoMessages });
         }
 
 
 
-        // my alternative json intedation Style
-        private static string Format(string json)
+        // my alternative json intendation Style
+        public static string Format(string json)   // removes newlines in arrayes
         {
+            string cr = Environment.NewLine;
             var result = json;
-            var pattern = @"(\[)\s*([^\n\]]*)\s*";
-            var replacement = @"$1$2";
-            for (int i = 0; i < 200; i++)
+            var pattern = @"(\[)\s*([^" + cr + @"\]\{}]*)\s*";
+            var replacement = @"$1$2  ";
+            for (int i = 0; i < 100; i++)
                 result = Regex.Replace(result, pattern, replacement);
+            result = Regex.Replace(result, @"\s*\]", " ]");
             return result;
         }
 
-        //-----------------------------------------------------------------------------------------
-        //----------------------------------  Validation   ----------------------------------------
-        // will set the hasDouble bool
-        private BasicDataNode MarkDouble(BasicDataNode treeRoot)
-        {
-            if (treeRoot == null)
-            {
-                log.LogCritical($"Internal Service faliure while Double Check \n"); //called with null
-                return treeRoot;
-            }
-            List<(BasicDataLeaf pointer, string cat)> allSkills = ListAll(treeRoot);
-            allSkills = allSkills.OrderBy(x => x.pointer.Name).ThenBy(x => x.cat).ToList();
-
-            (BasicDataLeaf pointer, string cat) previous = allSkills.Last();
-            foreach (var item in allSkills)
-            {
-                var previousName = previous.pointer.Name;
-                var currentName = item.pointer.Name;
-                if (item.cat.Length > 35)
-                    errorMessages.Add($"Für Kategorien nicht mehr als 35 Zeichen: {item.cat}");
-                if (currentName.Length > 45)
-                    errorMessages.Add($"Das Design beschränkt Skills auf 45 Zeichen: {currentName}");
-
-                if (previousName.ToLower().Equals(currentName.ToLower()))
-                {
-                    if (item.cat.ToLower().Equals(previous.cat.ToLower()))
-                        errorMessages.Add($"Inakzeptabels Dupllikat \n\t\"{item.cat}\" \"{currentName}\" \n\t\"{previous.cat}\" \"{previousName}\" ");
-                    else
-                    {
-                        infoMessages.Add($"Akzeptabel Dupllicat \n\t\"{item.cat}\" \"{currentName}\" \n\t\"{previous.cat}\" \"{previousName}\" ");
-                        previous.pointer.HasDouble = true;
-                        item.pointer.HasDouble = true;
-                    }
-                }
-                previous = item;
-            }
-
-            var allCat = allSkills.Select(x => x.cat).ToHashSet();
-            infoMessages.Add($"{allSkills.Count} Fähigkeiten in {allCat.Count} Kategorien.");
-            return treeRoot;
-        }
-
-        // combines a BasicDataNode-Tree to alist of Skills
-        private List<(BasicDataLeaf pointer, string cat)> ListAll(BasicDataNode tree)
-        {
-            List<(BasicDataLeaf pointer, string cat)> allSkills = new();
-
-            if (tree.Children.First() is BasicDataNode)     // if recursion
-                foreach (BasicDataNode node in tree.Children)
-                    allSkills = allSkills.Concat(ListAll(node)).ToList();
-            else
-                foreach (BasicDataLeaf leaf in tree.Children)
-                    allSkills.Add((leaf, tree.Name));
-            return allSkills;
-        }
-
-        // same as above but the (inputParameter: tree) will be  modified afterwards
-        private List<(BasicDataLeaf pointer, string cat, string[] posibLvl)> ListAndHeritage(BasicDataNode tree)
-        {
-            List<(BasicDataLeaf pointer, string cat, string[] posibLvl)> allskills = new();
-
-            if (tree.Children.First() is BasicDataNode)     // if recursion
-                foreach (BasicDataNode node in tree.Children)
-                {
-                    node.LevelNames = node.LevelNames.Any() ? node.LevelNames : tree.LevelNames;
-                    allskills = allskills.Concat(ListAndHeritage(node)).ToList();
-                }
-            else
-                foreach (BasicDataLeaf leaf in tree.Children)
-                    allskills.Add((leaf, tree.Name, tree.LevelNames));
-            return allskills;
-        }
-        //----------------------------------------------------------------------------------------
-
-
-        //-----------------------------------------------------------------------------------------
-        private void UpdateOtherServices(string json)
-        {
-            var treeRoot = Deserialize(json);
-            IEnumerable<Skill> hardSkills = new List<Skill>();
-            IEnumerable<Skill> softSkills = new List<Skill>();
-            IEnumerable<Field> fields = new List<Field>();
-            IEnumerable<Language> languages = new List<Language>();
-            IEnumerable<Role> roles = new List<Role>();
-
-            treeRoot = MarkDouble(treeRoot);
-
-            foreach (BasicDataNode firstCategory in treeRoot.Children)
-            {
-                if (firstCategory.Name is "Skills")
-                    hardSkills = ListAndHeritage(firstCategory).Select(x => new Skill()
-                    {
-                        Name = x.pointer.Name,
-                        Category = x.cat,
-                        HasDouble = x.pointer.HasDouble,
-                        PossibleLevels = x.posibLvl,
-                        Type = SkillGroup.Hardskill
-                    });
-                if (firstCategory.Name is "Softskills")
-                    softSkills = ListAndHeritage(firstCategory).Select(x => new Skill()
-                    {
-                        Name = x.pointer.Name,
-                        HasDouble = x.pointer.HasDouble,
-                        PossibleLevels = x.posibLvl,
-                        Type = SkillGroup.Softskill
-                    });
-
-                if (firstCategory.Name is "Felder")
-                    fields = ListAndHeritage(firstCategory).Select(x => new Field() { Name = x.pointer.Name });
-
-                if (firstCategory.Name is "Sprachen")
-                    languages = ListAndHeritage(firstCategory).Select((x) => new Language()
-                    {
-                        Name = x.pointer.Name,
-                        PossibleLevels = x.posibLvl,
-                    });
-                if (firstCategory.Name is "Rollen")
-                    roles = ListAndHeritage(firstCategory).Select((x) => new Role() { Name = x.pointer.Name });
-            }
-            hardSkills = hardSkills.Concat(softSkills).ToList();
-            _skillService.UpdateAllSkills(hardSkills);
-
-            _fildService.UpdateAllFields(fields);
-            _languageService.UpdateAllLanguages(languages);
-            _roleService.UpdateAllRoles(roles);
-
-        }
-        //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
 
 
 
+        private ChangeResult changeInfo = new();
 
+        private void OnSkillServ(object sender, ChangeResult e) => changeInfo = e;
 
-        //-------------------------------------Persistence-----------------------------------------with json
-        //-----------------------------------------------------------------------------------------
-        private readonly string subDirecory = "jsonPersistierung";
-        private readonly string prefix = "datenbasisV";
-        private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IgnoreReadOnlyProperties = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new InnerNodeConverter(), new LeafConvert() } };
-
-        //--read   --------------------------------------------------------------------------------
-        // might return null   uses the custom JsonConverter and  tries to deserialize the input
-        private BasicDataNode Deserialize(string json)
-        {
-            BasicDataNode treeRoot = null;
-            try
-            {
-                treeRoot = JsonSerializer.Deserialize<BasicDataNode>(json, options);
-            }
-            catch (Exception e)
-            {
-                var shortException = e.Message[..(e.Message.Length < 50 ? e.Message.Length : 50)];
-                errorMessages.Add($"Es fiel auf:  {shortException} ");
-            }
-            return treeRoot;
-        }
-        private IFileInfo GetLatestPersistence()
-        {
-            var file = env.ContentRootFileProvider.GetDirectoryContents(subDirecory)
-                                                         .Where(x => x.Name.StartsWith(prefix))
-                                                         .OrderByDescending(x => Int32.Parse(x.Name.Replace(prefix, "").Replace(".json", "")))
-                                                         .FirstOrDefault();
-            if (file == null)
-                throw new Exception("Not one BasicDataSet in Persistence \n");
-            return file;
-        }
-
-
-        //---write --------------------------------------------------------------------------------
-        private string Serialize(BasicDataNode tree) => JsonSerializer.Serialize(tree, options);
-        public void UpdatePersistence(string json)
-        {
-            var name = GetLatestPersistence().Name;
-            int newNumber = Int32.Parse(name.Replace(prefix, "").Replace(".json", "")) + 1;
-            name = $"{prefix}{newNumber}.json";
-            var path = Path.Combine(env.ContentRootPath, subDirecory, name);
-            File.WriteAllText(path, json, Encoding.UTF8);
-            OnChange(new() { SuccesMessage = $"Update erfolgreich. - Gespeichert unter: {name}", InfoMessages = infoMessages });
-        }
-        //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
-        //-----------------------------------------------------------------------------------------
-
-
-
-
-
-
-        //----------------keeps delegates to send Events to the calling Layer above----------------
         //-----------------------------------------------------------------------------------------
         private List<string> errorMessages = new();
         private List<string> infoMessages = new();
@@ -308,4 +192,37 @@ namespace Team14.Data
         protected virtual void OnChange(ChangeResult e) => ChangeEventHandel?.Invoke(this, e);
     }
 
+
+
+
+
+
+
+
+
+    struct dataSet
+    {
+        public IEnumerable<string> fields;  //nur elements
+        public IEnumerable<dataSetrole> roles;  //elements und wages
+        public dataSetLanguages languages;  //elements und wages
+        public dataSetSkills skills;  //elements und wages
+    }
+
+    public struct dataSetrole
+    {
+        public string name;
+        public float[] wages;
+    }
+    struct dataSetLanguages
+    {
+        public string[] levels;
+        public IEnumerable<string> elements;
+    }
+
+    struct dataSetSkills
+    {
+        public string[] hardSkillLevels;
+        public SkillCategory HardSkills;
+        public string[] SoftSkills;
+    }
 }

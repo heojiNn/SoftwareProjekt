@@ -3,36 +3,35 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
 
 
-namespace Team14.Data
+namespace XCV.Data
 {
     public interface IBasicDataSetService
     {
         // Summary:
-        //     Gets the current file from the Server
-        //     and uses ValidateUpdate
+        //     Gets the data from the lookup-tables in the database
+        //       uses ValidateUpdate
         // Returns:
-        //     The .json form the server.
+        //     an array of seriallised objects
         //
         // Raises:
         //   ChangeResultEvent:
         //       :  same as {ValidateUpdate(string json)}
-        public string ShowCurrentDataSet();
+        public string[] ShowCurrentDataSet();
 
 
         // Summary:
         //     Reads the file and does a round trip validation check
-        //     and uses ValidateUpdate
+        //       uses ValidateUpdate
         // Parameters:
         //   browserFile:
         //
         // Returns:
-        //     The formated content of uploaded-file.
+        //     an array of seriallised objects
         //
         // Raises:
         //   ChangeResultEvent:
         //       :  same as {ValidateUpdate(string json)}
-        public Task<string> ShowBrowserFileAsync(IBrowserFile browserFile);
-
+        public Task<string[]> ShowBrowserFile(IBrowserFile browserFile);
 
 
         // Summary:
@@ -47,11 +46,12 @@ namespace Team14.Data
         // and
         //     Error: Bei der Deserilisation fiel auf: ...
         //     Error: Inakzeptables Dupllikat ...
-        public string ValidateUpdate(string json);
+        public string[] ValidateUpdate(string[] jsons, string[] newOnes = null);
 
         // Summary:
         //     Checks for consistensy
-        //     an strores a new Version on the Server  if somthing changed
+        //     an strores all ne Values in the database  if something changed
+        //       uses ValidateUpdate
         // Parameters:
         //   json:
         //     a new json
@@ -60,12 +60,14 @@ namespace Team14.Data
         //   ChangeResult:
         //     Error:  same as {ValidateUpdate(string json)}
         // or
-        //     Succes: "Update erfolgreich. gespeichert unter: {name}."
+        //     Succes: "Update erfolgreich. gespeichert folgen de reihen ind data baae ceändert."
         //             "Keine Änderungen zu übernehmen."
-        public void Update(string json);
+        public void Update(string[] json);
 
 
         public event EventHandler<ChangeResult> ChangeEventHandel;
+
+
     }
 
 }
