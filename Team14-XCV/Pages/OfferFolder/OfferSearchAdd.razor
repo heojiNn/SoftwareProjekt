@@ -1,7 +1,7 @@
 @page "/offer-search-add"
 @attribute [Authorize(Roles = "sales, admin")]
 
-
+@namespace XCV.Pages.OfferNamespace
 @inject IProfileService profileService
 @inject ISkillService skillService
 @inject IRoleService roleService
@@ -129,7 +129,7 @@
                     {
                         <tr>
                             <td>
-                                 @RealValues[i].FirstName @RealValues[i].LastName 
+                                @RealValues[i].FirstName @RealValues[i].LastName
                             </td>
                             <td>
                                 @if (simpleCounter < 5 && SelectedRoles != null)

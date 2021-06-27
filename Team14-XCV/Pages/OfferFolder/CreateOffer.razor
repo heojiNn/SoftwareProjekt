@@ -1,11 +1,11 @@
-@page "/offer-edit"
+@page "/create-offer"
 @attribute [Authorize(Roles = "sales, admin")]
 
-@page "/angebotbearbeiten"
+@page "/angeboterstellen"
 
 @inject ISkillService skillService
 @inject IFieldService fieldService
-
+@namespace XCV.Pages.OfferNamespace
 @using Blazored.Typeahead
 
 
@@ -20,7 +20,7 @@
                         <h3><label>Angebottitel: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input class="form-control" placeholder="Siemens" /></h3>
+                        <h3><input class="form-control" placeholder="Titel hier eingeben!" /></h3>
                     </div>
                 </div>
             </div>
@@ -315,6 +315,7 @@
         {
             <div class="card-body">
                 <div class="row">
+                    <!--
                     <div class="card">
                         <div class="card-header">
                             Arnold B.
@@ -351,6 +352,7 @@
 
                         </div>
                     </div>
+                        -->
 
                 </div>
                 <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
@@ -360,7 +362,7 @@
 
 
 
-    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
+    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Hinzufügen</a>
     <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
 
 
@@ -393,6 +395,5 @@
      function updateTextInput9(val) {
           document.getElementById('textInput9').value=val;
         }</script>
-
 
 

@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using XCV.Data;
 
 
-namespace XCV.Pages.Offers
+
+namespace XCV.Pages.OfferNamespace
 {
-    public partial class OfferEdit
+    public partial class OfferEdittt
     {
         private List<Skill> skills;
         private List<Field> fields;

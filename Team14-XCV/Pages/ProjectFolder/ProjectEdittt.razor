@@ -1,0 +1,266 @@
+@page "/project-edittt"
+@attribute [Authorize(Roles = "sales, admin")]
+
+
+<div class="container-fluid">
+
+
+    <div class="card my-1">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-5">
+                    <h3><label>Projekttitel </label> </h3>
+                </div>
+                <div class="col">
+                    <input class="form-control form-control-lg" type="text" placeholder="Redesign Siemens.de Homepage">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <div class="card">
+
+                <div class="card-header">
+                    <h4>
+                        Projektbeschreibung
+
+                        @if (ProjektBeschreibungCollapsed)
+                        {
+                            <svg @onclick="@ProjektBeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!ProjektBeschreibungCollapsed)
+                        {
+                            <svg @onclick="@ProjektBeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+
+                </div>
+                @if (!ProjektBeschreibungCollapsed)
+                {
+                    <div class="card-body">
+                        <textarea class="form-control rounded-0" id="exampleFormControlTextarea1" rows="8">
+Laufzeit: 22.05.2019- 22.05.2022
+Branche: UI-Design
+Ziel ist es, die Siemens.de Homepage auf ein aktuelles, dem Jahr 2022 gerechten Stand zu bringen, mit den aktuellsten JavaScript und Boostrap Funktionen
+                </textarea>
+                    </div>
+                }
+
+
+
+
+
+            </div>
+
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Projektzweck
+
+                        @if (ZweckCollapsed)
+                        {
+                            <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!ZweckCollapsed)
+                        {
+                            <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+                </div>
+
+                @if (!ZweckCollapsed)
+                {
+                    <div class="card-body scroll h-100">
+                        <div class="card-body ">
+                            <b><label for="Projektzweck 1">Projektzweck 1</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Modernisierung" /><p></p>
+                            <b><label for="Projektzweck 2">Projektzweck 2</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Benutzerfreundlichkeit erhöhen" /><p></p>
+                            <b><label for="Proejktzweck 3">Projektzweck 3</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Effizienzverbesserung" /><p></p>
+                        </div>
+                    </div>}
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Projekttätigkeit
+
+                        @if (TaetigkeitCollapsed)
+                        {
+                            <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!TaetigkeitCollapsed)
+                        {
+                            <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+                </div>
+
+                @if (!TaetigkeitCollapsed)
+                {
+                    <div class="card-body scroll h-100">
+                        <div class="card-body ">
+                            <b><label for="Projektzweck 1">Projekttätigkeit 1</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Frontendentwicklung mit Angular" /><p></p>
+                            <b><label for="Projektzweck 2">Projekttätigkeit 2</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Frontendentwicklung mit Typescript" /><p></p>
+                            <b><label for="Proejktzweck 3">Projekttätigkeit 3</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder="Redesign mit Materialize" /><p></p>
+                        </div>
+                    </div>}
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Mitarbeiter
+
+                        @if (MitarbeiterCollapsed)
+                        {
+                            <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                        @if (!MitarbeiterCollapsed)
+                        {
+                            <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                    </h4>
+                </div>
+
+                @if (!MitarbeiterCollapsed)
+                {
+                    <div class="card-body scroll h-100">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-header">
+                                    Mitarbeiter A
+                                </div>
+                                <div class="card-body">
+                                    <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    Mitarbeiter B
+                                </div>
+                                <div class="card-body">
+                                    <a href="offer-one-maan-edit" style="color:black"> Profil anzeigen</a>
+
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    Mitarbeiter C
+                                </div>
+                                <div class="card-body">
+                                    <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    Mitarbeiter D
+                                </div>
+                                <div class="card-body">
+                                    <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
+                        <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
+                    </div>}
+            </div>
+            </div>
+        </div>
+            <a href="project" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen </a>
+            <a href="project" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen </a>
+
+        </div>
+
+
+
+        @code {
+            public bool BeschreibungCollapsed { get; set; }
+            public bool ZweckCollapsed { get; set; }
+            public bool MitarbeiterCollapsed { get; set; }
+            public bool TaetigkeitCollapsed { get; set; }
+            public bool ProjektBeschreibungCollapsed { get; set; }
+
+            void BeschreibungToggle()
+            {
+                BeschreibungCollapsed = !BeschreibungCollapsed;
+            }
+            void ZweckToggle()
+            {
+                ZweckCollapsed = !ZweckCollapsed;
+            }
+            void MitarbeiterToggle()
+            {
+                MitarbeiterCollapsed = !MitarbeiterCollapsed;
+            }
+            void TaetigkeitToggle()
+            {
+                TaetigkeitCollapsed = !TaetigkeitCollapsed;
+            }
+            void ProjektBeschreibungToggle()
+            {
+                ProjektBeschreibungCollapsed = !ProjektBeschreibungCollapsed;
+            }
+        }

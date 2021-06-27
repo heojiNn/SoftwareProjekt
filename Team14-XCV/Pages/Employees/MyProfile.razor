@@ -2,232 +2,390 @@
 @page "/my-profile"
 @attribute [Authorize]
 
-
-@inject CustomAuthentiProvider authentiProvider
-@inject IProfileService profileService
-@inject ISkillService skillService
-@inject ILanguageService sprachenService
-
-@inject IProjectService proService
-
-
 <div class="container-fluid">
-
-
     <div class="card my-1">
         <div class="card-header text-center">
-            <h3>Profil Übersicht von @myProfile.PersoNumber</h3>
+            <h3>Profilübersicht von @employee.FirstName @employee.LastName </h3>
         </div>
     </div>
-    @if (!myProfile.MadeFirstChangesOnProfile)
-    {
-        <br>
-        <div class="alert alert-warning" role="alert">
-        Sie habe noch keine Änderungen an ihrem Profil vorgenommen.<br>
-        Bitte tragen Sie die die Informationen möglichst bald ein.<br>
-    </div>
-    }
-
-
+    <!--Beschreibung Beginn-->
     <div class="card mb-3">
         <div class="card-header">
-            <h4> Beschreibung </h4>
+            <h4>
+                Beschreibung
+            </h4>
         </div>
-
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
+                <img src =@employee.Image alt="Profilbild" class="rounded" style="margin:1em; width:70%">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@myProfile.FirstName &nbsp; @myProfile.LastName</h5>
-                    <p class="card-text" style="min-height: 200px;">
-                    <pre>@myProfile.Description</pre>
-                    </p>
-                    <p class="card-text"><b>Rate Card Level: @myProfile.RCL</b> &nbsp;  &nbsp;  &nbsp; Berufserfahrung : @myProfile.Expirience Jahre</p>
+                    <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
+                    <p class="card-text">
+                        @employee.Description
 
+                        </p>
+                        <p class="card-text"><b>Rate Card Level: @employee.RCL</b></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!--Beschreibung Ende-->
+        <!--Erste Reihe Beginn-->
+        <div class="row row-cols-1 row-cols-md-2 g-4">
 
-    <div class="row gutters-sm">
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Rollen" ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll">
-                        @foreach (Role role in myProfile.Roles)
+            <!--Rollen Beginn-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Rollen
+                            @if (RolleCollapsed)
                         {
-                        <p>@role @role.Wage&euro;</p>
+                            <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
                         }
-                    </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Branchenwissen" ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll">
-                        @foreach (Field field in myProfile.Fields)
+
+                            @if (!RolleCollapsed)
                         {
-                        <p>@field</p>
+                            <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+
                         }
+                        </h4>
                     </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
 
+                    @if (!RolleCollapsed)
+                {
+                    <div class="card-body scroll h-100">
+                        @foreach (Role rolle in rollen){
+                        <p>@rolle.Name</p>
+                    }
+                    </div>
+                }
 
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="SoftSkills" ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll">
-                        @foreach (Skill skill in myProfile.Abilities.Where(x => x.Type == SkillGroup.Softskill))
+                </div>
+            </div>
+            <!--Rollen Ende-->
+            <!--Hardskills Beginn-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Hardskills
+
+                            @if (HardskillsCollapsed)
                         {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                            @if (!HardskillsCollapsed)
+                        {
+                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                        </h4>
+                    </div>
+
+                    @if (!HardskillsCollapsed)
+                {
+
+                <div class="card-body scroll h-100">
+                    @foreach (Skill skill in hardskills){
+                    <p> @skill.Name </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0"
+                             aria-valuemax="100" style=@skill.LevelNr>
+                            @skill.Level
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+
+                </div>
+            </div>
+            <!--Hardskills Ende-->
+        </div>
+        <!--Erste Reihe Ende-->
+
+        <br />
+        <br />
+
+        <!--Zweite Reihe Beginn-->
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+
+            <!--Softskills Anfanfg-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Softskills
+
+                            @if (SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+
+                        }
+
+                            @if (!SoftskillsCollapsed)
+                        {
+                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                        </h4>
+                    </div>
+
+                    @if (!SoftskillsCollapsed)
+                {
+
+                    <div class="card-body scroll h-100">
+                        @foreach(Skill skill in softskills){
                         <p>@skill.Name</p>
                         }
-                    </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Sprachen" ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll">
-                        @foreach (Language lang in myProfile.Languages)
-                        {
-                        var lvlIndex = Array.FindIndex(sprachenService.GetAllLevel(), (x => x == lang.Level));
-                        int lvlIndexPerce = ((int)lvlIndex * 100 / (sprachenService.GetAllLevel().Length - 1));
 
-                        @lang.Name
+                    </div>
+                }
+
+                </div>
+            </div>
+            <!--Softskills Ende-->
+
+            <br />
+            <br />
+
+            <!--Branchenwissen Anfang-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Tätigkeitsfelder
+
+                            @if (BranchenwissenCollapsed)
+                        {
+                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+
+                            @if (!BranchenwissenCollapsed)
+                        {
+                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+
+                        </h4>
+                    </div>
+
+                    @if (!BranchenwissenCollapsed)
+                {
+
+                    <div class="card-body scroll h-100">
+                        @foreach(Field feld in branchenwissen){
+                        <p>@feld.Name</p>
+                        }
+                    </div>
+                }
+
+                </div>
+            </div>
+            <!--Branchenwissen Ende-->
+        </div>
+        <!--Zweite Reihe Ende-->
+
+        <br />
+        <br />
+
+        <!--Dritte Reihe Beginn-->
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <!--Sprachen Anfang-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Sprachen
+
+                            @if (SprachenCollapsed)
+                        {
+                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
+                        }
+
+                            @if (!SprachenCollapsed)
+                        {
+                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                        </h4>
+                    </div>
+
+                    @if (!SprachenCollapsed)
+                {
+
+                    <div class="card-body scroll h-100">
+                        @foreach(Language sprache in sprachen){
+                        <p> @sprache.Name </p>
                         <div class="progress mb-3" style="height:15px">
-                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: @lvlIndexPerce%;">
-                                @lang.Level
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                                 aria-valuemax="100" style="width:75%">
+                                @sprache.Level
                             </div>
                         </div>
                         }
                     </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
- 
+                }
 
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-                <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll2">
-                    @{
-                    var myHskills = myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill);
-                    if(myHskills.Any())
-                    {
-                        var root = myHskills.First().Category.Parent;
-                        if (root.Parent != null)
-                            root = root.Parent;
-                        foreach (SkillCategory cat1 in root.Children)
+                </div>
+            </div>
+            <!--Sprachen Ende-->
+            <!--Projekte Anfang-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Projekte
+
+                            @if (ProjektCollapsed)
                         {
-                            <CollapsibleCard CardHeaderTitle="@cat1.Name" ShowCardBody=true SmallInner="true">
-                                <CardBody>
-                                @foreach (SkillCategory cat in cat1.Children)
-                                {
-                                if(cat is Skill skill)
-                                {
-                                    int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill.Level));
-                                    int lvlIndexPerce = (lvlIndex * 100 / (skillService.GetAllLevel().Length - 1));
-                                    <p class="mb-0">@skill</p>
-                                    <div class="progress mb-0" style="height:15px">
-                                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: @lvlIndexPerce%;">
-                                            @skill.Level
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <CollapsibleCard CardHeaderTitle="@cat.Name" ShowCardBody=true SmallInner="true">
-                                        <CardHeader> @cat.Children.Count() enthalten</CardHeader>
-                                        <CardBody>
-                                            @foreach (Skill skill2 in cat.Children)
-                                            {
-                                            int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill2.Level));
-                                            int lvlIndexPerce = (lvlIndex * 100 / (skillService.GetAllLevel().Length - 1));
-                                            <p class="mb-0">@skill2</p>
-                                            <div class="progress mb-0" style="height:15px">
-                                                <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: @lvlIndexPerce%;">
-                                                    @skill2.Level
-                                                </div>
-                                            </div>
-                                            }
-                                        </CardBody>
-                                    </CollapsibleCard>
-                                }
-                                }
-                                </CardBody>
-                            </CollapsibleCard>
+                            <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                </path>
+                            </svg>
                         }
-                    }
-                    }
-                    </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll">
-                        <table class="table table-bordered table-striped text-center">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">Projekt</th>
-                                    <th class="text-center">Tätigkeit</th>
-                                </tr>
-                            </thead>
-                            @foreach (Project pro in proService.ShowAllProjects())
-                {
-                            <tr>
-                                <td class="pt-3-half"> @pro.Title
-                                        @if(pro.ActivitiesWithEmployees[""].Any(x => x ==  myProfile.PersoNumber))
-                                        {
-                                        <span class="text-success"> war dabei</span>
-                                        } 
-                                </td>
-                                <td class="pt-3-half">
-                                    @foreach (var key in pro.ActivitiesWithEmployees.Keys.Where(x => x != ""))
-                                    {
-                                        @key
-                                        @if(pro.ActivitiesWithEmployees[key].Any(x => x ==  myProfile.PersoNumber))
-                                        {
-                                        <span class="text-success"> war dabei</span>
-                                        }
-                                        <br>
-                                    }
-                                </td>
-                            </tr>
 
+                            @if (!ProjektCollapsed)
+                        {
+                            <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                 height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                </path>
+                            </svg>
+                        }
+                        </h4>
+                    </div>
+
+                    @if (!ProjektCollapsed)
+                {
+                    <div class="card-body scroll h-100">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>Projektname</th>
+                                <th>Tätigkeit</th>
+                                <th></th>
+                            </tr>
+                            @foreach (Project project in projekte){
+                            <tr>
+                                <td>@project.Title</td>
+                                <td><ul>@foreach (string purpose in project.Purpose) { <li>@purpose</li>}</ul></td>
+                                <td><a class="text-secondary" href="project">Details</a></td>
+                            </tr>
                             }
                         </table>
                     </div>
-                </CardBody>
-            </CollapsibleCard>
+                }
+
+                </div>
+            </div>
+            <!--Projekte Ende-->
         </div>
-
+        <!--Dritte Reihe Ende-->
     </div>
+    <a href="my-profile-edittt" class="btn btn-secondary" style="float: right; margin: 3em 1em"> Bearbeiten</a>
 
 
-</div>
 
-<br>
-<br>
+    @code {
 
-
-@code {
-    private Employee myProfile = new Employee();
+        // Wertdefinition !!!Muss ausgetauscht werden mit Schnittstelle zum Backend!!!
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authstate = await authentiProvider.GetAuthenticationStateAsync();
+        Employee employee = new Employee() {FirstName = "Max",Image = "\\kappa2.jpg", LastName = "Mayer", Description = "Geboren 1969 Eintritt in das Unternehmen 2004 Mitglied der Geschäftsführung seit 2016 Verantwortungsbereich: Vertriebsgeschäftsführung", RCL = 5};
+        IEnumerable<Role>
+            rollen = new List<Role>
+                (){new Role() { Name = "Software Developer" }, new Role() { Name = "Product Owner" }, new Role() { Name = "UI/UX-Designer" }, new Role() { Name = "Agile Coach" }};
+        IEnumerable<Skill>
+            hardskills = new List<Skill>
+                (){new Skill() {Name = "C", Level = "lvl1", LevelNr = "width:25%"}, new Skill(){Name = "C++", Level = "lvl4", LevelNr = "width:100%" }, new Skill(){Name = "Angular", Level = "lvl3", LevelNr = "width:75%" }, new Skill(){Name = "Jasmine", Level = "lvl2", LevelNr = "width:50%" } };
+        IEnumerable<Skill>
+            softskills = new List<Skill>
+                (){new Skill() {Name = "Interdisziplinärer Sachverstand"}, new Skill() {Name = "Kommunikationsfähigkeit"}, new Skill() {Name = "Soziale Kompetenz"}, new Skill() {Name = "Problemlösungsfähigkeit"}};
+        IEnumerable<Field>
+            branchenwissen = new List<Field>
+                (){new Field() {Name = "Architektur/Bau/Immobilien"}, new Field() {Name = "Automobil"}, new Field() {Name = "Banken/Finanzsektor/Versicherung"}};
+        IEnumerable<Language>
+            sprachen = new List<Language>
+                (){new Language() {Name = "Deutsch", Level = "lvl3"}, new Language() {Name = "Englisch", Level = "lvl3"}, new Language() {Name = "Türkisch", Level = "lvl3"}, new Language() {Name = "Italienisch", Level = "lvl3"}, new Language() {Name = "Spanisch", Level = "lvl3"}, new Language() {Name = "Russisch", Level = "lvl3"}};
+        IEnumerable<Project>
+            projekte = new List<Project>
+                (){new Project() {Title = "Siemens", Purpose = new List<string>() { "Projektleiter" } }, new Project() {Title = "Xitaso", Purpose = new List<string>() { "UI-Design" } }, new Project() {Title = "BMW", Purpose = new List<string>() { "SQL-Server" } } };
 
-        myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
+        // Wertdefinition !!!Muss ausgetauscht werden mit Schnittstelle zum Backend!!!
+
+        public bool HardskillsCollapsed { get; set; }
+        public bool SoftskillsCollapsed { get; set; }
+        public bool RolleCollapsed { get; set; }
+        public bool BranchenwissenCollapsed { get; set; }
+        public bool SprachenCollapsed { get; set; }
+        public bool ProjektCollapsed { get; set; }
+        void RolleToggle()
+        {
+            RolleCollapsed = !RolleCollapsed;
+        }
+        void HardskillsToggle()
+        {
+            HardskillsCollapsed = !HardskillsCollapsed;
+        }
+        void SoftskillsToggle()
+        {
+            SoftskillsCollapsed = !SoftskillsCollapsed;
+        }
+        void BranchenwissenToggle()
+        {
+            BranchenwissenCollapsed = !BranchenwissenCollapsed;
+        }
+        void SprachenToggle()
+        {
+            SprachenCollapsed = !SprachenCollapsed;
+        }
+        void ProjektToggle()
+        {
+            ProjektCollapsed = !ProjektCollapsed;
+        }
     }
-
-
-}

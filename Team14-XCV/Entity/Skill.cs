@@ -8,6 +8,7 @@ namespace XCV.Data
         public new string Name { get; init; } = "";
 
         public string Level { get; set; } = "";
+        public string LevelNr { get; set; }
         public SkillGroup Type
         {
             get => Category.Name == "SoftSkills" ? SkillGroup.Softskill : SkillGroup.Hardskill;

@@ -1,13 +1,19 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.IO;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using XCV.Data;
 
 
 
 
-namespace XCV.Pages.Offers
+namespace XCV.Pages.OfferNamespace
 {
     public partial class Offer
     {
@@ -16,23 +22,23 @@ namespace XCV.Pages.Offers
         // Dokumentenkonfiguration: TODO: (needs: List of offers, List of employees contained in an offer)
 
         // Access:
-        // Use access role to identify user. -> Access role returns employee-instance.
-        // Employee instance contains: "DocumentConfigurationList".
-        // Display the Configurations in a HTML element on the offer with the latest chosen Config being preselected.
-        // How to implement latest chosen Config? Persist in Employee as attribute?
+            // Use access role to identify user. -> Access role returns employee-instance.
+            // Employee instance contains: "DocumentConfigurationList".
+            // Display the Configurations in a HTML element on the offer with the latest chosen Config being preselected.
+            // How to implement latest chosen Config? Persist in Employee as attribute?
 
         // Functions:
-        // User can selected/deselect/delete/create/copy/rename a configuration
-        // select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
-        // deselect: deactivate the prior config -> in this state no config is selected
-        // delete: removes an item from the "DocumentConfigurationList"
-        // create: creates a new DocumentConfig instance
-        // copy: copies a certain DocumentConfig with a default description of "<name> (1)" or "<name> (2)", as long as the previous copynumber doesn't exist/ is unique
-        // rename: change of the description of DocumentConfig, must be unique
+            // User can selected/deselect/delete/create/copy/rename a configuration
+            // select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
+            // deselect: deactivate the prior config -> in this state no config is selected
+            // delete: removes an item from the "DocumentConfigurationList"
+            // create: creates a new DocumentConfig instance
+            // copy: copies a certain DocumentConfig with a default description of "<name> (1)" or "<name> (2)", as long as the previous copynumber doesn't exist/ is unique
+            // rename: change of the description of DocumentConfig, must be unique
 
         // States:
-        // User must have at least one DocumentConfig in order to generate a Document(else no Input can be processed) [Alternative: Define a copy of the generate Function that prints the defaults{all Employees with all data}] or to enter the OfferEmployeeConfigEdit page.
-        // User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
+            // User must have at least one DocumentConfig in order to generate a Document(else no Input can be processed) [Alternative: Define a copy of the generate Function that prints the defaults{all Employees with all data}] or to enter the OfferEmployeeConfigEdit page.
+            // User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
 
 
         //===========================================================================================================================================//
@@ -40,11 +46,11 @@ namespace XCV.Pages.Offers
         // Dokumentengeneration: TODO: (needs: Dokumentenkonfiguration)
 
         // Parameter:
-        // DocumentConfig config, contains all the EmployeeConfigs of the document which are to be iterated through individually and displayed in the document.
+            // DocumentConfig config, contains all the EmployeeConfigs of the document which are to be iterated through individually and displayed in the document.
 
         // Content:
-        // Good looking document structure for EmployeeConfigs
-        // "Good looking" := Information-display of individual Employees shoudln't bn displayed cross-page.
+            // Good looking document structure for EmployeeConfigs
+            // "Good looking" := Information-display of individual Employees shoudln't bn displayed cross-page.
 
         /// <summary>
         /// Converts template from byte[] to stream, modifies it with Config-elements and returns the stream. <para></para>

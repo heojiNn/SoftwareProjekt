@@ -1,6 +1,7 @@
 @page "/project"
 @attribute [Authorize(Roles = "sales, admin")]
 
+@namespace XCV.Data
 
 <div class="container-fluid">
 
@@ -8,7 +9,7 @@
 
     <div class="card my-1">
         <div class="card-header">
-            <h3> Redesign Siemens.de Homepage </h3>
+            <h3> @project.Title </h3>
         </div>
     </div>
 
@@ -36,13 +37,14 @@
         @if (!BeschreibungCollapsed)
         {
         <div class="card-body scroll h-100">
-            <p> <b>Titel:</b> Siemens.de Redesign 2022</p>
-            <p><b>Laufzeit:</b>22.05.2019- 22.05.2022</p>
-            <p><b>Branche:</b> UI-Design</p>
-            <p>Ziel ist es, die Siemens.de Homepage auf ein aktuelles, dem Jahr 2022 gerechten Stand zu bringen, mit den aktuellsten JavaScript und Boostrap Funktionen</p>
+            <p> <b>Titel:</b> @project.Title</p>
+            <p><b>Laufzeit:</b>@project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
+            <p><b>Branchen:</b> <ul>@foreach (Field branche in project.Fields) { <li>@branche.Name</li>}</ul></p>
+            <p>@project.Description</p>
         </div>}
     </div>
     <div class="row row-cols-1 row-cols-md-2 g-4">
+        
         <div class="col">
             <div class="card">
                 <div class="card-header">
@@ -71,16 +73,17 @@
                 <div class="card-body scroll h-100">
                     <div class="card-body">
                         <ul>
-                            <li>Modernisierung</li>
-                            <li>Effizienzverbesserung</li>
-                            <li>Benutzerfreundlichkeit erhöhen</li>
+                            @foreach (string purpose in @project.Purpose)
+                            {
+                            <li>@purpose</li>
+                            }
                         </ul>
                     </div>
 
                 </div>}
             </div>
         </div>
-
+        
 
         <div class="col">
             <div class="card">
@@ -108,10 +111,11 @@
                 {
                 <div class="card-body scroll h-100">
                     <div class="card-body">
-                        <ul>
-                            <li>Frontendentwicklung mit Angular</li>
-                            <li>Frontendentwicklung mit Typescript</li>
-                            <li>Redesign mit Materialize</li>
+                        
+                        <ul>@foreach(KeyValuePair<string, IEnumerable<Skill>> activity in project.Activities)
+                        {
+                            <li>@activity.Key</li>
+                        }
                         </ul>
                     </div>
 
@@ -146,15 +150,19 @@
                 {
                 <div class="card-body scroll h-100">
                     <div class="row">
+                        @foreach (KeyValuePair<Employee, IEnumerable<string>> employee in project.HasDone)
+                        {
                         <div class="card">
                             <div class="card-header">
-                                Max Mayer
+                                @employee.Key.FirstName @employee.Key.LastName
                             </div>
                             <div class="card-body">
                                 <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
 
                             </div>
                         </div>
+                        }
+                        <!--
                         <div class="card">
                             <div class="card-header">
                                 Mitarbeiter B
@@ -182,7 +190,7 @@
 
                             </div>
                         </div>
-
+                            -->
                     </div>
                     <a href="project-search-add" class="btn btn-secondary" style="float:right; margin: 2em 1em"> Hinzufügen </a>
 
@@ -200,10 +208,10 @@
 
 @code {
 
-    // Wertdefinition !!!Muss ausgetauscht werden mit Schnittstelle zum Backend!!!
-    
-    
-    
+        // Wertdefinition !!!Muss ausgetauscht werden mit Schnittstelle zum Backend!!!
+
+        Project project = new Project() {HasDone = new Dictionary<Employee, IEnumerable<string>>() { { new Employee{FirstName = "Max", LastName = "Mayer"}, new List<string>() { "DUMMY"} }, { new Employee { FirstName = "Berta", LastName = "Besen" }, new List<string>() { "DUMMY" } } }, Activities = new Dictionary<string, IEnumerable<Skill>>() { { "Frontendentwicklung mit Angular", new List<Skill>() { new Skill() { Name = "DUMMY" } } }, { "Frontendentwicklung mit TypeScript", new List<Skill>() { new Skill() { Name = "DUMMY" } } } },Description = "Ziel ist es, die Siemens.de Homepage auf ein aktuelles, dem Jahr 2022 gerechten Stand zu bringen, mit den aktuellsten JavaScript und Boostrap Funktionen", Fields = new List<Field>() { new Field() { Name = "UI-Design" } },Title = "Siemens", Start = Convert.ToDateTime("05/22/2019"), End = Convert.ToDateTime("05/22/2022"), Purpose = new List<string>() { "Redesign der Siemens.de Homepage" } };
+
     // Wertdefinition !!!Muss ausgetauscht werden mit Schnittstelle zum Backend!!!
 
     public bool BeschreibungCollapsed { get; set; }
@@ -213,18 +221,18 @@
 
     void BeschreibungToggle()
     {
-    BeschreibungCollapsed = !BeschreibungCollapsed;
+        BeschreibungCollapsed = !BeschreibungCollapsed;
     }
     void ZweckToggle()
     {
-    ZweckCollapsed = !ZweckCollapsed;
+        ZweckCollapsed = !ZweckCollapsed;
     }
     void MitarbeiterToggle()
     {
-    MitarbeiterCollapsed = !MitarbeiterCollapsed;
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
     }
     void TaetigkeitToggle()
     {
-    TaetigkeitCollapsed = !TaetigkeitCollapsed;
+        TaetigkeitCollapsed = !TaetigkeitCollapsed;
     }
-    }
+}

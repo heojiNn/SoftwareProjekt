@@ -1,6 +1,6 @@
 @page "/offer"
 @attribute [Authorize(Roles = "sales, admin")]
-
+@namespace XCV.Pages.OfferNamespace
 <div class="container-fluid">
 
 
@@ -200,46 +200,35 @@
 
     Simplifizierte Dokumentenkonfiguration:
 
-    Branchenwissen:
-   @* Error since 24.06 CommitMario--------------
-   <input type="checkbox" @bind="@a" />
-    Softskills:
-    <input type="checkbox" @bind="@b" />
-    Hardskills:
-    <input type="checkbox" @bind="@c" />
-    Projekte:
-    <input type="checkbox" @bind="@d" />
-    Projektteilaufgaben:
-    <input type="checkbox" @bind="@e" /> *@
 
 </div>
 
 
 
-    @code {
-        [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+@code {
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
-       // Create Employee.
-       // Define selection Booleans.
-
-
+    // Create Employee.
+    // Define selection Booleans.
 
 
-        public bool HardskillsCollapsed { get; set; }
-        public bool SoftskillsCollapsed { get; set; }
-        public bool MitarbeiterCollapsed { get; set; }
 
-        void HardskillsToggle()
-        {
-            HardskillsCollapsed = !HardskillsCollapsed;
-        }
-        void SoftskillsToggle()
-        {
-            SoftskillsCollapsed = !SoftskillsCollapsed;
-        }
-        void MitarbeiterToggle()
-        {
-            MitarbeiterCollapsed = !MitarbeiterCollapsed;
-        }
 
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool MitarbeiterCollapsed { get; set; }
+
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
     }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+
+}

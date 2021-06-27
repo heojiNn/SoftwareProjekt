@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using XCV.Data;
-
 namespace XCV.Pages.Employees
 {
     public partial class EmployeeSearch

@@ -87,7 +87,7 @@ namespace XCV.Data
                     p.Field ??= "";
                     con.Open();
                     con.Execute($"Insert Into project Values (    '{p.Title}', '{p.Description}',  " +
-                                                    $"'{p.Start:yyyy-MM-dd}', '{p.Ende:yyyy-MM-dd}', '{p.Field}' )");
+                                                    $"'{p.Start:yyyy-MM-dd}', '{p.End:yyyy-MM-dd}', '{p.Field}' )");
                     con.Close();
                 }
                 catch (SqlException e)
@@ -121,7 +121,7 @@ namespace XCV.Data
                 newP.Field ??= "";
                 con.Open(); ;
                 con.Execute($"Update project Set  Title='{newP.Title}', Description='{newP.Description}', Start='{newP.Start:yyyy-MM-dd}', " +
-                                                             $" Ende='{newP.Ende:yyyy-MM-dd}', Field='{newP.Field}'  Where Id={newP.Id} ");
+                                                             $" Ende='{newP.End:yyyy-MM-dd}', Field='{newP.Field}'  Where Id={newP.Id} ");
 
                 con.Execute($"Delete From project_purpose  Where Project={newP.Id} ");
                 foreach (var purp in newP.Purpose)

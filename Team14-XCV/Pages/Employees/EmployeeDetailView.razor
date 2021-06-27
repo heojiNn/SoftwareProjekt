@@ -1,0 +1,426 @@
+@page "/employee-detail-view"
+@attribute [Authorize(Roles = "sales, admin")]
+
+<div class="container-fluid">
+
+
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3>Mitarbeiterdetailansicht von @employee.FirstName @employee.LastName</h3>
+        </div>
+
+    </div>
+
+    <div class="card mb-3">
+
+        <div class="card-header">
+            <h4>
+                Beschreibung
+            </h4>
+        </div>
+        <div class="row g-0">
+
+            <div class="col-md-4">
+                <img src=@employee.Image alt="Profilbild" class="rounded" style="margin:1em; width:70%">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">@employee.FirstName @employee.LastName</h5>
+                    <p class="card-text">
+                        @employee.Description
+                    </p>
+                    <p class="card-text"><b>Rate Card Level: @employee.RCL</b></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Rollen
+                    @if (RolleCollapsed)
+                    {
+                        <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+
+                    }
+
+
+                    @if (!RolleCollapsed)
+                    {
+                        <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+
+                    }
+                </h4>
+            </div>
+            @if (!RolleCollapsed)
+            {
+
+
+<div class="card-body scroll">
+                    @foreach (Role role in rollen) {
+                    <p>
+                        @role.Name
+                    </p>
+                    }
+    <!--
+                    <p>
+                        Agile Coach
+                    </p>
+                    <p>
+                        UI/UX-Designer
+                    </p>
+                -->
+                </div>
+            }
+
+        </div>
+    </div>
+
+
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Hardskills
+                    @if (HardskillsCollapsed)
+                    {
+                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+
+                    }
+                    @if (!HardskillsCollapsed)
+                    {
+                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+                    }
+                </h4>
+            </div>
+
+            @if (!HardskillsCollapsed)
+            {
+
+
+
+<div class="card-body scroll">
+                    @foreach (Skill skill in hardskills) {
+                    <p> @skill.Name </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style=@skill.LevelNr>
+                            @skill.Level
+                        </div>
+                    </div>
+                    }
+    <!--
+                    <p> Grafana </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                            lvl4
+                        </div>
+                    </div>
+
+                    <p> Elasticsearch</p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+
+                    <p> SPS Anbindung</p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                            lvl2
+                        </div>
+                    </div>
+                -->
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Softskills
+                    @if (SoftskillsCollapsed)
+                    {
+                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+
+                    }
+                    @if (!SoftskillsCollapsed)
+                    {
+                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+                    }
+                </h4>
+            </div>
+
+            @if (!SoftskillsCollapsed)
+            {
+            
+        <div class="card-body scroll">
+            @foreach (Skill skill in softskills)
+            {
+                <p> @skill.Name </p>
+
+            }
+        </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Branchenwissen
+                    @if (BranchenwissenCollapsed)
+                    {
+                        <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+                    }
+                    @if (!BranchenwissenCollapsed)
+                    {
+                        <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+                    }
+                </h4>
+            </div>
+
+            @if (!BranchenwissenCollapsed)
+            {
+
+                <div class="card-body scroll">
+                    @foreach (Field feld in branchenwissen)
+                    {
+                    <p> @feld.Name </p>
+                    }
+                    
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Sprachen
+                    @if (SprachenCollapsed)
+                    {
+                        <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+                    }
+                    @if (!SprachenCollapsed)
+                    {
+                        <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+                    }
+                </h4>
+            </div>
+
+            @if (!SprachenCollapsed)
+            {
+
+                <div class="card-body scroll">
+                    @foreach (Language sprache in sprachen)
+                    {
+                    <p>@sprache.Name</p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style=@sprache.LevelNr>
+                            @sprache.Level
+                        </div>
+                    </div>
+                    }
+                    <!--
+                    <p> Englisch </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+
+                    <p>Türkisch</p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+
+                    <p> Französisch </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+
+                    <p> Spanisch </p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+
+                    <p>Italienisch</p>
+                    <div class="progress mb-3" style="height:15px">
+                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                            lvl3
+                        </div>
+                    </div>
+                -->
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col">
+        <div class="card h-75">
+            <div class="card-header">
+                <h4>
+                    Projekte
+                    @if (ProjektCollapsed)
+                    {
+                        <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
+                    }
+                    @if (!ProjektCollapsed)
+                    {
+                        <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
+                    }
+                </h4>
+            </div>
+
+            @if (!ProjektCollapsed)
+            {
+
+
+
+<div class="card-body scroll">
+                    @foreach (KeyValuePair<Project, string> tat in Taetigkeiten) {
+                    <div class="row">
+                        <div class="col-sm-5">
+                            @tat.Key.Title
+                        </div>
+                        <div class="col-sm-5">
+                            @tat.Value
+                        </div>
+                    </div>
+                    }
+    <!--
+                    <div class="row">
+                        <div class="col-sm-5">
+                            BMW
+                        </div>
+                        <div class="col-sm-5">
+                            UI-Design
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            Xitaso
+                        </div>
+                        <div class="col-sm-5">
+                            SQL-Server
+                        </div>
+                    </div>
+                -->
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Dokumentenkonfiguration-/Generation:
+                @if (MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>
+                }
+                @if (!MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>
+                }
+            </h4>
+        </div>
+
+        @if (!MitarbeiterCollapsed)
+        {
+            <div class="card-body">
+                <a href="document-config-edit" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+@code
+{ 
+        [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    public bool MitarbeiterCollapsed { get; set; }
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool RolleCollapsed { get; set; }
+    public bool BranchenwissenCollapsed { get; set; }
+    public bool SprachenCollapsed { get; set; }
+    public bool ProjektCollapsed { get; set; }
+
+    void RolleToggle()
+    {
+        RolleCollapsed = !RolleCollapsed;
+    }
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
+    }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void BranchenwissenToggle()
+    {
+        BranchenwissenCollapsed = !BranchenwissenCollapsed;
+    }
+    void SprachenToggle()
+    {
+        SprachenCollapsed = !SprachenCollapsed;
+    }
+    void ProjektToggle()
+    {
+        ProjektCollapsed = !ProjektCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+    Employee employee = new Employee() { FirstName = "Max", Image = "\\kappa2.jpg", LastName = "Mayer", Description = "Geboren 1969 Eintritt in das Unternehmen 2004 Mitglied der Geschäftsführung seit 2016 Verantwortungsbereich: Vertriebsgeschäftsführung", RCL = 5 };
+    IEnumerable<Role>
+        rollen = new List<Role>
+            () { new Role() { Name = "Software Developer" }, new Role() { Name = "Product Owner" }, new Role() { Name = "UI/UX-Designer" }, new Role() { Name = "Agile Coach" } };
+    IEnumerable<Skill>
+        hardskills = new List<Skill>
+            () { new Skill() { Name = "C", Level = "lvl1", LevelNr = "width:25%" }, new Skill() { Name = "C++", Level = "lvl4", LevelNr = "width:100%" }, new Skill() { Name = "Angular", Level = "lvl3", LevelNr = "width:75%" }, new Skill() { Name = "Jasmine", Level = "lvl2", LevelNr = "width:50%" } };
+    IEnumerable<Skill>
+        softskills = new List<Skill>
+            () { new Skill() { Name = "Interdisziplinärer Sachverstand" }, new Skill() { Name = "Kommunikationsfähigkeit" }, new Skill() { Name = "Soziale Kompetenz" }, new Skill() { Name = "Problemlösungsfähigkeit" } };
+    IEnumerable<Field>
+        branchenwissen = new List<Field>
+            () { new Field() { Name = "Architektur/Bau/Immobilien" }, new Field() { Name = "Automobil" }, new Field() { Name = "Banken/Finanzsektor/Versicherung" } };
+    IEnumerable<Language>
+        sprachen = new List<Language>
+            () { new Language() { Name = "Deutsch", Level = "lvl3", LevelNr = "width:75%" }, new Language() { Name = "Englisch", Level = "lvl3", LevelNr = "width:75%" }, new Language() { Name = "Türkisch", Level = "lvl3", LevelNr = "width:75%" }, new Language() { Name = "Italienisch", Level = "lvl3", LevelNr = "width:75%" }, new Language() { Name = "Spanisch", Level = "lvl3", LevelNr = "width:75%" }, new Language() { Name = "Russisch", Level = "lvl3", LevelNr = "width:75%" } };
+    IEnumerable<Project>
+        projekte = new List<Project>
+            () { new Project() { Title = "Siemens", Purpose = new List<string>() { "Projektleiter" } }, new Project() { Title = "Xitaso", Purpose = new List<string>() { "UI-Design" } }, new Project() { Title = "BMW", Purpose = new List<string>() { "SQL-Server" } } };
+    Dictionary<Project, string> Taetigkeiten = new Dictionary<Project, string> { { new Project() { Title = "Siemens" }, "Projektleiter" } };
+
+}
