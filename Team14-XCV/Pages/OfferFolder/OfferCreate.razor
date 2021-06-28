@@ -1,11 +1,11 @@
-@page "/create-offer"
+@page "/offer-create"
 @attribute [Authorize(Roles = "sales, admin")]
+@namespace XCV.Pages.OfferNamespace
 
-@page "/angeboterstellen"
-
+@inject IOfferService offerService
 @inject ISkillService skillService
 @inject IFieldService fieldService
-@namespace XCV.Pages.OfferNamespace
+
 @using Blazored.Typeahead
 
 
@@ -20,7 +20,7 @@
                         <h3><label>Angebottitel: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input class="form-control" placeholder="Titel hier eingeben!" /></h3>
+                        <h3><input class="form-control" placeholder="Titel" @bind-value="title" /></h3>
                     </div>
                 </div>
             </div>
@@ -315,7 +315,6 @@
         {
             <div class="card-body">
                 <div class="row">
-                    <!--
                     <div class="card">
                         <div class="card-header">
                             Arnold B.
@@ -352,7 +351,6 @@
 
                         </div>
                     </div>
-                        -->
 
                 </div>
                 <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
@@ -362,13 +360,14 @@
 
 
 
-    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Hinzufügen</a>
-    <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
+    <a href="offers" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="CreateOffer"> Bestätigen</a>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"><a href='javascript:history.go(-1)'>Abbrechen</a> </button>
 
 
 </div>
 
-<script suppress-error="BL9992">function updateTextInput1(val) {
+<script suppress-error="BL9992">
+function updateTextInput1(val) {
           document.getElementById('textInput1').value=val;
         }
      function updateTextInput2(val) {
@@ -397,3 +396,12 @@
         }</script>
 
 
+@code { private string title { get; set; } = "";
+
+            private string description { get; set; } = "";
+
+            private void CreateOffer()
+            {
+                if (title == null) { throw new ArgumentNullException(); }
+                offerService.Create(title, description);
+            } }

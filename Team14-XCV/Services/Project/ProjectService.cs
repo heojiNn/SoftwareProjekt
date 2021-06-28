@@ -63,10 +63,10 @@ namespace XCV.Data
                 foreach (var pur in purposes)
                     pro.Purpose.Add(pur);
 
-                var activityKeys = con.Query<string>($"Select activitie  From activitie Where Project = '{pro.Id}'");
+                var activityKeys = con.Query<string>($"Select activity  From activity Where Project = '{pro.Id}'");
                 foreach (var key in activityKeys)
                 {
-                    pro.ActivitiesWithEmployees.Add(key, con.Query<string>($"Select employee From activitie_done_by Where Project = '{pro.Id}' And Activitie='{key}' ").ToList());
+                    pro.ActivitiesWithEmployees.Add(key, con.Query<string>($"Select employee From activity_done_by Where Project = '{pro.Id}' And activity='{key}' ").ToList());
                 }
             }
             return projects;
@@ -96,7 +96,7 @@ namespace XCV.Data
                 }
                 var newID = ShowAllProjects().FirstOrDefault(x => x.Title == title).Id;
                 con.Open();
-                con.Execute($"Insert Into activitie  Values ({newID}, '' )");
+                con.Execute($"Insert Into activity  Values ({newID}, '' )");
                 con.Close();
                 OnChange(new() { SuccesMessage = $"Es wurde ein Project erstellt mit der ID:{newID}." });
             }
@@ -151,45 +151,45 @@ namespace XCV.Data
         }
 
 
-        public void Add(Project p, string activitie)
+        public void Add(Project p, string activity)
         {
-            if (activitie.Length > 50)
+            if (activity.Length > 50)
             {
                 OnChange(new() { ErrorMessages = new string[] { "Nicht mehr als 50 Zeichen" } });
                 return;
             }
             using var con = new SqlConnection(connectionString);
             con.Open();
-            if (con.Query($"SELECT Project From activitie Where Project={p.Id} And Activitie='{activitie}' ").Any())
+            if (con.Query($"SELECT Project From activity Where Project={p.Id} And activity='{activity}' ").Any())
                 OnChange(new() { ErrorMessages = new string[] { "Eine Activität mit diesen Namen ist schon vohanden" } });
             else
             {
-                con.Execute($"Insert Into activitie  Values ({p.Id}, '{activitie}' )");
+                con.Execute($"Insert Into activity  Values ({p.Id}, '{activity}' )");
                 OnChange(new() { InfoMessages = new string[] { "Activität hinzugefügt" } });
             }
             con.Close();
         }
-        public void Remove(Project p, string activitie)
+        public void Remove(Project p, string activity)
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            con.Execute($"Delete From activitie  Where Project={p.Id} And Activitie='{activitie}' ");
+            con.Execute($"Delete From activity  Where Project={p.Id} And activity='{activity}' ");
             con.Close();
             OnChange(new() { InfoMessages = new string[] { "Activität entfernt" } });
         }
 
-        public void Add(Project p, Employee doneBy, string activitie = "")
+        public void Add(Project p, Employee doneBy, string activity = "")
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            con.Execute($"Insert Into activitie_done_by Values({p.Id}, '{activitie}', '{doneBy.PersoNumber}' )");
+            con.Execute($"Insert Into activity_done_by Values({p.Id}, '{activity}', '{doneBy.PersoNumber}' )");
             con.Close();
         }
-        public void Remove(Project p, Employee doneBy, string activitie = "")
+        public void Remove(Project p, Employee doneBy, string activity = "")
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            con.Execute($"Delete From activitie_done_by  Where Project={p.Id} And Activitie='{activitie}' And Employee='{doneBy.PersoNumber}' ");
+            con.Execute($"Delete From activity_done_by  Where Project={p.Id} And activity='{activity}' And Employee='{doneBy.PersoNumber}' ");
             con.Close();
         }
 

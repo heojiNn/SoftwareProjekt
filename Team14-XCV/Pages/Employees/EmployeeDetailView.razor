@@ -326,45 +326,14 @@
                 </div>
             }
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h4>
-                Dokumentenkonfiguration-/Generation:
-                @if (MitarbeiterCollapsed)
-                {
-                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                         width="24" height="24">
-                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                        </path>
-                    </svg>
-                }
-                @if (!MitarbeiterCollapsed)
-                {
-                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                         width="24" height="24">
-                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                        </path>
-                    </svg>
-                }
-            </h4>
-        </div>
-
-        @if (!MitarbeiterCollapsed)
-        {
-            <div class="card-body">
-                <a href="document-config-edit" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
-            </div>
-        }
-    </div>
+    </div>  
 </div>
 
 
 
 @code
 { 
-        [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
     public bool MitarbeiterCollapsed { get; set; }
     public bool HardskillsCollapsed { get; set; }

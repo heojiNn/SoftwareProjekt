@@ -1,13 +1,16 @@
-@page "/offer-edittt"
+@page "/offer-edit/{Id}"
 @attribute [Authorize(Roles = "sales, admin")]
+@namespace XCV.Pages.OfferNamespace
 
 @page "/angebotbearbeiten"
 
+@inject IProfileService profileService
+@inject IOfferService offerService
 @inject ISkillService skillService
 @inject IFieldService fieldService
 
 @using Blazored.Typeahead
-@namespace XCV.Pages.OfferNamespace
+
 
 <div class="container-fluid">
 
@@ -20,7 +23,7 @@
                         <h3><label>Angebottitel: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input class="form-control" placeholder="Siemens" /></h3>
+                        <h3><input class="form-control" placeholder=@myOffer.Title /></h3>
                     </div>
                 </div>
             </div>
@@ -360,13 +363,14 @@
 
 
 
-    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
-    <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
+    <a href="offer/@Id" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
+    <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
 
 
 </div>
 
-<script suppress-error="BL9992">function updateTextInput1(val) {
+<script suppress-error="BL9992">
+function updateTextInput1(val) {
           document.getElementById('textInput1').value=val;
         }
      function updateTextInput2(val) {
@@ -395,4 +399,6 @@
         }</script>
 
 
-
+@code { 
+    
+    }

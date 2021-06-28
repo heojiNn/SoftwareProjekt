@@ -41,7 +41,7 @@ namespace XCV.Data
             get => _workingSince;
             init { _workingSince = value.Date; }
         }
-
+        public bool MadeFirstChangesOnProfile = false;
 
 
         public ISet<Role> Roles { get; set; } = new SortedSet<Role>();
@@ -52,7 +52,7 @@ namespace XCV.Data
 
 
 
-        public bool MadeFirstChangesOnProfile = false;
+       
         //public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>();
 
 

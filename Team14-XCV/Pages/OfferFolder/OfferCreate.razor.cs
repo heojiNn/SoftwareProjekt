@@ -4,10 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using XCV.Data;
 
-
 namespace XCV.Pages.OfferNamespace
 {
-    public partial class CreateOffer
+    public partial class OfferCreate
     {
         private List<Skill> skills;
         private List<Field> fields;
@@ -73,5 +72,3 @@ namespace XCV.Pages.OfferNamespace
         }
     }
 }
-
-

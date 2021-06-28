@@ -34,23 +34,13 @@
                 <NavLink class="nav-link" href="offers">
                     <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
                 </NavLink>
-                <NavLink class="nav-link" href="offer">
-                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot)
-                </NavLink>
-                <NavLink class="nav-link" href="offer-edittt">
-                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot ändern)
-                </NavLink>
+            </li>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="sales, admin">
+            <li class="nav-item px-3 pb-4">
                 <NavLink class="nav-link" href="employee-search">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (Mitarbeitersuche)
-                </NavLink>
-                <NavLink class="nav-link" href="offer-search-result">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Suchergebnis
-                </NavLink>
-                <NavLink class="nav-link" href="offer-employee-detail-view">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarb. Details
-                </NavLink>
-                <NavLink class="nav-link" href="document-config-edit">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (DocConfig ändern)
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarbeitersuche (!Offer)
                 </NavLink>
             </li>
         </AuthorizeView>
@@ -61,7 +51,7 @@
                     <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
                 </NavLink>
                 <NavLink class="nav-link" href="project">
-                    <span class="oi oi-box" aria-hidden="true"></span> Project 
+                    <span class="oi oi-box" aria-hidden="true"></span> Project
                 </NavLink>
                 <NavLink class="nav-link" href="project-search-add">
                     <span class="oi oi-project" aria-hidden="true"></span> ProjektSuche?
@@ -89,7 +79,7 @@
             </NavLink>
         </li>
 
-     <span class="text-success" > funktioniert</span>
+        <span class="text-success"> funktioniert</span>
     </ul>
 </div>
 

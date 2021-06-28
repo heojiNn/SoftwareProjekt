@@ -1,0 +1,245 @@
+@page "/offers"
+@attribute [Authorize]
+
+@inject IOfferService offerService
+@inject NavigationManager navManager
+@namespace XCV.Pages.OfferNamespace
+
+@using Blazored.Typeahead
+
+<AuthorizeView Roles="sales">
+    <NotAuthorized>
+        <strong>Nur der Vertrieb kann diese Seite anzeigen!</strong>
+    </NotAuthorized>
+    <Authorized>
+    <div class="container-fluid">
+        <div class="card my-1">
+            <div class="card-header text-center">
+                <h3>Angebotsübersicht</h3>
+            </div>
+        </div>
+        <br />
+        <div class="input-group w-75 p-3">
+            <button type="button" class="btn btn-secondary" @onclick="ShowResults">Filter anwenden </button>
+            <BlazoredTypeahead SearchMethod="SearchTitle"
+                               @bind-Values="SelectedOffers"
+                               EnableDropDown="true"
+                               placeholder="Nach Angebotstitel suchen:"
+                               href="javascript:location.reload(true)">
+                <SelectedTemplate Context="oContext">
+                    @oContext.Title
+                </SelectedTemplate>
+                <ResultTemplate Context="oContext">
+                    @oContext.Title
+                </ResultTemplate>
+            </BlazoredTypeahead>
+        </div>
+
+        @if (!showSearchResults) {
+            @foreach (Offer o in offers.ToList())
+            {
+                <div class="col-sm-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    @o.Title 
+                                    @if (AngebotCCollapsed)
+                                    {
+                                        <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                            </path>
+                                        </svg>} @if (!AngebotCCollapsed)
+                                        {
+                                        <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                            </path>
+                                        </svg>}
+                                    </h4>
+                                </div>  
+                            </div>
+                        <div class="card-body">
+                            @if (!AngebotCCollapsed)
+                            {
+                            <table class="table table-hover">
+                                <tr class="table-active">
+                                    <th>Id</th>
+                                    <th>Titel</th>
+                                    <th>Beschreibung</th>
+                                    <th>Softskills</th>
+                                    <th>Hardskills</th>
+                                    <th>Branchenwissen</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @o.Id
+                                    </td>
+                                    <td>
+                                        @o.Title
+                                    </td>
+                                    @if (o.Title.Length==0)
+                                    {
+                                    <td>
+                                        -
+                                    </td>
+                                    }
+                                    <td>
+                                        @o.Description
+                                    </td>
+                                    @if (o.Description.Length==0)
+                                    {
+                                    <td>
+                                        -
+                                    </td>
+                                    }
+                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Softskill))
+                                    {
+                                        <td>
+                                            @s.Name,
+                                        </td>
+                                    }
+                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Softskill).Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Hardskill))
+                                    {
+                                        <td>
+                                            @s.Name,
+                                        </td>
+                                    }
+                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Hardskill).Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                    @foreach (Field f in o.Fields)
+                                    {
+                                        <td>
+                                            @f.Name;
+                                        </td>
+                                    }
+                                    @if (o.Fields.Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                </tr>
+                            </table>
+                            }
+                        <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a>
+                        <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a>
+                        </div>
+                    </div>
+            }      
+        } else {
+             @foreach (Offer o in SelectedOffers)
+             {
+                <div class="col-sm-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>
+                                    @o.Title 
+                                    @if (AngebotCCollapsed)
+                                    {
+                                        <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                            </path>
+                                        </svg>} @if (!AngebotCCollapsed)
+                                        {
+                                        <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                            <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                            </path>
+                                        </svg>}
+                                    </h4>
+                                </div>  
+                            </div>
+                        <div class="card-body">
+                            @if (!AngebotCCollapsed)
+                            {
+                            <table class="table table-hover">
+                                <tr class="table-active">
+                                    <th>Id</th>
+                                    <th>Titel</th>
+                                    <th>Beschreibung</th>
+                                    <th>Softskills</th>
+                                    <th>Hardskills</th>
+                                    <th>Branchenwissen</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @o.Id
+                                    </td>
+                                    <td>
+                                        @o.Title
+                                    </td>
+                                    @if (o.Title.Length==0)
+                                    {
+                                    <td>
+                                        -
+                                    </td>
+                                    }
+                                    <td>
+                                        @o.Description
+                                    </td>
+                                    @if (o.Description.Length==0)
+                                    {
+                                    <td>
+                                        -
+                                    </td>
+                                    }
+                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Softskill))
+                                    {
+                                        <td>
+                                            @s.Name,
+                                        </td>
+                                    }
+                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Softskill).Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Hardskill))
+                                    {
+                                        <td>
+                                            @s.Name,
+                                        </td>
+                                    }
+                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Hardskill).Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                    @foreach (Field f in o.Fields)
+                                    {
+                                        <td>
+                                            @f.Name;
+                                        </td>
+                                    }
+                                    @if (o.Fields.Count()==0)
+                                    {
+                                        <td>
+                                            -
+                                        </td>
+                                    }
+                                </tr>
+                            </table>
+                            }
+                        <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a>
+                        <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a>
+                        </div>
+                    </div>
+             }     
+        }      
+    </div>
+        <a href="javascript:location.reload(true)" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="DeleteAll">Alle Löschen</a>
+        <a href="offer-create" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Hinzufügen</a>
+    </Authorized>
+</AuthorizeView>
+
+@* TODO: (MODAL / DIALOG) "WILLST DU (DAS / DIE) ANGEBOT(E) WIRKLICH LÖSCHEN?" *@

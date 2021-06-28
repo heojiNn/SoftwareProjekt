@@ -34,6 +34,8 @@ namespace XCV
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IBasicDataSetService, BasicDataSetService>();
 
+            services.AddTransient<IOfferService, OfferService>();
+
             services.AddSingleton<ISkillService, SkillService>();
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ILanguageService, LanguageService>();

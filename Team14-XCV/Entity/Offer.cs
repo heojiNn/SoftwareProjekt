@@ -13,17 +13,13 @@ namespace XCV.Data
             ErrorMessage = "zu lang oder falsch")]
         public string Title { get; set; } = "";
         public string Description { get; set; } = "";
+        public ISet<Skill> Requirements { get; set; } = new SortedSet<Skill>();
+        public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
+        public ISet<Employee> participants { get; set; } = new SortedSet<Employee>();
 
+        // TODO: RCL, ROLE dynamisch änderbar
+        public IEnumerable<(Role, Employee)> participantRoles { get; set; } = new List<(Role, Employee)>();
 
-        public Object DocumentSettings { get; set; }
-
-
-        // might be null
-        public IEnumerable<(Role, Employee)> Members { get; set; } = new List<(Role, Employee)>();
-
-
-        public IEnumerable<Field> Fields { get; set; } = new List<Field>();
-        public IEnumerable<Skill> Requierments { get; set; } = new List<Skill>();
 
     }
 }
