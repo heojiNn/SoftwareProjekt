@@ -64,30 +64,38 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        Rollen
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Rollen
 
-                        @if (RolleCollapsed)
-                        {
-                            <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                 height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
+                                @if (RolleCollapsed)
+                                {
+                                    <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
 
-                        }
+                                }
 
 
-                        @if (!RolleCollapsed)
-                        {
-                            <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                 height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
+                                @if (!RolleCollapsed)
+                                {
+                                    <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
 
-                        }
-                    </h4>
+                                }
+
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Wählen Sie hier Ihre Rollen im Unternehmen"></div>
+                        </div>
+                    </div>
                 </div>
                 @if (!RolleCollapsed)
                 {
@@ -138,26 +146,34 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        Hardskills
-                        @if (HardskillsCollapsed)
-                        {
-                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Hardskills
+                                @if (HardskillsCollapsed)
+                                {
+                                    <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
 
-                        }
-                        @if (!HardskillsCollapsed)
-                        {
-                            <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
+                                }
+                                @if (!HardskillsCollapsed)
+                                {
+                                    <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Die Level sind: 1.Hobby Projekt  2. Produktiv eingesetzt  3. Regelmäßige Nutzung  4. Experte"></div>
+                        </div>
+                    </div>
                 </div>
 
                 @if (!HardskillsCollapsed)
@@ -204,26 +220,34 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        Softskills
-                        @if (SoftskillsCollapsed)
-                        {
-                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Softskills
+                                @if (SoftskillsCollapsed)
+                                {
+                                    <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
 
-                        }
-                        @if (!SoftskillsCollapsed)
-                        {
-                            <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
+                                }
+                                @if (!SoftskillsCollapsed)
+                                {
+                                    <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Wählen Sie hier Ihre Softskills"></div>
+                        </div>
+                    </div>
                 </div>
 
                 @if (!SoftskillsCollapsed)
@@ -284,26 +308,35 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        Tätigkeitsfelder
-                        @if (BranchenwissenCollapsed)
-                        {
-                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
-                        }
-                        @if (!BranchenwissenCollapsed)
-                        {
-                            <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
-                </div>
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Tätigkeitsfelder
+                                @if (BranchenwissenCollapsed)
+                                {
+                                    <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                                @if (!BranchenwissenCollapsed)
+                                {
+                                    <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Wählen Sie hier in welchen Branchen Sie bereits Erfahrungen haben"></div>
+                        </div>
+                    </div>
+                </div>              
 
                 @if (!BranchenwissenCollapsed)
                 {
@@ -319,15 +352,17 @@
                                 @context.Name
                             </ResultTemplate>
                         </BlazoredTypeahead>
-                        @foreach(Field feld in branchenwissen){
-                        <b><label for="Branche1">Tätigkeitsfeld</label></b>
-                        <input type="text" class="form-control" style="width: 400px;" placeholder=@feld.Name /><p></p>
-                        }<!--
-                        <b><label for="Branche1">Tätigkeitsfeld 2</label></b>
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Automobil" /><p></p>
-                        <b><label for="Branche1">Tätigkeitsfeld 3</label></b>
-                        <input type="text" class="form-control" style="width: 400px;" placeholder="Banken/Finanzsektor/Versicherung" /><p></p>
-                        -->
+                        @foreach (Field feld in branchenwissen)
+                        {
+                            <b><label for="Branche1">Tätigkeitsfeld</label></b>
+                            <input type="text" class="form-control" style="width: 400px;" placeholder=@feld.Name /><p></p>
+                        }
+                        <!--
+            <b><label for="Branche1">Tätigkeitsfeld 2</label></b>
+            <input type="text" class="form-control" style="width: 400px;" placeholder="Automobil" /><p></p>
+            <b><label for="Branche1">Tätigkeitsfeld 3</label></b>
+            <input type="text" class="form-control" style="width: 400px;" placeholder="Banken/Finanzsektor/Versicherung" /><p></p>
+            -->
                     </div>
                 }
             </div>
@@ -339,26 +374,42 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    <h4>
-                        Sprachen
-                        @if (SprachenCollapsed)
-                        {
-                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
-                        }
-                        @if (!SprachenCollapsed)
-                        {
-                            <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Sprachen
+                                @if (SprachenCollapsed)
+                                {
+                                    <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                                @if (!SprachenCollapsed)
+                                {
+                                    <svg @onclick="@SprachenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Wählen Sie hier Ihr Niveau in gesprochenen Sprachen, die Level sind:
+                                 1. Anfänger
+                                 2. Grundlegende kenntnisse
+                                 3. Fortgeschrittene Sprachverwendung
+                                 4. Selbsständige Sprachverwendung
+                                 5. Fachkundige Sprachkenntnisse
+                                 6. Beherrschung der Sprache"></div>
+                        </div>
+                    </div>
                 </div>
+                
 
                 @if (!SprachenCollapsed)
                 {
@@ -374,32 +425,33 @@
                                 @context.Name
                             </ResultTemplate>
                         </BlazoredTypeahead>
-                        @foreach (Language sprache in sprachen) {
-                        <b><label for="customRange2" class="form-label">@sprache.Name    <input class="form-control" type="text" id="textInput5" value="" style="width: 40px;" readonly></label></b>
-                        <div class="slidecontainer">
-                            <input type="range" class="custom-range" min="0" max="5" id="customRange5" onchange="updateTextInput5(this.value);">
+                        @foreach (Language sprache in sprachen)
+                        {
+                            <b><label for="customRange2" class="form-label">@sprache.Name    <input class="form-control" type="text" id="textInput5" value="" style="width: 40px;" readonly></label></b>
+                            <div class="slidecontainer">
+                                <input type="range" class="custom-range" min="0" max="5" id="customRange5" onchange="updateTextInput5(this.value);">
 
-                        </div>
+                            </div>
                         }
                         <!--
-                        <p></p>
-                        <b><label for="customRange2" class="form-label">Englisch:   <input class="form-control" type="text" id="textInput6" value="" style="width: 40px;" readonly></label></b>
-                        <input type="range" class="custom-range" min="0" max="5" id="customRange6" onchange="updateTextInput6(this.value);">
+            <p></p>
+            <b><label for="customRange2" class="form-label">Englisch:   <input class="form-control" type="text" id="textInput6" value="" style="width: 40px;" readonly></label></b>
+            <input type="range" class="custom-range" min="0" max="5" id="customRange6" onchange="updateTextInput6(this.value);">
 
 
-                        <p></p>
-                        <b><label for="customRange2" class="form-label">Türkisch:   <input class="form-control" type="text" id="textInput7" value="" style="width: 40px;" readonly></label></b>
-                        <input type="range" class="custom-range" min="0" max="5" id="customRange7" onchange="updateTextInput7(this.value);">
+            <p></p>
+            <b><label for="customRange2" class="form-label">Türkisch:   <input class="form-control" type="text" id="textInput7" value="" style="width: 40px;" readonly></label></b>
+            <input type="range" class="custom-range" min="0" max="5" id="customRange7" onchange="updateTextInput7(this.value);">
 
 
-                        <p></p>
-                        <b><label for="customRange2" class="form-label">Italienisch:    <input class="form-control" type="text" id="textInput8" value="" style="width: 40px;" readonly></label></b>
-                        <input type="range" class="custom-range" min="0" max="5" id="customRange8" onchange="updateTextInput8(this.value);">
+            <p></p>
+            <b><label for="customRange2" class="form-label">Italienisch:    <input class="form-control" type="text" id="textInput8" value="" style="width: 40px;" readonly></label></b>
+            <input type="range" class="custom-range" min="0" max="5" id="customRange8" onchange="updateTextInput8(this.value);">
 
-                        <p></p>
-                        <b><label for="customRange2" class="form-label">Russisch:   <input class="form-control" type="text" id="textInput9" value="" style="width: 40px;" readonly></label></b>
-                        <input type="range" class="custom-range" min="0" max="5" id="customRange9" onchange="updateTextInput9(this.value);">
-                        -->
+            <p></p>
+            <b><label for="customRange2" class="form-label">Russisch:   <input class="form-control" type="text" id="textInput9" value="" style="width: 40px;" readonly></label></b>
+            <input type="range" class="custom-range" min="0" max="5" id="customRange9" onchange="updateTextInput9(this.value);">
+            -->
 
                     </div>
                 }
@@ -410,6 +462,36 @@
 
         <div class="col">
             <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h4>
+                                Projekte
+                                @if (ProjektCollapsed)
+                                {
+                                    <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                                @if (!ProjektCollapsed)
+                                {
+                                    <svg @onclick="@ProjektToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                         height="24">
+                                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                        </path>
+                                    </svg>
+
+                                }
+                            </h4>
+                        </div>
+                        <div class="col">
+                            <div class="avatar-links" style="float: right" data-tooltip="Ihre Projekte können Sie unter 'Meine Projekte' verwalten"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-header">
                     <h4>
                         Projekte
@@ -436,7 +518,7 @@
                 {
 
 
-<div class="card-body scroll h-100">
+                    <div class="card-body scroll h-100">
                         <!-- Editable table -->
 
                         <div id="table" class="table-editable">
@@ -454,49 +536,50 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (KeyValuePair<Project, string> tat in Taetigkeiten) {
-                                    <tr>
-                                        <td class="pt-3-half" contenteditable="true">@tat.Key.Title</td>
-                                        <td class="pt-3-half" contenteditable="true">@tat.Value</td>
+                                    @foreach (KeyValuePair<Project, string> tat in Taetigkeiten)
+                                    {
+                                        <tr>
+                                            <td class="pt-3-half" contenteditable="true">@tat.Key.Title</td>
+                                            <td class="pt-3-half" contenteditable="true">@tat.Value</td>
 
 
-                                        <td>
-                                            <span class="table-remove">
-                                                <a href="" class="btn btn-secondary" type="submit">
-                                                    Löschen
-                                                </a>
-                                            </span>
-                                        </td>
-                                    </tr>
+                                            <td>
+                                                <span class="table-remove">
+                                                    <a href="" class="btn btn-secondary" type="submit">
+                                                        Löschen
+                                                    </a>
+                                                </span>
+                                            </td>
+                                        </tr>
                                     }
                                     <!-- This is our clonable table line -->
                                     <!--
-                                    <tr>
-                                        <td class="pt-3-half" contenteditable="true">BMW</td>
-                                        <td class="pt-3-half" contenteditable="true">UI-Design</td>
+                        <tr>
+                            <td class="pt-3-half" contenteditable="true">BMW</td>
+                            <td class="pt-3-half" contenteditable="true">UI-Design</td>
 
 
-                                        <td>
-                                            <span class="table-remove">
-                                                <a href="" class="btn btn-secondary" type="submit">
-                                                    Löschen
-                                                </a>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td class="pt-3-half" contenteditable="true">Xitaso</td>
-                                        <td class="pt-3-half" contenteditable="true">SQL-Server</td>
+                            <td>
+                                <span class="table-remove">
+                                    <a href="" class="btn btn-secondary" type="submit">
+                                        Löschen
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="pt-3-half" contenteditable="true">Xitaso</td>
+                            <td class="pt-3-half" contenteditable="true">SQL-Server</td>
 
 
-                                        <td>
-                                            <a href="" class="btn btn-secondary" type="submit">
-                                                Löschen
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    -->
+                            <td>
+                                <a href="" class="btn btn-secondary" type="submit">
+                                    Löschen
+                                </a>
+                            </td>
+                        </tr>
+                        -->
 
 
                                 </tbody>
