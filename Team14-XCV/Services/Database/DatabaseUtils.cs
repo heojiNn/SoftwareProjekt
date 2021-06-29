@@ -333,7 +333,7 @@ namespace XCV.Data
                                                     "END;");
                 */
                 //offer-skill
-                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_skill WHERE Offer IN (1, 2, 3))" +
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_skill)" +
                                                     "BEGIN" +
                                                         " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Akquisitionsstärke', 'SoftSkills', '3')" +
                                                         " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Automapper', 'Bibliotheken', '1')" +

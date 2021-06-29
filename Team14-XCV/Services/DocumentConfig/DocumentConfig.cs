@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace XCV.Services.Offers
+namespace XCV.Services.DocumentConfig
 {
     // Inputparameter of Documentgenerator.
     public class DocumentConfig

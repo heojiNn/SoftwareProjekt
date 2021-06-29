@@ -396,12 +396,28 @@ function updateTextInput1(val) {
         }</script>
 
 
-@code { private string title { get; set; } = "";
+@code { 
 
-            private string description { get; set; } = "";
 
-            private void CreateOffer()
-            {
-                if (title == null) { throw new ArgumentNullException(); }
-                offerService.Create(title, description);
-            } }
+    private string title { get; set; } = "";
+    private string description { get; set; } = "";
+
+    private Offer toCreate { get; set; }
+
+
+
+    private void CreateOffer()
+    {
+        if (toCreate == null) { throw new ArgumentNullException(); }
+        offerService.Create(title, description);
+        //offerService.Add()
+    }
+
+
+
+
+
+
+
+
+    }

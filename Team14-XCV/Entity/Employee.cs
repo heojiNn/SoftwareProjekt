@@ -14,14 +14,12 @@ namespace XCV.Data
 
 
         [Required(ErrorMessage = "Der Vorname darf nicht leer sein"),
-        MaxLength(10, ErrorMessage = "Die Vorname ist zu lang")]
+        MaxLength(10, ErrorMessage = "Der Vorname ist zu lang")]
         public string FirstName { get; set; } = "";
 
         [Required(ErrorMessage = "Der Nachname darf nicht leer sein"),
-        MaxLength(10, ErrorMessage = "Die Nachname ist zu lang")]
+        MaxLength(10, ErrorMessage = "Der Nachname ist zu lang")]
         public string LastName { get; set; } = "";
-
-
 
         public string Description { get; set; } = "";
         public string Image { get; set; } = "musterPic.png";
@@ -52,7 +50,7 @@ namespace XCV.Data
 
 
 
-       
+        //TODO
         //public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>();
 
 

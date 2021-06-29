@@ -87,7 +87,10 @@ namespace XCV.Data
 
         //---write --------------------------------------------------------------------------------
 
-
+        public void Create(string title, string description, Skill skill, Field field, ISet<Employee> participants)
+        {
+            throw new NotImplementedException();
+        }
 
         public void Create(string title, string description)
         {

@@ -28,11 +28,13 @@ namespace XCV.Data
         // Write:
 
         /// <summary>
-        ///  Creates a new Offer with title and description and a unique Id.
+        ///  Creates a new Offer with a unique Id.
         /// </summary>
         /// <param name="title"></param>
         /// <param name="description"></param>
         public void Create(string title, string description);
+      
+        public void Create(string title, string description, Skill skill, Field field, ISet<Employee> participants); // ref. "CreateOffer"
         /// <summary>
         /// TODO
         /// </summary>

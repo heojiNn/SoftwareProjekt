@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using XCV.Data;
 
-namespace XCV.Services.Offers
+namespace XCV.Services.DocumentConfig
 {
     public class EmployeeConfig
     {
