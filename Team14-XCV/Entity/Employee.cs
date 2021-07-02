@@ -47,16 +47,7 @@ namespace XCV.Data
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
         public ISet<Project> Projects { get; set; } = new SortedSet<Project>();
-
-
-
-        //TODO
-        //public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>();
-
-
-
-
-
+        public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>(); // (offer, configname)
         public override string ToString() => $"{PersoNumber}heißt \"{FirstName}\" \"{LastName}\"";
     }
 }

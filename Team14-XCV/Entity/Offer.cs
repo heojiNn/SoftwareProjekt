@@ -17,9 +17,7 @@ namespace XCV.Data
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
         public ISet<Employee> participants { get; set; } = new SortedSet<Employee>();
 
-        // TODO: RCL, ROLE dynamisch änderbar
         public IEnumerable<(Role, Employee)> participantRoles { get; set; } = new List<(Role, Employee)>();
-
-
+        public IEnumerable<(Employee, int)> participantRCLs { get; set; } = new List<(Employee, int)>();
     }
 }

@@ -408,9 +408,9 @@ function updateTextInput1(val) {
 
     private void CreateOffer()
     {
-        if (toCreate == null) { throw new ArgumentNullException(); }
+        if (title == null) { throw new ArgumentNullException(); }
         offerService.Create(title, description);
-        //offerService.Add()
+        //offerService.Create(everything at once)
     }
 
 

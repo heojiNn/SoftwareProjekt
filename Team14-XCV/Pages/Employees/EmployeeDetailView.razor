@@ -1,5 +1,8 @@
-@page "/employee-detail-view"
+@page "/employee-detail-view/{PersoNumber}"
 @attribute [Authorize(Roles = "sales, admin")]
+
+@inject IProfileService profileService
+@inject IConfigService configService
 
 <div class="container-fluid">
 
@@ -60,20 +63,21 @@
             {
 
 
-<div class="card-body scroll">
-                    @foreach (Role role in rollen) {
-                    <p>
-                        @role.Name
-                    </p>
+                <div class="card-body scroll">
+                    @foreach (Role role in rollen)
+                    {
+                        <p>
+                            @role.Name
+                        </p>
                     }
-    <!--
-                    <p>
-                        Agile Coach
-                    </p>
-                    <p>
-                        UI/UX-Designer
-                    </p>
-                -->
+                    <!--
+                                    <p>
+                                        Agile Coach
+                                    </p>
+                                    <p>
+                                        UI/UX-Designer
+                                    </p>
+                                -->
                 </div>
             }
 
@@ -103,37 +107,38 @@
 
 
 
-<div class="card-body scroll">
-                    @foreach (Skill skill in hardskills) {
-                    <p> @skill.Name </p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style=@skill.LevelNr>
-                            @skill.Level
+                <div class="card-body scroll">
+                    @foreach (Skill skill in hardskills)
+                    {
+                        <p> @skill.Name </p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style=@skill.LevelNr>
+                                @skill.Level
+                            </div>
                         </div>
-                    </div>
                     }
-    <!--
-                    <p> Grafana </p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                            lvl4
-                        </div>
-                    </div>
+                    <!--
+                                    <p> Grafana </p>
+                                    <div class="progress mb-3" style="height:15px">
+                                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+                                            lvl4
+                                        </div>
+                                    </div>
 
-                    <p> Elasticsearch</p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
-                        </div>
-                    </div>
+                                    <p> Elasticsearch</p>
+                                    <div class="progress mb-3" style="height:15px">
+                                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                            lvl3
+                                        </div>
+                                    </div>
 
-                    <p> SPS Anbindung</p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                            lvl2
-                        </div>
-                    </div>
-                -->
+                                    <p> SPS Anbindung</p>
+                                    <div class="progress mb-3" style="height:15px">
+                                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                                            lvl2
+                                        </div>
+                                    </div>
+                                -->
                 </div>
             }
         </div>
@@ -159,14 +164,14 @@
 
             @if (!SoftskillsCollapsed)
             {
-            
-        <div class="card-body scroll">
-            @foreach (Skill skill in softskills)
-            {
-                <p> @skill.Name </p>
 
-            }
-        </div>
+                <div class="card-body scroll">
+                    @foreach (Skill skill in softskills)
+                    {
+                        <p> @skill.Name </p>
+
+                    }
+                </div>
             }
         </div>
     </div>
@@ -194,9 +199,9 @@
                 <div class="card-body scroll">
                     @foreach (Field feld in branchenwissen)
                     {
-                    <p> @feld.Name </p>
+                        <p> @feld.Name </p>
                     }
-                    
+
                 </div>
             }
         </div>
@@ -225,49 +230,49 @@
                 <div class="card-body scroll">
                     @foreach (Language sprache in sprachen)
                     {
-                    <p>@sprache.Name</p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style=@sprache.LevelNr>
-                            @sprache.Level
+                        <p>@sprache.Name</p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style=@sprache.LevelNr>
+                                @sprache.Level
+                            </div>
                         </div>
-                    </div>
                     }
                     <!--
-                    <p> Englisch </p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
+                        <p> Englisch </p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                lvl3
+                            </div>
                         </div>
-                    </div>
 
-                    <p>Türkisch</p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
+                        <p>Türkisch</p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                lvl3
+                            </div>
                         </div>
-                    </div>
 
-                    <p> Französisch </p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
+                        <p> Französisch </p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                lvl3
+                            </div>
                         </div>
-                    </div>
 
-                    <p> Spanisch </p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
+                        <p> Spanisch </p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                lvl3
+                            </div>
                         </div>
-                    </div>
 
-                    <p>Italienisch</p>
-                    <div class="progress mb-3" style="height:15px">
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
-                            lvl3
+                        <p>Italienisch</p>
+                        <div class="progress mb-3" style="height:15px">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width:75%">
+                                lvl3
+                            </div>
                         </div>
-                    </div>
-                -->
+                    -->
                 </div>
             }
         </div>
@@ -294,46 +299,70 @@
 
 
 
-<div class="card-body scroll">
-                    @foreach (KeyValuePair<Project, string> tat in Taetigkeiten) {
-                    <div class="row">
-                        <div class="col-sm-5">
-                            @tat.Key.Title
+                <div class="card-body scroll">
+                    @foreach (KeyValuePair<Project, string> tat in Taetigkeiten)
+                    {
+                        <div class="row">
+                            <div class="col-sm-5">
+                                @tat.Key.Title
+                            </div>
+                            <div class="col-sm-5">
+                                @tat.Value
+                            </div>
                         </div>
-                        <div class="col-sm-5">
-                            @tat.Value
-                        </div>
-                    </div>
                     }
-    <!--
-                    <div class="row">
-                        <div class="col-sm-5">
-                            BMW
-                        </div>
-                        <div class="col-sm-5">
-                            UI-Design
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            Xitaso
-                        </div>
-                        <div class="col-sm-5">
-                            SQL-Server
-                        </div>
-                    </div>
-                -->
+                    <!--
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            BMW
+                                        </div>
+                                        <div class="col-sm-5">
+                                            UI-Design
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-5">
+                                            Xitaso
+                                        </div>
+                                        <div class="col-sm-5">
+                                            SQL-Server
+                                        </div>
+                                    </div>
+                                -->
                 </div>
             }
         </div>
-    </div>  
+    </div>
 </div>
+<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", configService.GenerateSingleProfile(employee),"application/octet-stream"))>
+    Download des Einzelprofils
+</button>
 
 
 
 @code
-{ 
+{
     [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    [Parameter]
+    public string PersoNumber { get; set; }
+    private Employee employee;
+    private ChangeResult changeInfo = new();
+
+
+    protected override void OnInitialized()
+    {
+        employee = profileService.ShowProfile(PersoNumber);
+        employee ??= new Employee();
+        profileService.ChangeEventHandel += OnChangeReturn;
+    }
+
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+    }
+
+
 
     public bool MitarbeiterCollapsed { get; set; }
     public bool HardskillsCollapsed { get; set; }
@@ -371,7 +400,7 @@
     {
         MitarbeiterCollapsed = !MitarbeiterCollapsed;
     }
-    Employee employee = new Employee() { FirstName = "Max", Image = "\\kappa2.jpg", LastName = "Mayer", Description = "Geboren 1969 Eintritt in das Unternehmen 2004 Mitglied der Geschäftsführung seit 2016 Verantwortungsbereich: Vertriebsgeschäftsführung", RCL = 5 };
+    Employee employee1 = new Employee() { FirstName = "Max", Image = "\\kappa2.jpg", LastName = "Mayer", Description = "Geboren 1969 Eintritt in das Unternehmen 2004 Mitglied der Geschäftsführung seit 2016 Verantwortungsbereich: Vertriebsgeschäftsführung", RCL = 5 };
     IEnumerable<Role>
         rollen = new List<Role>
             () { new Role() { Name = "Software Developer" }, new Role() { Name = "Product Owner" }, new Role() { Name = "UI/UX-Designer" }, new Role() { Name = "Agile Coach" } };
@@ -390,6 +419,7 @@
     IEnumerable<Project>
         projekte = new List<Project>
             () { new Project() { Title = "Siemens", Purpose = new List<string>() { "Projektleiter" } }, new Project() { Title = "Xitaso", Purpose = new List<string>() { "UI-Design" } }, new Project() { Title = "BMW", Purpose = new List<string>() { "SQL-Server" } } };
-    Dictionary<Project, string> Taetigkeiten = new Dictionary<Project, string> { { new Project() { Title = "Siemens" }, "Projektleiter" } };
+    Dictionary<Project, string> Taetigkeiten = new Dictionary<Project, string> { { new Project() { Title = "Siemens" }, "Projektleiter" } 
+    };
 
 }

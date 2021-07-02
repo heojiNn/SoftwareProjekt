@@ -324,14 +324,14 @@ namespace XCV.Data
 
 
 
-                /*offer-field (field fehlt)
-                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_field WHERE Offer IN (1, 2, 3))" +
+                //offer-field 
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_field)" +
                                                     "BEGIN" +
-                                                        " INSERT INTO offer_field VALUES ('1', '')" +
-                                                        " INSERT INTO offer_field VALUES ('2', '')" +
-                                                        " INSERT INTO offer_field VALUES ('3', '')" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Beratung')" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Automobil')" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Apple'), 'Automobil')" +
                                                     "END;");
-                */
+                
                 //offer-skill
                 rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_skill)" +
                                                     "BEGIN" +

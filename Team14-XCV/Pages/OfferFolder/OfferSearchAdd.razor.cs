@@ -13,7 +13,6 @@ namespace XCV.Pages.OfferNamespace
         public string Id { get; set; }
         private ChangeResult changeInfo = new();
         private Offer myOffer;
-        private int index = -1;
 
 
         public string simpleAttributes;
@@ -55,17 +54,15 @@ namespace XCV.Pages.OfferNamespace
         }
 
         // Hat noch Fehler
-        private void AddEmp()
+        private void AddEmp(Employee toAdd)
         {
             try
             {
-                if (index >= 0)
-                    offerService.Add(myOffer, resultList.ElementAt(index).Value);
-                else
-                    throw new ArgumentException();
-            } catch (Exception e)
+                offerService.Add(myOffer, toAdd);
+            }
+            catch (Exception e)
             {
-                Console.WriteLine("Illegal Input" + e.Message);
+                Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht hinzugefügt werden! " + e.Message);
             }
         }
 

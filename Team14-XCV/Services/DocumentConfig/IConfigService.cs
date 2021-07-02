@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using XCV.Data;
 
 
-namespace XCV.Services.DocumentConfig
+namespace XCV.Data
 {
     public interface IConfigService
     {
@@ -28,9 +27,9 @@ namespace XCV.Services.DocumentConfig
         /// </summary>
         /// <param name="e"></param>
         /// <returns></returns>
-        public byte[] GenerateSingleProfile(Employee e); 
+        public byte[] GenerateSingleProfile(Employee e);
 
-
+        public byte[] GenerateDocumentConfig(DocumentConfig config);
 
 
 

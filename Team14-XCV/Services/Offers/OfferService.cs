@@ -64,6 +64,7 @@ namespace XCV.Data
                                                 $"From offer_field Where Offer = '{of.Id}'");
                 foreach (var field in fields)
                     of.Fields.Add(field);
+
                 var skills = con.Query<(string Name, string Lvl, string Cat)>(  "Select offer_skill.skill_name as Name, skill_level.Name as Lvl, offer_skill.skill_cat as Cat " +
                                                                                 "From offer_skill  " +
                                                                                     "Join skill_level On  offer_skill.skill_level=skill_level.level " +
@@ -73,14 +74,28 @@ namespace XCV.Data
                     of.Requirements.Add(new Skill() { Name = Name, Level = Lvl, Category = new SkillCategory() { Name = Cat } });
                     ofSkillService.HangThemOnATree(of.Requirements);
                 }
-                //RCL kann angebotspezifisch sein
+
+
+                // TODO
+                //offer_employee's RCL may vary in the specific offer compared to his profile. ("angebotsspezifisch angepasstes RC Level")
+                //Other then that the employee within the offer should be equal to the employee in table "employee" (PersoNumber references that attribute)
+
                 var employees = con.Query<Employee>(" Select employee.PersoNumber as PersoNumber, employee.FirstName as FirstName, employee.LastName as LastName," +
-                                                    " employee.Description as Description, employee.Image as Image, offer_employee.RCL as RCL, employee.Expirience as Expirience, employee.WorkingSince as WorkingSince, employee.MadeFirstChangesOnProfile as MadeFirstChangesOnProfile" +
-                                                    " From offer_employee " +
-                                                        " Join employee On offer_employee.PersoNumber=employee.PersoNumber" +
-                                                       $" Where Offer = '{of.Id}';");
+                                                    " employee.Description as Description, employee.Image as Image, employee.RCL as RCL, employee.Expirience as Expirience, employee.WorkingSince as WorkingSince, employee.MadeFirstChangesOnProfile as MadeFirstChangesOnProfile" +
+                                                    " From offer_employee Join employee On offer_employee.PersoNumber=employee.PersoNumber" +
+                                                   $" Where Offer = '{of.Id}';");
                 foreach (var emp in employees)
-                    of.participants.Add(emp);
+                {
+                    try
+                    {
+                        of.participants.Add(emp);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.Write($"Failed to add Employee {emp.FirstName} to offer {of.Title}" + e.Message);
+                    }
+                }
+                   
             }
             return offers;
         }
@@ -139,11 +154,13 @@ namespace XCV.Data
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            if (con.Query($"SELECT Offer From offer_employee Where Offer={o.Id} And PersoNumber='{e.PersoNumber}' ").Any())
+            if (con.Query($"SELECT Offer From offer_employee " +
+                          $"Where Offer='{o.Id}' And PersoNumber='{e.PersoNumber}'").Any())
                 OnChange(new() { ErrorMessages = new string[] { "EinE MitarbeiterIn mit dieser PersNr existiert bereits in dem Angebot" } });
             else
             {
-                con.Execute($"Insert Into offer_employee  Values ('{o.Id}', '{e.PersoNumber}')");
+                con.Execute($"Insert Into offer_employee" +
+                            $" Values ('{o.Id}', '{e.PersoNumber}')");
                 OnChange(new() { InfoMessages = new string[] { "MitarbeiterIn hinzugefügt" } });
             }
             con.Close();
@@ -208,13 +225,19 @@ namespace XCV.Data
                 {
                     con.Open();
                     con.Execute($"Insert Into offer Values ('{o.Title}', '{o.Description}')");
+                    //Create references to offer_employee, offer_field, offer_skill
+
+                    
+
+
+
                     con.Close();
                 }
                 catch (SqlException e)
                 {
                     log.LogError($" creating Offer on database: {e.Message} \n");
                 }
-                OnChange(new() { SuccesMessage = $"Es wurde ein Objekt erstellt." });
+                OnChange(new() { SuccesMessage = $"Die Kopie wurde erstellt." });
             }
             else
                 OnChange(new() { ErrorMessages = errorMessages });

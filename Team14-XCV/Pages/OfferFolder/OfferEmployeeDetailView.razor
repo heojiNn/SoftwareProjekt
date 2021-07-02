@@ -2,8 +2,10 @@
 @attribute [Authorize(Roles = "sales, admin")]
 
 @inject IOfferService offerService
+@inject IConfigService configService 
 @inject IProfileService profileService
 @inject IProjectService proService
+
 
 
 <div class="container-fluid">
@@ -221,72 +223,77 @@
         </div>
     </div>
 </div>
+ <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", configService.GenerateSingleProfile(offerEmployee),"application/octet-stream"))>
+        Download des Einzelprofils
+    </button>
 <a href="document-config-edit" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
 <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zurück zum Angebot </a>
 
 
 
 @code
-{ // Einzelprofil downloaden
-            [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+{
+    // Einzelprofil downloaden
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
-            [Parameter]
-            public string Id { get; set; }
-            [Parameter]
-            public string PersoNumber { get; set; }
+    [Parameter]
+    public string Id { get; set; } // Of the parenting offer (identifies the parenting config in combination with PersoNumber below)
+    [Parameter]
+    public string PersoNumber { get; set; } // Of the parenting employee
 
-            private ChangeResult changeInfo = new();
-            private Offer offer;
-            private Employee offerEmployee;
+    private ChangeResult changeInfo = new();
+    private Offer offer;
+    private Employee offerEmployee;
 
 
-            protected override void OnInitialized()
-            {
-                offer = offerService.ShowOffer(int.Parse(Id));
-                offer ??= new Offer();
-                offerService.ChangeEventHandel += OnChangeReturn;
-                //Employee's RCL may vary in the specific offer compared to his profile. ("angebotsspezifisch angepasstes RC Level")
-                offerEmployee = offer.participants.Where(e => e.PersoNumber.Equals(PersoNumber)).FirstOrDefault();
-            }
+    protected override void OnInitialized()
+    {
+        offer = offerService.ShowOffer(int.Parse(Id));
+        offer ??= new Offer();
+        offerService.ChangeEventHandel += OnChangeReturn;
+        //reference: OfferService.ShowAllOffers()->var employees 
+        offerEmployee = offer.participants.Where(e => e.PersoNumber.Equals(PersoNumber)).FirstOrDefault();
+    }
 
-            private void OnChangeReturn(object sender, ChangeResult e)
-            {
-                changeInfo = e;
-            }
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+    }
 
-            public bool MitarbeiterCollapsed { get; set; }
-            public bool HardskillsCollapsed { get; set; }
-            public bool SoftskillsCollapsed { get; set; }
-            public bool RolleCollapsed { get; set; }
-            public bool BranchenwissenCollapsed { get; set; }
-            public bool SprachenCollapsed { get; set; }
-            public bool ProjektCollapsed { get; set; }
+    public bool MitarbeiterCollapsed { get; set; }
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool RolleCollapsed { get; set; }
+    public bool BranchenwissenCollapsed { get; set; }
+    public bool SprachenCollapsed { get; set; }
+    public bool ProjektCollapsed { get; set; }
 
-            void RolleToggle()
-            {
-                RolleCollapsed = !RolleCollapsed;
-            }
-            void HardskillsToggle()
-            {
-                HardskillsCollapsed = !HardskillsCollapsed;
-            }
-            void SoftskillsToggle()
-            {
-                SoftskillsCollapsed = !SoftskillsCollapsed;
-            }
-            void BranchenwissenToggle()
-            {
-                BranchenwissenCollapsed = !BranchenwissenCollapsed;
-            }
-            void SprachenToggle()
-            {
-                SprachenCollapsed = !SprachenCollapsed;
-            }
-            void ProjektToggle()
-            {
-                ProjektCollapsed = !ProjektCollapsed;
-            }
-            void MitarbeiterToggle()
-            {
-                MitarbeiterCollapsed = !MitarbeiterCollapsed;
-            } }
+    void RolleToggle()
+    {
+        RolleCollapsed = !RolleCollapsed;
+    }
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
+    }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void BranchenwissenToggle()
+    {
+        BranchenwissenCollapsed = !BranchenwissenCollapsed;
+    }
+    void SprachenToggle()
+    {
+        SprachenCollapsed = !SprachenCollapsed;
+    }
+    void ProjektToggle()
+    {
+        ProjektCollapsed = !ProjektCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+    }
