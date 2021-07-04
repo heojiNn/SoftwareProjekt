@@ -86,6 +86,14 @@ namespace XCV.Data
                                                         "level INT PRIMARY KEY," +
                                                         "name VARCHAR(50) UNIQUE " +
                                                     ");");
+                rows = con.Execute("IF OBJECT_ID('offer', 'U') IS NULL " + //ref by offer_field, offer_employee, offer_skill
+                                                    "CREATE TABLE offer ( " +
+                                                    "id INT NOT NULL IDENTITY PRIMARY KEY," +
+                                                    "title VARCHAR(50) NOT NULL," +
+                                                    "description VARCHAR(1000)" +
+                                                    ");");
+
+
                 //-----------------------------------------------------------------------------------------------------
 
                 rows = con.Execute("IF OBJECT_ID('employee', 'U') IS NULL " +     //ref by employee_accessrole/field/role/laguageskill
@@ -122,11 +130,11 @@ namespace XCV.Data
                                                         "CONSTRAINT fK_pro_pur FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE " +
                                                     ");");
 
-                rows = con.Execute("IF OBJECT_ID('activitie', 'U') IS NULL " +  //ref by activitie_done_by
-                                                    "CREATE TABLE activitie ( " +
-                                                        "Project INT       , " +
-                                                        "Activitie VARCHAR(100) , " +
-                                                        "PRIMARY KEY (project, activitie), " +
+                rows = con.Execute("IF OBJECT_ID('activity', 'U') IS NULL " +  //ref by activity_done_by
+                                                    "CREATE TABLE activity ( " +
+                                                        "Project INT, " +
+                                                        "Activity VARCHAR(100) , " +
+                                                        "PRIMARY KEY (project, activity), " +
                                                         "CONSTRAINT fK_ak_pro FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE " +
                                                     ");");
                 //-----------------------------------------------------------------------------------------------------
@@ -178,17 +186,47 @@ namespace XCV.Data
                                                         "CONSTRAINT fK_skill FOREIGN KEY (skill_name, skill_cat) REFERENCES skill(name, category) ON DELETE CASCADE, " +
                                                         "CONSTRAINT fK_lcl FOREIGN KEY (skill_level) REFERENCES  skill_level(level) " +
                                                     ");");
-
-
-                rows = con.Execute("IF OBJECT_ID('activitie_done_by', 'U') IS NULL " +
-                                                    "CREATE TABLE activitie_done_by ( " +
+                rows = con.Execute("IF OBJECT_ID('activity_done_by', 'U') IS NULL " +
+                                                    "CREATE TABLE activity_done_by ( " +
                                                         "Project INT       , " +
-                                                        "Activitie VARCHAR(100) , " +
+                                                        "Activity VARCHAR(100) , " +
                                                         "Employee VARCHAR(20) , " +
-                                                        "PRIMARY KEY (project, activitie, employee), " +
-                                                        "CONSTRAINT fK_do_pro FOREIGN KEY (project, activitie) REFERENCES  activitie(project, activitie) ON DELETE CASCADE, " +
+                                                        "PRIMARY KEY (project, activity, employee), " +
+                                                        "CONSTRAINT fK_do_pro FOREIGN KEY (project, activity) REFERENCES activity(project, activity) ON DELETE CASCADE, " +
                                                         "CONSTRAINT fK_do_emp FOREIGN KEY (employee) REFERENCES  employee(PersoNumber) ON DELETE CASCADE " +
                                                     ");");
+                
+                rows = con.Execute("IF OBJECT_ID('offer_employee', 'U') IS NULL " + 
+                                                    "CREATE TABLE offer_employee (" +
+                                                    "Offer INT," +
+                                                    "PersoNumber VARCHAR(20)," +
+                                                    "Role VARCHAR(50)," + // soll dem Mitarbeiter zugewiesen werden innerhalb des Angebots
+                                                    "RCL INT," +          // -=-
+                                                    "PRIMARY KEY (Offer, PersoNumber)," +   //Employee has only one role in an Offer -> unique (if he can have more adapt Primary Key)
+                                                    "CONSTRAINT fK_ofem FOREIGN KEY (Offer) REFERENCES  offer(Id) ON DELETE CASCADE, " +
+                                                    "CONSTRAINT fK_pnr_ofem FOREIGN KEY (PersoNumber) REFERENCES  employee(PersoNumber) ON DELETE CASCADE, " +
+                                                    "CONSTRAINT fK_role_ofem FOREIGN KEY (Role, RCL) REFERENCES role(name, rcl) ON DELETE CASCADE" +
+                                                    ");");
+                rows = con.Execute("IF OBJECT_ID('offer_field', 'U') IS NULL " +
+                                                    "CREATE TABLE offer_field (" +
+                                                    "Offer INT, " +
+                                                    "Field VARCHAR(50), " +
+                                                    "PRIMARY KEY (Offer, Field), " +
+                                                    "CONSTRAINT fK_oid_offld FOREIGN KEY (Offer) REFERENCES offer(Id) ON DELETE CASCADE, " +
+                                                    "CONSTRAINT fK_field_offld FOREIGN KEY (Field) REFERENCES field(name) ON DELETE CASCADE" +
+                                                   ");");
+                rows = con.Execute("IF OBJECT_ID('offer_skill', 'U') IS NULL " +
+                                                    "CREATE TABLE offer_skill (" +
+                                                    "Offer INT, " +
+                                                    "skill_name VARCHAR(50), " +
+                                                    "skill_cat VARCHAR(50), " +
+                                                    "skill_level INT, " +
+                                                    "PRIMARY KEY (Offer, skill_name, skill_cat, skill_level), " +
+                                                    "CONSTRAINT fK_oid_ofsk FOREIGN KEY (Offer) REFERENCES  offer(Id) ON DELETE CASCADE, " +
+                                                    "CONSTRAINT fK_sk_ofsk FOREIGN KEY (skill_name, skill_cat) REFERENCES skill(name, category) ON DELETE CASCADE, " +
+                                                    "CONSTRAINT fK_sklvl_ofsk FOREIGN KEY (skill_level) REFERENCES  skill_level(level) " +
+                                                   ");");
+
                 //-----------------------------------------------------------------------------------------------------
             }
             catch (SqlException e)
@@ -212,14 +250,14 @@ namespace XCV.Data
                 int rows = con.Execute("IF NOT EXISTS (  SELECT * " +
                                                     "FROM Employee  WHERE persoNumber = '000' ) " +
                                             "Insert Into Employee Values " +
-                                            "( '000', '000', 'admin', 'admin',      '', '',           null, 0, '2020-01-01', 0)," +  // 000 admin
-                                            "( '001', '001', 'arnold', 'schwarzen', '', 'musterPic.png', 1, 3, '2020-06-20', 0)," +// 001 arnold
-                                            "( '002', '002', 'brad', 'pitt',        '', 'musterPic.png', 2, 0, '2020-06-21', 0)," +// 002 brad
-                                            "( '003', '003', 'charlie', 'chaplin',  '', 'musterPic.png', 3, 0, '2020-06-22', 0);");// 003 charlie
+                                            "('000', '000', 'admin', 'admin',      '', '',           null, 0, '2020-01-01', 0)," +  // 000 admin
+                                            "('001', '001', 'arnold', 'schwarzen', '', 'musterPic.png', 1, 3, '2020-06-20', 0)," +// 001 arnold
+                                            "('002', '002', 'brad', 'pitt',        '', 'musterPic.png', 2, 0, '2020-06-21', 0)," +// 002 brad
+                                            "('003', '003', 'charlie', 'chaplin',  '', 'musterPic.png', 3, 0, '2020-06-22', 0);");// 003 charlie
                 rows = con.Execute("IF NOT EXISTS (  SELECT * " +
                                                     "FROM employee_AccessRole  WHERE employee = '000' ) " +
                                             "Insert Into employee_AccessRole Values " +             // admin=a  arnold=s  brad=s,a
-                                            "( '000', 1), ( '001', 0), ( '002', 0), ( '002', 1);");
+                                            "('000', 1), ('001', 0), ('002', 0), ('002', 1);");
                 rows = con.Execute("IF NOT EXISTS (  SELECT * " +
                                                         "FROM skill_level  WHERE level = 0 ) " +
                                             "Insert Into skill_level Values (0, ''), " +            //Required for SofSkills (0, '')
@@ -247,22 +285,75 @@ namespace XCV.Data
                 rows = con.Execute("IF NOT EXISTS (  SELECT * " +
                                                         "FROM field  WHERE name = 'Beratung' ) " +
                                             "Insert Into field Values ('Beratung'), ('Automobil') ;");
+
                 rows = con.Execute("IF NOT EXISTS (  SELECT * " +
                                                         "FROM project  WHERE Title = 'Brille' ) " +
                                             "Insert Into project Values " +
                                                 "('Brille', '', '2020-05-01', '2021-12-30', 'Beratung') ;");
+
+                //role
+               rows = con.Execute("IF NOT EXISTS ( SELECT * FROM role)" +
+                                                   "BEGIN" +
+                                                       " INSERT INTO role VALUES ('Softwareentwickler', '3', '40')" +
+                                                       " INSERT INTO role VALUES ('Softwareentwickler', '1', '40')" +
+                                                       " INSERT INTO role VALUES ('Product Owner', '6', '40')" +
+                                                       " INSERT INTO role VALUES ('Agile-Coach', '5', '40')" +
+                                                       " INSERT INTO role VALUES ('UI/UX', '4', '40')" +
+                                                   "END;");
+               
+                //offer
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer )" +
+                                                    "BEGIN" +
+                                                        " INSERT INTO offer VALUES ('Offer_Microsoft', 'Windows 12')" +         //Id kann auch eingefuegt werden, dann gibt es NICHT nach erstmaligem Löschen der drei Angebote
+                                                        " INSERT INTO offer VALUES ('Offer_Apple', 'Iphone 20')" +              // bei jedem rebuild 3 zusätzliche Angebote dieser Art oben drauf, da die ID inkrementell
+                                                        " INSERT INTO offer VALUES ('Offer_Huawey', 'Insolvenz')" +             // vergeben wird auch wenn es gelöscht wurde 
+                                                    "END;");
+
+
+                //offer_employee -
+                //missing: Role und RCL defaults - RCL MUSS auch angebotsspezifisch zugewiesen werden können! -> Nicht einfach employee.RCL dafür nehmen, da dann nicht "angebotspezifisch"
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_employee )" +
+                                                    "BEGIN" +
+                                                        " INSERT INTO offer_employee VALUES ((Select Id From Offer Where title='Offer_Microsoft'), '000', 'Softwareentwickler', '3')" +
+                                                        " INSERT INTO offer_employee VALUES ((Select Id From Offer Where title='Offer_Apple'), '001', 'Agile-Coach', '5')" +
+                                                        " INSERT INTO offer_employee VALUES ((Select Id From Offer Where title='Offer_Huawey'), '002', 'Product Owner', '6')" +
+                                                    "END;");
+
+               
+
+
+
+
+                //offer-field 
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_field)" +
+                                                    "BEGIN" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Beratung')" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Automobil')" +
+                                                        " INSERT INTO offer_field VALUES ((Select Id From Offer Where title='Offer_Apple'), 'Automobil')" +
+                                                    "END;");
+                
+                //offer-skill
+                rows = con.Execute("IF NOT EXISTS ( SELECT * FROM offer_skill)" +
+                                                    "BEGIN" +
+                                                        " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Akquisitionsstärke', 'SoftSkills', '3')" +
+                                                        " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Microsoft'), 'Automapper', 'Bibliotheken', '1')" +
+                                                        " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Apple'), 'C', 'Sprachen', '2')" +
+                                                        " INSERT INTO offer_skill VALUES ((Select Id From Offer Where title='Offer_Huawey'), 'CSS', 'Sprachen', '4')" +
+                                                    "END;");
+
                 rows = con.Execute("IF EXISTS (  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ) And " +
                                     " Not EXISTS (  SELECT * " +
-                                                        "FROM activitie  WHERE Project = (  SELECT Id " +
+                                                        "FROM activity  WHERE Project = (  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ) )" +
-                                            "Insert Into activitie Values " +
+                                            "Insert Into activity Values " +
                                                 "((  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ), ''), " +
                                                 "((  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ), 'FrontEnd'), " +
                                                 "((  SELECT Id " +
                                                         "FROM project  WHERE Title = 'Brille' ), 'BackEnd') ;");
+
             }
             catch (SqlException e)
             {
@@ -290,10 +381,10 @@ namespace XCV.Data
                                                     "Drop TABLE employee_language ;");
                 rows = con.Execute("IF OBJECT_ID('employee_skill', 'U') IS NOT  NULL " +
                                                     "Drop TABLE employee_skill ;");
-                rows = con.Execute("IF OBJECT_ID('activitie_done_by', 'U') IS NOT  NULL " +
-                                                    "Drop TABLE activitie_done_by ;");
-                rows = con.Execute("IF OBJECT_ID('activitie', 'U') IS NOT  NULL " +
-                                                    "Drop TABLE activitie ;");
+                rows = con.Execute("IF OBJECT_ID('activity_done_by', 'U') IS NOT  NULL " +
+                                                    "Drop TABLE activity_done_by ;");
+                rows = con.Execute("IF OBJECT_ID('activity', 'U') IS NOT  NULL " +
+                                                    "Drop TABLE activity ;");
                 rows = con.Execute("IF OBJECT_ID('project_purpose', 'U') IS NOT  NULL " +
                                                     "Drop TABLE project_purpose ;");
                 //----------------------

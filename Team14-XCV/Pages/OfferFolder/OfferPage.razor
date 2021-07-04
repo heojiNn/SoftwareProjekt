@@ -1,0 +1,262 @@
+@page "/offer/{Id}"
+@attribute [Authorize(Roles = "sales, admin")]
+@namespace XCV.Pages.OfferNamespace
+
+@inject IProfileService profileService
+@inject IOfferService offerService
+@inject IConfigService configService
+
+<div class="container-fluid">
+
+
+    <div class="card my-1">
+        <div class="card-header">
+            <h3> @myOffer.Title </h3>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header">
+            <div class="mt-3">
+                <div class="row">
+                    <h4>
+                        Branchen
+                    </h4>
+
+                </div>
+            </div>
+        </div>
+        <div class="card-body scroll h-100">
+            <div class="row">
+                @foreach (Field f in myOffer.Fields)
+                {
+                    if (f.Equals(myOffer.Fields.Last()))
+                    {
+                        <p>@f.Name</p> }
+                    else
+                    {
+                        <p>@(f.Name + ", ") </p>}
+                }
+                @if (myOffer.Fields.Count() == 0)
+                {
+                    <p> - </p>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Hardskills
+                        @if (HardskillsCollapsed)
+                        {
+                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             width="24" height="24">
+                            <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                            </path>
+                        </svg>
+                        }
+
+                        @if (!HardskillsCollapsed)
+                        {
+                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             width="24" height="24">
+                            <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                            </path>
+                        </svg>
+                        }
+
+                    </h4>
+                </div>
+                @if (!HardskillsCollapsed)
+                {
+                <div class="card-body scroll h-100">
+                    <div class="row">
+                        @foreach (Skill s in hardskills)
+                        {
+                            if (s.Equals(hardskills.Last())) // Last Hardskill?
+                            {
+                                <p>@s.Name</p> } // No comma
+                            else
+                            {
+                                <p>@(s.Name + ", ") </p>}
+                        }
+                        @if (hardskills.Count() == 0)
+                        {
+                            <p> - </p>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+
+        <div class="col-sm-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        Softskills
+
+                        @if (SoftskillsCollapsed)
+                        {
+                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             width="24" height="24">
+                            <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                            </path>
+                        </svg>}
+
+                                    @if (!SoftskillsCollapsed)
+                                    {
+                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             width="24" height="24">
+                            <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                            </path>
+                        </svg>}
+
+                    </h4>
+                </div>
+
+                @if (!SoftskillsCollapsed)
+                {
+                <div class="card-body scroll h-100">
+                    <div class="row">
+                        @foreach (Skill s in softskills)
+                        {
+                            if (s.Equals(softskills.Last())) // Last Hardskill?
+                            {
+                                <p>@s.Name</p> } // No comma
+                            else
+                            {
+                                <p>@(s.Name + ", ") </p>}
+                        }
+                        @if (softskills.Count() == 0)
+                        {
+                            <p> - </p>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4>
+                Mitarbeiter
+
+                @if (MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                        </path>
+                    </svg>}
+
+                @if (!MitarbeiterCollapsed)
+                {
+                    <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                         width="24" height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                        </path>
+                    </svg>}
+
+            </h4>
+        </div>
+
+        @if (!MitarbeiterCollapsed)
+        {
+            @if (!MitarbeiterCollapsed)
+            {
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (Employee e in myOffer.participants)
+                        {
+                            <div class="card">
+                                <div class="card-header">
+                                    @(new String(e.FirstName + " " + e.LastName.Substring(0, 1) + "."))
+                                </div>
+                                <div class="card-body">
+                                    <a href="offer-employee-detail-view/@Id/@e.PersoNumber" style="color:black">Profil anzeigen</a>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+             }
+        }
+    </div>
+
+
+
+    <a href="/offers" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteOffer(myOffer))">Löschen</a>
+    <a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten</a>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Kopieren </button>
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", configService.GenerateDocumentConfig(config),"application/octet-stream"))>
+        Download
+    </button>
+    <a href="offers" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Angebotsübersicht </a>
+
+</div>
+
+@code { 
+    [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+    private ChangeResult changeInfo = new();
+    private Offer myOffer;
+    //One time calculations instead of doing it multiple times on page:
+    public IEnumerable<Skill> softskills;
+    public IEnumerable<Skill> hardskills;
+
+    public DocumentConfig config;
+
+    protected override void OnInitialized()
+    {
+        myOffer = offerService.ShowOffer(int.Parse(Id));
+        myOffer ??= new Offer();
+        offerService.ChangeEventHandel += OnChangeReturn;
+
+        if (myOffer.Requirements.Where(s => s.Type == SkillGroup.Softskill) != null)
+            softskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Softskill).ToList();
+        else
+            softskills = new List<Skill>();
+        if (myOffer.Requirements.Where(s => s.Type == SkillGroup.Hardskill) != null)
+            hardskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Hardskill).ToList();
+        else
+            hardskills = new List<Skill>();
+    }
+
+    private void DeleteOffer(Offer o)
+    {
+        offerService.Delete(o);
+    }
+
+    private void OnChangeReturn(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+    }
+
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool MitarbeiterCollapsed { get; set; }
+
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
+    }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void MitarbeiterToggle()
+    {
+        MitarbeiterCollapsed = !MitarbeiterCollapsed;
+    }
+    }

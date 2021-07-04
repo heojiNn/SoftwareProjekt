@@ -1,8 +1,11 @@
-@page "/offer-edit"
+@page "/offer-edit/{Id}"
 @attribute [Authorize(Roles = "sales, admin")]
+@namespace XCV.Pages.OfferNamespace
 
 @page "/angebotbearbeiten"
 
+@inject IProfileService profileService
+@inject IOfferService offerService
 @inject ISkillService skillService
 @inject IFieldService fieldService
 
@@ -17,10 +20,10 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-5">
-                        <h3><label>Angebottitel: </label> </h3>
+                        <h3><label>Titel verändern: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input class="form-control" placeholder="Siemens" /></h3>
+                        <h3><input class="form-control" placeholder=@myOffer.Title/></h3>
                     </div>
                 </div>
             </div>
@@ -29,11 +32,9 @@
 
 
     <div class="card">
-
         <div class="card-header">
             <h4>
                 Branchen
-
                 @if (BrancheCollapsed)
                 {
                     <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -43,7 +44,6 @@
                     </svg>
 
                 }
-
                 @if (!BrancheCollapsed)
                 {
                     <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -52,9 +52,7 @@
                         </path>
                     </svg>
                 }
-
             </h4>
-
         </div>
         @if (!BrancheCollapsed)
         {
@@ -68,43 +66,19 @@
                     <ResultTemplate>
                         @context.Name
                     </ResultTemplate>
-                </BlazoredTypeahead>
-                <div class="row">
+                </BlazoredTypeahead>  
+                @* ! bei mehr als 4 kann es zu falschen Format kommen? *@
+            <div class="row">
+                @foreach (Field f in myOffer.Fields)
+                {
                     <div class="col-sm-3">
                         <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Elektrotechnik</b></label>
+                        <label class="form-check-label"> <b>@f.Name</b></label>
                     </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Automobil</b></label>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Softwaretechnik</b></label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Medizin</b></label>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Halbleiter</b></label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>NLP</b></label>
-                    </div>
-                </div>
+                }
+            </div>
             </div>
         }
-
-
-
-
     </div>
 
     <div class="row gutters-sm">
@@ -315,58 +289,38 @@
         {
             <div class="card-body">
                 <div class="row">
-                    <div class="card">
-                        <div class="card-header">
-                            Arnold B.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
+                    @foreach (Employee e in myOffer.participants)
+                    {
 
+                        <div class="card">
+                            <div class="card-header">
+                                @(new String(e.FirstName + " " + e.LastName.Substring(0, 1) + "."))
+                            </div>
+                            <div class="card-body">
+                                <a href="offer-employee-detail-view/@Id/@e.PersoNumber" style="color:black">Profil anzeigen</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Bernhard C.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black"> Profil anzeigen</a>
 
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Carsten D.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
 
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Detlev E.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
 
-                        </div>
-                    </div>
-
+                    }
                 </div>
                 <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
                 <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
-            </div>}
+            </div>
+        }
     </div>
 
 
 
-    <a href="offer" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
-    <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
+    <a href="offer/@Id" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
+    <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
 
 
 </div>
 
-<script suppress-error="BL9992">function updateTextInput1(val) {
+<script suppress-error="BL9992">
+function updateTextInput1(val) {
           document.getElementById('textInput1').value=val;
         }
      function updateTextInput2(val) {
@@ -395,4 +349,6 @@
         }</script>
 
 
-
+@code { 
+    
+    }

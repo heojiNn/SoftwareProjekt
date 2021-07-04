@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using XCV.Data;
 
-namespace XCV.Services.Offers
+namespace XCV.Data
 {
     public class EmployeeConfig
     {
@@ -14,9 +14,9 @@ namespace XCV.Services.Offers
 
         private bool _default = true;
 
-        public EmployeeConfig()
+        public EmployeeConfig(Employee e)
         {
-            CreateDefaultConfig();
+            CreateDefaultConfig(e);
         }
 
         public ISet<Field> selectedFields { get; set; }
@@ -26,14 +26,14 @@ namespace XCV.Services.Offers
         // TODO: Employee's activity within his projects
         public string[] selectedProjectroles { get; set; }
 
-        public void CreateDefaultConfig()
+        public void CreateDefaultConfig(Employee e)
         {
             if (_default)
             {
-                selectedFields = configEmployee.Fields;
-                selectedSoftSkills = (ISet<Skill>)configEmployee.Abilities.Where(s => s.Type == SkillGroup.Softskill);
-                selectedHardSkills = (ISet<Skill>)configEmployee.Abilities.Where(s => s.Type == SkillGroup.Hardskill);
-                selectedProjects = configEmployee.Projects;
+                selectedFields = e.Fields;
+                selectedSoftSkills = (ISet<Skill>)e.Abilities.Where(s => s.Type == SkillGroup.Softskill);
+                selectedHardSkills = (ISet<Skill>)e.Abilities.Where(s => s.Type == SkillGroup.Hardskill);
+                selectedProjects = e.Projects;
                 //selectedProjectroles = ...
             }
         }

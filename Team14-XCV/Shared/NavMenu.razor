@@ -21,11 +21,8 @@
 
 
         <li class="nav-item px-3 pb-4">
-            <NavLink class="nav-link text-success" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home"></span> Profil funktioniert
-            </NavLink>
-            <NavLink class="nav-link text-success" href="edit-profile">
-                <span class="oi oi-person"></span> (ProfilÄndern funkt)
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home"></span> Profil
             </NavLink>
         </li>
 
@@ -34,34 +31,18 @@
                 <NavLink class="nav-link" href="offers">
                     <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
                 </NavLink>
-                <NavLink class="nav-link" href="offer">
-                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot)
-                </NavLink>
-                <NavLink class="nav-link" href="offer-edit">
-                    <span class="oi oi-document" aria-hidden="true"></span> (Angebot ändern)
-                </NavLink>
+            </li>
+            <li class="nav-item px-3 pb-4">
                 <NavLink class="nav-link" href="employee-search">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (Mitarbeitersuche)
-                </NavLink>
-                <NavLink class="nav-link" href="offer-search-result">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Suchergebnis
-                </NavLink>
-                <NavLink class="nav-link" href="offer-employee-detail-view">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarb. Details
-                </NavLink>
-                <NavLink class="nav-link" href="document-config-edit">
-                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> (DocConfig ändern)
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarbeitersuche
                 </NavLink>
             </li>
-        </AuthorizeView>
-
-        <AuthorizeView Roles="sales, admin">
             <li class="nav-item px-3 pb-4">
-                <NavLink class="nav-link text-success" href="projects-overview">
+                <NavLink class="nav-link" href="projects">
                     <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
                 </NavLink>
                 <NavLink class="nav-link" href="project">
-                    <span class="oi oi-box" aria-hidden="true"></span> Project 
+                    <span class="oi oi-box" aria-hidden="true"></span> Project
                 </NavLink>
                 <NavLink class="nav-link" href="project-search-add">
                     <span class="oi oi-project" aria-hidden="true"></span> ProjektSuche?
@@ -69,13 +50,12 @@
             </li>
         </AuthorizeView>
 
-
         <AuthorizeView Roles="admin">
             <li class="nav-item px-3 pb-1">
                 <NavLink class="nav-link text-success" href="change-data-set">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis ändern
                 </NavLink>
-                <NavLink class="nav-link text-success" href="create-employee">
+                <NavLink class="nav-link" href="create-employee">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
                 </NavLink>
             </li>
@@ -88,8 +68,6 @@
 
             </NavLink>
         </li>
-
-     <span class="text-success" > funktioniert</span>
     </ul>
 </div>
 

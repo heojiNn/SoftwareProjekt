@@ -5,8 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Misc\" />
-    <Folder Include="Pages\Skill\" />
+    <Compile Remove="Pages\Misc\**" />
+    <Compile Remove="Pages\Skill\**" />
+    <Content Remove="Pages\Misc\**" />
+    <Content Remove="Pages\Skill\**" />
+    <EmbeddedResource Remove="Pages\Misc\**" />
+    <EmbeddedResource Remove="Pages\Skill\**" />
+    <None Remove="Pages\Misc\**" />
+    <None Remove="Pages\Skill\**" />
   </ItemGroup>
 
   <ItemGroup>

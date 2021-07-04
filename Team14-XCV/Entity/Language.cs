@@ -9,7 +9,7 @@ namespace XCV.Data
         public string Name { get; init; } = "";
         public string Level { get; set; } = "";
 
-
+        public string LevelNr { get; set; }
 
         public override string ToString() => $"{Name}-Niveau-{Level}";
 

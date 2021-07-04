@@ -2,12 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using XCV.Data;
 
-namespace XCV.Pages.Offers
+namespace XCV.Pages.OfferNamespace
 {
     public partial class OfferSearchAdd
-    {
+        {
+        [Parameter]
+        public string Id { get; set; }
+        private ChangeResult changeInfo = new();
+        private Offer myOffer;
+
+
         public string simpleAttributes;
         public int simpleCounter = 0;
         public Boolean showSearch = false;
@@ -34,7 +41,31 @@ namespace XCV.Pages.Offers
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
             languages = languageService.GetAllLanguages().ToList();
+
+            //context(add to offer with {Id})
+            myOffer = offerService.ShowOffer(int.Parse(Id));
+            myOffer ??= new Offer();
+            offerService.ChangeEventHandel += OnChangeReturn;
         }
+
+        private void OnChangeReturn(object sender, ChangeResult e)
+        {
+            changeInfo = e;
+        }
+
+        // Hat noch Fehler
+        private void AddEmp(Employee toAdd)
+        {
+            try
+            {
+                offerService.Add(myOffer, toAdd);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht hinzugefügt werden! " + e.Message);
+            }
+        }
+
 
         private async Task<IEnumerable<Role>> SearchRoles(string searchText)
         {
@@ -208,7 +239,7 @@ namespace XCV.Pages.Offers
             simpleAttributes = "";
         }
     }
-
+    
 
 }
 

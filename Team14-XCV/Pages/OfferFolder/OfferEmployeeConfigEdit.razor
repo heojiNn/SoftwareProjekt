@@ -5,9 +5,10 @@
 @inject IRoleService roleService
 @inject IFieldService fieldService
 @inject ILanguageService languageService
-
+@namespace XCV.Pages.OfferNamespace
 @using Blazored.Typeahead
 
+@* KANN THEORETISCH AUCH AUF DETAIL-VIEW GEMACHT WERDEN ... ÜBERLEGE DAS NOCH *@
 
 <div class="container-fluid">
     <div class="card my-1">
@@ -83,7 +84,7 @@
                 @if (!RolleCollapsed)
                 {
                     <div class="card-body scroll h-100">
-                        
+
                         <p>
                             <label>
                                 <input type="checkbox" /> <b> Software Developer</b>
@@ -142,7 +143,7 @@
                 @if (!HardskillsCollapsed)
                 {
                     <div class="card-body scroll h-100">
-                        
+
 
                         <b><label for="customRange1" class="form-label">C:  <input class="form-control" type="text" id="textInput1" value="" style="width: 40px;" readonly></label></b>
                         <input type="range" class="custom-range" min="0" max="5" id="customRange1" onchange="updateTextInput1(this.value);">
@@ -199,7 +200,7 @@
                 {
 
                     <div class="card-body scroll h-100">
-                        
+
                         <p>
                             <label>
                                 <input type="checkbox" /> <b> Interdisziplinärer Sachverstand</b>
@@ -266,7 +267,7 @@
                 {
 
                     <div class="card-body scroll h-100">
-                        
+
                         <b><label for="Branche1">Tätigkeitsfeld 1</label></b>
                         <input type="text" class="form-control" style="width: 400px;" placeholder="Architektur/Bau/Immobilien" /><p></p>
                         <b><label for="Branche1">Tätigkeitsfeld 2</label></b>
@@ -309,7 +310,7 @@
                 {
 
                     <div class="card-body scroll h-100">
-                        
+
                         <b><label for="customRange2" class="form-label">Deutsch  <input type="text" id="textInput5" value="" style="width: 40px;" readonly></label></b>
                         <div class="slidecontainer">
                             <input type="range" class="custom-range" min="0" max="5" id="customRange5" onchange="updateTextInput5(this.value);">
@@ -439,11 +440,9 @@
     </div>
 </div>
 <a href="my-profile" class="btn btn-secondary" style="float: right; margin: 3em 1em"> Bestätigen</a>
-<a href="my-profile" class="btn btn-secondary" style="float: right; margin: 3em 1em"> Abbrechen</a>
-<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"><a href='javascript:history.go(-1)'>Zurück</a> </button>
+<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"><a href='javascript:history.go(-1)'>Abbrechen</a> </button>
 
-<script suppress-error="BL9992">
-  function updateTextInput1(val) {
+<script suppress-error="BL9992">function updateTextInput1(val) {
           document.getElementById('textInput1').value=val;
         }
      function updateTextInput2(val) {
@@ -469,43 +468,39 @@
         }
      function updateTextInput9(val) {
           document.getElementById('textInput9').value=val;
-        }
-
-
-
-</script>
+        }</script>
 
 @code{
-        public bool HardskillsCollapsed { get; set; }
-        public bool SoftskillsCollapsed { get; set; }
-        public bool RolleCollapsed { get; set; }
-        public bool BranchenwissenCollapsed { get; set; }
-        public bool SprachenCollapsed { get; set; }
-        public bool ProjektCollapsed { get; set; }
-        void RolleToggle()
-        {
-            RolleCollapsed = !RolleCollapsed;
-        }
-        void HardskillsToggle()
-        {
-            HardskillsCollapsed = !HardskillsCollapsed;
-        }
-        void SoftskillsToggle()
-        {
-            SoftskillsCollapsed = !SoftskillsCollapsed;
-        }
-        void BranchenwissenToggle()
-        {
-            BranchenwissenCollapsed = !BranchenwissenCollapsed;
-        }
-        void SprachenToggle()
-        {
-            SprachenCollapsed = !SprachenCollapsed;
-        }
-        void ProjektToggle()
-        {
-            ProjektCollapsed = !ProjektCollapsed;
-        }
+    public bool HardskillsCollapsed { get; set; }
+    public bool SoftskillsCollapsed { get; set; }
+    public bool RolleCollapsed { get; set; }
+    public bool BranchenwissenCollapsed { get; set; }
+    public bool SprachenCollapsed { get; set; }
+    public bool ProjektCollapsed { get; set; }
+    void RolleToggle()
+    {
+        RolleCollapsed = !RolleCollapsed;
+    }
+    void HardskillsToggle()
+    {
+        HardskillsCollapsed = !HardskillsCollapsed;
+    }
+    void SoftskillsToggle()
+    {
+        SoftskillsCollapsed = !SoftskillsCollapsed;
+    }
+    void BranchenwissenToggle()
+    {
+        BranchenwissenCollapsed = !BranchenwissenCollapsed;
+    }
+    void SprachenToggle()
+    {
+        SprachenCollapsed = !SprachenCollapsed;
+    }
+    void ProjektToggle()
+    {
+        ProjektCollapsed = !ProjektCollapsed;
+    }
 }
 
 

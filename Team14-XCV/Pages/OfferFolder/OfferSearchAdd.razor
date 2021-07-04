@@ -1,12 +1,15 @@
-@page "/offer-search-add"
+@page "/offer-search-add/{Id}"
 @attribute [Authorize(Roles = "sales, admin")]
 
-
+@namespace XCV.Pages.OfferNamespace
 @inject IProfileService profileService
 @inject ISkillService skillService
 @inject IRoleService roleService
 @inject IFieldService fieldService
 @inject ILanguageService languageService
+@inject IOfferService offerService
+
+
 @*_Host.cshtml muss hierfür erweitert werden, MIT-Lizenz vorhanden*@
 @using Blazored.Typeahead
 
@@ -129,7 +132,7 @@
                     {
                         <tr>
                             <td>
-                                 @RealValues[i].FirstName @RealValues[i].LastName 
+                                @RealValues[i].FirstName @RealValues[i].LastName
                             </td>
                             <td>
                                 @if (simpleCounter < 5 && SelectedRoles != null)
@@ -206,7 +209,7 @@
                                 @simpleAttributes
                             </td>
                             <td>
-                                <a href="offer" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen</a>
+                                <a href="offer/@myOffer.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => AddEmp(RealValues[i+1]))"> Hinzufügen</a>
                             </td>
                         </tr>
                         simpleCountClear();
