@@ -4,15 +4,18 @@
 /*hide Change , Validation and NoResult alert containers */
 .alert-container {
     min-height: 50px;
-  }
+}
+
 .alert-success, .alert-info {
-    width: 700px;
+    max-width: 700px;
     margin-bottom: 0;
     /* max-width: 800px; */
 }
+
 .alert-danger {
-    width: 700px;
+    max-width: 700px;
 }
+
 .alert:empty {
     display: none;
 }
@@ -22,6 +25,7 @@
 .outerbox.invalid {
     border: 2px solid orange;
 }
+
 .outerbox {
     border: 3px solid green;
 }
@@ -53,8 +57,6 @@ a {
 }
 
 .btn-primary {
-    
-    
 }
 
 
@@ -105,8 +107,17 @@ a {
     color: white;
 }
 
+.alert {
+    margin-top: 1rem;
+}
+
 .card {
+    margin-top: 1rem;
+}
+
+.rounded {
     margin: 1em;
+    max-width: 90%;
 }
 
 .card-header {
@@ -114,8 +125,9 @@ a {
 }
 
 .progress {
-    height: 5px
+    height: 15px;
 }
+
 
 .btn-secondary {
     background-color: #7A212E;
@@ -133,6 +145,11 @@ a:hover {
 
 .scroll {
     max-height: 250px;
+    overflow-y: auto;
+}
+
+.scroll2 {
+    max-height: 400px;
     overflow-y: auto;
 }
 

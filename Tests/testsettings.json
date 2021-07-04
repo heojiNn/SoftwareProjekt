@@ -1,7 +1,7 @@
 {
   "ConnectionStrings": {
-    "MS_SQL_Connection": "Server=localhost; Database=IntegrationTests_4;  User Id=SA; Password=123456Sa",
-    "MS_SQL_Connection_Root": "Server=localhost; User Id=SA; Password=123456Sa",
+    "MS_SQL_Connection": "Data Source=(localdb)\\MSSQLLocalDB;  Initial Catalog=IntegrationTests_4;  Integrated Security=True ",
+    "MS_SQL_Connection_Root": "Data Source=(localdb)\\MSSQLLocalDB; Integrated Security=True",
     "DatabaseName": "IntegrationTests_4"
   },
   "DetailedErrors": true,

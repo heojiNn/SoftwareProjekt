@@ -20,14 +20,13 @@
                     <div class="row m-1" style="overflow-x: hidden;">
                         <div class="col-md-4  p-0">
                             <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
-                            <span style="min-width: 100px;"> @skillCast</span>
+                            <span style="min-width: 100px;"> @nameToShow</span>
                         </div>
 
                         <div class="col-md-5  p-0 @(containt ? "" : "d-none")">
                             <input type="range" class="custom-range w-75 @(lvlIndex == -1 ? "bg-secondary" : "")" min="0"  max="@lvlCount" value="@lvlIndex" @onchange="@(async e => await RefreshAsync(item, e.Value) )">
                         </div>
                         <div class="col-md-3 p-0   @(containt ? "" : "d-none")">
-
 
                             <span id="@nameToShow"> </span>
                         </div>

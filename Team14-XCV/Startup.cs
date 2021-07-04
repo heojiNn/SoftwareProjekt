@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using BlazorDownloadFile;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -35,7 +37,6 @@ namespace XCV
             services.AddTransient<IBasicDataSetService, BasicDataSetService>();
 
             services.AddTransient<IOfferService, OfferService>();
-            services.AddTransient<IConfigService, ConfigService>();
 
             services.AddSingleton<ISkillService, SkillService>();
             services.AddTransient<IFieldService, FieldService>();
@@ -43,6 +44,7 @@ namespace XCV
             services.AddTransient<IRoleService, RoleService>();
 
             services.AddTransient<DatabaseUtils>();
+            services.AddTransient<InsertRandomData>();
             // Nuget: BlazorDownloadFile for Worddownload.
             services.AddBlazorDownloadFile();
 
@@ -51,7 +53,7 @@ namespace XCV
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseUtils dbu)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseUtils dbu, IServiceProvider sp)
         {
             if (env.IsDevelopment())
             {
@@ -64,7 +66,11 @@ namespace XCV
 
             dbu.CreateDatabase();
             dbu.CreateTables();
-            dbu.Populate();
+
+            var ird = sp.GetService<InsertRandomData>();
+            ird.InsertJson();
+            Thread.Sleep(200);
+            ird.Insert6Employyes();
 
 
             app.UseStaticFiles();

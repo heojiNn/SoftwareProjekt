@@ -24,6 +24,9 @@
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home"></span> Profil
             </NavLink>
+                <NavLink class="nav-link" href="edit-profile">
+                <span class="oi oi-home"></span> ändern
+            </NavLink>
         </li>
 
         <AuthorizeView Roles="sales, admin">
@@ -52,8 +55,11 @@
 
         <AuthorizeView Roles="admin">
             <li class="nav-item px-3 pb-1">
-                <NavLink class="nav-link text-success" href="change-data-set">
+                <NavLink class="nav-link" href="change-data-set">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis ändern
+                </NavLink>
+                <NavLink class="nav-link" href="change-json">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis .json
                 </NavLink>
                 <NavLink class="nav-link" href="create-employee">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
