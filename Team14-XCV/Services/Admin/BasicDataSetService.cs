@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace XCV.Data
 {
+    /// <inheritdoc/>
     public class BasicDataSetService : IBasicDataSetService
     {
         private readonly JsonSerializerOptions options = new() { IgnoreNullValues = true, IncludeFields = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping, WriteIndented = true, Converters = { new SCategoryConverter(), new SkillConverter() } };
@@ -21,49 +22,45 @@ namespace XCV.Data
         private readonly IFieldService _fieldService;
         private readonly IRoleService _roleService;
 
-        public BasicDataSetService(ISkillService skillService, ILanguageService languageService,
-                                   IRoleService roleService, IFieldService fieldService)
+        public BasicDataSetService(IFieldService fieldService, IRoleService roleService, ILanguageService languageService, ISkillService skillService)
         {
-            _skillService = skillService;
-            _skillService.ChangeEventHandel += OnSkillServ;
-            _languageService = languageService;
             _fieldService = fieldService;
             _roleService = roleService;
+            _skillService = skillService;
+            _languageService = languageService;
         }
 
 
+        //-------------------------------------Business Logic--------------------------------------
         //-----------------------------------------------------------------------------------------
-        //---------------------------------Buissines Logic-----------------------------------------
-        //-----------------------------------------------------------------------------------------
-        //---------------------------------IBasicDataSetService------------------------------------
-        public string[] ShowCurrentDataSet()      //returns eveytig as a json
+        // for definition see   IBasicDataSetService
+        public string[] ShowCurrentDataSet()
         {
             var result = new string[5];
-            var allDset = new dataSet();
-            var fields = _fieldService.GetAllFields();
-            var fieldDset = fields.Select(x => x.Name).ToList();
-            allDset.fields = fieldDset;
+            dataSet databaseReturns = new();
 
-            var roles = _roleService.GetAllRoles();
-            List<dataSetrole> roleDset = new();
-            var roleNames = roles.Select(x => x.Name).Distinct();
-            foreach (var name in roleNames)
-            {
-                List<float> wages = new();
-                roles.Where(x => x.Name == name).ToList().ForEach(x => wages.Add(x.Wage));
-                roleDset.Add(new() { name = name, wages = wages.ToArray() });
-            }
-            allDset.roles = roleDset;
+            IEnumerable<string> fields = _fieldService.GetAllFields().Select(x => x.Name);  // Field names
+            databaseReturns.fields = fields;
 
-            var languages = _languageService.GetAllLanguages();
+            var multiRoles = _roleService.GetAllRoles().Select(x => new dataSetrole() { name = x.Name, wages = new[] { new dataSetWage() { RCL = x.RCL, PerHour = x.Wage } } });
+            IEnumerable<dataSetrole> roles = multiRoles.GroupBy(x => x.name).Select(g =>
+                                            {
+                                                var groupedFirst = g.First();
+                                                groupedFirst.wages = g.Select(x => x.wages.First()).ToArray();
+                                                return groupedFirst;
+                                            });
+            databaseReturns.roles = roles;
+
+            var languagesNames = _languageService.GetAllLanguages().Select(x => x.Name);
             var langLvls = _languageService.GetAllLevel();
-            var languageDset = new dataSetLanguages() { elements = languages.Select(x => x.Name), levels = langLvls };
-            allDset.languages = languageDset;
+            dataSetLanguages languages = new() { elements = languagesNames, levels = langLvls };
+            databaseReturns.languages = languages;
 
-            result[1] = Format(JsonSerializer.Serialize(fieldDset, options));
-            result[2] = Format(JsonSerializer.Serialize(roleDset, options));
-            result[3] = Format(JsonSerializer.Serialize(languageDset, options));
 
+            result[1] = Format(JsonSerializer.Serialize(fields, options));      // "fields": ["Archite,  "Automobil", .....
+            result[2] = Format(JsonSerializer.Serialize(roles, options));       // "roles":[{"name":"agileC", "wages": [{"RCL": 0, "PerHour": 0}, {"RC...
+            result[3] = Format(JsonSerializer.Serialize(languages, options));   // "languages":{"levels": ["spricht",  "ok",  "gut" ],
+                                                                                //              "elements": ["Arabis...
 
 
             dataSetSkills skillsDset = new();
@@ -72,100 +69,108 @@ namespace XCV.Data
             if (!skills.Any())
                 return result;
 
-            var root = skills.First().Category.Parent;
-            if (root.Parent != null)
-                root = root.Parent;
-            if (root.Parent != null)
-                root = root.Parent;
-            var softCat = skills.FirstOrDefault(x => x.Category.Name == "SoftSkills").Category;
+            var root = skills.First().Category.GetRoot();
             result[4] = Format(JsonSerializer.Serialize(root, options));
+
+            var softCat = skills.FirstOrDefault(x => x.Category.Name == "SoftSkills").Category;
             root.Children.Remove(softCat);
-            var hardCat = root.Children.First();
+            var hardCat = (SkillCategory)root.Children.First();
             hardCat.Name = "";
             skillsDset.HardSkills = hardCat;
             skillsDset.SoftSkills = softCat.Children.Select(x => ((Skill)x).Name).ToArray();
-            allDset.skills = skillsDset;
-
-            result[0] = Format(JsonSerializer.Serialize(allDset, options));
+            databaseReturns.skills = skillsDset;
+            result[0] = Format(JsonSerializer.Serialize(databaseReturns, options));// the whole file
 
             return result;
         }
         public async Task<string[]> ShowBrowserFile(IBrowserFile browserFile)
         {
-            var cont = await new StreamReader(browserFile.OpenReadStream())
+            var fileContent = await new StreamReader(browserFile.OpenReadStream())
                                         .ReadToEndAsync();
             var result = ShowCurrentDataSet();
-            result[0] = cont;
+            result[0] = fileContent;
             return result;
         }
 
-        public string[] ValidateUpdate(string[] jsons, string[] newOnes = null) // delivers ChangeResult
+
+
+        public void JsonUpdate(string json, bool dryRun = true)
         {
-            infoMessages = new();
             errorMessages = new();
-
-
-            var fieldsDataSet = JsonSerializer.Deserialize<string[]>(jsons[1], options);
-            var newFields = fieldsDataSet.Select(x => new Field() { Name = x });
-            if (newFields.Where(x => x.Name.Length > 40).Any())
-                errorMessages.Add($"Brachennamen dürfen nicht länger als 40 Zeichen sein");
-
-
-            OnChange(new() { InfoMessages = infoMessages, ErrorMessages = errorMessages });
-            return jsons;
-        }
-        public void Update(string[] json)
-        {
-            ValidateUpdate(json);
-            if (errorMessages.Any())
+            infoMessages = new();
+            dataSet wholeJson;
+            try
+            {
+                wholeJson = JsonSerializer.Deserialize<dataSet>(json, options);
+            }
+            catch (Exception e)
+            {
+                OnChange(new() { ErrorMessages = new[] { e.Message } });
                 return;
+            }
 
-            var fieldsDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).fields;
-            var newFields = fieldsDataSet.Select(x => new Field() { Name = x.Trim() });
+            var newFields = wholeJson.fields.Select(x => new Field() { Name = x.Trim() });              // for ValidateFields() + UpdateAllFields()
 
-            var rolesDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).roles;
+            var newRoles = new List<Role>();                                                            // for ValidateRoles() + UpdateAllRoles()
+            foreach (var roleKind in wholeJson.roles)
+                foreach (var wage in roleKind.wages)
+                    newRoles.Add(new Role() { Name = roleKind.name, RCL = wage.RCL, Wage = wage.PerHour });
 
-            var languagesDataSet = JsonSerializer.Deserialize<dataSet>(json[0], options).languages;
-            var newLanguages = languagesDataSet.elements.Select(x => new Language() { Name = x.Trim() });
-            var newLangLvl = languagesDataSet.levels;
+            var languagesDataSet = wholeJson.languages;
+            var newLanguages = languagesDataSet.elements.Select(x => new Language() { Name = x.Trim() });// for ValidateLanguages() + UpdateAllLanguages()
+            var newLangLvl = languagesDataSet.levels;                                                    // for                       UpdateAllLevels()
 
-            var dataSkillTree = JsonSerializer.Deserialize<dataSet>(json[0], options).skills;
-            var newSkillTree = new SkillCategory();
+            var newSkillTree = new SkillCategory();                // a tree with two children            for ValidateSkill() + UpdateAllSkills()
+            var dataSkillTree = wholeJson.skills;
             dataSkillTree.HardSkills.Name = "HardSkills";
             dataSkillTree.HardSkills.Parent = newSkillTree;
+            newSkillTree.Children.Add(dataSkillTree.HardSkills);   // HardSkills
+
             var softSkills = new SkillCategory() { Name = "SoftSkills", Parent = newSkillTree };
-            IEnumerable<SkillCategory> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
+            IEnumerable<SkilTreeNode> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
             softSkills.Children = softChildren.ToList();
-            newSkillTree.Children.Add(dataSkillTree.HardSkills);
-            newSkillTree.Children.Add(softSkills);
-            var newSkillLvl = dataSkillTree.hardSkillLevels;
+            newSkillTree.Children.Add(softSkills);                  // and SoftSkills
 
-            int addedRows, removedRows;
+
+            errorMessages = errorMessages.Concat(_fieldService.ValidateFields(newFields)).ToList();
+            errorMessages = errorMessages.Concat(_roleService.ValidateRoles(newRoles)).ToList();
+            errorMessages = errorMessages.Concat(_languageService.ValidateLanguages(newLanguages)).ToList();
+            (var cats, var skills) = _skillService.ValidateSkill(newSkillTree);
+            errorMessages = errorMessages.Concat(_skillService.ValidateSkillCategory(cats)).ToList();
+            errorMessages = errorMessages.Concat(_skillService.ValidateSkill(skills)).ToList();
+            if (dryRun || errorMessages.Any())
+            {
+                OnChange(new() { ErrorMessages = errorMessages });
+                return;
+            }
+
+
+            int addedRows, removedRows, changed;
             (addedRows, removedRows) = _fieldService.UpdateAllFields(newFields);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Brachen hinzugefügt/entfernt");
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Brachen hinzugefügt/entfernt.");
 
-            (addedRows, removedRows) = _roleService.UpdateAllRoles(rolesDataSet);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} (Rollen,Lohn) hinzugefügt/entfernt");
+            (addedRows, changed, removedRows) = _roleService.UpdateAllRoles(newRoles);
+            infoMessages.Add($"Es wurden: {addedRows}/{changed}/{removedRows} (Rollen mit Lohn) hinzugefügt/geändert/entfernt.");
 
             (addedRows, removedRows) = _languageService.UpdateAllLanguages(newLanguages);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen hinzugefügt/entfernt");
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen hinzugefügt/entfernt.");
             (addedRows, removedRows) = _languageService.UpdateAllLevels(newLangLvl);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen Level Namen geändert");
+            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} SprachenLevel geändert.");
 
             (var added, var removed) = _skillService.UpdateAllSkills(newSkillTree);
-            infoMessages.Add($"Es wurden: {added[0]}/{removed[0]} Skills Kategorien hinzugefügt/entfernt");
-            infoMessages.Add($"Es wurden: {added[1]}/{removed[1]} Skills hinzugefügt/entfernt");
-            (addedRows, removedRows) = _skillService.UpdateAllLevels(newSkillLvl);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Skill Level hinzugefügt/entfernt");
+            infoMessages.Add($"Es wurden: {added[0]}/{removed[0]} SkillsKategorien hinzugefügt/entfernt.");
+            infoMessages.Add($"Es wurden: {added[1]}/{removed[1]} Skills hinzugefügt/entfernt.");
+            changed = _skillService.UpdateAllLevels(dataSkillTree.hardSkillLevels);
+            infoMessages.Add($"Es wurden: {changed} Skill Level geändert.");
 
-            infoMessages = infoMessages.Concat(changeInfo.InfoMessages).ToList();
-            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
-            OnChange(new() { SuccesMessage = "", InfoMessages = infoMessages });
+            OnChange(new() { SuccesMessage = "Änderungen in die Datenbank übernommen.", InfoMessages = infoMessages });
         }
 
 
 
-        // my alternative json intendation Style
+
+
+        // an alternative json intendation Style
         public static string Format(string json)   // removes newlines in arrayes
         {
             string cr = Environment.NewLine;
@@ -177,48 +182,50 @@ namespace XCV.Data
             result = Regex.Replace(result, @"\s*\]", " ]");
             return result;
         }
-
-
-
-
-        private ChangeResult changeInfo = new();
-
-        private void OnSkillServ(object sender, ChangeResult e) => changeInfo = e;
-
-        //-----------------------------------------------------------------------------------------
+        //-------------------------------------User Messaging--------------------------------------
         private List<string> errorMessages = new();
         private List<string> infoMessages = new();
         public event EventHandler<ChangeResult> ChangeEventHandel;
         protected virtual void OnChange(ChangeResult e) => ChangeEventHandel?.Invoke(this, e);
     }
-
-
-
-
-
-
-
-
-
+    //----------------------------------Helper Classes-----------------------------------------
+    //-----------------------------------------------------------------------------------------
+    /// <summary>
+    ///         the Class/Struct that represents the datenbasis.json
+    /// </summary>
     struct dataSet
     {
         public IEnumerable<string> fields;  //nur elements
-        public IEnumerable<dataSetrole> roles;  //elements und wages
         public dataSetLanguages languages;  //elements und wages
         public dataSetSkills skills;  //elements und wages
+        public IEnumerable<dataSetrole> roles;  //elements und wages
     }
 
+    /// <summary>
+    ///         a internal strutcure of the datenbasis.json
+    /// </summary>
     public struct dataSetrole
     {
         public string name;
-        public float[] wages;
+        public dataSetWage[] wages;
     }
+    public struct dataSetWage
+    {
+        public int RCL;
+        public float PerHour;
+    }
+    /// <summary>
+    ///         a internal strutcure of the datenbasis.json
+    /// </summary>
     struct dataSetLanguages
     {
         public string[] levels;
         public IEnumerable<string> elements;
     }
 
+    /// <summary>
+    ///         a internal strutcure of the datenbasis.json
+    /// </summary>
     struct dataSetSkills
     {
         public string[] hardSkillLevels;

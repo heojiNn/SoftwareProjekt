@@ -7,67 +7,56 @@ namespace XCV.Data
 {
     public interface IBasicDataSetService
     {
-        // Summary:
-        //     Gets the data from the lookup-tables in the database
-        //       uses ValidateUpdate
-        // Returns:
-        //     an array of seriallised objects
-        //
-        // Raises:
-        //   ChangeResultEvent:
-        //       :  same as {ValidateUpdate(string json)}
+        /// <summary>
+        ///         Gets the data from the lookup-tables in the database
+        ///         and shows it split up
+        /// </summary>
+        ///
+        /// <returns>
+        ///          An array of seriallised objects that the json contains
+        ///          [0] is the whole databasis  [1] the fields .....
+        /// </returns>
         public string[] ShowCurrentDataSet();
 
 
-        // Summary:
-        //     Reads the file and does a round trip validation check
-        //       uses ValidateUpdate
-        // Parameters:
-        //   browserFile:
-        //
-        // Returns:
-        //     an array of seriallised objects
-        //
-        // Raises:
-        //   ChangeResultEvent:
-        //       :  same as {ValidateUpdate(string json)}
+        /// <summary>
+        ///         Reads the file and shows it split up
+        /// </summary>
         public Task<string[]> ShowBrowserFile(IBrowserFile browserFile);
 
 
-        // Summary:
-        //     Checks for consistensy (doubles  format error)
-        // Returns:
-        //     the fomated Version of the input
-        //
-        // Raises:
-        //   ChangeResult:
-        //     Info:  Akzeptables Dupllikat ...
-        //     Info:  Fähigkeiten in .. Kategorien
-        // and
-        //     Error: Bei der Deserilisation fiel auf: ...
-        //     Error: Inakzeptables Dupllikat ...
-        public string[] ValidateUpdate(string[] jsons, string[] newOnes = null);
+        /// <summary>
+        ///         updates the lookup tables in the database with the json
+        /// </summary>
+        ///
+        /// <remarks>
+        ///         uses  UpdateAllFields(), UpdateAllRoles(), UpdateAllLang(), UpdateAllLangLevels()
+        ///               UpdateAllSkills(), UpdateAllLevels(),  ValidateFields(), ValidateRoles()
+        /// </remarks>
+        ///
+        /// <event cref="OnChange">
+        ///     Succes: Änderungen in die Datenbank übernommen.
+        /// and
+        ///     Info:  Es wurden: {addRows}/{removoRows} Brachen hinzugefügt/entfernt.
+        ///     Info:  Es wurden: {aR}{cR}{rR} (Rollen mit Lohn) hinzugefügt/geändert/entfernt
+        ///     Info:  Es wurden: {aR}{rR}  Sprachen hinzugefügt/entfernt"
+        ///     Info:   Es wurden: {cR}     Sprachen Level geändert
+        ///     Info:  Es wurden: {aR}{rR}  SkillsKategorien hinzugefügt/entfernt.
+        ///     Info:   Es wurden: {aR}{rR} Skills hinzugefügt/entfernt.
+        ///     Info:   Es wurden: {cR}     Skill Level geändert.
+        /// or
+        ///     Error:  {Name} Brachen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
+        ///     Error:  {Name} Rollen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
+        ///     Error:  {Name} Sprachen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
+        ///     Error:  {Name} Skill brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
+        ///     Error:  {Name} SkillCategory brauchen einen Namen./Der Name muss unter 40 Zeichen sein.
+        ///     Error:  Es trat ein Fehler in der Persistenz auf {ex.Message}.
+        /// </event>
+        public void JsonUpdate(string json, bool dryRun = true);
 
-        // Summary:
-        //     Checks for consistensy
-        //     an strores all ne Values in the database  if something changed
-        //       uses ValidateUpdate
-        // Parameters:
-        //   json:
-        //     a new json
-        //
-        // Raises:
-        //   ChangeResult:
-        //     Error:  same as {ValidateUpdate(string json)}
-        // or
-        //     Succes: "Update erfolgreich. gespeichert folgen de reihen ind data baae ceändert."
-        //             "Keine Änderungen zu übernehmen."
-        public void Update(string[] json);
 
 
         public event EventHandler<ChangeResult> ChangeEventHandel;
 
-
     }
-
 }

@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
 
 namespace XCV.Data
 {
@@ -58,8 +58,13 @@ namespace XCV.Data
                 writer.WriteStartObject(value.Name);
 
 
-            foreach (var child in value.Children)
+            foreach (SkillCategory child in value.Children)
             {
+                if (!child.Children.Any())
+                {
+                    writer.WriteEndObject();
+                    return;
+                }
                 if (child.Children.First() is Skill)
                 {
                     writer.WriteStartArray(child.Name);

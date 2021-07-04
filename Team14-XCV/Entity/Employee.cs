@@ -1,53 +1,86 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
 
 namespace XCV.Data
 {
     public class Employee
     {
+        [MinLength(2, ErrorMessage = "Die Personalnummer muss länger als 2 Zeichen sein."),
+        MaxLength(6, ErrorMessage = "Die Personalnummer darf nicht länger als 6 Zeichen sein."),
+        RegularExpression(@"[a-zA-Z0-9_\-,.]*", ErrorMessage = "PersoNr. darf nur Buchstaben Zahlen oder -_,. enthalten.")] //some SQL might use it directly, so watch for (')
         public string PersoNumber { get; set; } = "";
+
         public string Password { get; set; } = "";
 
         public ISet<AccessRole> AcRoles { get; set; } = new SortedSet<AccessRole>();
 
 
-        [Required(ErrorMessage = "Der Vorname darf nicht leer sein"),
-        MaxLength(10, ErrorMessage = "Der Vorname ist zu lang")]
+        [Required(ErrorMessage = "Es muss eine Eingabe zum Vorname gemacht werden."),
+        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu opimieren, \n" +
+                                        "lässt das System keine Vornamen über 20 Zeichne zu.")]
         public string FirstName { get; set; } = "";
 
-        [Required(ErrorMessage = "Der Nachname darf nicht leer sein"),
-        MaxLength(10, ErrorMessage = "Der Nachname ist zu lang")]
+        [Required(ErrorMessage = "Es muss eine Eingabe zum Nachname gemacht werden."),
+        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu optimieren, \n" +
+                                        "lässt das System keine Nachname über 20 Zeichne zu")]
         public string LastName { get; set; } = "";
 
+
+
+        [MaxLength(202, ErrorMessage = "Beschreibung nicht über 200 Zeichen")]
         public string Description { get; set; } = "";
         public string Image { get; set; } = "musterPic.png";
 
+        // null, until explicitly set
+        [Range(0, 8, ErrorMessage = "Das RCL muss zwischen 1 und 8 liegen")]
+        public int RCL { get; set; }
 
-        // bis der Mitarbeiter sich für ein Rate Card Level entschieden hat bleibet es NULL
-        [Range(1, 7, ErrorMessage = "Das RCL muss zwischen 1 und 7 liegen")]
-        public int? RCL { get; set; }
 
+        public DateTime? Expirience { get; set; }
 
-        //private TimeSpan _expirience = new();
-        public float Expirience { get; set; }
+        public DateTime EmployyedSince { get; init; }
 
-        private DateTime _workingSince;
-        public DateTime WorkingSince
-        {
-            get => _workingSince;
-            init { _workingSince = value.Date; }
-        }
-        public bool MadeFirstChangesOnProfile = false;
 
 
         public ISet<Role> Roles { get; set; } = new SortedSet<Role>();
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
-        public ISet<Project> Projects { get; set; } = new SortedSet<Project>();
-        public Dictionary<int, string> DocumentSettingsList { get; set; } = new Dictionary<int, string>(); // (offer, configname)
-        public override string ToString() => $"{PersoNumber}heißt \"{FirstName}\" \"{LastName}\"";
+
+        public List<(int project, string activity)> Projects { get; set; } = new();
+
+
+
+        public bool MadeFirstChangesOnProfile = false;
+
+
+
+
+
+        public override string ToString()
+        {
+            var pro = string.Join(", \n           ", Projects.Select(x => $"im Pro. Id:{x.project} :   ({x.activity})"));
+            var ro = "keine Rollen";
+            if (Roles.FirstOrDefault() != null)
+                ro = string.Join(", \n           ", Roles.Select(x => $"(L{x.RCL}-{x.Name}:{x.Wage}€)"));
+
+            var ab = "keine Skills";
+            if (Abilities.FirstOrDefault() != null)
+            {
+                ab = $"\n {Abilities.Count}:Skills in  {Abilities.First().Category.GetRoot()}";
+            }
+
+            var result = $"{PersoNumber}: \"{FirstName}\" \"{LastName}\" Erfahrung{Expirience}:\n"
+                         + $"AcRoles:   {string.Join(", ", AcRoles)}\n\n"
+                         + $"Projekte:  {pro}\n"
+                         + $"Roles:     {ro}  \n\n"
+                         + $"Fields:    {string.Join(", ", Fields)} \n"
+                         + $"Languages: {string.Join(", ", Languages)} \n"
+                         + $"{ab}";
+
+            return result;
+        }
     }
 }
