@@ -68,7 +68,7 @@ namespace XCV.Data
                 employyes6[3].AcRoles.Add(AccessRole.Sales);
                 foreach (var e in employyes6)
                     _accountService.CreateAccount(e);               //creates 6 accounts
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
                 foreach (var e in employyes6)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
 
@@ -85,7 +85,7 @@ namespace XCV.Data
                     _projectService.Add(p, "Tätigkeit 1");
                     _projectService.Add(p, "Tätigkeit 2");
                 }
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
                 pros = _projectService.ShowAllProjects();
                 var rand = new Random();
                 foreach (var p in pros)
