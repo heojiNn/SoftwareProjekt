@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -22,7 +20,7 @@ namespace XCV.Data
 
             using (MemoryStream templateStream = new MemoryStream())
             {
-                templateStream.Write(templateBytes, 0, (int)templateBytes.Length); 
+                templateStream.Write(templateBytes, 0, (int)templateBytes.Length);
                 using (WordprocessingDocument doc = WordprocessingDocument.Open(templateStream, true)) // 'WordprocessingDocument.Open' takes a stream as input in this implementation.
                 {
                     MainDocumentPart mainPart = doc.MainDocumentPart;
@@ -32,7 +30,7 @@ namespace XCV.Data
 
                     // -------------------Single Input:------------------------------
 
-                    // add Heading 
+                    // add Heading
                     Paragraph para = body.AppendChild(new Paragraph());
                     ParagraphProperties pPr = para.AppendChild(new ParagraphProperties());
                     pPr.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
@@ -67,7 +65,7 @@ namespace XCV.Data
                     else
                         run1.AppendChild(new Text($"Vorname: -") { Space = SpaceProcessingModeValues.Preserve });
 
-                    // add LastName 
+                    // add LastName
                     Paragraph para3 = body.AppendChild(new Paragraph());
                     Run run3 = para3.AppendChild(new Run());
                     if (e.LastName.Length != 0)
@@ -86,16 +84,16 @@ namespace XCV.Data
                     // add RCL
                     Paragraph para5 = body.AppendChild(new Paragraph());
                     Run run5 = para5.AppendChild(new Run());
-                    if (e.RCL.HasValue)
+                    if (e.RCL != 0)
                         run5.AppendChild(new Text($"RCL: {e.RCL}") { Space = SpaceProcessingModeValues.Preserve });
                     else
                         run5.AppendChild(new Text($"RCL: -") { Space = SpaceProcessingModeValues.Preserve });
-                    
-                    // add WorkingSince 
+
+                    // add WorkingSince
                     Paragraph para6 = body.AppendChild(new Paragraph());
                     Run run6 = para6.AppendChild(new Run());
-                    run6.AppendChild(new Text($"Beschreibung: {e.WorkingSince.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
-                    
+                    run6.AppendChild(new Text($"Beschreibung: {e.EmployyedSince.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
+
                     //
                     // ----------------------Multiple Inputs:------------------------
                     //
@@ -108,7 +106,7 @@ namespace XCV.Data
                     run7.AppendChild(new Text($"Rollen: "));
                     if ((e.Roles.Count() != 0) && e.Roles != null)
                     {
-                        
+
                         Role lastR = e.Roles.Last();
                         foreach (Role r in e.Roles)
                         {
@@ -117,7 +115,8 @@ namespace XCV.Data
                             else
                                 run7.AppendChild(new Text($"{r.Name}") { Space = SpaceProcessingModeValues.Preserve });
                         }
-                    } else
+                    }
+                    else
                     {
                         run7.AppendChild(new Text($"-"));
                     }
@@ -136,7 +135,8 @@ namespace XCV.Data
                             else
                                 run8.AppendChild(new Text($"{f.Name}") { Space = SpaceProcessingModeValues.Preserve });
                         }
-                    } else
+                    }
+                    else
                     {
                         run8.AppendChild(new Text($"-"));
                     }
@@ -203,20 +203,24 @@ namespace XCV.Data
                         int i = 0;
                         Paragraph[] parAr = new Paragraph[length];
 
-                        foreach (Project p in e.Projects)
-                        {
-                            parAr[i] = new Paragraph();
-                            parAr[i].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-                            parAr[i].Append(new Run(new Text(p.Title)));
-                            body.Append(parAr[i]);
-                            i++;
-                        }
-                    } else
+
+                        //----------------by mario
+                        ////            projectservice Get(  e.Projects.ProNumber  )
+                        // foreach (Project p in e.Projects)
+                        // {
+                        //     parAr[i] = new Paragraph();
+                        //     parAr[i].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
+                        //     parAr[i].Append(new Run(new Text(p.Title)));
+                        //     body.Append(parAr[i]);
+                        //     i++;
+                        // }
+                    }
+                    else
                     {
                         run12.AppendChild(new Text("-") { Space = SpaceProcessingModeValues.Preserve });
                     }
-                    
-                    
+
+
 
                     //==================================================================================//
 
@@ -253,45 +257,45 @@ namespace XCV.Data
                     Table table = new Table();
                     TableRow tr1 = new TableRow();
 
-                    TableCell tc11 = new TableCell();  
-                    Paragraph p11 = new Paragraph(new Run(new text("A")));  
-                    tc11.Append(p11);  
+                    TableCell tc11 = new TableCell();
+                    Paragraph p11 = new Paragraph(new Run(new text("A")));
+                    tc11.Append(p11);
                     tr1.Append(tc11);
 
-                    TableCell tc12 = new TableCell();  
-                    Paragraph p12 = new Paragraph();  
-                    Run r12 = new Run();  
-                    RunProperties rp12 = new RunProperties();  
-                    rp12.Bold = new Bold();  
-                    r12.Append(rp12);  
-                    r12.Append(new Text("Nice"));  
-                    p12.Append(r12);  
+                    TableCell tc12 = new TableCell();
+                    Paragraph p12 = new Paragraph();
+                    Run r12 = new Run();
+                    RunProperties rp12 = new RunProperties();
+                    rp12.Bold = new Bold();
+                    r12.Append(rp12);
+                    r12.Append(new Text("Nice"));
+                    p12.Append(r12);
                     tc12.Append(p12);
 
-                    tr1.Append(tc12);  
+                    tr1.Append(tc12);
                     table.Append(tr1);
 
                     TableRow tr2 = new TableRow();
 
 
-                    TableCell tc21 = new TableCell();  
-                    Paragraph p21 = new Paragraph(new Run(new text("Little")));  
-                    tc21.Append(p21);  
+                    TableCell tc21 = new TableCell();
+                    Paragraph p21 = new Paragraph(new Run(new text("Little")));
+                    tc21.Append(p21);
                     tr2.Append(tc21);
 
-                    TableCell tc22 = new TableCell();  
-                    Paragraph p22 = new Paragraph();  
-                    ParagraphProperties pp22 = new ParagraphProperties();  
-                    pp22.Justification = new Justification() { Val = JustificationValues.Center };  
-                    p22.Append(pp22);  
-                    p22.Append(new Run(new Text("Table")));  
+                    TableCell tc22 = new TableCell();
+                    Paragraph p22 = new Paragraph();
+                    ParagraphProperties pp22 = new ParagraphProperties();
+                    pp22.Justification = new Justification() { Val = JustificationValues.Center };
+                    p22.Append(pp22);
+                    p22.Append(new Run(new Text("Table")));
                     tc22.Append(p22);
 
-                    tr2.Append(tc22);  
+                    tr2.Append(tc22);
                     table.Append(tr2);
 
                     // Add your table to docx body
-                    docBody.Append(table);  
+                    docBody.Append(table);
                      */
                     //==================================================================================//
 

@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
 namespace XCV.Data
 {
     public interface IConfigService
@@ -20,7 +14,7 @@ namespace XCV.Data
 
 
         // Input can be anything, must only adjust DocumentFormat.OpenXml accordingly (for Future additions/purposes, easy to add))
-        
+
 
         /// <summary>
         /// Opens a template .docx worddocument, adds information of Employee e to the .docx and returns the combined .docx in a byte-stream.

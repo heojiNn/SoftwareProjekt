@@ -197,26 +197,24 @@
             {
                 @foreach (Project pro in proService.ShowAllProjects())
                 {
-                    <div class="row">
-                        <div class="col-sm-5">
-                            @pro.Title
-                            @if (pro.ActivitiesWithEmployees[""].Any(x => x == offerEmployee.PersoNumber))
+                                               @foreach (var akti in pro.Activities)
                             {
-                                <span class="text-success"> war dabei</span>
-                            }
-                        </div>
-                        <div class="col-sm-5">
-                            @foreach (var key in pro.ActivitiesWithEmployees.Keys.Where(x => x != ""))
+                                <div class="card">
+                                    <div class="card-header">
+                                        @akti.Key
+                                        
+                            @foreach (var e in akti.Value.persNr)
                             {
-                                @key
-                                @if (pro.ActivitiesWithEmployees[key].Any(x => x == offerEmployee.PersoNumber))
-                                {
-                                    <span class="text-success"> war dabei</span>
-                                }
-                                <br>
+                                @e
                             }
-                        </div>
-                    </div>
+                                        
+                                    </div>
+                                    <div class="card-body">
+                                        <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
+
+                                    </div>
+                                </div>
+                            }
 
                 }
             }

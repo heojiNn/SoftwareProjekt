@@ -7,19 +7,18 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+
 namespace XCV.Data
 {
     public class ProjectService : IProjectService
     {
         private readonly string connectionString;
         private readonly ILogger<ProjectService> log;
-        private readonly IFieldService _fieldService;
 
-        public ProjectService(IConfiguration config, ILogger<ProjectService> logger, IFieldService fieldService)
+        public ProjectService(IConfiguration config, ILogger<ProjectService> logger)
         {
-            _fieldService = fieldService;
             log = logger;
-            connectionString = config.GetConnectionString("MyLocalConnection");
+            connectionString = config.GetConnectionString("MS_SQL_Connection");
         }
 
 
@@ -38,9 +37,16 @@ namespace XCV.Data
             if (!Validator.TryValidateObject(newVersion, new ValidationContext(newVersion), results, true))
                 errorMessages = results.Select(e => e.ErrorMessage).ToList();
 
-            if (newVersion.Start > DateTime.Now.AddYears(1))
-                errorMessages.Add("Projecte dürfen nicht ein erst in einem Jahr starten");
-
+            if (newVersion.Start > newVersion.End.AddSeconds(1))
+                errorMessages.Add("Das Enddatum muss hinter den Beginn liegen");
+            newVersion.Purpose.ForEach(x => x = x.Trim());
+            foreach (var pur in newVersion.Purpose)
+            {
+                if (pur.Length < 2)
+                    errorMessages.Add("Die Beschreibung des Zwecks:({pur}) ist zu kurz");
+                if (pur.Length > 200)
+                    errorMessages.Add("Die Beschreibung des Zwecks:({pur}) ist zu lang");
+            }
         }
 
 
@@ -55,18 +61,19 @@ namespace XCV.Data
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            var projects = con.Query<Project>("Select * From project");
+            var projects = con.Query<Project>("Select * From [Project]");
             con.Close();
             foreach (var pro in projects)
             {
-                var purposes = con.Query<string>($"Select Purpose From project_purpose Where Project = '{pro.Id}'");
+                var purposes = con.Query<string>("Select [Name] From [ProjectHasPurpose] Where [Project] = @ID", new { pro.Id });
                 foreach (var pur in purposes)
                     pro.Purpose.Add(pur);
 
-                var activityKeys = con.Query<string>($"Select activity  From activity Where Project = '{pro.Id}'");
+                var activityKeys = con.Query<string>($"Select [Name]  From [ProjectHasActivity] Where [Project] =@ID", new { pro.Id });
                 foreach (var key in activityKeys)
                 {
-                    pro.ActivitiesWithEmployees.Add(key, con.Query<string>($"Select employee From activity_done_by Where Project = '{pro.Id}' And activity='{key}' ").ToList());
+                    var PersNrs = con.Query<string>($"Select [Employee] From [ActivityHasEmployee] Where [Project] = @ID  And [Activity] = @Key", new { pro.Id, key });
+                    pro.Activities.Add(key, (PersNrs.ToList(), new List<Skill>()));
                 }
             }
             return projects;
@@ -79,75 +86,72 @@ namespace XCV.Data
             errorMessages = new();
             var p = new Project() { Title = title };
             ValidateUpdate(p);
-            if (!errorMessages.Any())
+            if (ShowAllProjects().Any(x => x.Title.ToLower() == title.ToLower()))
+                errorMessages.Add("Es existiert schon ein Projekt mit diesem Titel");
+            if (errorMessages.Any())
             {
-                using var con = new SqlConnection(connectionString);
-                try
-                {
-                    p.Field ??= "";
-                    con.Open();
-                    con.Execute($"Insert Into project Values (    '{p.Title}', '{p.Description}',  " +
-                                                    $"'{p.Start:yyyy-MM-dd}', '{p.End:yyyy-MM-dd}', '{p.Field}' )");
-                    con.Close();
-                }
-                catch (SqlException e)
-                {
-                    log.LogError($" creating Projekt on database: {e.Message} \n");
-                }
-                var newID = ShowAllProjects().FirstOrDefault(x => x.Title == title).Id;
-                con.Open();
-                con.Execute($"Insert Into activity  Values ({newID}, '' )");
-                con.Close();
-                OnChange(new() { SuccesMessage = $"Es wurde ein Project erstellt mit der ID:{newID}." });
-            }
-            else
                 OnChange(new() { ErrorMessages = errorMessages });
+                return;
+            }
+
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                con.Execute($"Insert Into [Project] Values ( @Title,  @Description,  @Start,  @End,  @Field)", p);
+            }
+            catch (SqlException e)
+            {
+                log.LogError($" Create() persitence Error:: \n{e.Message}\n");
+            }
+            finally { con.Close(); }
+
+            var newID = ShowAllProjects().FirstOrDefault(x => x.Title == title).Id;
+            con.Open();
+            con.Execute($"Insert Into [ProjectHasActivity]  Values ('ohne sepz. Aktivität', @newID)", new { newID });
+            con.Close();
+            OnChange(new() { SuccesMessage = $"Das Projekt:{title} wurde  mit der ID:{newID} erstellt." });
+
         }
         public void Update(Project newP)
         {
             errorMessages = new();
             ValidateUpdate(newP);
-            if (!_fieldService.GetAllFields().Any(x => x.Name == newP.Field))
-                OnChange(new() { ErrorMessages = new string[] { $"Dieses Wert:{newP.Field} muss aus der vohanden Brachen kommen" } });
-
             if (errorMessages.Any())
             {
-                OnChange(new() { InfoMessages = infoMessages, ErrorMessages = errorMessages });
+                OnChange(new() { ErrorMessages = errorMessages });
                 return;
             }
+
             using var con = new SqlConnection(connectionString);
             try
             {
-                newP.Field ??= "";
                 con.Open(); ;
-                con.Execute($"Update project Set  Title='{newP.Title}', Description='{newP.Description}', Start='{newP.Start:yyyy-MM-dd}', " +
-                                                             $" Ende='{newP.End:yyyy-MM-dd}', Field='{newP.Field}'  Where Id={newP.Id} ");
-
-                con.Execute($"Delete From project_purpose  Where Project={newP.Id} ");
+                con.Execute($"Update [Project] Set  [Title]=@Title,  [Description]=@Description, [Start]= @Start, [End]=@End, [Field]=@Field  Where [Id]= @ID", newP);
+                con.Execute($"Delete From [ProjectHasPurpose]  Where Project={newP.Id} ");
                 foreach (var purp in newP.Purpose)
-                    if (con.Query($"SELECT Project From project_purpose Where Project={newP.Id} And Purpose='{purp}' ").Any())
-                        OnChange(new() { ErrorMessages = new string[] { "Eine Zweck mit diesen Namen ist schon vohanden" } });
-                    else
-                        con.Execute($"Insert Into project_purpose  Values ({newP.Id}, '{purp}' )");
+                    con.Execute($"Insert Into [ProjectHasPurpose] Values (@Purp, @Id) ", new { purp, newP.Id });
 
                 OnChange(new() { SuccesMessage = "Die Änderungen am Project wurden übernommen" });
             }
             catch (SqlException e)
             {
-                log.LogError($"updating Projekt in database: {e.Message} \n");
+                log.LogError($" Update() persitence Error:: \n{e.Message}\n");
             }
-            finally
-            {
-                con.Close();
-            }
+            finally { con.Close(); }
         }
 
         public void Delete(Project toDelete)
         {
             using var con = new SqlConnection(connectionString);
-            con.Open();
-            con.Execute($"Delete From project  Where Id='{toDelete.Id}' ");
-            con.Close();
+            try
+            {
+                con.Open();
+                con.Execute($"Delete From project  Where Id='{toDelete.Id}' ");
+
+            }
+            catch (SqlException) { }
+            finally { con.Close(); }
         }
 
 
@@ -159,37 +163,50 @@ namespace XCV.Data
                 return;
             }
             using var con = new SqlConnection(connectionString);
-            con.Open();
-            if (con.Query($"SELECT Project From activity Where Project={p.Id} And activity='{activity}' ").Any())
-                OnChange(new() { ErrorMessages = new string[] { "Eine Activität mit diesen Namen ist schon vohanden" } });
-            else
+            try
             {
-                con.Execute($"Insert Into activity  Values ({p.Id}, '{activity}' )");
-                OnChange(new() { InfoMessages = new string[] { "Activität hinzugefügt" } });
+                con.Open();
+                if (con.Query($"SELECT [Project] From [ProjectHasActivity] Where [Project] = {p.Id} And [Name] = '{activity}' ").Any())
+                    OnChange(new() { ErrorMessages = new[] { "Eine Activität mit diesen Namen ist schon vohanden" } });
+                else
+                {
+                    con.Execute($"Insert Into [ProjectHasActivity]  Values ('{activity}', {p.Id})");
+                    OnChange(new() { SuccesMessage = "Aktivität hinzugefügt" });
+                }
             }
-            con.Close();
+            catch (SqlException) { }
+            finally { con.Close(); }
         }
         public void Remove(Project p, string activity)
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            con.Execute($"Delete From activity  Where Project={p.Id} And activity='{activity}' ");
+            con.Execute($"Delete From [ProjectHasActivity]  Where [Project]={p.Id} And [Name]='{activity}' ");
             con.Close();
-            OnChange(new() { InfoMessages = new string[] { "Activität entfernt" } });
+            OnChange(new() { SuccesMessage = "Aktivität entfernt" });
         }
 
-        public void Add(Project p, Employee doneBy, string activity = "")
+        public void Add(Project p, Employee doneBy, string activity = "ohne sepz. Aktivität")
         {
             using var con = new SqlConnection(connectionString);
-            con.Open();
-            con.Execute($"Insert Into activity_done_by Values({p.Id}, '{activity}', '{doneBy.PersoNumber}' )");
-            con.Close();
+            try
+            {
+                con.Open();
+                con.Execute($"Insert Into [activityHasEmployee] Values('{activity}', {p.Id}, '{doneBy.PersoNumber}' )");
+
+                con.Execute($"IF EXISTS ( SELECT * FROM [ActivityHasEmployee] " +
+                                                $"Where  [Activity]<>'ohne sepz. Aktivität' And [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' )" +
+            $"Delete From [ActivityHasEmployee]  Where  [Activity]='ohne sepz. Aktivität'  And  [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' "
+                );
+            }
+            catch (SqlException) { }
+            finally { con.Close(); }
         }
-        public void Remove(Project p, Employee doneBy, string activity = "")
+        public void Remove(Project p, Employee doneBy, string activity = "ohne sepz. Aktivität")
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
-            con.Execute($"Delete From activity_done_by  Where Project={p.Id} And activity='{activity}' And Employee='{doneBy.PersoNumber}' ");
+            con.Execute($"Delete From [ActivityHasEmployee]  Where  [Activity]='{activity}' And [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' ");
             con.Close();
         }
 
@@ -202,12 +219,7 @@ namespace XCV.Data
 
         //-----------------------------------------------------------------------------------------
         private List<string> errorMessages = new();
-        private List<string> infoMessages = new();
         public event EventHandler<ChangeResult> ChangeEventHandel;
-        protected virtual void OnChange(ChangeResult e)
-        {
-            if (e.InfoMessages.Any() || e.ErrorMessages.Any() || e.SuccesMessage != "")
-                ChangeEventHandel?.Invoke(this, e);
-        }
+        protected virtual void OnChange(ChangeResult e) => ChangeEventHandel?.Invoke(this, e);
     }
 }

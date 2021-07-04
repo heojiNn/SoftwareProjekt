@@ -28,8 +28,8 @@ namespace XCV.Data
         public void Add(Project p, string activity);
         public void Remove(Project p, string activity);
 
-        public void Add(Project p, Employee doneBy, string activity = "");
-        public void Remove(Project p, Employee doneBy, string activity = "");
+        public void Add(Project p, Employee doneBy, string activity = "ohne sepz. Aktivität");
+        public void Remove(Project p, Employee doneBy, string activity = "ohne sepz. Aktivität");
 
 
 

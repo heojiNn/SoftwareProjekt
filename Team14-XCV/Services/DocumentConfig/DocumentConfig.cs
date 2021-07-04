@@ -46,15 +46,31 @@ namespace XCV.Data
         private string PersoNumber { get; set; } // PersNr of the parent employee.
         private string description { get; set; } // Identifiying description, unique
         public IEnumerable<EmployeeConfig> employeeConfigs { get; set; }
-        private OfferService oS;
 
-        public DocumentConfig()
-        {   // Initializes with defaults.
-            foreach (Employee e in oS.ShowOffer(offerId).participants)
-            {
-                new EmployeeConfig(e);
-            }
-        }
+
+
+
+        // by mario    ------------------- private OfferService oS;
+        // public DocumentConfig()
+        // {   // Initializes with defaults.
+        //     foreach (Employee e in oS.ShowOffer(offerId).participants)
+        //     {
+        //         new EmployeeConfig(e);
+        //     }
+        // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Whenever employees are added or removed from the offer, their EmployeeConfig is to be added/removed from employeeConfigs-collection (of each DocumentConfig)
 

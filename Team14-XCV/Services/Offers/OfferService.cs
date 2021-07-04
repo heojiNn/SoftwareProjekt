@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -19,12 +15,12 @@ namespace XCV.Data
         private readonly string connectionString;
         private readonly ILogger<ProjectService> log;
         private readonly ISkillService ofSkillService;
-         
+
         public OfferService(IConfiguration config, ILogger<ProjectService> logger, ISkillService skillService)
         {
             log = logger;
             ofSkillService = skillService;
-            connectionString = config.GetConnectionString("MyLocalConnection");
+            connectionString = config.GetConnectionString("MS_SQL_Connection");
         }
 
         //-----------------------------------------------------------------------------------------
@@ -65,7 +61,7 @@ namespace XCV.Data
                 foreach (var field in fields)
                     of.Fields.Add(field);
 
-                var skills = con.Query<(string Name, string Lvl, string Cat)>(  "Select offer_skill.skill_name as Name, skill_level.Name as Lvl, offer_skill.skill_cat as Cat " +
+                var skills = con.Query<(string Name, string Lvl, string Cat)>("Select offer_skill.skill_name as Name, skill_level.Name as Lvl, offer_skill.skill_cat as Cat " +
                                                                                 "From offer_skill  " +
                                                                                     "Join skill_level On  offer_skill.skill_level=skill_level.level " +
                                                                                     $"Where Offer = '{of.Id}';");
@@ -95,7 +91,7 @@ namespace XCV.Data
                         Console.Write($"Failed to add Employee {emp.FirstName} to offer {of.Title}" + e.Message);
                     }
                 }
-                   
+
             }
             return offers;
         }
@@ -124,7 +120,7 @@ namespace XCV.Data
                 catch (SqlException e)
                 {
                     log.LogError($" creating Offer on database: {e.Message} \n");
-                }    
+                }
                 OnChange(new() { SuccesMessage = $"Es wurde ein Objekt erstellt." });
             }
             else
@@ -180,7 +176,7 @@ namespace XCV.Data
             else
             {
                 con.Execute($"Insert Into offer_field  Values ('{o.Id}', '{f.Name}')");
-                OnChange(new() { InfoMessages = new string[] {$"Branche zum Angebot {o.Title} (Id: {o.Id}) hinzugefügt" } });
+                OnChange(new() { InfoMessages = new string[] { $"Branche zum Angebot {o.Title} (Id: {o.Id}) hinzugefügt" } });
             }
             con.Close();
         }
@@ -227,7 +223,7 @@ namespace XCV.Data
                     con.Execute($"Insert Into offer Values ('{o.Title}', '{o.Description}')");
                     //Create references to offer_employee, offer_field, offer_skill
 
-                    
+
 
 
 

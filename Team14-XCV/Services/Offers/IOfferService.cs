@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace XCV.Data
@@ -33,7 +31,7 @@ namespace XCV.Data
         /// <param name="title"></param>
         /// <param name="description"></param>
         public void Create(string title, string description);
-      
+
         public void Create(string title, string description, Skill skill, Field field, ISet<Employee> participants); // ref. "CreateOffer"
         /// <summary>
         /// TODO

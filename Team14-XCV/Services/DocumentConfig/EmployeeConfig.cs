@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using XCV.Data;
 
 namespace XCV.Data
 {
@@ -33,7 +32,14 @@ namespace XCV.Data
                 selectedFields = e.Fields;
                 selectedSoftSkills = (ISet<Skill>)e.Abilities.Where(s => s.Type == SkillGroup.Softskill);
                 selectedHardSkills = (ISet<Skill>)e.Abilities.Where(s => s.Type == SkillGroup.Hardskill);
-                selectedProjects = e.Projects;
+
+                ///   by marrrio
+                //----------------by mario
+                ////            projectservice Get(  e.Projects.ProNumber  )  use se servi to get the whole project
+                selectedProjects = new HashSet<Project>() { new Project() };
+                //----------------------------------------------------
+
+
                 //selectedProjectroles = ...
             }
         }
