@@ -1,0 +1,103 @@
+@page "/change-json"
+
+
+@using Microsoft.AspNetCore.Hosting
+
+@inject IWebHostEnvironment Environment
+@inject IJSRuntime JS
+@inject IBasicDataSetService dataSetService
+@inject IFieldService fieldService
+@inject IRoleService roleService
+@inject ILanguageService langService
+@inject ISkillService skillService
+
+
+<b>Datenbasis: ändern</b>
+<br>
+
+<div class="alert alert-success" role="alert">
+    @changeInfo?.SuccesMessage
+</div>
+
+<div class="row ">
+
+    <div class="col-6">
+        <InputFile OnChange="@ShowUpload" class="btn btn-sm btn-primary" />
+        <div class="outerbox @(validJson ? "" : "invalid")">
+            <textarea class="form-control" style="white-space: pre;" rows="30" @bind="@textareas[0]"
+                @bind:event="oninput">
+            </textarea>
+        </div>
+        <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
+            diese Version in die Datenbank laden
+        </button>
+
+    </div>
+
+    <div class="col-6">
+        <ul class="alert alert-danger" role="alert">
+            @foreach (string line in changeInfo.ErrorMessages)
+            {
+                <li>
+                    <pre>@line</pre>
+                </li>
+            }
+        </ul>
+        <ul class="alert alert-info" role="alert">
+            @foreach (string line in changeInfo.InfoMessages)
+            {
+                <li>
+                    <pre>@line</pre>
+                </li>
+            }
+        </ul>
+    </div>
+
+</div>
+
+<br>
+<br>
+<br>
+
+
+
+
+
+
+@code {
+    private string[] textareas = new string[5];
+    private bool validJson = true;
+
+
+    protected override void OnInitialized()
+    {
+        dataSetService.ChangeEventHandel += OnChange;
+        textareas = dataSetService.ShowCurrentDataSet();
+    }
+    private async Task ShowUpload(InputFileChangeEventArgs eventA)
+    {
+        textareas = await dataSetService.ShowBrowserFile(eventA.File);
+        //StateHasChanged();
+    }
+
+
+
+    private void Validate()
+    {
+        dataSetService.JsonUpdate(textareas[0]);// might show ChangeInfo and ChangeInfo.Error
+    }
+    private void Upload()
+    {
+        dataSetService.JsonUpdate(textareas[0], false); // shows either ChangeInfo.Error o. ChangeInfo.Succes
+    }
+
+
+
+
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+        validJson = (!e.ErrorMessages.Any());
+    }
+}

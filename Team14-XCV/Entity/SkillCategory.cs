@@ -1,48 +1,58 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 
 namespace XCV.Data
 {
-    public class SkillCategory : IComparable
+    public class SkillCategory : SkilTreeNode, IComparable
     {
-        public string Name { get; set; } = "";
+        [MaxLength(40, ErrorMessage = "Der Name der Kategorie darf 50 Zeichen nicht überschreiten.")]
+        public override string Name { get; set; } = "";
 
 
         public SkillCategory Parent { get; set; }
 
-        public List<SkillCategory> Children { get; set; } = new List<SkillCategory>();
+        public List<SkilTreeNode> Children { get; set; } = new List<SkilTreeNode>();
 
 
+        public SkillCategory GetRoot()
+        {
+            if (Parent == null)
+                return this;
+            else
+                return Parent.GetRoot();
+        }
 
-        public override string ToString() => ToString("");
 
-
-
+        public override string ToString() => ToString("");  // will print the Name  with all Children Category/Skill
         public string ToString(string indentation)
         {
             if (Children.First() is Skill)
-                return $"{indentation}{Name}: {string.Join(", ", Children)}\n";
+                return $"{indentation}({Name}):   " + string.Join(", ", Children.Select(x => $"[{x}-{((Skill)x).Level}]")) + "\n";
             else if (Children.First() is SkillCategory)
             {
                 string subTree = $"{indentation}{Name} \n";
                 foreach (SkillCategory c in Children.OrderBy(x => x.Name))
-                    subTree += c.ToString(indentation + "\t");
+                    if (c.Children.Any())
+                        subTree += c.ToString(indentation + "   ");
                 return subTree;
             }
             else
                 throw new Exception("Tree Structure Error");
         }
+
+
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
             if (obj is SkillCategory other)
-                return Parent?.Name == other.Parent?.Name && Name == other.Name;
+                return Name == other.Name;
             return false;
         }
-        public override int GetHashCode() => HashCode.Combine(Parent.Name, Name);
+        public override int GetHashCode() => HashCode.Combine(Name);    //is Db-Key
         public int CompareTo(object obj)
         {
             if (obj == null)
@@ -50,7 +60,15 @@ namespace XCV.Data
             if (obj is SkillCategory other)
                 return Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit SkillCategorys vergleichen");
+                throw new ArgumentException("");
         }
+    }
+
+
+
+
+    public abstract class SkilTreeNode
+    {
+        public virtual string Name { get; set; }
     }
 }

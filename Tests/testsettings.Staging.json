@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "MS_SQL_Connection": "Server=localhost; Database=IntegrationTests_Docker; User Id=SA; Password=123456Sa",
+    "MS_SQL_Connection_Root": "Server=localhost; User Id=SA; Password=123456Sa",
+    "DatabaseName": "IntegrationTests_Docker"
+  },
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}

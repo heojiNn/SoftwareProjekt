@@ -1,17 +1,20 @@
 using System;
-
+using System.ComponentModel.DataAnnotations;
 
 
 namespace XCV.Data
 {
     public class Language : IComparable
     {
+        [Required(ErrorMessage = "Sprachen benötigen einen Namen."),
+        MaxLength(50, ErrorMessage = "Der Name der Sprache darf 50 Zeichen nicht überschreiten.")]
         public string Name { get; init; } = "";
+
         public string Level { get; set; } = "";
 
-        public string LevelNr { get; set; }
 
-        public override string ToString() => $"{Name}-Niveau-{Level}";
+
+        public override string ToString() => $"{Name}-auf-Niveau-{Level}";
 
 
 
@@ -23,14 +26,14 @@ namespace XCV.Data
                 return Name == other.Name;
             return false;
         }
-        public override int GetHashCode() => HashCode.Combine(Name);
+        public override int GetHashCode() => HashCode.Combine(Name);    //is Db-Key
         public int CompareTo(object obj)
         {
             if (obj == null) return 1;
             if (obj is Language other)
-                return this.Name.CompareTo(other.Name);
+                return Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Sprachen vergleichen");
+                throw new ArgumentException("");
         }
     }
 }

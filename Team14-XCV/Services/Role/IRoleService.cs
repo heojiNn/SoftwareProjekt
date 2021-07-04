@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 
@@ -6,26 +7,45 @@ namespace XCV.Data
 {
     public interface IRoleService
     {
-        // Summary:
-        //     GetAllRoles from Persistece.
-        // Returns:
-        //     A List of Roles that might be  empty
-        //
-        // Exceptions:
-        //   Exception:
-        //     Could not reach Persistence: {subPath}/{fileName}
-        public IEnumerable<Role> GetAllRoles(int Rcl = 8);
+        /// <summary>
+        ///         Validates against DataAnotations on the  Role-Entity
+        /// </summary>
+        ///
+        /// <returns>
+        ///          ErrorMessages
+        /// </returns>
+        public IEnumerable<string> ValidateRoles(IEnumerable<Role> roles);
 
 
-        // Summary:
-        //     UpdateAllRoles in Persistece.
-        // Parameters:
-        //   roles:
-        //     The roles to replace the old ones.
-        //
-        // Loges:
-        //   LogInformation:
-        //     All Role updated  Persitence  {fileName}
-        public (int added, int removed) UpdateAllRoles(IEnumerable<dataSetrole> roles);
+        /// <summary>
+        ///         GetAllRoles from persistence.
+        /// </summary>
+        /// <remarks>
+        ///         Catches all SqlExceptions, logs an Error: {e.Message}
+        ///         and will just return an empty collection
+        /// </remarks>
+        ///
+        /// <returns>
+        ///          A collection of Roles, that might be empty
+        /// </returns>
+        public IEnumerable<Role> GetAllRoles();
+
+
+        /// <summary>
+        ///         updates that Role in the persistence.
+        ///         via delet/insert normally  and  update if only wage changes
+        /// </summary>
+        /// <remarks>
+        ///         uses ValidateRoles(roles),
+        ///         catches SqlExceptions and logs them
+        /// </remarks>
+        ///
+        /// <param name="roles">
+        ///         The roles to replace the old ones.
+        /// </param>
+        public (int added, int changed, int removed) UpdateAllRoles(IEnumerable<Role> roles);
+
+
+        public event EventHandler<ChangeResult> ChangeEventHandel;
     }
 }

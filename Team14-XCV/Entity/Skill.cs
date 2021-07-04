@@ -1,14 +1,16 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace XCV.Data
 {
-    public class Skill : SkillCategory, IComparable
+    public class Skill : SkilTreeNode, IComparable
     {
-        public new string Name { get; init; } = "";
+        [Required(ErrorMessage = "Skills benötigen einen Namen."),
+        MaxLength(50, ErrorMessage = "Der Name des Skill darf 50 Zeichen nicht überschreiten.")]
+        public override string Name { get; set; } = "";
 
-        public string Level { get; set; } = "";
-        public string LevelNr { get; set; }
+        public string Level { get; set; } = "";                                     //in Db Key would be the associated nummber,  cause names can be changed
         public SkillGroup Type
         {
             get => Category.Name == "SoftSkills" ? SkillGroup.Softskill : SkillGroup.Hardskill;
@@ -36,8 +38,8 @@ namespace XCV.Data
                 return Category.Name == other.Category.Name && Name == other.Name;
             return false;
         }
-        public override int GetHashCode() => HashCode.Combine(Category.Name, Name);
-        public new int CompareTo(object obj)
+        public override int GetHashCode() => HashCode.Combine(Category.Name, Name);    //is Db-Key
+        public int CompareTo(object obj)
         {
             if (obj == null)
                 return 1;
@@ -49,9 +51,10 @@ namespace XCV.Data
                 return res;
             }
             else
-                throw new ArgumentException("Kann nur mit Skills vergleichen");
+                throw new ArgumentException("");
         }
     }
+
 
 
 

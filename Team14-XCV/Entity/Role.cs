@@ -1,14 +1,17 @@
 using System;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace XCV.Data
 {
     public class Role : IComparable
     {
-        public string Name { get; init; } = "";
+        [Required(ErrorMessage = "Rollen benötigen einen Namen."),
+        MaxLength(50, ErrorMessage = "Der Name der Rolle darf 50 Zeichen nicht überschreiten.")]
+        public string Name { get; init; }
 
 
-        public float Wage { get; init; }
+        public int RCL { get; init; }
+        public float Wage { get; set; }
 
 
 
@@ -24,14 +27,14 @@ namespace XCV.Data
                 return Name == other.Name;
             return false;
         }
-        public override int GetHashCode() => HashCode.Combine(Name);
+        public override int GetHashCode() => HashCode.Combine(Name);    //Db-Key is (Name, RCL) cause it would be quite hard to split the tabel
         public int CompareTo(object obj)
         {
             if (obj == null) return 1;
             if (obj is Role other)
                 return Name.CompareTo(other.Name);
             else
-                throw new ArgumentException("Kann nur mit Rollen Vergleichen");
+                throw new ArgumentException("");
         }
     }
 }

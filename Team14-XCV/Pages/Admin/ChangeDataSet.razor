@@ -1,0 +1,270 @@
+@page "/change-data-set"
+
+
+@using Microsoft.AspNetCore.Hosting
+
+@inject IWebHostEnvironment Environment
+@inject IJSRuntime JS
+@inject IBasicDataSetService dataSetService
+@inject IFieldService fieldService
+@inject IRoleService roleService
+@inject ILanguageService langService
+@inject ISkillService skillService
+
+
+<b>Datenbasis: ändern</b>
+<br>
+
+    <ul class="alert alert-danger" role="alert">
+        @foreach (string line in changeInfo.ErrorMessages)
+        {
+            <li>
+                <pre>@line</pre>
+            </li>
+        }
+    </ul>
+    <ul class="alert alert-info" role="alert">
+        @foreach (string line in changeInfo.InfoMessages)
+        {
+            <li>
+                <pre>@line</pre>
+            </li>
+        }
+    </ul>
+<div class="alert alert-success" role="alert">
+    @changeInfo?.SuccesMessage
+</div>
+<div class="row ">
+
+    <div class="col-6">
+
+        <div class="pb-5">
+            <CollapsibleCard CardHeaderTitle="Brachen" ShowCardBody="true">
+                <CardBody>
+                    @foreach (var field in fieldService.GetAllFields())
+                {
+                    <span style="white-space:nowrap;"><button class="btn btn-outline-primary btn-sm" disabled>@field </button>
+                    <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveField(field) )"><span
+                            class="oi oi-minus"></span></button></span> <span style="white-space:normal;">  &nbsp; &nbsp; &nbsp; </span>
+                    }
+                    <br>
+                    <input id="newField" @bind="@newField"><button class="btn btn-sm btn-secondary"
+                        @onclick="CreateField"> hinzufügen</button><br>
+
+
+                    <textarea readonly class="form-control" rows="2" >
+                        @dataSetService.ShowCurrentDataSet()[1]
+            </textarea>
+                </CardBody>
+            </CollapsibleCard>
+
+        </div>
+
+        <CollapsibleCard CardHeaderTitle="Rollen" ShowCardBody="true">
+            <CardBody>
+                <div class="row">
+                    @foreach (var role in newRoles.GroupBy(x => x.Name))
+                {
+                    <div class="col-2">
+                        <p style="width: 120px; font-size: 0.8rem;">@role.Key</p>
+                        @foreach (var r in role)
+                        {
+                            if (r.Wage != 0)
+                            {
+                                @r.RCL <input id="inputExpir" style="width: 50px;" @bind="@r.Wage"><span>&euro;</span<br>
+                            }
+                        }
+                    </div>
+                    }
+                    <div class="col-2">
+                        <br><br><button class="btn btn-sm btn-secondary" @onclick="UpdateRoles">Löhne aktuallisieren</button>
+                    </div>
+                </div>
+<br><br>
+                <textarea readonly class="form-control" rows="4" >
+                    @dataSetService.ShowCurrentDataSet()[2]
+            </textarea>
+            </CardBody>
+        </CollapsibleCard>
+    </div>
+
+    <div class="col-6">
+
+        <div class="pb-5">
+            <CollapsibleCard CardHeaderTitle="Sprachen" ShowCardBody="true">
+                <CardBody>
+                    @foreach (var lang in langService.GetAllLanguages())
+                {
+                    <span style="white-space:nowrap;"><button class="btn btn-outline-primary btn-sm" disabled>@lang.Name </button>
+                    <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveLang(lang) )"><span
+                            class="oi oi-minus"></span></button></span> <span style="white-space:normal;"> &nbsp;  &nbsp;  &nbsp; </span>
+                    }
+                    <br>
+                    <input id="newLang" @bind="@newLang"><button class="btn btn-sm btn-secondary" @onclick="CreateLang">
+                        hinzufügen</button><br>
+<br>
+
+                    <input id="splvl" placeholder="level" @bind="@lvlVal" /> <span style="  font-size: 1.2rem;">zwischen
+                    </span>
+                    <select style="width: 120px;" @bind="@lvlInt">
+                        @{
+                            var langLvl = langService.GetAllLevel().Append("").ToArray();
+                            <option value="0">/@langLvl[0]</option>
+                            for (int i = 0; i < langLvl.Length - 1; i++)
+                {
+                            <option value="@(i+1)"> @langLvl[i]/ @langLvl[i+1]</option>
+                            }
+                        }
+                    </select>
+                    <button class="btn btn-sm btn-secondary" @onclick="IsertLvl">einfügen</button>
+                    <br>
+                    <br><br>
+                    <textarea readonly class="form-control" rows="4">
+                        @dataSetService.ShowCurrentDataSet()[3]
+            </textarea>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <CollapsibleCard CardHeaderTitle="Skills" ShowCardBody="true">
+            <CardBody>
+                <input style="float: left;" id="lvl1" @bind="@skillLevel[0]">
+                <input id="lvl2" @bind="@skillLevel[1]">
+                <input id="lvl3" @bind="@skillLevel[2]">
+                <input id="lvl4" @bind="@skillLevel[3]"><br>
+                <button class="btn btn-sm btn-secondary" @onclick="UpdateSkillLevels">Lvl Bezeichnugenändern
+                    ändern</button><br>
+
+                Neuen Skill <input id="name"  @bind="@newSkill"/>
+                 in
+                        <select style="width: 170px; font-size: 1.1rem;" @bind="@skillCat">
+                        @{
+                        var cats = skillService.GetAllSkills().Select(x => x.Category).Distinct();
+                            @foreach (var cat in cats)
+                            {
+                            <option value="@cat.Name" > @cat.Name</option>
+                            }
+                        }
+                    </select>
+                    <button class="btn btn-sm btn-secondary"  @onclick="CreateSkill">einfügen</button><br>
+                    
+                <input class="form-control" id="skillRemo"  placeholder="entfernen" @bind="@skillRemo" @bind:event="oninput"/>
+                    @if (skillRemo != "")
+                    {
+                    foreach (var skill in skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillRemo.ToLower()))  )
+                {
+                    <span style="white-space:nowrap;"><button class="btn btn-outline-primary btn-sm" disabled>@skill.Name </button>
+                    <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveSkill(skill) )"><span
+                            class="oi oi-minus"></span></button></span> <span style="white-space:normal;"> &nbsp;  &nbsp;  &nbsp; </span>
+                    }
+                    }
+                    <br><br>
+                <textarea readonly class="form-control" style="white-space: pre;" rows="10">
+                    @dataSetService.ShowCurrentDataSet()[4]
+            </textarea>
+            </CardBody>
+        </CollapsibleCard>
+
+
+    </div>
+
+</div>
+<br>
+<br>
+
+
+
+@code {
+    private string newField = "";
+    private string newLang = "";
+    private string lvlVal = "";
+    private int lvlInt;
+    private string skillCat = "";
+    private string newSkill = "";
+    private string skillRemo = "";
+    private string[] skillLevel = new string[4];
+    private IEnumerable<Role> newRoles;
+
+
+    protected override void OnInitialized()
+    {
+        fieldService.ChangeEventHandel += OnChange;
+        roleService.ChangeEventHandel += OnChange;
+        langService.ChangeEventHandel += OnChange;
+        skillService.ChangeEventHandel += OnChange;
+        skillLevel = skillService.GetAllLevel();
+        newRoles = roleService.GetAllRoles();
+    }
+
+
+
+    private void CreateField()
+    {
+        if (newField.Length > 1)
+        fieldService.CreateField(new Field() { Name = newField });
+    }
+    private void RemoveField(Field fi)
+    {
+        fieldService.RemoveField(fi);
+    }
+
+    private void CreateLang()
+    {
+        if (newLang.Length > 1)
+        {
+        var oLang = langService.GetAllLanguages().ToList();
+        oLang.Add(new Language() { Name = newLang });
+        langService.UpdateAllLanguages(oLang);
+        changeInfo.SuccesMessage = $"{newLang}: Sprache wurde hinzugefügt";
+        }
+    }
+    private void RemoveLang(Language la)
+    {
+        var oLang = langService.GetAllLanguages().ToList();
+        oLang.Remove(la);
+        langService.UpdateAllLanguages(oLang);
+    }
+    private void IsertLvl()
+    {
+        if (lvlVal.Length > 1)
+        {
+            var oLvl = langService.GetAllLevel().ToList();
+            oLvl.Insert(lvlInt, lvlVal);
+            langService.UpdateAllLevels(oLvl.ToArray());
+        }
+    }
+    private void CreateSkill()
+    {
+        if (skillCat.Length > 1 && newSkill.Length > 1)
+        {
+            var cat =new SkillCategory() {Name = skillCat};
+        skillService.InsertSkill(new Skill(){Name = newSkill, Category = cat});
+        }
+    }
+    private void RemoveSkill(Skill s)
+    {
+        skillService.DeleteSkill(s);
+    }
+
+    private void UpdateSkillLevels()
+    {
+        skillService.UpdateAllLevels(skillLevel);
+    }
+
+    private void UpdateRoles()
+    {
+        (_, int c, _) =roleService.UpdateAllRoles(newRoles);
+        changeInfo.SuccesMessage = $"{c}: Löhne aktualisiert";
+    }
+
+
+
+
+
+
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+    }
+}

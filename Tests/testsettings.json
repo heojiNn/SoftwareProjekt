@@ -1,0 +1,15 @@
+{
+  "ConnectionStrings": {
+    "MS_SQL_Connection": "Server=localhost; Database=IntegrationTests_4;  User Id=SA; Password=123456Sa",
+    "MS_SQL_Connection_Root": "Server=localhost; User Id=SA; Password=123456Sa",
+    "DatabaseName": "IntegrationTests_4"
+  },
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}
