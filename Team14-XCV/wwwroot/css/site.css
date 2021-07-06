@@ -144,7 +144,7 @@ a:hover {
 }
 
 .scroll {
-    max-height: 250px;
+    max-height: 350px;
     overflow-y: auto;
 }
 
@@ -154,3 +154,4 @@ a:hover {
 }
 
 /*changeProfile*/
+

@@ -20,11 +20,11 @@
     </div>
     @if (!myProfile.MadeFirstChangesOnProfile)
     {
-<br>
-                <div class="alert alert-warning" role="alert">
-                    Sie habe noch keine Änderungen an ihrem Profil vorgenommen.<br>
-                    Bitte tragen Sie die die Informationen möglichst bald ein.<br>
-                </div>}
+        <br>
+        <div class="alert alert-warning" role="alert">
+            Sie habe noch keine Änderungen an ihrem Profil vorgenommen.<br>
+            Bitte tragen Sie die die Informationen möglichst bald ein.<br>
+        </div>}
 
 
     <div class="card mb-3">
@@ -42,7 +42,7 @@
                     <p class="card-text" style="min-height: 150px;">
                         <pre>@myProfile.Description</pre>
                     </p>
-                    <p>RCL: @myProfile.RCL </p>
+                    <p>Rate Card Level: @myProfile.RCL </p>
                     @{var yearsE = myProfile.Expirience != null ? (float)(DateTime.Now.Subtract(myProfile.Expirience.Value).Days) / 356 : 0;}
                     <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
 
@@ -58,7 +58,7 @@
                     <div class="scroll">
                         @foreach (Role role in myProfile.Roles)
                         {
-        <p>(@role.RCL) @role @role.Wage&euro;</p>}
+                            <p class="ml-2"><b>@role</b> mit RCL (@role.RCL)</p>}
                     </div>
                 </CardBody>
             </CollapsibleCard>
@@ -69,8 +69,8 @@
                     <div class="scroll">
                         @foreach (Field field in myProfile.Fields)
                         {
-        @field <br>}
-                    </div>
+                        <p class="ml-2">@field <br></p>}
+</div>
                 </CardBody>
             </CollapsibleCard>
         </div>
@@ -82,8 +82,8 @@
                     <div class="scroll">
                         @foreach (Skill sSkill in myProfile.Abilities.Where(x => x.Type == SkillGroup.Softskill))
                         {
-        @sSkill <br>}
-                    </div>
+                        <p class="ml-2"> @sSkill <br></p>}
+</div>
                 </CardBody>
             </CollapsibleCard>
         </div>
@@ -96,20 +96,21 @@
                             var lvlIndex = Array.FindIndex(sprachenService.GetAllLevel(), (x => x == lang.Level));
                             int lvlIndexPerce = ((int)lvlIndex * 100 / (sprachenService.GetAllLevel().Length - 1));
 
-        @lang.Name
-                            <div class="progress mb-3" style="height:15px">
+                        <p class="ml-2">
+                            @lang.Name</p>
+                            <div class="progress mb-3 ml-2" style="height:15px">
                                 <div class="progress-bar bg-secondary" role="progressbar" aria-valuemin="0"
                                      aria-valuemax="100" style="width: @lvlIndexPerce%;">
                                     @lang.Level
                                 </div>
                             </div>}
-                    </div>
+</div>
                 </CardBody>
             </CollapsibleCard>
         </div>
 
 
-        <div class="col-sm-6 mb-3" style="min-height: 200px;">
+        <div class="col-sm-6 mb-3 " style="min-height: 200px;">
             <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody=true>
                 <CardBody>
                     <div class="scroll2">
@@ -123,52 +124,52 @@
                                 {
                                     if (topLevel is SkillCategory toptCast && toptCast.Children.Any())
                                     {
-            <CollapsibleCard CardHeaderTitle="@topLevel.Name" ShowCardBody=true SmallInner="true">
-                <CardBody>
-                    @foreach (var cat in topLevel.Children)
-                    {
-                        if (cat is Skill skill)
-                        {
-                            int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill.Level));
-                            if (lvlIndex == 0)
-                            {
-<button class="btn btn-outline-secondary btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 1)
-{
-<button class="btn btn-outline-dark btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 2)
-{
-<button class="btn btn-outline-info btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 3)
-{
-<button class="btn btn-outline-success btn-sm" disabled>@skill @skill.Level</button> }
-}
-if (cat is SkillCategory castCat && castCat.Children.Any())
-{
-<b>@castCat.Name</b>
-                                        <div>
-                                            @foreach (Skill skill2 in castCat.Children)
-                                            {
-                                                int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill2.Level));
-                                                if (lvlIndex == 0)
+                                        <CollapsibleCard CardHeaderTitle="@topLevel.Name" ShowCardBody=true SmallInner="true">
+                                            <CardBody>
+                                                @foreach (var cat in topLevel.Children)
                                                 {
-    <button class="btn btn-outline-secondary btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 1)
-{
-<button class="btn btn-outline-dark btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 2)
-{
-<button class="btn btn-outline-info btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 3)
-{
-<button class="btn btn-outline-success btn-sm" disabled>@skill2 @skill2.Level</button>}
-}
-                                        </div>}
+                                                    if (cat is Skill skill)
+                                                    {
+                                                        int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill.Level));
+                                                        if (lvlIndex == 0)
+                                                        {
+                                                            <button class="btn btn-outline-secondary btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 1)
+                                                        {
+                                                            <button class="btn btn-outline-dark btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 2)
+                                                        {
+                                                            <button class="btn btn-outline-info btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 3)
+                                                        {
+                                                            <button class="btn btn-outline-success btn-sm" disabled>@skill </button> }
+                                                    }
+                                                    if (cat is SkillCategory castCat && castCat.Children.Any())
+                                                    {
+                                                        <b>@castCat.Name</b>
+                                                        <div>
+                                                            @foreach (Skill skill2 in castCat.Children)
+                                                            {
+                                                                int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill2.Level));
+                                                                if (lvlIndex == 0)
+                                                                {
+                                                                    <button class="btn btn-outline-secondary btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 1)
+                                                                {
+                                                                    <button class="btn btn-outline-dark btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 2)
+                                                                {
+                                                                    <button class="btn btn-outline-info btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 3)
+                                                                {
+                                                                    <button class="btn btn-outline-success btn-sm" disabled>@skill2</button>}
+                                                            }
+                                                        </div>}
+                                                }
+                                            </CardBody>
+                                        </CollapsibleCard> }
                                 }
-                </CardBody>
-            </CollapsibleCard> }
-    }
-} }
+                            } }
                     </div>
                 </CardBody>
             </CollapsibleCard>
@@ -180,24 +181,25 @@ if (lvlIndex == 3)
                         <table class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
-                                    <th class="text-center">alle Projekte</th>
-                                    <th class="text-center">hat erledigt:</th>
+                                    <th class="text-center">beteiligte Projekte</th>
+                                    <th class="text-center">Tätigkeiten im Projekt</th>
                                 </tr>
                             </thead>
                             @foreach (Project pro in proService.ShowAllProjects())
                             {
-            <tr>
-                <td class="pt-3-half">
-                    @pro.Title
-                </td>
-                <td class="pt-3-half">
-                    @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
-                 myProfile.PersoNumber)))
-                    {
-@keyValue.Key
-                        <br>}
-                </td>
-            </tr>}
+                                <tr>
+                                    <td class="pt-3-half">
+                                        @pro.Title
+                                    </td>
+                                    <td class="pt-3-half">
+                                        @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
+                                    myProfile.PersoNumber)))
+                                        {
+                                            @keyValue.Key
+                                            <br>}
+                                    </td>
+                                </tr>
+}
                         </table>
                     </div>
                 </CardBody>
@@ -208,7 +210,7 @@ if (lvlIndex == 3)
 
 
 </div>
-
+<a href="edit-profile" class="btn btn-secondary" style="float: right; margin: 3em 1em"> Bearbeiten</a>
 <br>
 <br>
 
