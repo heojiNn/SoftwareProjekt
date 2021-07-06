@@ -5,19 +5,18 @@
 @inject IOfferService offerService
 @inject ISkillService skillService
 @inject IFieldService fieldService
+@inject OfferData offerData  
 
 @using Blazored.Typeahead
 
-
 <div class="container-fluid">
-
 
     <div class="card my-1">
         <div class="card-header">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-5">
-                        <h3><label>Angebottitel: </label> </h3>
+                        <h3><label>Angebotstitel: </label> </h3>
                     </div>
                     <div class="col">
                         <h3><input class="form-control" placeholder="Titel" @bind-value="title" /></h3>
@@ -27,13 +26,15 @@
         </div>
     </div>
 
-
-    <div class="card">
-
+    <div class="card border border-secondary">
+        <textarea class="form-control " rows="3" @bind="@description" placeholder="optionaler Beschreibungstext">
+        </textarea>
+    </div>
+    
+    <div class="card h-100 border border-secondary">
         <div class="card-header">
             <h4>
                 Branchen
-
                 @if (BrancheCollapsed)
                 {
                     <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -43,7 +44,6 @@
                     </svg>
 
                 }
-
                 @if (!BrancheCollapsed)
                 {
                     <svg @onclick="@BrancheToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -52,16 +52,15 @@
                         </path>
                     </svg>
                 }
-
             </h4>
-
         </div>
         @if (!BrancheCollapsed)
         {
-            <div class="card-body scroll h-100">
+            <div class="card-body scroll h-100" style="min-height: 300px;">
                 <BlazoredTypeahead SearchMethod="SearchFields"
                                    @bind-Values="SelectedFields"
-                                   EnableDropDown="true">
+                                   EnableDropDown="true"
+                                   placeholder="Branche suchen">
                     <SelectedTemplate>
                         @context.Name
                     </SelectedTemplate>
@@ -69,47 +68,25 @@
                         @context.Name
                     </ResultTemplate>
                 </BlazoredTypeahead>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Elektrotechnik</b></label>
+                @if (SelectedFields != null && SelectedFields.Count() != 0)
+                {
+                    <div class="row">
+                        @foreach (Field f in SelectedFields)
+                        {
+                            <div class="col-sm-3">
+                                <input type="checkbox" value="" />
+                                <label class="form-check-label"> <b>@f.Name</b></label>
+                            </div>
+                        }
                     </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Automobil</b></label>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Softwaretechnik</b></label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Medizin</b></label>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>Halbleiter</b></label>
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>NLP</b></label>
-                    </div>
-                </div>
+                }
             </div>
         }
-
-
-
-
     </div>
 
     <div class="row gutters-sm">
         <div class="col-sm-6 mb-3">
-            <div class="card">
+            <div class="card border border-secondary">
 
                 <div class="card-header">
                     <h4>
@@ -142,7 +119,8 @@
                     <div class="card-body scroll h-100">
                         <BlazoredTypeahead SearchMethod="SearchHardskills"
                                            @bind-Values="SelectedHardskills"
-                                           EnableDropDown="true">
+                                           EnableDropDown="true"
+                                           placeholder="Hardskill suchen">
                             <SelectedTemplate>
                                 @context.Name
                             </SelectedTemplate>
@@ -218,7 +196,7 @@
         </div>
 
         <div class="col-sm-6 mb-3">
-            <div class="card">
+            <div class="card border border-secondary">
 
                 <div class="card-header">
                     <h4>
@@ -251,7 +229,8 @@
                     <div class="card-body scroll h-100">
                         <BlazoredTypeahead SearchMethod="SearchSoftskills"
                                            @bind-Values="SelectedSoftskills"
-                                           EnableDropDown="true">
+                                           EnableDropDown="true"
+                                           placeholder="Softskill suchen">
                             <SelectedTemplate>
                                 @context.Name
                             </SelectedTemplate>
@@ -259,33 +238,27 @@
                                 @context.Name
                             </ResultTemplate>
                         </BlazoredTypeahead>
-                        <div class="col">
-                            <input type="checkbox" value="" />
-                            <label class="form-check-label"> <b>Interdisziplinärer Sachverstand</b></label>
+                        @if (SelectedSoftskills != null && SelectedSoftskills.Count() != 0)
+                        {
+                        <div class="row">
+                            @foreach (Skill s in SelectedSoftskills)
+                            {
+                                <div class="col-sm-3">
+                                    <input type="checkbox" value="" />
+                                    <label class="form-check-label"> <b>@s.Name</b></label>
+                                </div>
+                            }
                         </div>
-                        <div class="col">
-                            <input type="checkbox" value="" />
-                            <label class="form-check-label"> <b>Kommunikationsfähigkeit</b></label>
-                        </div>
-                        <div class="col">
-                            <input type="checkbox" value="" />
-                            <label class="form-check-label"> <b>Problemlösungsfähigkeit</b></label>
-                        </div>
-
-
+                        }
                     </div>
                 }
-
-
-
-
-
-
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
+
+
+    <div class="card border border-secondary">
+            <div class="card-header">
             <h4>
                 Mitarbeiter
 
@@ -315,55 +288,28 @@
         {
             <div class="card-body">
                 <div class="row">
+                    @if (SelectedParticipants != null) {
+                    @foreach (Employee em in SelectedParticipants)
+                    {
                     <div class="card">
-                        <div class="card-header">
-                            Arnold B.
+                            <div class="card-header">
+                                @(new String(em.FirstName + " " + em.LastName.Substring(0, 1) + "."))
+                            </div>
+                            <div class="card-body">
+                                <a href="employee-detail-view/@em.PersoNumber" style="color:black">Profil anzeigen</a>
+                                <a href="javascript:location.reload(true)" class="btn oi oi-trash btnhover" @onclick="(e => SelectedParticipants.Remove(em))">Löschen</a>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
-
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Bernhard C.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black"> Profil anzeigen</a>
-
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Carsten D.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
-
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            Detlev E.
-                        </div>
-                        <div class="card-body">
-                            <a href="offer-one-maan-edit" style="color:black">Profil anzeigen</a>
-
-                        </div>
-                    </div>
-
+                    }
+                    }
                 </div>
-                <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
-                <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
-            </div>}
+                <button type="button" class="btn btn-secondary" style=" float:left; margin: 3em 1em"> Alle Löschen </button>
+                <a href="offer-search-add" class="btn btn-secondary" style="float:left; margin: 3em 1em" @onclick="Store"> Hinzufügen </a>
+            </div>
+        }
     </div>
-
-
-
     <a href="offers" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="CreateOffer"> Bestätigen</a>
-    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em"><a href='javascript:history.go(-1)'>Abbrechen</a> </button>
-
-
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Discard"><a href="offers">Abbrechen</a> </button>
 </div>
 
 <script suppress-error="BL9992">
@@ -395,29 +341,4 @@ function updateTextInput1(val) {
           document.getElementById('textInput9').value=val;
         }</script>
 
-
-@code { 
-
-
-    private string title { get; set; } = "";
-    private string description { get; set; } = "";
-
-    private Offer toCreate { get; set; }
-
-
-
-    private void CreateOffer()
-    {
-        if (title == null) { throw new ArgumentNullException(); }
-        offerService.Create(title, description);
-        //offerService.Create(everything at once)
-    }
-
-
-
-
-
-
-
-
-    }
+        

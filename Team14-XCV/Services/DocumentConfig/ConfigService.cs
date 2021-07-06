@@ -92,7 +92,7 @@ namespace XCV.Data
                     // add WorkingSince
                     Paragraph para6 = body.AppendChild(new Paragraph());
                     Run run6 = para6.AppendChild(new Run());
-                    run6.AppendChild(new Text($"Beschreibung: {e.EmployyedSince.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
+                    run6.AppendChild(new Text($"Beschreibung: {e.EmployedSince.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
 
                     //
                     // ----------------------Multiple Inputs:------------------------

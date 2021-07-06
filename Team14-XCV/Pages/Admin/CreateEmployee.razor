@@ -67,7 +67,7 @@
                 <td>@roles</td>
                 <td>@account.FirstName </td>
                 <td>@account.LastName</td>
-                <td>@account.EmployyedSince.ToString("dd.MM.yyyy")</td>
+                <td>@account.EmployedSince.ToString("dd.MM.yyyy")</td>
                 <td> <button class="btn btn-secondary" @onclick="@(e => Delete(account))" >Entfernen </button> </td>
             </tr>
         }
@@ -117,7 +117,7 @@
                 FirstName = newOne.FirstName,
                 LastName = newOne.LastName,
                 AcRoles = newOne.AcRoles,
-                EmployyedSince = startDate
+                EmployedSince = startDate
             };
             accountService.CreateAccount(copy);
         }

@@ -23,15 +23,20 @@
                         <h3><label>Titel verändern: </label> </h3>
                     </div>
                     <div class="col">
-                        <h3><input class="form-control" placeholder=@myOffer.Title/></h3>
+                        <h3><input class="form-control" @bind="@myOffer.Title"/></h3>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="card border border-secondary">
+        <textarea class="form-control " rows="3" @bind="@myOffer.Description" placeholder="optionaler Beschreibungstext">
+        </textarea>
+    </div>
 
-    <div class="card">
+
+    <div class="card h-100 border border-secondary">
         <div class="card-header">
             <h4>
                 Branchen
@@ -56,34 +61,35 @@
         </div>
         @if (!BrancheCollapsed)
         {
-            <div class="card-body scroll h-100">
+            <div class="card-body scroll h-100" style="min-height: 300px;">
                 <BlazoredTypeahead SearchMethod="SearchFields"
                                    @bind-Values="SelectedFields"
-                                   EnableDropDown="true">
+                                   EnableDropDown="true"
+                                   placeholder="Branche suchen">
                     <SelectedTemplate>
                         @context.Name
                     </SelectedTemplate>
                     <ResultTemplate>
                         @context.Name
                     </ResultTemplate>
-                </BlazoredTypeahead>  
-                @* ! bei mehr als 4 kann es zu falschen Format kommen? *@
-            <div class="row">
-                @foreach (Field f in myOffer.Fields)
+                </BlazoredTypeahead>
+                @if (SelectedFields != null && SelectedFields.Count() != 0)
                 {
-                    <div class="col-sm-3">
-                        <input type="checkbox" value="" />
-                        <label class="form-check-label"> <b>@f.Name</b></label>
+                    <div class="row">
+                        <CheckBoxList Data="@SelectedFields" TextField="@((item)=>item.ToString())" SelectedValues="@(new SortedSet<Field>(SelectedFields))" /> 
+                        @*<div class="col-sm-3">
+                            <input type="checkbox" value="" />
+                            <label class="form-check-label"> <b>@f.Name</b></label>
+                        </div>*@
                     </div>
                 }
-            </div>
             </div>
         }
     </div>
 
     <div class="row gutters-sm">
         <div class="col-sm-6 mb-3">
-            <div class="card">
+            <div class="card border border-secondary">
 
                 <div class="card-header">
                     <h4>
@@ -192,7 +198,7 @@
         </div>
 
         <div class="col-sm-6 mb-3">
-            <div class="card">
+            <div class="card border border-secondary">
 
                 <div class="card-header">
                     <h4>
@@ -258,7 +264,7 @@
             </div>
         </div>
     </div>
-    <div class="card">
+    <div class="card border border-secondary">
         <div class="card-header">
             <h4>
                 Mitarbeiter
@@ -289,31 +295,29 @@
         {
             <div class="card-body">
                 <div class="row">
-                    @foreach (Employee e in myOffer.participants)
+                    @foreach (Employee em in myOffer.participants)
                     {
 
                         <div class="card">
                             <div class="card-header">
-                                @(new String(e.FirstName + " " + e.LastName.Substring(0, 1) + "."))
+                                @(new String(em.FirstName + " " + em.LastName.Substring(0, 1) + "."))
                             </div>
                             <div class="card-body">
-                                <a href="offer-employee-detail-view/@Id/@e.PersoNumber" style="color:black">Profil anzeigen</a>
+                                <a href="offer-employee-detail-view/@Id/@em.PersoNumber" style="color:black">Profil anzeigen</a>
+                                <a href="javascript:location.reload(true)" class="btn oi oi-trash btnhover" @onclick="(e => offerService.Remove(myOffer, em))">Löschen</a>
                             </div>
                         </div>
-
-
-
                     }
                 </div>
-                <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
-                <a href="offer-search-add" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Hinzufügen </a>
+                <a href="javascript:location.reload(true)" class="btn btn-secondary" style=" float:left; margin: 3em 1em" @onclick="DeleteAllEmployees"> Alle Löschen </a>
+                <a href="offer-search-add/@Id" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Hinzufügen </a>
             </div>
         }
     </div>
 
 
 
-    <a href="offer/@Id" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Bestätigen</a>
+    <a href="offer/@Id" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="UpdateOffer"> Bestätigen</a>
     <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Abbrechen</a>
 
 

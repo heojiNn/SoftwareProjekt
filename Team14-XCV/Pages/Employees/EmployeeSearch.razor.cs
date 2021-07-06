@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using XCV.Data;
 
-namespace XCV.Pages.OfferNamespace
+namespace XCV.Pages.Employees
 {
-    public partial class OfferSearchAdd
-        {
+    public partial class EmployeeSearch
+    {
         //===========================================================================================================================================//
 
         // Suche: TODO:  
@@ -17,17 +17,6 @@ namespace XCV.Pages.OfferNamespace
         // Alternativ könnten natürlich auch nur die Mitarbeiter ausgegeben werden, die alle Suchkriterien erfüllen, das fände ich als Nutzer aber unpraktisch.
 
         //===========================================================================================================================================//
-
-        public bool toBeCreated = false;
-
-        [Parameter] // Existing Offer to add into
-        public string Id { get; set; }
-        private ChangeResult changeInfo = new();
-        private Offer myOffer;
-
-        
-
-        //=====================================
 
 
         // Searchresult: a Dictionary sorted in EmployeeSearch.razor, key = PersoNumber, value = a tuple of the score and a list of all fulfilled properties.
@@ -75,15 +64,6 @@ namespace XCV.Pages.OfferNamespace
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
             languages = languageService.GetAllLanguages().ToList();
-            if (Id != null)
-            {
-                myOffer = offerService.ShowOffer(int.Parse(Id));
-                myOffer ??= new Offer();
-                offerService.ChangeEventHandel += OnChangeReturn;
-            } else if (offerData != null)
-            {
-                toBeCreated = true;
-            }
         }
 
         // Search functions for typeahead.
@@ -402,40 +382,7 @@ namespace XCV.Pages.OfferNamespace
             advancedSearch = !advancedSearch;
         }
 
-        // Offer =============================================================================
 
-        private void OnChangeReturn(object sender, ChangeResult e)
-        {
-            changeInfo = e;
-        }
 
-        private void AddEmp(Employee toAdd) //To Existing offer
-        {
-            if (!toBeCreated)
-            {
-                try
-                {
-                    offerService.Add(offerService.ShowOffer(int.Parse(Id)), toAdd);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht hinzugefügt werden! " + e.Message);
-                }
-            } else
-            {
-                try
-                {
-                    offerData.creatingOffer.participants.Add(toAdd);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht ins neue Angebot hinzugefügt werden! " + e.Message);
-                }
-            }
-
-        }
-
-        //====================================================================================
     }
 }
-

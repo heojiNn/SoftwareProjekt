@@ -93,5 +93,8 @@ namespace XCV.Data
         /// </summary>
         public event EventHandler<ChangeResult> ChangeEventHandel;
 
+        public int GetLastId();
+        public int GetNextId();
+
     }
 }

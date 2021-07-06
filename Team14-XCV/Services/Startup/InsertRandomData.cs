@@ -51,15 +51,16 @@ namespace XCV.Data
             {
                 List<Employee> employyes6 = new()
                 {
-                    new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployyedSince = DateTime.Now },
-
-                    new Employee() { PersoNumber = "001", FirstName = "arnold", LastName = "schwarzenegger", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "002", FirstName = "brad", LastName = "pitt", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "003", FirstName = "daniel", LastName = "craig", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "004_A", FirstName = "Synnøve", LastName = "Nielsen", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployyedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployyedSince = DateTime.Now }
+                    // Wie Christian damals meinte im Allgemeinen sollte das Anstellungsdatum schon vor Profilanlegung geschehen koennen.
+                    // Sind aber nur Testdaten
+                    new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "001", FirstName = "arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "002", FirstName = "brad", LastName = "pitt", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "003", FirstName = "daniel", LastName = "craig", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "004_A", FirstName = "Synnøve", LastName = "Nielsen", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now }
                 };
                 employyes6[0].AcRoles.Add(AccessRole.Admin);
                 employyes6[1].AcRoles.Add(AccessRole.Admin);
@@ -71,14 +72,12 @@ namespace XCV.Data
                 Thread.Sleep(1000);
                 foreach (var e in employyes6)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
-
-
-                _projectService.Create("Praject1");                 // 2 projects
-                _projectService.Create("Prbject2");
-                _projectService.Create("Prbject3");
-                _projectService.Create("Project4");
-                _projectService.Create("Pro5");
-                _projectService.Create("Pro6");
+                _projectService.Create("Projekt1");                 // 2 projects
+                _projectService.Create("Projekt2");
+                _projectService.Create("Projekt3");
+                _projectService.Create("Projekt4");
+                _projectService.Create("Projekt5");
+                _projectService.Create("Projekt6");
                 var pros = _projectService.ShowAllProjects();
                 foreach (var p in pros)
                 {

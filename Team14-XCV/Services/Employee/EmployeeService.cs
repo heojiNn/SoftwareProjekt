@@ -131,9 +131,9 @@ namespace XCV.Data
             if (newVersion.Roles.Where(x => x.Name == "Consultant").Any() && newVersion.RCL < 4)
                 errorMessages.Add("Consultant wird erst ab RCL:4 freigeschaltet");
             if (newVersion.Languages.Where(x => x.Level == "").Any())
-                errorMessages.Add("Mindesetens ein Sprache hat keine Level Angabe.");
+                errorMessages.Add("Mindestens ein Sprache hat keine Level Angabe.");
             if (newVersion.Abilities.Where(x => !_skillService.GetAllLevel().Contains(x.Level) && x.Type == SkillGroup.Hardskill).Any())
-                errorMessages.Add("Mindesetens ein Skill hat keine Level Angabe.");
+                errorMessages.Add("Mindestens ein Skill hat keine Level Angabe.");
             //-------------------------------------------------------------------------------------
 
             OnChange(new()
@@ -344,7 +344,7 @@ namespace XCV.Data
             {
                 con.Open();
                 con.Execute(@"Insert Into [Employee] Values (@PersoNumber, @Password, @FirstName, @LastName,
-                                                         @Description, @Image, null, null, @EmployyedSince, 0)", e);
+                                                         @Description, @Image, null, null, @EmployedSince, 0)", e);
                 foreach (int acR in e.AcRoles)
                     con.Execute("Insert Into [EmployeeHasAcrole] Values (@EnumInt, @E)", new { EnumInt = acR, E = e.PersoNumber });
             }
@@ -358,7 +358,7 @@ namespace XCV.Data
         /// </summary>
         ///
         /// <remarks>
-        ///         Updates [Employee] except(Password, EmployyedSince)
+        ///         Updates [Employee] except(Password, EmployedSince)
         ///         and [EmployeeHasField] [EmployeeHasRole] [EmployeeHasLanguage] [EmployeeHasSkill]  through DELETE all and INSERT
         /// </remarks>
         private void UpdateEmployee(Employee e)

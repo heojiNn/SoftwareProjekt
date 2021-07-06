@@ -119,7 +119,7 @@ namespace XCV.Data
                                     "[Image]        VARCHAR(50) NOT NULL, " +
                                     "[RCL]          INT, " +                        //can be Null
                                     "[Expirience]   DATE, " +                       //can be Null
-                                    "[EmployyedSince] DATE NOT NULL, " +
+                                    "[EmployedSince] DATE NOT NULL, " +
                                     "[MadeFirstChangesOnProfile] BIT NOT NULL " +
                             ");");
                 con.Execute("IF OBJECT_ID('project', 'U') IS NULL " +                    // Project
@@ -136,7 +136,7 @@ namespace XCV.Data
                             "CREATE TABLE [offer] ( " +                                 // ref by offer_Employee offer_Field offer_Skill
                                     "[Id]           INT NOT NULL IDENTITY PRIMARY KEY," +
                                     "[Title]        VARCHAR(50) NOT NULL," +
-                                    "[Description]  VARCHAR(1000) NOT NULL, " +
+                                    "[Description]  VARCHAR(200) NOT NULL, " +
                             ");");
 
 

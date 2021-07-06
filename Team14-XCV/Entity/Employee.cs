@@ -40,7 +40,7 @@ namespace XCV.Data
 
         public DateTime? Expirience { get; set; }
 
-        public DateTime EmployyedSince { get; init; }
+        public DateTime EmployedSince { get; init; }
 
 
 
