@@ -38,7 +38,7 @@ namespace Tests.Integration
         [Order(1)]
         public bool CreateAccount(string nr, string fName, string lName)
         {
-            var newOne = new Employee() { PersoNumber = nr, FirstName = fName, LastName = lName, EmployyedSince = DateTime.Now };
+            var newOne = new Employee() { PersoNumber = nr, FirstName = fName, LastName = lName, EmployedSince = DateTime.Now };
             newOne.AcRoles.Add(AccessRole.Admin);
             newOne.AcRoles.Add(AccessRole.Sales);
 

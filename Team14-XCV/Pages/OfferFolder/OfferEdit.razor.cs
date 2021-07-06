@@ -32,8 +32,28 @@ namespace XCV.Pages.OfferNamespace
             offerService.ChangeEventHandel += OnChangeReturn;
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
+            SelectedFields = myOffer.Fields;
+            SelectedSoftskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Softskill).ToList();
+            SelectedHardskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Hardskill).ToList();
 
         }
+
+        private void UpdateOffer()
+        {
+            myOffer.Fields = SelectedFields;
+            //...
+            offerService.Update(myOffer);
+        }
+
+
+        private void DeleteAllEmployees()
+        {
+            foreach (Employee e in myOffer.participants)
+            {
+                offerService.Remove(myOffer, e);
+            }
+        }
+
 
         private async Task<IEnumerable<Skill>> SearchHardskills(string searchText)
         {

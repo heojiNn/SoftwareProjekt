@@ -17,6 +17,11 @@
         <div class="card-header text-center">
             <h3>Profil Übersicht von @myProfile.PersoNumber</h3>
         </div>
+        <div width="40" height="40">
+            <style> .btn-secondary {border-color: transparent;} </style>
+            <a href="edit-profile" class="btn btn-secondary oi oi-cog" style="margin: 1em 1em"> Bearbeiten</a>
+        </div>
+        
     </div>
     @if (!myProfile.MadeFirstChangesOnProfile)
     {
@@ -132,37 +137,37 @@
                             int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill.Level));
                             if (lvlIndex == 0)
                             {
-<button class="btn btn-outline-secondary btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 1)
-{
-<button class="btn btn-outline-dark btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 2)
-{
-<button class="btn btn-outline-info btn-sm" disabled>@skill @skill.Level</button> }
-if (lvlIndex == 3)
-{
-<button class="btn btn-outline-success btn-sm" disabled>@skill @skill.Level</button> }
-}
-if (cat is SkillCategory castCat && castCat.Children.Any())
-{
-<b>@castCat.Name</b>
+                                <button class="btn btn-outline-secondary btn-sm" disabled>@skill @skill.Level</button> }
+                                if (lvlIndex == 1)
+                                {
+                                <button class="btn btn-outline-dark btn-sm" disabled>@skill @skill.Level</button> }
+                                if (lvlIndex == 2)
+                                {
+                                <button class="btn btn-outline-info btn-sm" disabled>@skill @skill.Level</button> }
+                                if (lvlIndex == 3)
+                                {
+                                <button class="btn btn-outline-success btn-sm" disabled>@skill @skill.Level</button> }
+                                }
+                                if (cat is SkillCategory castCat && castCat.Children.Any())
+                                {
+                                <b>@castCat.Name</b>
                                         <div>
                                             @foreach (Skill skill2 in castCat.Children)
                                             {
                                                 int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill2.Level));
                                                 if (lvlIndex == 0)
                                                 {
-    <button class="btn btn-outline-secondary btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 1)
-{
-<button class="btn btn-outline-dark btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 2)
-{
-<button class="btn btn-outline-info btn-sm" disabled>@skill2 @skill2.Level</button> }
-if (lvlIndex == 3)
-{
-<button class="btn btn-outline-success btn-sm" disabled>@skill2 @skill2.Level</button>}
-}
+                                                    <button class="btn btn-outline-secondary btn-sm" disabled>@skill2 @skill2.Level</button> }
+                                                if (lvlIndex == 1)
+                                                {
+                                                <button class="btn btn-outline-dark btn-sm" disabled>@skill2 @skill2.Level</button> }
+                                                if (lvlIndex == 2)
+                                                {
+                                                <button class="btn btn-outline-info btn-sm" disabled>@skill2 @skill2.Level</button> }
+                                                if (lvlIndex == 3)
+                                                {
+                                                <button class="btn btn-outline-success btn-sm" disabled>@skill2 @skill2.Level</button>}
+                                                }
                                         </div>}
                                 }
                 </CardBody>
@@ -173,6 +178,7 @@ if (lvlIndex == 3)
                 </CardBody>
             </CollapsibleCard>
         </div>
+
         <div class="col-sm-6 mb-3" style="min-height: 200px;">
             <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
                 <CardBody>
@@ -186,18 +192,19 @@ if (lvlIndex == 3)
                             </thead>
                             @foreach (Project pro in proService.ShowAllProjects())
                             {
-            <tr>
-                <td class="pt-3-half">
-                    @pro.Title
-                </td>
-                <td class="pt-3-half">
-                    @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
-                 myProfile.PersoNumber)))
-                    {
-@keyValue.Key
-                        <br>}
-                </td>
-            </tr>}
+                            <tr>
+                                <td class="pt-3-half">
+                                    @pro.Title
+                                </td>
+                                <td class="pt-3-half">
+                                    @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
+                                 myProfile.PersoNumber)))
+                                    {
+                                 @keyValue.Key
+                                        <br>}
+                                </td>
+                            </tr>
+                            }
                         </table>
                     </div>
                 </CardBody>
@@ -213,7 +220,8 @@ if (lvlIndex == 3)
 <br>
 
 
-@code { private Employee myProfile = new Employee();
+@code {
+    private Employee myProfile = new Employee();
 
 
     protected override async Task OnInitializedAsync()
@@ -221,4 +229,13 @@ if (lvlIndex == 3)
         var authstate = await authentiProvider.GetAuthenticationStateAsync();
 
         myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
-    } }
+    }
+
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+    }
+
+
+
+    }

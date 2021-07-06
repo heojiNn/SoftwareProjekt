@@ -7,7 +7,7 @@
 
 @using Blazored.Typeahead
 
-<AuthorizeView Roles="sales">
+<AuthorizeView Context="Usercontext" Roles="sales">
     <NotAuthorized>
         <strong>Nur der Vertrieb kann diese Seite anzeigen!</strong>
     </NotAuthorized>
@@ -17,14 +17,21 @@
             <div class="card-header text-center">
                 <h3>Angebotsübersicht</h3>
             </div>
+            <div>
+                <style> .btn-secondary {border-color: transparent;} </style>
+                <a href="offer-create" class="btn btn-secondary oi oi-plus" style="margin: 1em 1em"></a>
+                <a href="javascript:location.reload(true)" class="btn btn-secondary oi oi-trash" style=" margin: 1em 1em; float:right;" @onclick="DeleteAll"> Alle Löschen</a>
+            </div>
         </div>
-        <br />
-        <div class="input-group w-75 p-3">
-            <button type="button" class="btn btn-secondary" @onclick="ShowResults">Filter anwenden </button>
+        <br>
+        <style>.rounded { margin: unset; }</style>
+        <button type="button" class="btn-secondary rounded" style="background-color: #5E6B7A; color: white; float:left;" @onclick="ShowResults">Filter anwenden </button>
+        <div class="input-group w-100" >
+            
             <BlazoredTypeahead SearchMethod="SearchTitle"
                                @bind-Values="SelectedOffers"
                                EnableDropDown="true"
-                               placeholder="Nach Angebotstitel suchen:"
+                               placeholder="Nach Angebotstitel suchen"
                                href="javascript:location.reload(true)">
                 <SelectedTemplate Context="oContext">
                     @oContext.Title
@@ -34,211 +41,167 @@
                 </ResultTemplate>
             </BlazoredTypeahead>
         </div>
-
+        <br>
         @if (!showSearchResults) {
             @foreach (Offer o in offers.ToList())
             {
-                <div class="col-sm-6 mb-3">
-                        <div class="card">
+                @*<style> .card { margin-top: 1rem; margin-bottom: 1rem;}</style>*@
+                <div class="col-sm-6 mb-3 card border border-secondary rounded" style="background-color: lightgray; display: inline-block; width: 50%"> 
+                     @*<br />*@
+                        <div class="card border border-secondary rounded">
                             <div class="card-header">
                                 <h4>
-                                    @o.Title 
+                                    <a href="offer/@o.Id" style="color: #7A212E;">@o.Title</a>
                                     @if (AngebotCCollapsed)
                                     {
                                         <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                             <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                                             </path>
                                         </svg>} @if (!AngebotCCollapsed)
-                                        {
+                                    {
                                         <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                             <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                                             </path>
                                         </svg>}
+                                        @{ var list = new List<string> { "", "", "" }; }
+                                        <DropDown TItem="string" OnSelected="@OnSelected">
+                                            @*<InitialTip> Text </InitialTip>*@
+                                            <ChildContent>
+                                                <DropdownListitem Item="@list[0]"> <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a> </DropdownListitem>
+                                                <DropdownListitem Item="@list[2]"><a href="offer-edit/@o.Id" class="btn btn-secondary"> Bearbeiten</a></DropdownListitem>
+                                                <DropdownListitem Item="@list[1]"><a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => offerService.Copy(o))"> Kopieren </a></DropdownListitem>
+                                                <DropdownListitem Item="@list[2]"><a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a></DropdownListitem>
+
+                                                @*<div class="dropdown-divider"></div>*@
+                                            </ChildContent>
+                                        </DropDown>
                                     </h4>
                                 </div>  
-                            </div>
-                        <div class="card-body">
-                            @if (!AngebotCCollapsed)
-                            {
-                            <table class="table table-hover">
-                                <tr class="table-active">
-                                    <th>Id</th>
-                                    <th>Titel</th>
-                                    <th>Beschreibung</th>
-                                    <th>Softskills</th>
-                                    <th>Hardskills</th>
-                                    <th>Branchenwissen</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        @o.Id
-                                    </td>
-                                    <td>
-                                        @o.Title
-                                    </td>
-                                    @if (o.Title.Length==0)
-                                    {
-                                    <td>
-                                        -
-                                    </td>
-                                    }
-                                    <td>
-                                        @o.Description
-                                    </td>
-                                    @if (o.Description.Length==0)
-                                    {
-                                    <td>
-                                        -
-                                    </td>
-                                    }
-                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Softskill))
-                                    {
-                                        <td>
-                                            @s.Name,
-                                        </td>
-                                    }
-                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Softskill).Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Hardskill))
-                                    {
-                                        <td>
-                                            @s.Name,
-                                        </td>
-                                    }
-                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Hardskill).Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                    @foreach (Field f in o.Fields)
-                                    {
-                                        <td>
-                                            @f.Name;
-                                        </td>
-                                    }
-                                    @if (o.Fields.Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                </tr>
-                            </table>
-                            }
-                        <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a>
-                        <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a>
                         </div>
+                        <br />
+                            <div class="card-body card border border-secondary rounded" >
+                                @if (!AngebotCCollapsed)
+                                {
+
+                                      <div class="row">
+                                          <div class="col-sm-4">
+                                              ID: @o.Id
+                                          </div>
+                                          @if (o.Title.Length != 0)
+                                            {
+                                            <div class="col-sm-4">
+                                                      Titel: @o.Title
+                                                  </div>
+                                            } else {
+                                            <div class="col-sm-4">
+                                                Titel: -
+                                            </div>
+                                            }
+                                      </div>
+                                      <div class="dropdown-divider"></div>
+                                      <div class="row">
+                                          @if (o.Description.Length != 0)
+                                          {
+                                          <div class="col-sm-4">
+                                              Beschreibung:
+                                          </div>
+                                           <div class="col-sm-4 card-text scroll">
+                                                @o.Description
+                                           </div>
+                                          } else
+                                          {
+                                           <div class="col-sm-4">
+                                              <br />
+                                           </div>
+                                          }
+                                      </div>
+                                }
+                            </div>
+                    @*<br />*@
                     </div>
+                     
             }      
         } else {
              @foreach (Offer o in SelectedOffers)
              {
-                <div class="col-sm-6 mb-3">
-                        <div class="card">
+               @*<style> .card { margin-top: 1rem; margin-bottom: 1rem;}</style>*@
+                <div class="col-sm-6 mb-3 card border border-secondary rounded" style="background-color: lightgray; display: inline-block; width: 50%"> 
+                     @*<br />*@
+                        <div class="card border border-secondary rounded">
                             <div class="card-header">
                                 <h4>
-                                    @o.Title 
+                                    <a href="offer/@o.Id" style="color: #7A212E;">@o.Title</a>
                                     @if (AngebotCCollapsed)
                                     {
                                         <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                             <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                                             </path>
                                         </svg>} @if (!AngebotCCollapsed)
-                                        {
+                                    {
                                         <svg @onclick="@AngebotCToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                                             <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                                             </path>
                                         </svg>}
+                                        @{ var list = new List<string> { "", "", "" }; }
+                                        <DropDown TItem="string" OnSelected="@OnSelected">
+                                            @*<InitialTip> Text </InitialTip>*@
+                                            <ChildContent>
+                                                <DropdownListitem Item="@list[0]"> <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a> </DropdownListitem>
+                                                <DropdownListitem Item="@list[2]"><a href="offer-edit/@o.Id" class="btn btn-secondary"> Bearbeiten</a></DropdownListitem>
+                                                <DropdownListitem Item="@list[1]"><a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => offerService.Copy(o))"> Kopieren </a></DropdownListitem>
+                                                <DropdownListitem Item="@list[2]"><a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a></DropdownListitem>
+
+                                                @*<div class="dropdown-divider"></div>*@
+                                            </ChildContent>
+                                        </DropDown>
                                     </h4>
                                 </div>  
-                            </div>
-                        <div class="card-body">
-                            @if (!AngebotCCollapsed)
-                            {
-                            <table class="table table-hover">
-                                <tr class="table-active">
-                                    <th>Id</th>
-                                    <th>Titel</th>
-                                    <th>Beschreibung</th>
-                                    <th>Softskills</th>
-                                    <th>Hardskills</th>
-                                    <th>Branchenwissen</th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        @o.Id
-                                    </td>
-                                    <td>
-                                        @o.Title
-                                    </td>
-                                    @if (o.Title.Length==0)
-                                    {
-                                    <td>
-                                        -
-                                    </td>
-                                    }
-                                    <td>
-                                        @o.Description
-                                    </td>
-                                    @if (o.Description.Length==0)
-                                    {
-                                    <td>
-                                        -
-                                    </td>
-                                    }
-                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Softskill))
-                                    {
-                                        <td>
-                                            @s.Name,
-                                        </td>
-                                    }
-                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Softskill).Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                    @foreach (Skill s in o.Requirements.Where(s => s.Type == SkillGroup.Hardskill))
-                                    {
-                                        <td>
-                                            @s.Name,
-                                        </td>
-                                    }
-                                    @if (o.Requirements.Where(s => s.Type == SkillGroup.Hardskill).Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                    @foreach (Field f in o.Fields)
-                                    {
-                                        <td>
-                                            @f.Name;
-                                        </td>
-                                    }
-                                    @if (o.Fields.Count()==0)
-                                    {
-                                        <td>
-                                            -
-                                        </td>
-                                    }
-                                </tr>
-                            </table>
-                            }
-                        <a href="offer/@o.Id" class="btn btn-secondary"> Anzeigen</a>
-                        <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteOffer(o))">Löschen</a>
                         </div>
+                        <br />
+                            <div class="card-body card border border-secondary rounded" >
+                                @if (!AngebotCCollapsed)
+                                {
+
+                                      <div class="row">
+                                          <div class="col-sm-4">
+                                              ID: @o.Id
+                                          </div>
+                                          @if (o.Title.Length != 0)
+                                            {
+                                            <div class="col-sm-4">
+                                                      Titel: @o.Title
+                                                  </div>
+                                            } else {
+                                            <div class="col-sm-4">
+                                                Titel: -
+                                            </div>
+                                            }
+                                      </div>
+                                      <div class="dropdown-divider"></div>
+                                      <div class="row">
+                                          @if (o.Description.Length != 0)
+                                          {
+                                          <div class="col-sm-4">
+                                              Beschreibung:
+                                          </div>
+                                           <div class="col-sm-4 card-text scroll">
+                                                @o.Description
+                                           </div>
+                                          } else
+                                          {
+                                           <div class="col-sm-4">
+                                              <br />
+                                           </div>
+                                          }
+                                      </div>
+                                }
+                            </div>
+                    @*<br />*@
                     </div>
-             }     
-        }      
+            }      
+        }    
     </div>
-        <a href="javascript:location.reload(true)" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="DeleteAll">Alle Löschen</a>
-        <a href="offer-create" class="btn btn-secondary" style=" float: right; margin: 3em 1em"> Hinzufügen</a>
+    <a href="javascript:location.reload(true)" class="btn btn-secondary oi oi-arrow-circle-top" style=" float: right; margin: 3em 1em"></a>
     </Authorized>
 </AuthorizeView>
 

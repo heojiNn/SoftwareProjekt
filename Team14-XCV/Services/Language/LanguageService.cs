@@ -55,7 +55,7 @@ namespace XCV.Data
             }
             catch (SqlException e)
             {
-                log.LogError($"GetAllLanguages() persitence Error: \n{e.Message}\n");
+                log.LogError($"GetAllLanguages() persistence Error: \n{e.Message}\n");
             }
             finally { con.Close(); }
             return languages;

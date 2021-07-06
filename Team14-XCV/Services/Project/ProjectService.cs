@@ -102,17 +102,17 @@ namespace XCV.Data
             }
             catch (SqlException e)
             {
-                log.LogError($" Create() persitence Error:: \n{e.Message}\n");
+                log.LogError($" Create() persistence Error:: \n{e.Message}\n");
             }
             finally { con.Close(); }
 
             var newID = ShowAllProjects().FirstOrDefault(x => x.Title == title).Id;
             con.Open();
-            con.Execute($"Insert Into [ProjectHasActivity]  Values ('ohne sepz. Aktivität', @newID)", new { newID });
+            con.Execute($"Insert Into [ProjectHasActivity]  Values ('ohne spez. Aktivität', @newID)", new { newID });
             con.Close();
             OnChange(new() { SuccesMessage = $"Das Projekt:{title} wurde  mit der ID:{newID} erstellt." });
-
         }
+
         public void Update(Project newP)
         {
             errorMessages = new();
@@ -136,7 +136,7 @@ namespace XCV.Data
             }
             catch (SqlException e)
             {
-                log.LogError($" Update() persitence Error:: \n{e.Message}\n");
+                log.LogError($" Update() persistence Error:: \n{e.Message}\n");
             }
             finally { con.Close(); }
         }

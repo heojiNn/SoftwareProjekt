@@ -92,7 +92,7 @@
                                 </div>
                                 </CardBody>
                             </CollapsibleCard>
-                    Angestellt seit @myProfile.EmployyedSince.Date.ToString("dd.MM.yyyy")
+                    Angestellt seit @myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")
 
                 </div>
             </div>
@@ -172,7 +172,7 @@
                                         @if (isSkill)
                                         {
                                             var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
-                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" /> 
+                                        <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" /> 
                                         }
                                         else
                                         {
@@ -202,8 +202,8 @@
                 </CardBody>
             </CollapsibleCard>
         </div>
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
 
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
             <CollapsibleCard CardHeaderTitle="Projekte ">
                 <CardBody>
                 <input class="form-control" id="proSer"  placeholder="suche"  @bind="@proSearch" @bind:event="oninput"/>
@@ -262,6 +262,7 @@
     </div>
 </div>
 
+<a href="my-Profile" class="btn btn-secondary"> Zurück zum Profil</a>
 <button type="submit" class="btn btn-secondary" @onclick="@Validate">Änderungen speichern.</button>
 <br>
 oder klick einfach Enter, sobad du was geändert hast
@@ -305,8 +306,8 @@ oder klick einfach Enter, sobad du was geändert hast
     private DateTime startyear = DateTime.Now;
     private float reduceY1;
     private float reduceY2;
-private bool[] showB = new bool[100];
-private int sBi = 0;
+    private bool[] showB = new bool[100];
+    private int sBi = 0;
     private ChangeResult changeInfo = new();
 
 
@@ -339,6 +340,12 @@ private int sBi = 0;
         if (changeInfo.InfoMessages.Any() || changeInfo.ErrorMessages.Any())
             modal.Open();
     }
+
+    private void Discard()
+    {
+        // Asks if User want to discard changes and return
+    }
+
     private void Close()
     {
         modal.Close();
@@ -363,19 +370,19 @@ private int sBi = 0;
     private void AddMe(Project p, string act)
     {
         if (act == "")
-        proService.Add(p, myProfile);
+            proService.Add(p, myProfile);
         else
-        proService.Add(p, myProfile, act);
+            proService.Add(p, myProfile, act);
 
     }
     private void RemoveMe(Project p, string act)
     {
         if (act == "")
-        proService.Remove(p, myProfile);
+            proService.Remove(p, myProfile);
         else
-        proService.Remove(p, myProfile, act);
-    } 
+            proService.Remove(p, myProfile, act);
+    }
 
 
-    private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e; 
+    private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
 }
