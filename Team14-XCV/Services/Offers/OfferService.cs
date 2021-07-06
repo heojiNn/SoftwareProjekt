@@ -162,7 +162,7 @@ namespace XCV.Data
                     con.Close();
                 } catch (Exception e)
                 {
-
+                    log.LogError($" creating Offer on database: {e.Message} \n");
                 }
                 
             }
