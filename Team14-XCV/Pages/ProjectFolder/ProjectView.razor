@@ -26,18 +26,16 @@
                 @if (BeschreibungCollapsed)
                 {
                     <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                    height="24">
-                        <path
-                        d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                         height="24">
+                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                         </path>
                     </svg>
                 }
                 @if (!BeschreibungCollapsed)
                 {
                     <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                    height="24">
-                        <path
-                        d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                         height="24">
+                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                         </path>
                     </svg>
                 }
@@ -49,11 +47,12 @@
             <div class="card-body scroll h-100">
                 <p> <b>Titel:</b> @project.Title</p>
                 <p><b>Laufzeit:</b>@project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
-                <p><b>Branchen:</b>
-                @project.Field
-                    </p>
-                    <p>@project.Description</p>
-                </div>
+                <p>
+                    <b>Branchen:</b>
+                    @project.Field
+                </p>
+                <p>@project.Description</p>
+            </div>
         }
     </div>
     <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -66,18 +65,16 @@
                         @if (ZweckCollapsed)
                         {
                             <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                            height="24">
-                                <path
-                                d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                 height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                                 </path>
                             </svg>
                         }
                         @if (!ZweckCollapsed)
                         {
                             <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                            height="24">
-                                <path
-                                d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                 height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                                 </path>
                             </svg>
                         }
@@ -111,18 +108,16 @@
                         @if (TaetigkeitCollapsed)
                         {
                             <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            width="24" height="24">
-                                <path
-                                d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                                 </path>
                             </svg>
                         }
                         @if (!TaetigkeitCollapsed)
                         {
                             <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            width="24" height="24">
-                                <path
-                                d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                                 </path>
                             </svg>
                         }
@@ -134,15 +129,16 @@
                     <div class="card-body scroll h-100">
                         <div class="card-body">
 
-                            <ul>@foreach (var activity in project.Activities)
+                            <ul>
+                                @foreach (var activity in project.Activities)
                                 {
                                     <li>@activity.Key</li>
                                 }
-                            </ul>
-                        </div>
-
+                        </ul>
                     </div>
-                }
+
+                </div>
+            }
             </div>
         </div>
     </div>
@@ -155,18 +151,16 @@
                         @if (MitarbeiterCollapsed)
                         {
                             <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            width="24" height="24">
-                                <path
-                                d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                 width="24" height="24">
+                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
                                 </path>
                             </svg>
                         }
                         @if (!MitarbeiterCollapsed)
                         {
                             <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                            width="24" height="24">
-                                <path
-                                d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                 width="24" height="24">
+                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
                                 </path>
                             </svg>
                         }
@@ -176,65 +170,82 @@
                 @if (!MitarbeiterCollapsed)
                 {
                     <div class="card-body scroll h-100">
-                        <div class="row">
+                        
+                        
                             @foreach (var akti in project.Activities)
                             {
-                             @akti.Key
+                        <div class="row">
+                            <b class="col-2" >
+                                <br />
+                                <br />
+                                @akti.Key
+                            </b>
                             @foreach (var e in akti.Value.persNr)
-                            { 
-                                <div class="card">
-                                    <div class="card-header">
-                                @e
+                            {
+                        <div class="col-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    @e
 
-                                        
-                                    </div>
-                                    <div class="card-body">
-                                        <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
 
-                                    </div>
                                 </div>
-                                                            }
+                                <div class="card-body">
+                                    <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
+
+                                </div>
+                            </div>
+                        </div>
                             }
+                        </div>
+                                                    <br />
+
+                                                                        <br />
+
+                                                                    }
+
                             <!--
-                            <div class="card">
-                                <div class="card-header">
-                                    Mitarbeiter B
-                                </div>
-                                <div class="card-body">
-                                    <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
+    <div class="card">
+        <div class="card-header">
+            Mitarbeiter B
+        </div>
+        <div class="card-body">
+            <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
 
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    Mitarbeiter C
-                                </div>
-                                <div class="card-body">
-                                    <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Mitarbeiter C
+        </div>
+        <div class="card-body">
+            <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
 
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header">
-                                    Mitarbeiter D
-                                </div>
-                                <div class="card-body">
-                                    <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Mitarbeiter D
+        </div>
+        <div class="card-body">
+            <a href="/document-config-edit" style="color:black">Profil anzeigen</a>
 
-                                </div>
-                            </div>
-                                -->
-                    </div>
-                        <a href="project-search-add" class="btn btn-secondary" style="float:right; margin: 2em 1em">
-                            Hinzufügen </a>
+        </div>
+    </div>
+        -->
+                        </div>
+                        
+                    <a href="project-search-add" class="btn btn-secondary" style="float:right; margin: 2em 1em">
+                        Hinzufügen
+                    </a>
 
-                    </div>
+                    
                 }
             </div>
         </div>
     </div>
     <button type="button" class="btn btn-secondary" style=" float:right; margin: 3em 1em"> Löschen </button>
-    <a href="project-edittt" class="btn btn-secondary" type="submit" style="float:right; margin: 3em 1em"> Bearbeiten
+    <a href="project-edittt" class="btn btn-secondary" type="submit" style="float:right; margin: 3em 1em">
+        Bearbeiten
     </a>
 
 
