@@ -35,71 +35,89 @@
         <div class="card-body">
 
             <div class="row">
-                <div class="col-md-4">
-                    <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
-                    <br>Bild hochladen
-                    <InputFile OnChange="@JustUpload" class="btn-sm btn-secondary p-0" />
+                <div class="col-md-4" style="text-align: center">
+                    <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em;">
+                    <br />
+                    <br />
+                    <div>
+                        <button class="btn btn-secondary" onclick="document.getElementById('browse-files').click()">
+                            Neues Profilbild
+                        </button>
+                        <br /><br />
+                        <InputFile OnChange="@JustUpload" multiple @attributes="browseAttributes" />
+                    </div>
                 </div>
+
                 <div class="col-md-8">
                     <!--Large lg ≥992px  Ist es eine Reihe -->
                     <!-- Small sm ≥576px  Sind es 2 Reihen-->
                     <div class="row">
-                        <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname</label>
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname:</label>
                         <div class="col-md-6 col-xl-4 ">
                             <input class="form-control" id="inputFirstName" @bind="@myProfile.FirstName">
                         </div>
-                        <label class="col-md-6 col-xl-2 col-form-label" for="inputLastName">Nachname</label>
+
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputLastName">Nachname:</label>
                         <div class="col-md-6 col-xl-4">
                             <input class="form-control" id="inputLastName" @bind="@myProfile.LastName">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="inputRcl">Beschreibung:</label>
-                        <textarea class="form-control " rows="4" @bind="@myProfile.Description"
+                        <label for="inputDescription">Beschreibung:</label>
+                        <textarea class="form-control " id="inputDescription" rows="4" @bind="@myProfile.Description"
                                   @onkeydown="(e) => KeyHandler(e, true)">
                         </textarea>
                     </div>
+
                     <div class="row">
-                        <label class="col-md-6  col-form-label " style="width:20px" for="RCL">Rate Card Level:</label>
-                        <select class="form-control form-control-sm" id="RCL" @bind="@myProfile.RCL" style="width: 80px;">
-                            @for (int i = 1; i <= 8; i++)
-                            {
-                                <option value="@i"> @i</option>
-                            }
-                        </select>
-                        <div class="wrap-collabsible ">
-                            @{var yearsE = myProfile.Expirience != null ? (float)(DateTime.Now.Subtract(myProfile.Expirience.Value).Days) / 356 : 0;}
-                            <input id="collapsible" class="toggle" type="checkbox"> <label for="collapsible" class="lbl-toggle"><tag>Berufserfahrung:</tag> @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" )</label>
+                        <label class="col col-form-label" for="RCL" style="max-width: fit-content">Rate Card Level:</label>
+                        <div class="col">
+                            <select class="form-control" id="RCL" style="float: left; max-width: max-content" @bind="@myProfile.RCL">
+                                @for (int i = 1; i < 8; i++)
+                                {
+                                    <option value="@i"> @i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="wrap-collabsible ml-3">
+                            
+                                    @{var yearsE = myProfile.Expirience != null ? (float)(DateTime.Now.Subtract(myProfile.Expirience.Value).Days) / 356 : 0;}
+                                    <input id="collapsible" class="toggle" type="checkbox">
+                                    <label for="collapsible" class="lbl-toggle" style="margin-bottom:0"><tag>Relevante Berufserfahrung:</tag> @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2")} Jahre" )
+                                            <div class="avatar-links" style="float: right" data-tooltip="Die relevante Berufserfahrung wird wie folgt berechnet: <Aktuelles Jahr> - <Jahre Berufserfahrung> - <0,5 x Jahre als Wissenschaftliche/r Mitarbeiterin> - <0,3 x Jahre als Studentische Hilfskraft>"></div>
+                                    </label>                               
+
                             <div class="collapsible-content">
-                                <div class="row">
+                                <div class="row ml-1">
                                     <div class="col-4">
-                                        <label for="year">aktiv seit</label><br>
-                                        <input type="date" id="inputExpir" @bind="@startyear" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> im Tätigkeitsfeld </label>
+                                        <label for="fieldActive"> Im Tätigkeitsfeld aktiv seit:</label><br>
+                                        <input type="date" class="form-control" id="fieldActive" @bind="@startyear" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                     <div class="col-4">
-                                        <label for="min1">nur als wissen.Hilfe</label><br>
-                                        <input id="inputExpir" @bind="@reduceY1" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> wird mit 1/2 abgezogen</label>
+                                        <label for="timeAssistant">Zeit als wiss. Mitarbeiter</label><br>
+                                        <input id="timeAssistant" class="form-control" @bind="@reduceY1" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                     <div class="col-4">
-                                        <label for="min2">nur als stud.Hilfe</label><br>
-                                        <input id="inputExpir" @bind="@reduceY2" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> wird mit 2/3 abgezogen</label>
+                                        <label for="timeStudent">Zeit als stud. Hilfskraft</label><br>
+                                        <input id="timeStudent" class="form-control" @bind="@reduceY2" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
-
-
-
                     </div>
-                    Angestellt seit @myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")
-                
-            </div>
+
+                    <!--hier fehlt noch DB Anbindung für Einstellungsdatum!-->
+                    <div class="row">
+                        <label class="col col-form-label" for="employedSince" style="max-width: fit-content">Bei Xitaso angestellt seit:</label>
+                        <div class="col">
+                            <input type="date" class="form-control" id="employedSince" style="max-width: max-content;" placeholder="@myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")">
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 </div>
@@ -140,6 +158,7 @@
                     </CardBody>
                 </CollapsibleCard>
             </div>
+
             <div class="col-sm-6 mb-3" style="min-height: 100px;">
                 @{ var allLanguages = langService.GetAllLanguages(); }
                 <CollapsibleCard CardHeaderTitle="Sprachen">
@@ -269,7 +288,6 @@
 <a href="my-Profile" class="btn btn-secondary"> Zurück zum Profil</a>
 <button type="submit" class="btn btn-secondary" @onclick="@Validate">Änderungen speichern.</button>
 <br>
-oder klick einfach Enter, sobad du was geändert hast
 <br>
 <br>
 <br>
@@ -314,6 +332,15 @@ oder klick einfach Enter, sobad du was geändert hast
         private bool[] showB = new bool[100];
         private int sBi = 0;
         private ChangeResult changeInfo = new();
+
+
+
+
+        readonly Dictionary<string, object> browseAttributes = new Dictionary<string, object> {
+        { "accept", ".csv,.txt" },   // filter pattern
+        { "style", "display:none" }, // for custon label
+        { "id", "browse-files" }     // for custom label
+        };
 
 
         protected override async Task OnInitializedAsync()

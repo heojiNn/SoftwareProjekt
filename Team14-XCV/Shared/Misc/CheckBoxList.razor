@@ -17,55 +17,63 @@
             var lvlIndex = Array.FindIndex(allLvl, (x => x == lvlInSelected));
             var lvlCount = allLvl.Length - 1;
 
-                    <div class="row m-1" style="overflow-x: hidden;">
-                        <div class="col-md-4  p-0">
-                            <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
-                            <span style="min-width: 100px;"> @nameToShow</span>
-                        </div>
+            <div class="row m-1" style="overflow-x: hidden;">
+                <div class="col-md-4  p-0">
+                    <label>
+                        <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                        <span style="min-width: 100px; margin-left: 4px"> @nameToShow</span>
+                    </label>
+                </div>
 
-                        <div class="col-md-5  p-0 @(containt ? "" : "d-none")">
-                            <input type="range" class="custom-range w-75 @(lvlIndex == -1 ? "bg-secondary" : "")" min="0"  max="@lvlCount" value="@lvlIndex" @onchange="@(async e => await RefreshAsync(item, e.Value) )">
-                        </div>
-                        <div class="col-md-3 p-0   @(containt ? "" : "d-none")">
-
-                            <span id="@nameToShow"> </span>
-                        </div>
-                    </div>
+                <div class="col-md-5  p-0 @(containt ? "" : "d-none")">
+                    <input type="range" class="custom-range w-75 @(lvlIndex == -1 ? "bg-secondary" : "")" min="0" max="@lvlCount" value="@lvlIndex" @onchange="@(async e => await RefreshAsync(item, e.Value) )">
+                </div>
+                <div class="col-md-3 p-0   @(containt ? "" : "d-none")">
+                    <span id="@nameToShow"> </span>
+                </div>
+            </div>
         }
 
         else if (item is Language langCast)
         {
             var lvlInSelected = ((ISet<Language>)SelectedValues).FirstOrDefault(x => x.Name == langCast.Name)?.Level ?? "";
             var allLvl = langService.GetAllLevel();
-                    <div class="row" style="overflow-x: hidden;">
-                        <div class="col-md-5">
-                            <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
-                            <span style="min-width: 70px;"> @nameToShow</span>
-                        </div>
+            <div class="row" style="overflow-x: hidden;">
+                <div class="col-md-5">
+                    <label>
+                        <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                        <span style="min-width: 70px; margin-left: 4px"> @nameToShow</span>
+                    </label>
+                </div>
 
-                        <div class="col-md-6 @(containt ? "" : "d-none")">
-                            <div class="form-inline @(lvlInSelected == "" ? "bg-secondary" : "")">
-                                <select class="form-control form-control-sm" value="@lvlInSelected"  @onchange="@(async e => Refresh(item, e.Value) )">
+                <div class="col-md-6 @(containt ? "" : "d-none")">
+                    <div class="form-inline @(lvlInSelected == "" ? "bg-secondary" : "")">
+                        <select class="form-control form-control-sm" value="@lvlInSelected" @onchange="@(async e => Refresh(item, e.Value) )">
                             @for (int i = 0; i <= allLvl.Length; i++)
                             {
                                 if (i == allLvl.Length)
                                 {
-                                                    <option value=""> </option>
+                                    <option value=""> </option>
                                 }
                                 else
                                 {
-                                                    <option value="@allLvl[i]"> @allLvl[i]</option>
+                                    <option value="@allLvl[i]"> @allLvl[i]</option>
                                 }
                             }
-                                </select>
-                            </div>
-                        </div>
+                        </select>
                     </div>
+                </div>
+            </div>
         }
         else
         {
-                    <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked(e.Value, item); }" />
-            @nameToShow <br>
+            <div>
+                <label>
+                    <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                    <span style="min-width: 70px; margin-left: 4px"> @nameToShow</span>
+                </label> 
+            </div>
+                       
         }
     }
 
