@@ -6,30 +6,29 @@ stages:
   - test
 #  - deploy
 
+# baut das Projekt
 build:
   stage: build
   tags:
     - sopro
   only:
-#    - master
     - Staging
   script:
-#    - dotnet build Abgaben/Uebungsblatt06/Musterlösung/Team14/Team14.csproj
      - dotnet build Team14-XCV/XCV.csproj
 
 
-
+# lässt Testprogramm über das Projekt laufen
 test:
   stage: test
   tags:
     - sopro
   only:
-#    - master
     - Staging
   script:
-#    - dotnet test Abgaben/Uebungsblatt06/Musterlösung/Tests/Tests.csproj
     - dotnet test Tests/Tests.csproj
 
+# wird akiviert sobald Docker mit der Datenbank funktioniert
+# Baut eine Release-Version des Projekts und ein DockerImage
 #deploy:
 #  stage: deploy
 #  tags:
@@ -38,5 +37,5 @@ test:
 #    - staging
 #  script:
 #    - dotnet publish -c Release Team14-XCV/XCV.csproj
-#    - docker build -t counter-image -f Dockerfile .
+#    - docker build -t xcv-image -f Dockerfile .
     
