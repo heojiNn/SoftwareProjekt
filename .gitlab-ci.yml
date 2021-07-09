@@ -4,7 +4,7 @@ image : mcr.microsoft.com/dotnet/sdk:5.0
 stages:
   - build
   - test
-  - deploy
+#  - deploy
 
 build:
   stage: build
@@ -30,13 +30,13 @@ test:
 #    - dotnet test Abgaben/Uebungsblatt06/Musterlösung/Tests/Tests.csproj
     - dotnet test Tests/Tests.csproj
 
-deploy:
-  stage: deploy
-  tags:
-    - sopro
-  only:
-    - staging
-  script:
-    - dotnet publish -c Release Team14-XCV/XCV.csproj
-    - docker build -t counter-image -f Dockerfile .
+#deploy:
+#  stage: deploy
+#  tags:
+#    - sopro
+#  only:
+#    - staging
+#  script:
+#    - dotnet publish -c Release Team14-XCV/XCV.csproj
+#    - docker build -t counter-image -f Dockerfile .
     
