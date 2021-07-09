@@ -41,7 +41,8 @@ namespace XCV.Data
             if (!_skillService.GetAllSkills().Any())
             {
                 var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-                var content = File.ReadAllText(Path.Combine(currentParent, "datenbasis.json"));
+                //System.Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!" + Directory.GetDirectories(Directory.GetCurrentDirectory()));
+                var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
                 _bDataSetService.JsonUpdate(content, false);
             }
         }
