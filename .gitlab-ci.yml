@@ -3,8 +3,8 @@ image : mcr.microsoft.com/dotnet/sdk:5.0
 
 stages:
   - build
+  - deploy
   - test
-#  - deploy
 
 # baut das Projekt
 build:
@@ -16,6 +16,16 @@ build:
   script:
      - dotnet build Team14-XCV/XCV.csproj
 
+# Baut eine Release-Version des Projekts und ein DockerImage
+deploy:
+  stage: deploy
+  tags:
+    - sopro
+  only:
+    - staging
+  script:
+    - dotnet publish -c Release Team14-XCV/XCV.csproj
+    - docker build -t xcv-image -f Dockerfile .
 
 # lässt Testprogramm über das Projekt laufen
 test:
@@ -27,15 +37,6 @@ test:
   script:
     - dotnet test Tests/Tests.csproj
 
-# wird akiviert sobald Docker mit der Datenbank funktioniert
-# Baut eine Release-Version des Projekts und ein DockerImage
-#deploy:
-#  stage: deploy
-#  tags:
-#    - sopro
-#  only:
-#    - staging
-#  script:
-#    - dotnet publish -c Release Team14-XCV/XCV.csproj
-#    - docker build -t xcv-image -f Dockerfile .
+
+
     
