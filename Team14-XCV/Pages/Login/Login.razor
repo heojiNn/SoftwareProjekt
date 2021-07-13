@@ -30,6 +30,8 @@
                 </div>
 
                 <button class="btn btn-secondary" @onclick="LoginA">Login</button>
+                <button class="btn btn-secondary" @onclick="Register">Registrieren</button>
+                
             </div>
         </div>
         <table class="table table-sm">
@@ -42,7 +44,7 @@
             </tr>
             @foreach (Employee ac in accountService.ShowAllProfiles())
             {
-                var roles = String.Join(", ", ac.AcRoles);
+                var roles = String.Join(", ", ac.AcRoles.Where(role => role != AccessRole.Employee));
                 <tr>
                     <td @onclick="@(e => pNum = ac.PersoNumber)"> @ac.PersoNumber </td>
                     <td @onclick="@(e => password = ac.Password)"> @ac.Password</td>
@@ -99,6 +101,11 @@
             NavigationManager.NavigateTo("/my-profile", forceLoad: true);
     }
 
+    private async void Register()
+    {
+        if (await authentiProvider.Register())
+            NavigationManager.NavigateTo("/register", forceLoad: true);
+    }
 
 
     private void OnValidationReturn(object sender, LoginResult e) => validationInfo = e;

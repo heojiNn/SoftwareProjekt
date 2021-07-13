@@ -48,6 +48,15 @@ namespace XCV.Data
             return true;
         }
 
+        public async Task<bool> Register()
+        {
+            Employee employee = _employeeService.ShowAllProfiles().First(u => u.PersoNumber.Equals("999-R"));
+
+            await _jSRuntime.InvokeVoidAsync("sessionStorage.setItem", sessionStorageKey, JsonSerializer.Serialize(employee.PersoNumber));  //set
+            _logger.LogInformation($"\"{employee.PersoNumber}\" \t stores his login-data in SessionStorage");
+            return true;
+        }
+
         public async Task Logout()
         {
             var authstate = await GetAuthenticationStateAsync();

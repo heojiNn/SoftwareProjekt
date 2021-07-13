@@ -1,5 +1,5 @@
 @page "/change-json"
-
+@attribute [Authorize(Roles = "admin, sales")]
 
 @using Microsoft.AspNetCore.Hosting
 
@@ -25,7 +25,7 @@
         <InputFile OnChange="@ShowUpload" class="btn btn-sm btn-primary" />
         <div class="outerbox @(validJson ? "" : "invalid")">
             <textarea class="form-control" style="white-space: pre;" rows="30" @bind="@textareas[0]"
-                @bind:event="oninput">
+                      @bind:event="oninput">
             </textarea>
         </div>
         <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
