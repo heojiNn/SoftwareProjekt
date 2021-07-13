@@ -60,7 +60,7 @@ namespace XCV.Pages.Employees
         protected override void OnInitialized()
         {
             employees = profileService.ShowAllProfiles().ToList();
-            roles = roleService.GetAllRoles().ToList();
+            roles = roleService.GetAllRoles().Where(x => x.RCL == 0).ToList();
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
             languages = languageService.GetAllLanguages().ToList();
