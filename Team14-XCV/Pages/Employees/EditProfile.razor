@@ -247,9 +247,9 @@
                                     <td class="pt-3-half">
                                         <div class="row mb-1">
                                             <dv class="col-9">
-                                                ohne Tätigkeit eintragen:
+                                                ohne Tätigkeit:
                                             </dv>
-                                            @if (pro.Activities["ohne spez. Aktivität"].persNr.Any(x => x == myProfile.PersoNumber))
+                                            @if (pro.Activities[withoutActivity].persNr.Any(x => x == myProfile.PersoNumber))
                                             {
                                                 <div class="col">
                                                     <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
@@ -268,7 +268,7 @@
                                         </div>
 
 
-                                        @foreach (var key in pro.Activities.Keys.Where(x => x != "ohne spez. Aktivität"))
+                                        @foreach (var key in pro.Activities.Keys.Where(x => x != withoutActivity))
                                         {
                                             <div class="row mb-1">
                                                 <dv class="col-9">
@@ -352,7 +352,7 @@
     private int sBi = 0;
     private ChangeResult changeInfo = new();
 
-
+    private string withoutActivity = "ohne Tätigkeit";
 
 
     readonly Dictionary<string, object> browseAttributes = new Dictionary<string, object> {
