@@ -8,272 +8,279 @@
 @namespace XCV.Pages.ProjectFolder
 
 
-<div class="container-fluid">
-    <div class="card my-1">
-        <div class="card-header">
-            <h3> @project.Title </h3>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <h4>
-                Projektbeschreibung
-                @if (BeschreibungCollapsed)
-                {
-                    <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                         height="24">
-                        <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                        </path>
-                    </svg>
-                }
-                @if (!BeschreibungCollapsed)
-                {
-                    <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                         height="24">
-                        <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                        </path>
-                    </svg>
-                }
-            </h4>
-        </div>
-        @if (!BeschreibungCollapsed)
-        {
-            <div class="card-body scroll h-100">
-                <div class="row">
-                    <div class="col-2">
-                        <b>Titel:</b>
-                    </div>
-                    <div class="col-10">
-                        @project.Title
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <b>Laufzeit:</b>
-                    </div>
-                    <div class="col-10">
-                        @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <b>Branche:</b>
-                    </div>
-                    <div class="col-10">
-                        @project.Field
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-2">
-                        <b> Beschreibung </b>
-                    </div>
-                    <div class="col-10">
-                        @project.Description
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h4>
-                        Projektzwecke
-                        @if (ZweckCollapsed)
-                        {
-                            <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                 height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
-                        }
-                        @if (!ZweckCollapsed)
-                        {
-                            <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
-                                 height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
+    
+
+
+    <div class="container-fluid">
+        <div class="card my-1">
+            <div class="card-header" style="position: relative">
+                <div style="position: absolute; margin-top: 0.1%;">
+                    <a href="project-edit/@project.Id" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E">Bearbeiten</a>
                 </div>
-                @if (!ZweckCollapsed)
-                {
-                    <div class="card-body scroll h-100">
-                        <div class="card-body">
-                            <ul>
-                                @foreach (string purpose in @project.Purpose)
-                                {
-                                    <li>@purpose</li>
-                                }
-                            </ul>
+                <h3 style="text-align: center">@project.Title </h3>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h4>
+                    Projektbeschreibung
+                    @if (BeschreibungCollapsed)
+                    {
+                        <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                             height="24">
+                            <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                            </path>
+                        </svg>
+                    }
+                    @if (!BeschreibungCollapsed)
+                    {
+                        <svg @onclick="@BeschreibungToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                             height="24">
+                            <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                            </path>
+                        </svg>
+                    }
+                </h4>
+            </div>
+            @if (!BeschreibungCollapsed)
+            {
+                <div class="card-body scroll h-100">
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Titel:</b>
                         </div>
-                    </div>}
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h4>
-                        Projekttätigkeiten
-                        @if (TaetigkeitCollapsed)
-                        {
-                            <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
-                        }
-                        @if (!TaetigkeitCollapsed)
-                        {
-                            <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
-                </div>
-                @if (!TaetigkeitCollapsed)
-                {
-                    <div class="card-body scroll h-100">
-                        <div class="card-body">
-                            <ul>
-                                @foreach (var activity in project.Activities.Where(x => x.Key != "ohne Tätigkeit"))
-                                {
-                                    <li>@activity.Key</li>
-                                }
-                            </ul>
+                        <div class="col-10">
+                            @project.Title
                         </div>
                     </div>
-                }
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Laufzeit:</b>
+                        </div>
+                        <div class="col-10">
+                            @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b>Branche:</b>
+                        </div>
+                        <div class="col-10">
+                            @project.Field
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <b> Beschreibung </b>
+                        </div>
+                        <div class="col-10">
+                            @project.Description
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Projektzwecke
+                            @if (ZweckCollapsed)
+                            {
+                                <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                     height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+                            }
+                            @if (!ZweckCollapsed)
+                            {
+                                <svg @onclick="@ZweckToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                     height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+                        </h4>
+                    </div>
+                    @if (!ZweckCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            <div class="card-body">
+                                <ul>
+                                    @foreach (string purpose in @project.Purpose)
+                                    {
+                                        <li>@purpose</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>}
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Projekttätigkeiten
+                            @if (TaetigkeitCollapsed)
+                            {
+                                <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+                            }
+                            @if (!TaetigkeitCollapsed)
+                            {
+                                <svg @onclick="@TaetigkeitToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+                        </h4>
+                    </div>
+                    @if (!TaetigkeitCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            <div class="card-body">
+                                <ul>
+                                    @foreach (var activity in project.Activities.Where(x => x.Key != "ohne Tätigkeit"))
+                                    {
+                                        <li>@activity.Key</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row row-cols-1 row-cols-md-2 g-4">
-        <div class="col">
-            <div class="card">
-                <div class="card-header">
-                    <h4>
-                        Mitarbeiter
-                        @if (MitarbeiterCollapsed)
-                        {
-                            <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
-                                </path>
-                            </svg>
-                        }
-                        @if (!MitarbeiterCollapsed)
-                        {
-                            <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                 width="24" height="24">
-                                <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
-                                </path>
-                            </svg>
-                        }
-                    </h4>
-                </div>
-                @if (!MitarbeiterCollapsed)
-                {
-                    <div class="card-body scroll h-100">
-                        @foreach (var act in project.Activities)
-                        {
-                            <div class="row">
-                                <div class="col-2">
-                                    <br />
-                                    <br />
-                                    @act.Key
-                                </div>
-                                <div class="col-10">
-                                    <div class="row">
-                                        @foreach (var e in act.Value.persNr)
-                                        {
-                                            <div class="col-4">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        @allEmployees.First(x => x.PersoNumber == e).FirstName @allEmployees.First(x => x.PersoNumber == e).LastName
-                                                        <a href="/employee-detail-view/@e" class="oi oi-person" style="color: #7A212E; float:right;"></a>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>
+                            Mitarbeiter
+                            @if (MitarbeiterCollapsed)
+                            {
+                                <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                                    </path>
+                                </svg>
+                            }
+                            @if (!MitarbeiterCollapsed)
+                            {
+                                <svg @onclick="@MitarbeiterToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     width="24" height="24">
+                                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                                    </path>
+                                </svg>
+                            }
+                        </h4>
+                    </div>
+                    @if (!MitarbeiterCollapsed)
+                    {
+                        <div class="card-body scroll h-100">
+                            @foreach (var act in project.Activities)
+                            {
+                                <div class="row">
+                                    <div class="col-2">
+                                        <br />
+                                        <br />
+                                        <b>@act.Key</b>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="row">
+                                            @foreach (var e in act.Value.persNr)
+                                            {
+                                                <div class="col-4">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            @allEmployees.First(x => x.PersoNumber == e).FirstName @allEmployees.First(x => x.PersoNumber == e).LastName
+                                                            <a href="/employee-detail-view/@e" class="oi oi-person" style="color: #7A212E; float:right;"></a>
 
-                                                    </div>
-                                                    <div class="card-body scroll">
-                                                        <ul>
-                                                            <li> RCL : @allEmployees.First(x => x.PersoNumber == e).RCL </li>
-                                                            @if (act.Value.requirements.Any())
-                                                            {
-                                                                @foreach (var s in allEmployees.First(x => x.PersoNumber == e).Abilities)
+                                                        </div>
+                                                        <div class="card-body scroll">
+                                                            <ul>
+                                                                <li> RCL : @allEmployees.First(x => x.PersoNumber == e).RCL </li>
+                                                                @if (act.Value.requirements.Any())
                                                                 {
-                                                                    if (act.Value.requirements.Any(x => x.Equals(s)))
+                                                                    @foreach (var s in allEmployees.First(x => x.PersoNumber == e).Abilities)
                                                                     {
-                                                                        <li> @s.Name </li>
+                                                                        if (act.Value.requirements.Any(x => x.Equals(s)))
+                                                                        {
+                                                                            <li> @s.Name </li>
+                                                                        }
                                                                     }
                                                                 }
-                                                            }
-                                                        </ul>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        }
+                                            }
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <br />
-                            <br />
-                        }
-                    </div>
-                }
+                                <br />
+                                <br />
+                            }
+                        </div>
+                    }
+                </div>
             </div>
         </div>
+        <a href="project-edit/@project.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten </a>
+        <a href="projects" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteProject(project))"> Löschen </a>
+        <a href="projects" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Projektübersicht </a>
+
     </div>
-    <a href="project-edit/@project.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten </a>
-    <a href="projects" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteProject(project))"> Löschen </a>
-    <a href="projects" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Projektübersicht </a>
-
-</div>
 
 
 
-@code {
-    [Parameter]
-    public string Id { get; set; }
+    @code {
+        [Parameter]
+        public string Id { get; set; }
 
-    private Project project;
-    private IEnumerable<Employee> allEmployees;
+        private Project project;
+        private IEnumerable<Employee> allEmployees;
 
-    protected override void OnInitialized()
-    {
-        allEmployees = profilService.ShowAllProfiles();
-        project = projectService.ShowProject(int.Parse(Id));
+        protected override void OnInitialized()
+        {
+            allEmployees = profilService.ShowAllProfiles();
+            project = projectService.ShowProject(int.Parse(Id));
+        }
+
+        private void DeleteProject(Project p)
+        {
+            projectService.Delete(p);
+        }
+
+        public bool BeschreibungCollapsed { get; set; }
+        public bool ZweckCollapsed { get; set; }
+        public bool MitarbeiterCollapsed { get; set; }
+        public bool TaetigkeitCollapsed { get; set; }
+
+        void BeschreibungToggle()
+        {
+            BeschreibungCollapsed = !BeschreibungCollapsed;
+        }
+        void ZweckToggle()
+        {
+            ZweckCollapsed = !ZweckCollapsed;
+        }
+        void MitarbeiterToggle()
+        {
+            MitarbeiterCollapsed = !MitarbeiterCollapsed;
+        }
+        void TaetigkeitToggle()
+        {
+            TaetigkeitCollapsed = !TaetigkeitCollapsed;
+        }
     }
-
-    private void DeleteProject(Project p) 
-    {
-        projectService.Delete(p);
-    }
-
-    public bool BeschreibungCollapsed { get; set; }
-    public bool ZweckCollapsed { get; set; }
-    public bool MitarbeiterCollapsed { get; set; }
-    public bool TaetigkeitCollapsed { get; set; }
-
-    void BeschreibungToggle()
-    {
-        BeschreibungCollapsed = !BeschreibungCollapsed;
-    }
-    void ZweckToggle()
-    {
-        ZweckCollapsed = !ZweckCollapsed;
-    }
-    void MitarbeiterToggle()
-    {
-        MitarbeiterCollapsed = !MitarbeiterCollapsed;
-    }
-    void TaetigkeitToggle()
-    {
-        TaetigkeitCollapsed = !TaetigkeitCollapsed;
-    }
-}

@@ -14,14 +14,26 @@
 <body>
     <div class="container-fluid">
         <div class="card my-1">
-            <div class="card-header text-center">
+            <div class="card-header text-center" style="position:relative;">
+                <style>
+                    .btn-secondary {
+                        border-color: transparent;
+                    }
+                </style>
+                <div style="position: absolute; margin-top: 0.4%;">
+                    <a href="project-create" class="btn btn-secondary" style="float: left; padding-left: 0px; padding-top: 0px; padding-bottom: 0px; border-color: #7A212E;">
+                        <i class="oi oi-plus" style="margin-right: 6px"></i>
+                    </a>
+                </div>
                 <h3>Projekte</h3>
+
+                <button class="btn btn-secondary oi oi-trash" style="float: right;  margin-top: 0%; padding-left: 0px; padding-top: 0px; padding-bottom: 0px;" @onclick="Confirm">
+                    Alle Löschen
+                </button>
+
+
             </div>
-            <div>
-                <style> .btn-secondary {  border-color: transparent; } </style>
-                <a href="project-create" class="btn btn-secondary oi oi-plus" style="margin: 1em 1em"></a>
-                <button class="btn btn-secondary oi oi-trash" style=" margin: 1em 1em; float:right;" @onclick="Confirm"> Alle Löschen</button>
-            </div>
+         
         </div>
         <br />
         <br />
@@ -30,35 +42,40 @@
 
         <table id="myTable">
             <tr class="header">
-                <th style="width:40%;">Name</th>
+                <th style="width:40%;">Titel</th>
                 <th style="width:40%;">Laufzeit</th>
                 <th style="width:20%;"></th>
             </tr>
             @{ var projects = (searchTitle == "") ? allProjects : allProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower())); }
             @foreach (var project in projects.OrderBy(pro => pro.Title))
             {
-                <tr>
-                    <td>
-                        <a href="project/@project.Id" style="color:black; text-decoration:none"> @project.Title </a>
+        <tr>
+            
+                <td>
+                    <a href="project/@project.Id" style="color:black; text-decoration:none"> @project.Title </a>
                     </td>
-                    <td> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy") </td>
-                    <td>
+                <td>
+                    <a href="project/@project.Id" style="color:black; text-decoration:none">  @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")
+                    </a>
+                </td>
+            
+                <td>
                     @{var list = new List<string> { "", "", "" }; }
-                        <DropDown TItem="string">
-                            <ChildContent>
-                                <DropdownListitem Item="@list[0]">
-                                    <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
-                                </DropdownListitem>
-                                <DropdownListitem Item="@list[1]">
-                                    <a href="project-edit/@project.Id" class="btn btn-secondary" type="submit"> Bearbeiten </a>
-                                </DropdownListitem>
-                                <DropdownListitem Item="@list[2]">
-                                    <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Löschen</a>
-                                </DropdownListitem>
-                            </ChildContent>
-                        </DropDown>
-                    </td>
-                </tr>
+                    <DropDown TItem="string">
+                        <ChildContent>
+                            <DropdownListitem Item="@list[0]">
+                                <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                            </DropdownListitem>
+                            <DropdownListitem Item="@list[1]">
+                                <a href="project-edit/@project.Id" class="btn btn-secondary" type="submit"> Bearbeiten </a>
+                            </DropdownListitem>
+                            <DropdownListitem Item="@list[2]">
+                                <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Löschen</a>
+                            </DropdownListitem>
+                        </ChildContent>
+                    </DropDown>
+                </td>
+        </tr>
                 }
         </table>
         <a href="javascript:location.reload(true)" class="btn btn-secondary oi oi-arrow-circle-top" style=" float: right; margin: 3em 1em"></a>
