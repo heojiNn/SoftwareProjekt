@@ -22,6 +22,8 @@ namespace XCV.Data
         private readonly ILogger<EmployeeService> log;
         private readonly ISkillService _skillService;
 
+        public bool imageChanged = false;
+
         public EmployeeService(IConfiguration config, ILogger<EmployeeService> logger, ISkillService skillService, IWebHostEnvironment environment)
         {
             connectionString = config.GetConnectionString("MS_SQL_Connection");
@@ -85,16 +87,15 @@ namespace XCV.Data
 
             //-------------------------------------------------------------------------------------infoMessages
             if (!oldVersion.FirstName.Equals(newVersion.FirstName) || !oldVersion.LastName.Equals(newVersion.LastName))
-                infoMessages.Add("Dein Vor- und/oder Nachname würde geändert werden.");
+                infoMessages.Add("Der Vor- und/oder Nachname wurde verändert.");
             if (!oldVersion.Description.Equals(newVersion.Description))
-                infoMessages.Add("Deine Beschreibung würde geändert werden.");
+                infoMessages.Add("Die Beschreibung wurde verändert.");
             if (oldVersion.RCL != newVersion.RCL)
-                infoMessages.Add("Dein Rate Card Level würde geändert werden.");
+                infoMessages.Add("Das Rate Card Level wurde verändert.");
             if (!oldVersion.Experience.Equals(newVersion.Experience))
-                infoMessages.Add("Dein Berufserfahrung würde geändert werden.");
-            if (!oldVersion.Image.Equals(newVersion.Image))
-                infoMessages.Add("Dein Profilbild würde geändert werden.");
-
+                infoMessages.Add("Die Berufserfahrung wurde verändert.");
+            if (imageChanged)
+                infoMessages.Add("Das Profilbild wurde verändert.");
 
             if (!oldVersion.Languages.SetEquals(newVersion.Languages)) inlineWords.Add("Sprachen");
             else
@@ -169,36 +170,27 @@ namespace XCV.Data
                 OnChange(new() { ErrorMessages = new[] { $"Es trat ein Fehler in der Persistenz auf\n {ex.Message}" } });
                 log.LogError($"UpdateProfile() persitence Error: \n{ex.Message}\n");
             }
-
-
         }
 
         // for definition see   IProfileService
-        public async Task UploadeImage(string persoNumber, IBrowserFile image)
+        public async Task UploadImage(Employee e, IBrowserFile image)
         {
-            var nameInWWW = $"empPic{persoNumber}.{image.ContentType.Split('/')[1]}";
+            var nameInWWW = $"empPic{e.PersoNumber}.{image.ContentType.Split('/')[1]}";
             var path = Path.Combine(env.WebRootPath, nameInWWW);
-
             try
             {
                 await using FileStream fs = new(path, FileMode.Create);
                 await image.OpenReadStream().CopyToAsync(fs);
-
-                var profile = ShowProfile(persoNumber);
-                profile.Image = nameInWWW;
-                UpdateEmployee(profile);
+                e.Image = nameInWWW;
+                UpdateEmployee(e);
+                imageChanged = true;
             }
             catch (Exception ex)
             {                                                    // it is risky to show the user unknown, possible sensitive.infos
                 OnChange(new() { ErrorMessages = new[] { $"Es trat ein Fehler in der Persistenz auf\n {ex.Message}" } });
                 log.LogError($"UploadeImage() persitence Error: \n{ex.Message}\n");
             }
-
         }
-
-
-
-
 
         // for definition see   IAccountService
         public void CreateAccount(Employee newAccount)

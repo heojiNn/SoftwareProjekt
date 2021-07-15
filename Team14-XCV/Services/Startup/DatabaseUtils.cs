@@ -13,7 +13,6 @@ namespace XCV.Data
         private readonly string connectionString;
         private readonly string databaseName;
 
-
         public DatabaseUtils(IConfiguration IConfiguration, ILogger<DatabaseUtils> logger)
         {
             config = IConfiguration;
@@ -21,8 +20,6 @@ namespace XCV.Data
             connectionString = config.GetConnectionString("MS_SQL_Connection");     //from appsettings.json
             databaseName = config.GetConnectionString("DatabaseName");              //from appsettings.json
         }
-
-
 
         public void CreateDatabase()
         {
