@@ -75,45 +75,31 @@ namespace XCV.Data
                         infoMessages.Add("Die Projekttätigkeiten und/oder zugehörige MitarbeiterInnen bzw. Skills werden geändert.");
                         break;
                     }
-                    if ((kvp.Value.persNr.Count == 0 && newVersion.Activities[kvp.Key].persNr.Count != 0) ||
-                        (kvp.Value.requirements.Count() == 0 && newVersion.Activities[kvp.Key].requirements.Count() != 0))
+                    if (kvp.Value.persNr.Count != newVersion.Activities[kvp.Key].persNr.Count || kvp.Value.requirements.Count() != newVersion.Activities[kvp.Key].requirements.Count())
                     {
                         infoMessages.Add("Die Projekttätigkeiten und/oder zugehörige MitarbeiterInnen bzw. Skills werden geändert.");
                         break;
                     }
+
                     foreach (var emp in kvp.Value.persNr)
                     {
-                        if (newVersion.Activities[kvp.Key].persNr.Count == kvp.Value.persNr.Count)
+                        if (!newVersion.Activities[kvp.Key].persNr.Contains(emp))
                         {
-                            if (!newVersion.Activities[kvp.Key].persNr.Contains(emp))
-                            {
                                 employeeChanged = true;
                                 break;
-                            }
                         }
-                        else
-                        {
-                            employeeChanged = true;
-                            break;
-                        }
+                        
                     }
                     if (!employeeChanged)
                     {
                         foreach (var skill in kvp.Value.requirements)
                         {
-                            if (newVersion.Activities[kvp.Key].requirements.Count() == kvp.Value.requirements.Count())
-                            {
                                 if (!newVersion.Activities[kvp.Key].requirements.Contains(skill))
                                 {
                                     skillChanged = true;
                                     break;
                                 }
-                            }
-                            else
-                            {
-                                skillChanged = true;
-                                break;
-                            }
+
                         }
                     }
 
@@ -294,7 +280,6 @@ namespace XCV.Data
             try
             {
                 con.Open();
-                con.Execute($"Insert Into [ProjectHasActivity]  Values ('ohne Tätigkeit', @newID)", new { newId });
 
                 foreach (var purp in p.Purpose)
                 {
@@ -347,57 +332,17 @@ namespace XCV.Data
                 con.Execute($"Delete From [ProjectHasPurpose]  Where Project={newP.Id} ");
                 foreach (var purp in newP.Purpose)
                     con.Execute($"Insert Into [ProjectHasPurpose] Values (@Purp, @Id) ", new { purp, newP.Id });
-
-                foreach (var act in oldVersion.Activities.Keys.Except(newP.Activities.Keys)) // Lösche alte nicht mehr enthaltene Tätigkeiten und Mitarbeiter
-                    Remove(oldVersion, act);
+                con.Execute($"Delete From [ProjectHasActivity]  Where Project={newP.Id} ");
                 foreach (var kvp in newP.Activities)
                 {
-                    if (!oldVersion.Activities.ContainsKey(kvp.Key))                          // Füge neue Tätigkeiten, Mitarbeiter und Skills hinzu
+                    if (Add(newP.Id, kvp.Key))
                     {
-                        if (Add(newP.Id, kvp.Key))
-                        {
-                            foreach (var emp in kvp.Value.persNr)
-                            {
-                                Add(newP.Id, emp, kvp.Key);
-                            }
-                            foreach (var skill in kvp.Value.requirements)
-                            {
-                                Add(newP.Id, skill, kvp.Key);
-                            }
-                        }
-                    }
-                    else                                                                    //Lösche und Adde neue Mitarbeiter und Skills bei bestehenden Tätigkeiten
-                    {
-                        foreach (var emp in oldVersion.Activities[kvp.Key].persNr)
-                        {
-                            if (!newP.Activities[kvp.Key].persNr.Contains(emp))            // Lösche alle alten nicht mehr enthaltenen Mitarbeiter
-                                Remove(newP.Id, emp, kvp.Key);
-                        }
-                        foreach (var emp in newP.Activities[kvp.Key].persNr)
-                        {
-                            if (!oldVersion.Activities[kvp.Key].persNr.Contains(emp))     // Füge neue Mitarbeiter zu bestehenden Tät. hinzu 
-                                Add(newP.Id, emp, kvp.Key);
-                        }
-
-                        foreach (var skill in oldVersion.Activities[kvp.Key].requirements)
-                        {
-                            if (!newP.Activities[kvp.Key].requirements.Contains(skill))            // Lösche alle alten nicht mehr enthaltenen Skills
-                                Remove(newP.Id, skill, kvp.Key);
-                        }
-                        foreach (var skill in newP.Activities[kvp.Key].requirements)
-                        {
-                            if (!oldVersion.Activities[kvp.Key].requirements.Contains(skill))     // Füge neue Skills zu bestehenden Tät. hinzu 
-                                Add(newP.Id, skill, kvp.Key);
-                        }
+                        foreach (var emp in kvp.Value.persNr)
+                            Add(newP.Id, emp, kvp.Key);
+                        foreach (var skill in kvp.Value.requirements)
+                            Add(newP.Id, skill, kvp.Key);
                     }
                 }
-
-
-
-
-
-
-
                 OnChange(new() { SuccesMessage = "Die Änderungen am Project wurden übernommen" });
             }
             catch (SqlException e)

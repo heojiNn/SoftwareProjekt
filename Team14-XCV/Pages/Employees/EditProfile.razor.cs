@@ -93,18 +93,12 @@ namespace XCV.Pages.Employees
 
         private void AddMe(Project p, string act)
         {
-            if (act == "")
-                proService.Add(p, myProfile);
-            else
-                proService.Add(p, myProfile, act);
+            proService.Add(p, myProfile, act);
 
         }
         private void RemoveMe(Project p, string act)
         {
-            if (act == "")
-                proService.Remove(p, myProfile);
-            else
-                proService.Remove(p, myProfile, act);
+            proService.Remove(p, myProfile, act);
         }
 
 

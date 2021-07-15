@@ -230,6 +230,8 @@
 
             <CollapsibleCard CardHeaderTitle="Projekte ">
                 <CardBody>
+                    <div class="avatar-links" style="float: right" data-tooltip="Ihre Änderungen werden direkt übernommen!"></div>
+
                     <input class="form-control" id="proSer" placeholder="suche" @bind="@proSearch" @bind:event="oninput" />
                     <div class="scroll2">
                         <table class="table table-bordered table-striped text-center">
@@ -245,30 +247,7 @@
                                 <tr>
                                     <td class="pt-3-half"> @pro.Title</td>
                                     <td class="pt-3-half">
-                                        <div class="row mb-1">
-                                            <dv class="col-9">
-                                                ohne Tätigkeit:
-                                            </dv>
-                                            @if (pro.Activities[withoutActivity].persNr.Any(x => x == myProfile.PersoNumber))
-                                            {
-                                                <div class="col">
-                                                    <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
-                                                        <span class="oi oi-minus"></span>
-                                                    </button>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="col">
-                                                    <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, "") )">
-                                                        <span class="oi oi-plus"></span>
-                                                    </button>
-                                                </div>
-                                            }
-                                        </div>
-
-
-                                        @foreach (var key in pro.Activities.Keys.Where(x => x != withoutActivity))
+                                        @foreach (var key in pro.Activities.Keys)
                                         {
                                             <div class="row mb-1">
                                                 <dv class="col-9">
@@ -277,7 +256,7 @@
                                                 @if (pro.Activities[key].persNr.Any(x => x == myProfile.PersoNumber))
                                                 {
                                                     <div class="col">
-                                                        <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
+                                                        <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, key) )">
                                                             <span class="oi oi-minus"></span>
                                                         </button>
                                                     </div>
@@ -285,7 +264,7 @@
                                                 else
                                                 {
                                                     <div class="col">
-                                                        <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, "") )">
+                                                        <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, key) )">
                                                             <span class="oi oi-plus"></span>
                                                         </button>
                                                     </div>
