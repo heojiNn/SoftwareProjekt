@@ -1,5 +1,5 @@
 @page "/project/{Id}"
-@attribute [Authorize(Roles = "sales, admin")]
+@attribute [Authorize]
 
 
 @inject IProjectService projectService
@@ -8,10 +8,17 @@
 @namespace XCV.Pages.ProjectFolder
 
 
+
+    
+
+
 <div class="container-fluid">
     <div class="card my-1">
-        <div class="card-header">
-            <h3> @project.Title </h3>
+        <div class="card-header" style="position: relative">
+            <div style="position: absolute; margin-top: 0.1%;">
+                <a href="project-edit/@project.Id" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E">Bearbeiten</a>
+            </div>
+            <h3 style="text-align: center">@project.Title </h3>
         </div>
     </div>
     <div class="card">
@@ -187,7 +194,7 @@
                                 <div class="col-2">
                                     <br />
                                     <br />
-                                    @act.Key
+                                    <b>@act.Key</b>
                                 </div>
                                 <div class="col-10">
                                     <div class="row">
@@ -229,11 +236,18 @@
             </div>
         </div>
     </div>
-    <a href="project-edit/@project.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten </a>
-    <a href="projects" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteProject(project))"> Löschen </a>
-    <a href="projects" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Projektübersicht </a>
+    <AuthorizeView Context="Usercontext" Roles="sales, admin">
+        <Authorized>
+
+
+            <a href="project-edit/@project.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten </a>
+            <a href="projects" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteProject(project))"> Löschen </a>
+            <a href="projects" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Projektübersicht </a>
+        </Authorized>
+    </AuthorizeView>
 
 </div>
+
 
 
     

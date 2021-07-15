@@ -138,7 +138,24 @@ namespace Tests.Integration
             var sut = new SkillService(GetTestConfig(), sLogger);
             return sut;
         }
-
+        public static OfferService GetOfferService()
+        {
+            var sLogger = Mock.Of<ILogger<OfferService>>();
+            var sut = new OfferService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService());
+            return sut;
+        }
+        public static ConfigService GetConfigService()
+        {
+            var sLogger = Mock.Of<ILogger<ConfigService>>();
+            var sut = new ConfigService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService(), GetProjectService());
+            return sut;
+        }
+        public static GenerateService GetGenerateService()
+        {
+            var sLogger = Mock.Of<ILogger<GenerateService>>();
+            var sut = new GenerateService(GetOfferService(), GetProjectService(), GetEmployeeService());
+            return sut;
+        }
 
         public static void DoJsonUpdate()
         {
@@ -146,8 +163,8 @@ namespace Tests.Integration
             var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
-            currentParent = Directory.GetParent(currentParent).FullName;    //now git root directory
-            var content = File.ReadAllText(Path.Combine(currentParent, "datenbasis.json"));
+            //currentParent = Directory.GetParent(currentParent).FullName;    //now git root directory
+            var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
             bdsService.JsonUpdate(content, false);
         }
 

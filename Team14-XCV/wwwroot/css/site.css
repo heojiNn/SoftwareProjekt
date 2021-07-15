@@ -159,6 +159,9 @@ a:hover {
     overflow-y: auto;
 }
 
+card.employee {
+    flex-direction: row;
+}
 .mb-o {
     vertical-align: central;
 }

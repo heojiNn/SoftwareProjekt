@@ -13,7 +13,6 @@ namespace XCV.Data
         private readonly string connectionString;
         private readonly string databaseName;
 
-
         public DatabaseUtils(IConfiguration IConfiguration, ILogger<DatabaseUtils> logger)
         {
             config = IConfiguration;
@@ -21,8 +20,6 @@ namespace XCV.Data
             connectionString = config.GetConnectionString("MS_SQL_Connection");     //from appsettings.json
             databaseName = config.GetConnectionString("DatabaseName");              //from appsettings.json
         }
-
-
 
         public void CreateDatabase()
         {
@@ -50,6 +47,8 @@ namespace XCV.Data
         ///         [field],  [role],  [language], [language_level],  [skillCategory], [skill], [skill_level]
         ///         [employee],   [project], [activity], [activity_done_by], [project_purpose]
         ///         [employee_acrole], [employee_field], [employee_role], [employee_language], [employee_skill]
+        ///         [offer], [offerHasEmployee], [offerHasField], [offerHasSkill], [offerhasConfig], [offerHasActiveConfig],
+        ///         [config], [configHasActivity], [configHasField], [configHasSkill], [configHasOrder]
         /// </summary>
         public void CreateTables()
         {
@@ -103,7 +102,7 @@ namespace XCV.Data
                             ");");                  //Key is Level  cause  number 4 is fixed  ---(no insert or delete)----
                 con.Execute(@"IF NOT EXISTS (SELECT * FROM [skill_level] ) " +
                             "Insert Into [skill_level] Values " +
-                                "(1, 'h'),  (2, 'p'),  (3, 'rege'),  (4, 'exp') " +
+                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelmaeßige'),  (4, 'erfahren') " +
                             ";");
 
 
@@ -118,7 +117,7 @@ namespace XCV.Data
                                     "[Description]  VARCHAR(200) NOT NULL, " +
                                     "[Image]        VARCHAR(50) NOT NULL, " +
                                     "[RCL]          INT, " +                        //can be Null
-                                    "[Expirience]   DATE, " +                       //can be Null
+                                    "[Experience]   DATE, " +                       //can be Null
                                     "[EmployedSince] DATE NOT NULL, " +
                                     "[MadeFirstChangesOnProfile] BIT NOT NULL " +
                             ");");
@@ -137,6 +136,8 @@ namespace XCV.Data
                                     "[Id]           INT NOT NULL IDENTITY PRIMARY KEY," +
                                     "[Title]        VARCHAR(50) NOT NULL," +
                                     "[Description]  VARCHAR(200) NOT NULL, " +
+                                    "[Start]        Date NOT NULL," +
+                                    "[End]          Date NOT NULL," +
                             ");");
 
 
@@ -149,14 +150,13 @@ namespace XCV.Data
                                     "PRIMARY KEY (name, project), " +
                                     "CONSTRAINT fK_pur_pro FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE " +
                             ");");
-                con.Execute("IF OBJECT_ID('projectHasActivity', 'U') IS NULL " +            //Pproject Has Activity
+                con.Execute("IF OBJECT_ID('projectHasActivity', 'U') IS NULL " +            //Project Has Activity
                             "CREATE TABLE [projectHasActivity] ( " +                        // ref by activity_Emp
                                     "[Name]         VARCHAR(100), " +
                                     "[Project]      INT, " +
                                     "PRIMARY KEY (name, project), " +
                                     "CONSTRAINT fK_akti_pro FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE " +
                             ");");
-
 
                 //-----------n to m Relation---------------------------------------------------------------------------
                 con.Execute("IF OBJECT_ID('employeeHasAcrole', 'U') IS NULL " +            // Employee Has Acrole
@@ -228,35 +228,118 @@ namespace XCV.Data
 
                 con.Execute("IF OBJECT_ID('offerHasEmployee', 'U') IS NULL " +          // Offer Has Employee
                             "CREATE TABLE [offerHasEmployee] ( " +
-                                    "Offer INT, " +
-                                    "PersoNumber VARCHAR(20), " +
-                                    "Role VARCHAR(50), " + // soll dem Mitarbeiter zugewiesen werden innerhalb des Angebots
-                                    "RCL INT," +          // -=-
-                                    "PRIMARY KEY (Offer, PersoNumber)," +   //Employee has only one role in an Offer -> unique (if he can have more adapt Primary Key)
+                                    "[Offer]        INT, " +
+                                    "[PersoNumber]  VARCHAR(20), " +
+                                    "[Role]         VARCHAR(50), " + 
+                                    "[RCL]          INT," +
+                                    "[Wage]         DECIMAL(6, 2)," + //Max: (9999.99)                        // Default(null): Wage in dbo.role corresponding to (role, RCL), Else: Textinput on Page
+                                    "[HoursPerDay]      INT," +                                               // Default(null): 8, Else: Textinput on Page
+                                    "[DaysPerRuntime]   INT," +                                               // Default(null): End-Start, Else: Textinput on Page
+                                    "[Discount]         INT CHECK (0 <= Discount AND Discount <= 100)," +      // Default(null): Kein Discount, Else: Textinput on Page
+                                    "PRIMARY KEY (Offer, PersoNumber)," +                                   //Employee has only one role in an Offer -> unique (if he can have more adapt Primary Key)
                                     "CONSTRAINT fK_ofem FOREIGN KEY (Offer) REFERENCES  offer(Id) ON DELETE CASCADE, " +
                                     "CONSTRAINT fK_pnr_ofem FOREIGN KEY (PersoNumber) REFERENCES  employee(PersoNumber) ON DELETE CASCADE, " +
                                     "CONSTRAINT fK_role_ofem FOREIGN KEY (Role, RCL) REFERENCES role(name, rcl) ON DELETE  CASCADE" +
                             ");");
                 con.Execute("IF OBJECT_ID('offerHasField', 'U') IS NULL " +             // Offer Has Field
                             "CREATE TABLE [offerHasField] ( " +
-                                    "Offer INT, " +
-                                    "Field VARCHAR(50), " +
+                                    "[Offer] INT, " +
+                                    "[Field] VARCHAR(50), " +
                                     "PRIMARY KEY (Offer, Field), " +
                                     "CONSTRAINT fK_oid_offld FOREIGN KEY (Offer) REFERENCES offer(Id) ON DELETE CASCADE, " +
                                     "CONSTRAINT fK_field_offld FOREIGN KEY (Field) REFERENCES field(name) ON DELETE CASCADE " +
                             ");");
                 con.Execute("IF OBJECT_ID('offerHasSkill', 'U') IS NULL " +             // Offer Has Skill
                             "CREATE TABLE [offerHasSkill] ( " +
-                                    "Offer INT, " +
-                                    "skill_name VARCHAR(50), " +
-                                    "skill_cat VARCHAR(50), " +
-                                    "skill_level INT, " +
-                                    "PRIMARY KEY (Offer, skill_name, skill_cat, skill_level), " +
+                                    "[Offer] INT, " +
+                                    "[Skill]        VARCHAR(50), " +
+                                    "[Skill_Cat]    VARCHAR(50), " +
+                                    "[Skill_Level]  INT, " +               
+                                    "PRIMARY KEY (Offer, Skill, Skill_Cat), " +
                                     "CONSTRAINT fK_oid_ofsk FOREIGN KEY (Offer) REFERENCES  offer(Id) ON DELETE CASCADE, " +
-                                    "CONSTRAINT fK_sk_ofsk FOREIGN KEY (skill_name, skill_cat) REFERENCES skill(name, category) ON DELETE CASCADE, " +
-                                    "CONSTRAINT fK_sklvl_ofsk FOREIGN KEY (skill_level) REFERENCES  skill_level(level) " +
+                                    "CONSTRAINT fK_sk_ofsk FOREIGN KEY (Skill, Skill_Cat) REFERENCES skill(Name, Category) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_sklvl_ofsk FOREIGN KEY (Skill_level) REFERENCES  skill_level(Level) " +
                             ");");
 
+                //------------Config------------------------------------------------
+
+                con.Execute("IF OBJECT_ID('offerHasConfig', 'U') IS NULL " +
+                            "CREATE TABLE [offerHasConfig] (" +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," + 
+                                    "PRIMARY KEY(Offer, Config)," +
+                                    "CONSTRAINT fK_ohc_of FOREIGN KEY (Offer) REFERENCES offer(Id) ON DELETE CASCADE," +
+                            ");");
+                con.Execute("IF OBJECT_ID('offerHasActiveConfig', 'U') IS NULL " +
+                            "CREATE TABLE [offerHasActiveConfig] (" +
+                                    "[Offer]        Int," +
+                                    "[Config]       VARCHAR(30)," +
+                                    "PRIMARY KEY(Offer)," +
+                                    "CONSTRAINT fK_ohac_oc FOREIGN KEY (Offer, Config) REFERENCES offerHasConfig(Offer, Config) ON DELETE CASCADE" +
+                            ");");
+                con.Execute("IF OBJECT_ID('config', 'U') IS NULL " +        // Candidate Key: (Offer, Name, Employee)
+                           "CREATE TABLE [config] (" +
+                                    "[Offer]        INT," +                     
+                                    "[Name]         VARCHAR(30)," +
+                                    "[Employee]     VARCHAR(20)," +         // references employee->PersoNumber On Delete Cascade (the whole employeeconfig gets deleted if emp is removed from the active profiles, not from the offer though)
+                                    "[FirstName]    VARCHAR(50), " +
+                                    "[LastName]     VARCHAR(50), " +
+                                    "[Description]  VARCHAR(200), " +
+                                    "[Image]        VARCHAR(50), " +
+                                    "[Experience]    DATE, " +
+                                    "[EmployedSince] DATE, " +
+                                   "PRIMARY KEY(Offer, Name, Employee)," +
+                                   "CONSTRAINT fK_cfg_from FOREIGN KEY (Offer, Name) REFERENCES offerHasConfig(Offer, Config) ON DELETE CASCADE," +
+                                   "CONSTRAINT fK_cfg_emp FOREIGN KEY (Employee) REFERENCES employee(PersoNumber) ON DELETE CASCADE," +
+                           ");");
+                con.Execute("IF OBJECT_ID('configHasField', 'U') IS NULL " +
+                            "CREATE TABLE [configHasField] ( " +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," +   
+                                    "[cfgEmployee]  VARCHAR(20), " +
+                                    "[Field]        VARCHAR(50), " +
+                                    "PRIMARY KEY (Offer, Config, cfgEmployee, Field), " +
+                                    "CONSTRAINT fK_chf_f_emp FOREIGN KEY (Offer, Config, cfgEmployee) REFERENCES  config(Offer, Name, Employee) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_chf_f_field FOREIGN KEY (Field) REFERENCES  field(name) ON DELETE CASCADE, " +
+                            ");");
+                con.Execute("IF OBJECT_ID('configHasSkill', 'U') IS NULL " +
+                            "CREATE TABLE [configHasSkill] ( " +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," +   //ref config->Name
+                                    "[cfgEmployee]  VARCHAR(20), " +
+                                    "[Skill]        VARCHAR(50), " +
+                                    "[Skill_Cat]    VARCHAR(50), " +
+                                    "[Skill_Level]  INT, " +
+                                    "PRIMARY KEY (Offer, Config, cfgEmployee, skill, skill_cat), " +
+                                    "CONSTRAINT fK_chs_f_emp FOREIGN KEY (Offer, Config, cfgEmployee) REFERENCES  config(Offer, Name, Employee) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_chs_s_skill FOREIGN KEY (skill, skill_cat) REFERENCES skill(Name, Category) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_chs_s_lvl FOREIGN KEY (skill_level) REFERENCES  skill_level(Level), " +
+                            ");");
+                con.Execute("IF OBJECT_ID('configHasActivity', 'U') IS NULL " +
+                            "CREATE TABLE [configHasActivity] ( " +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," +   //ref config->Name
+                                    "[cfgEmployee]  VARCHAR(20), " +
+                                    "[Project]      INT,  " +
+                                    "[Activity]     VARCHAR(100), " +
+                                    "PRIMARY KEY (Offer, Config, cfgEmployee, Activity, Project), " +
+                                    "CONSTRAINT fK_cha_f_emp FOREIGN KEY (Offer, Config, cfgEmployee) REFERENCES  config(Offer, Name, Employee) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_cha_pro FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE, " +
+                            ");");
+                con.Execute("IF OBJECT_ID('configHasOrder', 'U') IS NULL " +
+                            "CREATE TABLE [configHasOrder] ( " +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," +
+                                    "[pos1]         INT," +
+                                    "[pos2]         INT," +
+                                    "[pos3]         INT, " +
+                                    "[pos4]         INT,  " +
+                                    "[pos5]         INT, " +
+                                    "PRIMARY KEY (Offer, Config), " +
+                                    "CONSTRAINT fK_cho FOREIGN KEY (Offer, Config) REFERENCES offerHasConfig(Offer, Config) ON DELETE CASCADE" +
+                            ");");
+
+                //------------Config------------------------------------------------
 
                 //-----------------------------------------------------------------------------------------------------
             }

@@ -18,13 +18,13 @@ namespace XCV.Data
 
 
         [Required(ErrorMessage = "Es muss eine Eingabe zum Vorname gemacht werden."),
-        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu opimieren, \n" +
-                                        "lässt das System keine Vornamen über 20 Zeichne zu.")]
+        MaxLength(40, ErrorMessage = "Um Gestaltung und Marketing zu opimieren, \n" +
+                                        "lässt das System keine Vornamen über 20 Zeichen zu.")]
         public string FirstName { get; set; } = "";
 
         [Required(ErrorMessage = "Es muss eine Eingabe zum Nachname gemacht werden."),
-        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu optimieren, \n" +
-                                        "lässt das System keine Nachname über 20 Zeichne zu")]
+        MaxLength(40, ErrorMessage = "Um Gestaltung und Marketing zu optimieren, \n" +
+                                        "lässt das System keine Nachname über 20 Zeichen zu")]
         public string LastName { get; set; } = "";
 
 
@@ -36,28 +36,28 @@ namespace XCV.Data
         // null, until explicitly set
         [Range(0, 8, ErrorMessage = "Das RCL muss zwischen 1 und 8 liegen")]
         public int RCL { get; set; }
-
-
-        public DateTime? Expirience { get; set; }
+        public DateTime? Experience { get; set; }
 
         public DateTime EmployedSince { get; init; }
-
-
 
         public ISet<Role> Roles { get; set; } = new SortedSet<Role>();
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
 
-        public List<(int project, string activity)> Projects { get; set; } = new();
-
+        public ISet<(int project, string activity)> Projects { get; set; } = new SortedSet<(int project, string activity)>();
 
 
         public bool MadeFirstChangesOnProfile = false;
 
-
-
-
+        [MaxLength(50, ErrorMessage = "Der Name der Rolle darf 50 Zeichen nicht überschreiten.")]
+        public string offerRole { get; set; }
+        [Range(0, 8, ErrorMessage = "Das RCL muss zwischen 1 und 8 liegen")]
+        public int offerRCL { get; set; }
+        public float offerWage { get; set; }
+        public int hoursPerDay { get; set; }
+        public int daysPerRun { get; set; }
+        public int discount { get; set; }
 
         public override string ToString()
         {
@@ -72,7 +72,7 @@ namespace XCV.Data
                 ab = $"\n {Abilities.Count}:Skills in  {Abilities.First().Category.GetRoot()}";
             }
 
-            var result = $"{PersoNumber}: \"{FirstName}\" \"{LastName}\" Erfahrung{Expirience}:\n"
+            var result = $"{PersoNumber}: \"{FirstName}\" \"{LastName}\" Erfahrung{Experience}:\n"
                          + $"AcRoles:   {string.Join(", ", AcRoles)}\n\n"
                          + $"Projekte:  {pro}\n"
                          + $"Roles:     {ro}  \n\n"

@@ -1,4 +1,4 @@
-@page "/offer-search-add/{Id}"
+@page "/offer-search-add/{Id:int}"
 @page "/offer-search-add"
 
 @attribute [Authorize(Roles = "sales, admin")]
@@ -271,7 +271,7 @@
     }
     @if(!toBeCreated) //Return to existing offer
     {                 
-        <a href="offer/@myOffer.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zum Angebot</a>               
+        <a href="offer-edit/@myOffer.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zur Angebotsbearbeitung</a>               
     } else // Return to new offer: Store intermediately
     {             
         <a href='offer-create' class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zur Angebotserstellung</a>              

@@ -100,7 +100,7 @@ namespace XCV.Data
         ///         Uploades the Image to the Server
         /// </summary>
         ///
-        public Task UploadeImage(string persoNumber, IBrowserFile image);
+        public Task UploadImage(Employee e, IBrowserFile image);
         // -------------TODO Validation----------------------
 
 

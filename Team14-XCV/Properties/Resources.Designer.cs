@@ -47,9 +47,16 @@ namespace XCV.Properties {
             }
         }
         
-        internal static byte[] Vorlage1 {
+        internal static byte[] Angebot1_3 {
             get {
-                object obj = ResourceManager.GetObject("Vorlage1", resourceCulture);
+                object obj = ResourceManager.GetObject("Angebot1_3", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] Einzelprofil {
+            get {
+                object obj = ResourceManager.GetObject("Einzelprofil", resourceCulture);
                 return ((byte[])(obj));
             }
         }

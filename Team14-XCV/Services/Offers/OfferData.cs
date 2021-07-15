@@ -7,6 +7,6 @@ namespace XCV.Data
 {
     public class OfferData
     {
-        public Offer creatingOffer { get; set; } = new Offer();
+        public Offer offerStore { get; set; } 
     }
 }

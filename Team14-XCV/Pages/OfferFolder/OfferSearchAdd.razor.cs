@@ -9,23 +9,14 @@ namespace XCV.Pages.OfferNamespace
 {
     public partial class OfferSearchAdd
         {
-        //===========================================================================================================================================//
 
-        // Suche: TODO:  
-        // Soll ein Hinweis ausgegeben werden, wenn ein Mitarbeiter alle Suchkriterien erfüllt, oder reicht die Abwesenheit des "Kein/Keine MitarbeiterIn erfüllt alle Kriterien." Textes? 
-        // Statt des Hinweises kann eine prozentuale Eignung des Mitarbeiters angegeben werden, auch wenn sie bei gewichteten Suchkriterien kontrainduktiv wirkt? S. EmployeeSeach.razor Z.244
-        // Alternativ könnten natürlich auch nur die Mitarbeiter ausgegeben werden, die alle Suchkriterien erfüllen, das fände ich als Nutzer aber unpraktisch.
+        // Edit or Create Offer?
+        public bool toBeCreated; 
 
-        //===========================================================================================================================================//
-
-        public bool toBeCreated = false;
-
-        [Parameter] // Existing Offer to add into
-        public string Id { get; set; }
+        [Parameter] 
+        public int? Id { get; set; }
         private ChangeResult changeInfo = new();
         private Offer myOffer;
-
-        
 
         //=====================================
 
@@ -71,18 +62,20 @@ namespace XCV.Pages.OfferNamespace
         protected override void OnInitialized()
         {
             employees = profileService.ShowAllProfiles().ToList();
-            roles = roleService.GetAllRoles().ToList();
+            roles = roleService.GetAllRoles().Where(x => x.RCL == 0).ToList();
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
             languages = languageService.GetAllLanguages().ToList();
-            if (Id != null)
+            if (Id.HasValue)
             {
-                myOffer = offerService.ShowOffer(int.Parse(Id));
+                try { myOffer = offerService.ShowOffer(Id.Value); }
+                catch (Exception e) { Console.WriteLine(e.Message + e.StackTrace); }
                 myOffer ??= new Offer();
                 offerService.ChangeEventHandel += OnChangeReturn;
-            } else if (offerData != null)
+                toBeCreated = false;
+            } else 
             {
-                toBeCreated = true;
+                toBeCreated = true; 
             }
         }
 
@@ -408,31 +401,39 @@ namespace XCV.Pages.OfferNamespace
         {
             changeInfo = e;
         }
-
-        private void AddEmp(Employee toAdd) //To Existing offer
+        
+        private void AddEmp(Employee toAdd)
         {
-            if (!toBeCreated)
+            try
             {
-                try
+                foreach (Employee e in offerData.offerStore.participants)
                 {
-                    offerService.Add(offerService.ShowOffer(int.Parse(Id)), toAdd);
+                    if (e.PersoNumber.Equals(toAdd.PersoNumber))
+                    {
+                        Console.WriteLine($"Mitarbeiter - {toAdd.FirstName} wurde schon hinzugefügt. ");
+                        return;
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht hinzugefügt werden! " + e.Message);
-                }
-            } else
-            {
-                try
-                {
-                    offerData.creatingOffer.participants.Add(toAdd);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht ins neue Angebot hinzugefügt werden! " + e.Message);
-                }
+                // Assign with a role to start with, change possible and intended
+                toAdd.offerRole ??= toAdd.Roles.First().Name ?? roleService.GetAllRoles().First().Name;
+                // On init: takes RCL of employee, on change: keeps RCL in offer
+                toAdd.offerRCL = toAdd.offerRCL != 0 ? toAdd.offerRCL : ((0 <= toAdd.RCL && toAdd.RCL <= 8) ? toAdd.RCL : 1);
+                // Get normal wages, via database, or the old value after a previous search, or 1 if both don't exist
+                Role temp = roleService.GetAllRoles().Where(x => x.Name.Equals(toAdd.offerRole) && x.RCL == toAdd.offerRCL).FirstOrDefault();
+                if (toAdd.offerWage == 0) //default
+                    toAdd.offerWage = temp.Wage == 0 ? 1 : temp.Wage;
+                // Default as per excel-example
+                toAdd.hoursPerDay = 8;
+                // Total runtime defaults to Project runtime
+                toAdd.daysPerRun = (offerData.offerStore.End - offerData.offerStore.Start).Days;
+                // No Discount to begin with
+                toAdd.discount = 0;
+                offerData.offerStore.participants.Add(toAdd);
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine($"Illegal Input - {toAdd.FirstName} konnte nicht ins Angebot hinzugefügt werden! " + e.Message);
+            }
         }
 
         //====================================================================================

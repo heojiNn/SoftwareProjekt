@@ -1,0 +1,30 @@
+
+
+
+#myInput {
+    
+    background-repeat: no-repeat;
+    
+    
+}
+
+#myTable {
+    border-collapse: collapse;
+    width:100%;
+    
+    
+}
+
+    #myTable th,
+    #myTable td {
+       
+    }
+
+    #myTable tr {
+        
+    }
+
+        #myTable tr.header,
+        #myTable tr:hover {
+            
+        }

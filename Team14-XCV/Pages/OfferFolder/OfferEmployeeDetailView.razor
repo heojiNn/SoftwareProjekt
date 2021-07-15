@@ -1,228 +1,225 @@
-@page "/offer-employee-detail-view/{Id}/{PersoNumber}"
+@page "/offer-employee-detail-view/{Id:int}/{Config}/{PersoNumber}"
+@page "/offer-employee-detail-view/{Id:int}/{PersoNumber}"
 @attribute [Authorize(Roles = "sales, admin")]
 
+@namespace XCV.Pages.OfferNamespace
 @inject IOfferService offerService
-@inject IConfigService configService 
+@inject IConfigService configService
+@inject IGenerateService generateService 
 @inject IProfileService profileService
 @inject IProjectService proService
-
+@inject ISkillService skillService
 
 
 <div class="container-fluid">
+
     <div class="card my-1">
         <div class="card-header text-center">
-            <h3>Mitarbeiterdetailansicht von @(new String(offerEmployee.FirstName + " " + offerEmployee.LastName.Substring(0, 1) + "."))</h3>
+            <h3>Mitarbeiterdetailansicht Übersicht von @offerEmployee.PersoNumber</h3>
+        </div>
+        <div width="40" height="40">
+            <style>
+                .btn-secondary {
+                    border-color: transparent;
+                }
+            </style>
         </div>
     </div>
 
     <div class="card mb-3">
-
         <div class="card-header">
-            <h4>
-                Angebots-Profil
-            </h4>
+            <h4> Beschreibung </h4>
         </div>
-        <div class="row g-0">
 
+        <div class="row g-0">
             <div class="col-md-4">
-                <img src="\@offerEmployee.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
+                <img src="@offerEmployee.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@(new String(offerEmployee.FirstName + " " + offerEmployee.LastName))</h5>
-                    <p class="card-text" style="min-height: 20px;">
+                    <h5 class="card-title">@offerEmployee.FirstName &nbsp; @offerEmployee.LastName</h5>
+                    <p class="card-text" style="min-height: 150px;">
                         <pre>@offerEmployee.Description</pre>
                     </p>
-                    <p class="card-text"><b>Rate Card Level: @offerEmployee.RCL</b></p>
+                    <p>Rate Card Level: @offerEmployee.offerRCL </p>
+                    @{var yearsE = offerEmployee.Experience != null ? (float)(DateTime.Now.Subtract(offerEmployee.Experience.Value).Days) / 365 : 0;}
+                    <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
+                    <p><b>Rolle:</b> @offerEmployee.offerRole </p>
 
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-@* TODO: *@
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col">
-        <div class="card h-75">
-            <div class="card-header">
-                <h4>
-                    Angebotsspezifische Rollen:
-                    @if (RolleCollapsed)
-                    {
-                        <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
-
-                    }
-
-
-                    @if (!RolleCollapsed)
-                    {
-                        <svg @onclick="@RolleToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
-
-                    }
-                </h4>
-            </div>
-            @if (!RolleCollapsed)
-            {
-                <div class="card-body scroll">
-                    <p></p>
-                    <p></p>
-                    <p></p>
-                </div>
-            }
-
-        </div>
-    </div>
-
-@* TODO: *@
-    <div class="col">
-        <div class="card h-75">
-            <div class="card-header">
-                <h4>
-                    Angebotsspezifische Hardskills:
-                    @if (HardskillsCollapsed)
-                    {
-                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
-
-                    }
-                    @if (!HardskillsCollapsed)
-                    {
-                        <svg @onclick="@HardskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
-                    }
-                </h4>
-            </div>
-
-            @if (!HardskillsCollapsed)
-            {
-
-                <div class="card-body scroll">
-                    <div class="progress mb-3" style="height:15px">
-                        @foreach (Skill s in offerEmployee.Abilities.Where(s => s.Type == SkillGroup.Hardskill))
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3" style="min-height: 200px;">
+            <CollapsibleCard CardHeaderTitle="Branchenwissen" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Field field in offerEmployee.Fields)
                         {
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width:25%">
-                            @s.Name
-                        </div>
-                        }
+                            <p class="ml-2">@field <br></p>}
                     </div>
-                </div>
-            }
+                </CardBody>
+            </CollapsibleCard>
         </div>
-    </div>
-</div>
-@* TODO: *@
-<div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col">
-        <div class="card h-75">
-            <div class="card-header">
-                <h4>
-                    Angebotsspezifische Softskills:
-                    @if (SoftskillsCollapsed)
-                    {
-                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
 
-                    }
-                    @if (!SoftskillsCollapsed)
-                    {
-                        <svg @onclick="@SoftskillsToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
-                    }
-                </h4>
-            </div>
 
-            @if (!SoftskillsCollapsed)
-            {
-
-                <div class="card-body scroll">
-                    <div class="progress mb-3" style="height:15px">
-                        @foreach (Skill s in offerEmployee.Abilities.Where(s => s.Type == SkillGroup.Softskill))
+        <div class="col-sm-6 mb-3" style="min-height: 200px;">
+            <CollapsibleCard CardHeaderTitle="SoftSkills" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll">
+                        @foreach (Skill sSkill in offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Softskill))
                         {
-                        <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width:25%">
-                            @s.Name
-                        </div>
-                        }
+                            <p class="ml-2"> @sSkill <br></p>}
                     </div>
-                </div>
-            }
+                </CardBody>
+            </CollapsibleCard>
         </div>
-    </div>
 
-    @* TODO: *@
-    <div class="col">
-        <div class="card h-75">
-            <div class="card-header">
-                <h4>
-                    Angebotsspezifisches Branchenwissen:
-                    @if (BranchenwissenCollapsed)
-                    {
-                        <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z"></path></svg>
-                    }
-                    @if (!BranchenwissenCollapsed)
-                    {
-                        <svg @onclick="@BranchenwissenToggle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z"></path></svg>
-                    }
-                </h4>
-            </div>
+        <div class="col-sm-6 mb-3 " style="min-height: 200px;">
+            <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll2">
+                        @{ var hSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Hardskill);
+                            if (hSkills.Any())
+                            {
+                                var root = hSkills.First().Category.GetRoot();
+                                var hRoot = (SkillCategory)(root.Children.First(x => x.Name == "HardSkills"));
 
-            @if (!BranchenwissenCollapsed)
-            {
-
-                <div class="card-body scroll">
-                    <p> </p>
-                    <p> </p>
-                    <p> </p>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="col-sm-6 mb-3" style="min-height: 200px;">
-    <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
-        <CardBody>
-            <div class="scroll2">
-                <table class="table table-bordered table-striped text-center">
-                    <thead>
-                        <tr>
-                            <th class="text-center">alle Projekte</th>
-                            <th class="text-center">hat erledigt:</th>
-                        </tr>
-                    </thead>
-                    @foreach (Project pro in proService.ShowAllProjects())
-                    {
-                        <tr>
-                            <td class="pt-3-half">
-                                @pro.Title
-                            </td>
-                            <td class="pt-3-half">
-                                @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
-                            offerEmployee.PersoNumber)))
+                                foreach (SkillCategory topLevel in hRoot.Children)
                                 {
-                                    @keyValue.Key
-                                    <br>}
-                            </td>
-                        </tr>}
-                </table>
-            </div>
-        </CardBody>
-    </CollapsibleCard>
+                                    if (topLevel is SkillCategory toptCast && toptCast.Children.Any())
+                                    {
+                                        <CollapsibleCard CardHeaderTitle="@topLevel.Name" ShowCardBody=true SmallInner="true">
+                                            <CardBody>
+                                                @foreach (var cat in topLevel.Children)
+                                                {
+                                                    if (cat is Skill skill)
+                                                    {
+                                                        int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill.Level));
+                                                        if (lvlIndex == 0)
+                                                        {
+                                                            <button class="btn btn-outline-secondary btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 1)
+                                                        {
+                                                            <button class="btn btn-outline-dark btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 2)
+                                                        {
+                                                            <button class="btn btn-outline-info btn-sm" disabled>@skill </button> }
+                                                        if (lvlIndex == 3)
+                                                        {
+                                                            <button class="btn btn-outline-success btn-sm" disabled>@skill </button> }
+                                                    }
+                                                    if (cat is SkillCategory castCat && castCat.Children.Any())
+                                                    {
+                                                        <b>@castCat.Name</b>
+                                                        <div>
+                                                            @foreach (Skill skill2 in castCat.Children)
+                                                            {
+                                                                int lvlIndex = Array.FindIndex(skillService.GetAllLevel(), (x => x == skill2.Level));
+                                                                if (lvlIndex == 0)
+                                                                {
+                                                                    <button class="btn btn-outline-secondary btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 1)
+                                                                {
+                                                                    <button class="btn btn-outline-dark btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 2)
+                                                                {
+                                                                    <button class="btn btn-outline-info btn-sm" disabled>@skill2</button> }
+                                                                if (lvlIndex == 3)
+                                                                {
+                                                                    <button class="btn btn-outline-success btn-sm" disabled>@skill2</button>}
+                                                            }
+                                                        </div>}
+                                                }
+                                            </CardBody>
+                                        </CollapsibleCard> }
+                                }
+                            } }
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col-sm-6 mb-3" style="min-height: 200px;">
+            <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
+                <CardBody>
+                    <div class="scroll2">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">beteiligte Projekte</th>
+                                    <th class="text-center">Tätigkeiten im Projekt</th>
+                                </tr>
+                            </thead>
+                            @foreach (Project pro in proService.ShowAllProjects())
+                            {
+                                <tr>
+                                    <td class="pt-3-half">
+                                        @pro.Title
+                                    </td>
+                                    <td class="pt-3-half">
+                                        @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(offerEmployee.PersoNumber)))
+                                        {
+                                            @keyValue.Key
+                                            <br>}
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+    </div>
+
+
 </div>
 
- <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", configService.GenerateSingleProfile(offerEmployee),"application/octet-stream"))>
-        Download des Einzelprofils
-    </button>
-<a href="document-config-edit" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
+
+
+<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", generateService.GenerateSingleProfile(offerEmployee),"application/octet-stream"))>
+    Download des Einzelprofils
+</button>
+@if (Config != null)
+{
+    <a href="offer-employee-config-edit/@Id/@Config/@PersoNumber" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
+} else
+{
+    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Notify"> Dokumentenkonfiguration bearbeiten</button>
+}
 <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zurück zum Angebot </a>
 
-
+<Modal @ref="modal">
+    <Title> Bitte wählen Sie eine Dokumentenkonfiguration aus</Title>
+    <Body>
+        <ul class="alert alert-danger" role="alert">
+           Zur Bearbeitung einer Dokumentenkonfiguration ist es notwendig eine Konfiguration auszuwählen.
+        </ul>
+    </Body>
+    <Footer>
+        <a href="offer/@Id" class="btn btn-primary">Angebotsdetailansicht</a>
+        <button type="button" class="btn btn-secondary" @onclick="@Close">abbrechen</button>
+    </Footer>
+</Modal>
 
 @code
 {
     // Einzelprofil downloaden
     [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
+    private Modal modal { get; set; }
+    private void Notify() { modal.Open(); }
+    private void Close() { modal.Close(); }
+
     [Parameter]
-    public string Id { get; set; } // Of the parenting offer (identifies the parenting config in combination with PersoNumber below)
+    public int Id { get; set; } // Of the parenting offer (identifies the parenting config in combination with PersoNumber below)
     [Parameter]
-    public string PersoNumber { get; set; } // Of the parenting employee
+    public string Config { get; set; } // Used to identify the config which can be edited in the edit page with routing
+    [Parameter]
+    public string PersoNumber { get; set; }
 
     private ChangeResult changeInfo = new();
     private Offer offer;
@@ -231,12 +228,23 @@
 
     protected override void OnInitialized()
     {
-        offer = offerService.ShowOffer(int.Parse(Id));
-        offer ??= new Offer();
+        offer = offerService.ShowOffer(Id);
         offerService.ChangeEventHandel += OnChangeReturn;
-        //reference: OfferService.ShowAllOffers()->var employees 
-        offerEmployee = offer.participants.Where(e => e.PersoNumber.Equals(PersoNumber)).FirstOrDefault();
+        offerEmployee = profileService.ShowProfile(PersoNumber) ?? new Employee();
+        Employee temp = offerService.ShowOfferEmployee(Id, PersoNumber);
+        offerEmployee.offerRole = temp.offerRole;
+        offerEmployee.offerRCL = temp.offerRCL;
+        offerEmployee.offerWage = temp.offerWage;
+        offerEmployee.hoursPerDay = temp.hoursPerDay;
+        offerEmployee.daysPerRun = temp.daysPerRun;
+        offerEmployee.discount = temp.discount;
     }
+
+    private void OnSelected(string selection)
+    {
+        Console.WriteLine(selection);
+    }
+
 
     private void OnChangeReturn(object sender, ChangeResult e)
     {
@@ -279,4 +287,4 @@
     {
         MitarbeiterCollapsed = !MitarbeiterCollapsed;
     }
-    }
+}

@@ -38,6 +38,7 @@ namespace XCV
 
             services.AddTransient<IOfferService, OfferService>();
             services.AddTransient<IConfigService, ConfigService>();
+            services.AddTransient<IGenerateService, GenerateService>();
             services.AddSingleton<OfferData>();
 
             services.AddSingleton<ISkillService, SkillService>();
@@ -71,9 +72,10 @@ namespace XCV
 
             var ird = sp.GetService<InsertRandomData>();
             ird.InsertJson();
-            Thread.Sleep(200);
-            ird.Insert6Employyes();
-
+            Thread.Sleep(1000);
+            ird.Insert10Employyes();
+            Thread.Sleep(100);
+            ird.Insert4Offers();
 
             app.UseStaticFiles();
 
