@@ -105,7 +105,7 @@ namespace XCV.Data
                             ");");                  //Key is Level  cause  number 4 is fixed  ---(no insert or delete)----
                 con.Execute(@"IF NOT EXISTS (SELECT * FROM [skill_level] ) " +
                             "Insert Into [skill_level] Values " +
-                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelmäßige'),  (4, 'erfahren') " +
+                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelm��ige'),  (4, 'erfahren') " +
                             ";");
 
 
@@ -217,6 +217,16 @@ namespace XCV.Data
                                     "PRIMARY KEY (activity, project, employee), " +
                                     "CONSTRAINT fK_a_e_akti FOREIGN KEY (activity, project) REFERENCES  ProjectHasActivity(Name, Project) ON DELETE CASCADE, " +
                                     "CONSTRAINT fK_a_e_emp FOREIGN KEY (employee) REFERENCES  employee(PersoNumber) ON DELETE CASCADE " +
+                            ");");
+                con.Execute("IF OBJECT_ID('activityHasSkill', 'U') IS NULL " +          // Activity(in Project) Has Skill
+                            "CREATE TABLE [activityHasSkill] ( " +
+                            "[Activity]     VARCHAR(100), " +
+                            "[Project]      INT,  " +
+                            "skill_name VARCHAR(50), " +
+                            "skill_cat VARCHAR(50), " +
+                            "PRIMARY KEY (activity, project, skill_name, skill_cat), " +
+                            "CONSTRAINT fK_a_s_akti FOREIGN KEY (activity, project) REFERENCES  ProjectHasActivity(Name, Project) ON DELETE CASCADE, " +
+                            "CONSTRAINT fK_a_s_skill FOREIGN KEY (skill_name, skill_cat) REFERENCES skill(name, category) ON DELETE CASCADE, " +
                             ");");
 
                 con.Execute("IF OBJECT_ID('offerHasEmployee', 'U') IS NULL " +          // Offer Has Employee

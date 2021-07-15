@@ -35,12 +35,12 @@
             <div class="card ">
                 <div class="card-header">
                     <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showpersonalData/>
+                        <input type="checkbox" @bind=@showpersonalData />
                         <span style="min-width: 100px;"> Profildetails </span>
                     </div>
                 </div>
                 <div class="card-body">
-                    <input type="checkbox" @bind="@showImage"/>
+                    <input type="checkbox" @bind="@showImage" />
                     <div class="col-md-4">
                         <img src="@Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
                     </div>
@@ -62,7 +62,7 @@
     <div class="card">
         <div class="card-header">
             <div class="col-md-4  p-0">
-                <input type="checkbox" @bind=@showfieldData/>
+                <input type="checkbox" @bind=@showfieldData />
                 <span style="min-width: 100px;"> Branchen anzeigen </span>
             </div>
         </div>
@@ -89,7 +89,7 @@
             </CardBody>
         </CollapsibleCard>
     </div>
-        <br />
+    <br />
 
     <div class="row gutters-sm">
         @* Hardskills *@
@@ -97,7 +97,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showHSkill/>
+                        <input type="checkbox" @bind=@showHSkill />
                         <span style="min-width: 100px;"> Hardskills anzeigen </span>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showSSkill/>
+                        <input type="checkbox" @bind=@showSSkill />
                         <span style="min-width: 100px;"> Softskills anzeigen </span>
                     </div>
                 </div>
@@ -162,95 +162,94 @@
     </div>
 
     <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll2">
-                        <table class="table table-bordered table-striped text-center">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">beteiligte Projekte</th>
-                                    <th class="text-center">Tätigkeiten im Projekt</th>
-                                </tr>
-                            </thead>
-                            @foreach (var pro in selectedProjects)
-                            {
-                                <tr>
-                                    <td class="pt-3-half">
-                                        @(proService.ShowProject(pro.project).Title)
-                                    </td>
-                                    <td class="pt-3-half">
-                                       @pro.activity
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </CardBody>
-            </CollapsibleCard>
-        </div>
+        <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
+            <CardBody>
+                <div class="scroll2">
+                    <table class="table table-bordered table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">beteiligte Projekte</th>
+                                <th class="text-center">Tätigkeiten im Projekt</th>
+                            </tr>
+                        </thead>
+                        @foreach (var pro in selectedProjects)
+                        {
+        <tr>
+            <td class="pt-3-half">
+                @(proService.ShowProject(pro.project).Title)
+            </td>
+            <td class="pt-3-half">
+                @pro.activity
+            </td>
+        </tr>}
+                    </table>
+                </div>
+            </CardBody>
+        </CollapsibleCard>
+    </div>
 
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Bestätigen</button>
     @*<a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Reset"> Änderungen zurücksetzen</a>*@
     <a href="offer-employee-detail-view/@Id/@Config/@PersoNumber" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Discard"> Zurück zur Mitarbeiteransicht</a>
 </div>
 
-    <Modal @ref="modal">
-        <Title>Möchten Sie die Mitarbeiterkonfiguration speichern?</Title>
-        <Body>
-            @if (showpersonalData)
-            {
-                <ul>
-                    Profileinträge werden angezeigt:
-                    
-                </ul> }
-            else
-            {
-                <ul class="alert alert-danger" role="alert">
-                    Profileinträge werden nicht angezeigt
-                </ul>}
-            @if (showfieldData)
-            {
-        <ul>
-            Branchen werden angezeigt
-        </ul> }
-            else
-            {
-        <ul class="alert alert-danger" role="alert">
-            Branchen werden nicht angezeigt
-        </ul>}
-            @if (showSSkill)
-            {
-        <ul>
-            Softskills werden angezeigt
-        </ul>}
-            else
-            {
-        <ul class="alert alert-danger" role="alert">
-            Softskills werden nicht angezeigt
-        </ul>}
-            @if (showHSkill)
-            {
-                <ul>
-                   Hardskills werden angezeigt
-                </ul>}
-            else
-            {
-        <ul class="alert alert-danger" role="alert">
-            Hardskills werden nicht angezeigt
-        </ul>   }
-            @if (showProjects)
-            {
-                <ul>
-                    Projekte werden angezeigt
-                </ul>}
-            else
-            {
-        <ul class="alert alert-danger" role="alert">
-            Projekte werden nicht angezeigt
-        </ul>                }
-        </Body>
-        <Footer>
-            <a href="offer/@Id" type="button" class="btn btn-primary" @onclick="@UpdateConfig">speichern</a>
-            <button type="button" class="btn btn-secondary" @onclick="@Close">nicht speichern</button>
-        </Footer>
-    </Modal>
+<Modal @ref="modal">
+    <Title>Möchten Sie die Mitarbeiterkonfiguration speichern?</Title>
+    <Body>
+        @if (showpersonalData)
+        {
+            <ul>
+                Profileinträge werden angezeigt:
+
+            </ul> }
+        else
+        {
+            <ul class="alert alert-danger" role="alert">
+                Profileinträge werden nicht angezeigt
+            </ul>}
+        @if (showfieldData)
+        {
+            <ul>
+                Branchen werden angezeigt
+            </ul> }
+        else
+        {
+            <ul class="alert alert-danger" role="alert">
+                Branchen werden nicht angezeigt
+            </ul>}
+        @if (showSSkill)
+        {
+            <ul>
+                Softskills werden angezeigt
+            </ul>}
+        else
+        {
+            <ul class="alert alert-danger" role="alert">
+                Softskills werden nicht angezeigt
+            </ul>}
+        @if (showHSkill)
+        {
+            <ul>
+                Hardskills werden angezeigt
+            </ul>}
+        else
+        {
+            <ul class="alert alert-danger" role="alert">
+                Hardskills werden nicht angezeigt
+            </ul>   }
+        @if (showProjects)
+        {
+            <ul>
+                Projekte werden angezeigt
+            </ul>}
+        else
+        {
+            <ul class="alert alert-danger" role="alert">
+                Projekte werden nicht angezeigt
+            </ul>   }
+    </Body>
+    <Footer>
+        <a href="offer/@Id" type="button" class="btn btn-primary" @onclick="@UpdateConfig">speichern</a>
+        <button type="button" class="btn btn-secondary" @onclick="@Close">nicht speichern</button>
+    </Footer>
+</Modal>

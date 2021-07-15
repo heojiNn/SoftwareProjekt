@@ -206,6 +206,9 @@ namespace XCV.Data
             errorMessages = new();
             infoMessages = new();
 
+            // wont let Register-Account recieve Employee AccessRole
+            if(newAccount.PersoNumber!="999-R") newAccount.AcRoles.Add(AccessRole.Employee);
+
             // adds the Entity-DataAnnotations to the list of Errors
             var results = new List<ValidationResult>();
             if (!Validator.TryValidateObject(newAccount, new ValidationContext(newAccount), results, true))

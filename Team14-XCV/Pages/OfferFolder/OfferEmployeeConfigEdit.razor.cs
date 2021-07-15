@@ -55,7 +55,7 @@ namespace XCV.Pages.OfferNamespace
         //==================================================//
 
         // Personal Data
-        #nullable enable
+#nullable enable
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Description { get; set; }
@@ -70,7 +70,7 @@ namespace XCV.Pages.OfferNamespace
         public ISet<Skill>? selectedHardSkills { get; set; }
         public IList<(int project, string activity)>? selectedProjects { get; set; }
 
-        #nullable disable
+#nullable disable
 
         //==================================================//
         // All possible Data to show for the employee (checked and unchecked)
@@ -108,16 +108,17 @@ namespace XCV.Pages.OfferNamespace
             if (ecfg == null)
             {
                 Console.WriteLine("Error!");
-            } else
+            }
+            else
             {
                 try
                 {
                     if (ecfg.FirstName != null) showFirstName = true;
-                    if (ecfg.LastName != null)  showLastName = true;
+                    if (ecfg.LastName != null) showLastName = true;
                     if (ecfg.Description != null) showDescription = true;
-                    if (ecfg.Image != null)  showImage = true;
+                    if (ecfg.Image != null) showImage = true;
                     if (ecfg.Experience.HasValue) showExperience = true;
-                    if (ecfg.EmployedSince.HasValue)  showEmployedSince = true;
+                    if (ecfg.EmployedSince.HasValue) showEmployedSince = true;
                     if (showFirstName || showLastName || showDescription || showImage || showExperience || showEmployedSince) //If unchecked all will be removed and vice verca
                         showpersonalData = true;
                     if (ecfg.selectedFields != null && ecfg.selectedFields.Count != 0) showfieldData = true;
@@ -172,24 +173,28 @@ namespace XCV.Pages.OfferNamespace
             if (!showfieldData)
             {
                 toUpdate.selectedFields = null;
-            } else 
+            }
+            else
                 toUpdate.selectedFields = selectedFields == null ? null : selectedFields;
             if (!showSSkill)
             {
                 toUpdate.selectedSoftSkills = null;
-            } else
+            }
+            else
                 toUpdate.selectedSoftSkills = selectedSoftSkills == null ? null : selectedSoftSkills;
 
             if (!showHSkill)
             {
                 toUpdate.selectedHardSkills = null;
-            }  else
+            }
+            else
                 toUpdate.selectedHardSkills = selectedHardSkills == null ? null : selectedHardSkills;
 
             if (!showProjects)
             {
                 toUpdate.selectedProjects = null;
-            } else
+            }
+            else
                 toUpdate.selectedProjects = selectedProjects == null ? null : selectedProjects;
             configService.UpdateEmployeeConfig(offer, configService.GetDocumentConfig(offer, Config), offerEmployee.PersoNumber, toUpdate);
             Close();

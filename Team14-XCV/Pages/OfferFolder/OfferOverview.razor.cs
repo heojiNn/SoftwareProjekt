@@ -11,7 +11,7 @@ namespace XCV.Pages.OfferNamespace
     {
         private Modal modal { get; set; }
 
-        
+
         /// <summary>
         /// false: show all offers <para></para>
         /// true: show offers matching search
@@ -47,7 +47,7 @@ namespace XCV.Pages.OfferNamespace
         }
 
         private void Validate() { modal.Open(); }
-            
+
         private void Close() { modal.Close(); }
 
         private void OnSelected(string selection)
@@ -91,13 +91,13 @@ namespace XCV.Pages.OfferNamespace
                 {
                     showSearchResults = true;
                 }
-                    
+
                 else
                 {
                     showSearchResults = false;
                 }
             }
-            
+
         }
 
         private void DeleteAll()

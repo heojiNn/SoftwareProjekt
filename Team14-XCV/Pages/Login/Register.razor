@@ -1,15 +1,16 @@
-@page "/create-employee"
-@attribute [Authorize(Roles = "admin")]
+@page "/register"
+@attribute [Authorize(Roles = "register")]
 
-
+@inject CustomAuthentiProvider authentiProvider
 @inject IAccountService accountService
+@inject NavigationManager NavigationManager
 
 <div class="container-fluid">
 
 
     <div class="card my-1">
         <div class="card-header text-center">
-            <h3>Neuen Mitarbeiter erstellen</h3>
+            <h3>Registrieren Sie hier Ihren Account</h3>
         </div>
     </div>
 
@@ -17,7 +18,7 @@
         <tr>
             <th>Personalnummer</th>
             <th>Passwort</th>
-            <th>Zugriffsrollen</th>
+            <!--<th>Zugriffsrollen</th>-->
             <th>Vorname</th>
             <th>Nachname</th>
             <th>Angestellt seit  </th>
@@ -32,13 +33,15 @@
 
                 <input @bind="@newOne.Password" class="form-control" id="pw" />
             </td>
+            <!--
             <td class="form-group" @onclick="StateHasChanged">
-                
+
                 @{
                     List<AccessRole> allRoles = new() { AccessRole.Sales, AccessRole.Admin };
                 }
                 <CheckBoxList Data="@allRoles" TextField="@( item => item.ToString() )" SelectedValues="newOne.AcRoles" />
             </td>
+                -->
             <td class="form-group">
 
                 <input @bind="@newOne.FirstName" class="form-control" id="fName" />
@@ -49,28 +52,14 @@
                 <input @bind="@newOne.LastName" class="form-control" id="name" />
             </td>
             <td class="form-group">
-                
-                <input @bind="@startDate" class="form-control"/>
-                
+
+                <input @bind="@startDate" class="form-control" />
+
             </td>
             <td>
                 <input type="submit" class="btn btn-primary" value="Hinzufügen" @onclick="Create" />
             </td>
         </tr>
-        
-        @foreach (Employee account in accountService.ShowAllProfiles())
-        {
-            var roles = String.Join(", ", account.AcRoles);
-            <tr>
-                <td>@account.PersoNumber </td>
-                <td>@account.Password</td>
-                <td>@roles</td>
-                <td>@account.FirstName </td>
-                <td>@account.LastName</td>
-                <td>@account.EmployedSince.ToString("dd.MM.yyyy")</td>
-                <td> <button class="btn btn-secondary" @onclick="@(e => Delete(account))" >Entfernen </button> </td>
-            </tr>
-        }
 
     </table>
 
@@ -97,6 +86,3 @@
         }
     </ul>
 </div>
-   
-        
-    

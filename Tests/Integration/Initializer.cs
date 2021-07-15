@@ -163,8 +163,8 @@ namespace Tests.Integration
             var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
-            currentParent = Directory.GetParent(currentParent).FullName;    //now git root directory
-            var content = File.ReadAllText(Path.Combine(currentParent, "datenbasis.json"));
+            //currentParent = Directory.GetParent(currentParent).FullName;    //now git root directory
+            var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
             bdsService.JsonUpdate(content, false);
         }
 

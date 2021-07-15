@@ -42,9 +42,9 @@ namespace XCV.Pages.OfferNamespace
         private List<Skill> skills;
         private List<Field> fields;
 
-        
 
-        
+
+
         protected override void OnInitialized()
         {
             myOffer = offerService.ShowOffer(Id);
@@ -64,7 +64,8 @@ namespace XCV.Pages.OfferNamespace
                 SelectedSoftskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Softskill).ToHashSet();
                 SelectedHardskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet();
                 SelectedParticipants = myOffer.participants;
-            } else if(offerData.offerStore != null) // create empty storage and load previously selected Data after switching to employeesearch page
+            }
+            else if (offerData.offerStore != null) // create empty storage and load previously selected Data after switching to employeesearch page
             {
                 title = offerData.offerStore.Title;
                 description = offerData.offerStore.Description;
@@ -74,8 +75,8 @@ namespace XCV.Pages.OfferNamespace
                 SelectedSoftskills = offerData.offerStore.Requirements.Where(s => s.Type == SkillGroup.Softskill).ToHashSet();
                 SelectedHardskills = offerData.offerStore.Requirements.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet();
                 SelectedParticipants = offerData.offerStore.participants;
-       
-            }  
+
+            }
         }
 
         private async void UpdateOffer()

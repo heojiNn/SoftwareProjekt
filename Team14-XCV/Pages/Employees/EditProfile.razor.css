@@ -1,0 +1,130 @@
+input[type='checkbox'] {
+    display: none;
+}
+
+.wrap-collabsible {
+    margin: 1rem 0;
+    width: 100%;
+}
+
+.lbl-toggle {
+    display: block;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+    text-transform: none;
+    text-align: left;
+    padding: 1rem;
+    background-color: rgba(0,0,0,0.03);
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.25s ease-out;
+}
+
+
+
+    .lbl-toggle::before {
+        content: ' ';
+        display: inline-block;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+        border-left: 5px solid currentColor;
+        vertical-align: middle;
+        margin-right: .7rem;
+        transform: translateY(-2px);
+        transition: transform .2s ease-out;
+    }
+
+.toggle:checked + .lbl-toggle::before {
+    transform: rotate(90deg) translateX(-3px);
+}
+
+.collapsible-content {
+    max-height: 0px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.03);
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+    transition: max-height .25s ease-in-out;
+}
+
+.toggle:checked + .lbl-toggle + .collapsible-content {
+    max-height: 350px;
+}
+
+.toggle:checked + .lbl-toggle {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.collapsible-content .content-inner {
+    padding: .5rem 1rem;
+}
+
+.collapsible-content p {
+    margin-bottom: 0;
+}
+
+tag {
+    color: #7A212E;
+}
+
+/*..................................*/
+
+.avatar-links {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/43/Minimalist_info_Icon.png');
+    background-size: cover;
+    position: absolute;
+    right: 1.5%;
+    margin-top: -23px;
+    z-index: 3;
+}
+
+.avatar-links::before,
+.avatar-links::after {
+    --scale: 0;
+    --tooltipcolor: white;
+    --arrow-size: 5px;
+    position: absolute;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%) scale(var(--scale));
+    transition: 250ms transform;
+    transform-origin: right;
+    z-index: 3;
+}
+
+.avatar-links::before {
+    content: attr(data-tooltip);
+    color: black;
+    width: 200px;
+    padding: .5rem;
+    text-align: center;
+    border-radius: .4rem;
+    border-style: solid;
+    border-width: thin;
+    border-color: grey;
+    background: var(--tooltipcolor);
+    z-index: 3;
+}
+
+.avatar-links:hover::before,
+.avatar-links:hover::after {
+    --scale: 1;
+    z-index: 3;
+    position: absolute;
+    font-size: 14px;
+}
+
+.avatar-links::after {
+    content: " ";
+    right: 100%;
+    border: var(--arrow-size) solid transparent;
+    border-left-color: grey;
+    transform-origin: left;
+    z-index: 3;
+    position: absolute;
+}
