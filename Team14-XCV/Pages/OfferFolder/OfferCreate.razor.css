@@ -5,3 +5,13 @@
     font-weight: bold;
     color: black;
 }
+
+.btnhover {
+    background-color: white;
+    color: black;
+}
+
+btnhover:hover {
+    background-color: gray;
+    color: black;
+}

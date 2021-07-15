@@ -37,7 +37,7 @@ namespace Tests.Integration
             var eService = GetEmployeeService();
             foreach (var e in eService.ShowAllProfiles())
                 eService.DeleteAccount(e.PersoNumber);
-            eService.CreateAccount(new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployyedSince = DateTime.Now });
+            eService.CreateAccount(new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployedSince = DateTime.Now });
 
             Assert.AreEqual(1, eService.ShowAllProfiles().Count());       // and one fresh account
             var pService = GetProjectService();
@@ -138,7 +138,24 @@ namespace Tests.Integration
             var sut = new SkillService(GetTestConfig(), sLogger);
             return sut;
         }
-
+        public static OfferService GetOfferService()
+        {
+            var sLogger = Mock.Of<ILogger<OfferService>>();
+            var sut = new OfferService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService());
+            return sut;
+        }
+        public static ConfigService GetConfigService()
+        {
+            var sLogger = Mock.Of<ILogger<ConfigService>>();
+            var sut = new ConfigService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService(), GetProjectService());
+            return sut;
+        }
+        public static GenerateService GetGenerateService()
+        {
+            var sLogger = Mock.Of<ILogger<GenerateService>>();
+            var sut = new GenerateService(GetTestConfig(), sLogger, GetOfferService());
+            return sut;
+        }
 
         public static void DoJsonUpdate()
         {

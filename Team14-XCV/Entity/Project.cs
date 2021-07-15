@@ -20,7 +20,6 @@ namespace XCV.Data
 
         public List<string> Purpose { get; set; } = new();
         //List<Field> Fields muss statt string Field in ProjectService.cs genutzt werden!!!!!!!!!!!!!!!
-        // Ok OK ich war faul
         public string Field { get; set; }
 
 

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace XCV.Pages.OfferFolder
+namespace XCV.Data
 {
-    public partial class OfferEmployeeDetailView
+    public class OfferData
     {
-
+        public Offer offerStore { get; set; } 
     }
 }

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace XCV.Data
 {
-    interface IOfferService
+    public interface IOfferService
     {
-        //--------------------------------------------------------------//
-        // Read:
+        ///--------------------------------------------------------------//
+        /// Read:
 
         /// <summary>
         /// Returns a Collection which contains the existing Offer(s) in the database.
@@ -22,17 +22,50 @@ namespace XCV.Data
         /// <returns></returns>
         public Offer ShowOffer(int id);
 
-        //--------------------------------------------------------------//
-        // Write:
+        /// <summary>
+        /// Returns an instance of an Employee within an existing Offer or null if he isn't within that offer.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="persnr"></param>
+        /// <returns>Employee, null</returns>
+        public Employee ShowOfferEmployee(int id, string persnr);
+
+        /// <summary>
+        /// Returns the Id of the most recently created offer
+        /// </summary>
+        /// <returns></returns>
+        public int GetLastId();
+        /// <summary>
+        /// Returns the Id of the Offer which would be created next
+        /// </summary>
+        /// <returns></returns>
+        public int GetNextId();
+
+        /// <summary>
+        /// Reseeds the Id-Increment to 1 after deleting all Offers (OfferIds wont stack until Int-Overflow over time)
+        /// </summary>
+        public void ResetId();
+
+        ///--------------------------------------------------------------//
+        /// Write:
 
         /// <summary>
         ///  Creates a new Offer with a unique Id.
         /// </summary>
         /// <param name="title"></param>
         /// <param name="description"></param>
-        public void Create(string title, string description);
-
-        public void Create(string title, string description, Skill skill, Field field, ISet<Employee> participants); // ref. "CreateOffer"
+        public void Create(string title, string description, DateTime start, DateTime end);
+        /// <summary>
+        /// Alternative to Creating a new Offer instantaneously
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="description"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="skill"></param>
+        /// <param name="field"></param>
+        /// <param name="participants"></param>
+        public void Create(string title, string description, DateTime start, DateTime end, Skill skill, Field field, ISet<Employee> participants);
         /// <summary>
         /// TODO
         /// </summary>
@@ -80,18 +113,27 @@ namespace XCV.Data
         /// <param name="f"></param>
         public void Remove(Offer o, Field f);
         /// <summary>
-        /// Creates a new Offer which is identical to Offer o.
+        /// Creates a new Offer which is identical to Offer o (apart from the Id)
         /// </summary>
         /// <param name="o"></param>
         public void Copy(Offer o);
 
-        //--------------------------------------------------------------//
-        // Business:
+        ///--------------------------------------------------------------//
+        /// Business:
 
         /// <summary>
         /// Processes Events.
         /// </summary>
         public event EventHandler<ChangeResult> ChangeEventHandel;
-
+        /// <summary>
+        /// Validates the Changes made to an offer
+        /// </summary>
+        /// <param name="newVersion"></param>
+        public void ValidateUpdate(Offer newVersion);
+        /// <summary>
+        /// Validates the Creation of a new offer
+        /// </summary>
+        /// <param name="newVersion"></param>
+        public void ValidateCreate(Offer newVersion);
     }
 }

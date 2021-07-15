@@ -1,20 +1,17 @@
-@page "/offer-search-add/{Id:int}"
-@page "/offer-search-add"
-
+@page "/employee-search"
 @attribute [Authorize(Roles = "sales, admin")]
-
-@namespace XCV.Pages.OfferNamespace
 
 @inject IProfileService profileService
 @inject ISkillService skillService
 @inject IRoleService roleService
 @inject IFieldService fieldService
 @inject ILanguageService languageService
-@inject IOfferService offerService
-@inject OfferData offerData  
+
 @inject NavigationManager navigationManager
 
+
 @using Blazored.Typeahead
+
 
 <!DOCTYPE html>
 <html>
@@ -125,10 +122,10 @@
                     <br />
                     <br />
                     <BlazoredTypeahead SearchMethod="SearchRoles"
-                                       @bind-Values="advancedSelectedRoles"
-                                       EnableDropDown="true"
-                                       MaximumSuggestions="100"
-                                       placeholder="Rollen">
+                           @bind-Values="advancedSelectedRoles"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Rollen">
                         <SelectedTemplate>
                             @context.Name
                         </SelectedTemplate>
@@ -136,12 +133,12 @@
                             @context.Name
                         </ResultTemplate>
                     </BlazoredTypeahead>
-
+                    
                     <BlazoredTypeahead SearchMethod="SearchHardskills"
-                                       @bind-Values="advancedSelectedHardskills"
-                                       EnableDropDown="true"
-                                       MaximumSuggestions="100"
-                                       placeholder="Hardskills">
+                           @bind-Values="advancedSelectedHardskills"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Hardskills">
                         <SelectedTemplate>
                             @context.Name (@context.Category.Name)
                         </SelectedTemplate>
@@ -149,12 +146,12 @@
                             @context.Name (@context.Category.Name)
                         </ResultTemplate>
                     </BlazoredTypeahead>
-
+                    
                     <BlazoredTypeahead SearchMethod="SearchSoftskills"
-                                       @bind-Values="advancedSelectedSoftskills"
-                                       EnableDropDown="true"
-                                       MaximumSuggestions="100"
-                                       placeholder="Softskills">
+                           @bind-Values="advancedSelectedSoftskills"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Softskills">
                         <SelectedTemplate>
                             @context.Name
                         </SelectedTemplate>
@@ -162,12 +159,12 @@
                             @context.Name
                         </ResultTemplate>
                     </BlazoredTypeahead>
-
+                    
                     <BlazoredTypeahead SearchMethod="SearchFields"
-                                       @bind-Values="advancedSelectedFields"
-                                       EnableDropDown="true"
-                                       MaximumSuggestions="100"
-                                       placeholder="Branchen">
+                           @bind-Values="advancedSelectedFields"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Branchen">
                         <SelectedTemplate>
                             @context.Name
                         </SelectedTemplate>
@@ -175,12 +172,12 @@
                             @context.Name
                         </ResultTemplate>
                     </BlazoredTypeahead>
-
+                    
                     <BlazoredTypeahead SearchMethod="SearchLanguages"
-                                       @bind-Values="advancedSelectedLanguages"
-                                       EnableDropDown="true"
-                                       MaximumSuggestions="100"
-                                       placeholder="Sprachen">
+                           @bind-Values="advancedSelectedLanguages"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Sprachen">
                         <SelectedTemplate>
                             @context.Name
                         </SelectedTemplate>
@@ -190,9 +187,9 @@
                     </BlazoredTypeahead>
                 </div>
             </div>
-        }
+         }
     </div>
-
+    
     @if (showSearch)
     {
         <div class="container-fluid">
@@ -203,13 +200,12 @@
                     <div class="alert alert-warning" role="alert">
                         Kein/Keine MitarbeiterIn erfüllt alle Kriterien.
                     </div>
-                }
+                 }
                 <div> <input type="button" class="btn btn-secondary" value="Neue Suche" style="float:right; margin: 1em 1em" @onclick="NewSearch"> </div>
                 <table id="myTable">
                     <tr class="header">
                         <th style="width:20%;">MitarbeiterIn</th>
-                        <th style="width:15%;"> Zum Angebot hinzufügen </th>
-                        <th style="width:50%;"> Erfüllte Suchkriterien </th>
+                        <th style="width:65%;"> Erfüllte Suchkriterien </th>
                         <th style="width:15%">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -226,16 +222,13 @@
                     </tr>
                     <tbody>
                         @foreach (var kvp in results.OrderByDescending(item => item.Value.Item1)
-                                                   .ThenByDescending(item => profileService.ShowProfile(item.Key).RCL)
-                                                   .ThenByDescending(item => DateTime.Now.Ticks - profileService.ShowProfile(item.Key).EmployedSince.Ticks)
-                                                   .Take(numberOfColumns))
-                        {
+                                                    .ThenByDescending(item => profileService.ShowProfile(item.Key).RCL)
+                                                    .ThenByDescending(item => DateTime.Now.Ticks - profileService.ShowProfile(item.Key).EmployedSince.Ticks)
+                                                    .Take(numberOfColumns))
+                         {
                             <tr>
                                 <td>
                                     <a href="employee-detail-view/@profileService.ShowProfile(kvp.Key).PersoNumber" style="color:black; text-decoration:none"> @profileService.ShowProfile(kvp.Key).FirstName @profileService.ShowProfile(kvp.Key).LastName </a>
-                                </td>
-                                <td>
-                                    <button class="btn btn-secondary oi oi-plus" @onclick="(e => AddEmp(profileService.ShowProfile(kvp.Key)))"></button>
                                 </td>
                                 <td>
                                     @for (int i = 0; i < numberOfAttributes && i < kvp.Value.Item2.Count; i++)
@@ -246,35 +239,37 @@
                                     @if (kvp.Value.Item1 == numberOfSelectedAttributes)
                                     {
                                         <p> erfüllt alle Kriterien</p>
-                                    }
+                                     }
                                     <!-- Alternative: prozentuale Eignung angeben, diese könnte jedoch bei gewichteten Suchkriterien kontraintuitiv wirken -->
                                     @if (kvp.Value.Item1 < numberOfSelectedAttributes)
                                     {@(kvp.Value.Item1 * 100/numberOfSelectedAttributes) @("%")}
+
+
+
+
                                 </td>
                             </tr>
-                        }
+                         }
                     </tbody>
                 </table>
                 <br />
-                <br />
-            }
+                <br /> 
+             }
             else
             {
                 <div class="alert alert-warning" role="alert">
                     Kein/Keine MitarbeiterIn erfüllt mindestens ein gesuchtes Kriterium.
                 </div>
-                <div>
-                    <input type="button" class="btn btn-secondary" value="Neue Suche" style="float:right; margin: 1em 1em" @onclick="NewSearch">
+                <div> 
+                    <input type="button" class="btn btn-secondary" value="Neue Suche" style="float:right; margin: 1em 1em" @onclick="NewSearch"> 
                 </div>
-            }
-        </div>
-    }
-    @if(!toBeCreated) //Return to existing offer
-    {                 
-        <a href="offer-edit/@myOffer.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zur Angebotsbearbeitung</a>               
-    } else // Return to new offer: Store intermediately
-    {             
-        <a href='offer-create' class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zur Angebotserstellung</a>              
-    }
+             }
+        </div> 
+     }
+
+
 </body>
+
 </html>
+
+

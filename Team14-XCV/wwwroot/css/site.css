@@ -139,6 +139,11 @@ a {
         color: #7A212E;
     }
 
+
+.rounded {
+    max-width: 100%;
+}
+
 a:hover {
     color: #7A212E;
 }
@@ -153,4 +158,6 @@ a:hover {
     overflow-y: auto;
 }
 
-/*changeProfile*/
+card.employee {
+    flex-direction: row;
+}

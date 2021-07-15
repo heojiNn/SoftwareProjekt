@@ -1,21 +1,21 @@
-@page "/offer-employee-detail-view/{Id:int}/{Config}/{PersoNumber}"
-@page "/offer-employee-detail-view/{Id:int}/{PersoNumber}"
+@page "/employee-detail-view/{PersoNumber}"
 @attribute [Authorize(Roles = "sales, admin")]
 
-@namespace XCV.Pages.OfferNamespace
+@inject CustomAuthentiProvider authentiProvider
 @inject IOfferService offerService
 @inject IConfigService configService
-@inject IGenerateService generateService 
+@inject IGenerateService generateService
 @inject IProfileService profileService
 @inject IProjectService proService
-@inject ISkillService skillService
+@inject ISkillService skillService 
+
 
 
 <div class="container-fluid">
 
     <div class="card my-1">
         <div class="card-header text-center">
-            <h3>Mitarbeiterdetailansicht Übersicht von @offerEmployee.PersoNumber</h3>
+            <h3>Mitarbeiterdetailansicht Übersicht von @employee.PersoNumber</h3>
         </div>
         <div width="40" height="40">
             <style>
@@ -33,18 +33,18 @@
 
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="@offerEmployee.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
+                <img src="@employee.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@offerEmployee.FirstName &nbsp; @offerEmployee.LastName</h5>
+                    <h5 class="card-title">@employee.FirstName &nbsp; @employee.LastName</h5>
                     <p class="card-text" style="min-height: 150px;">
-                        <pre>@offerEmployee.Description</pre>
+                        <pre>@employee.Description</pre>
                     </p>
-                    <p>Rate Card Level: @offerEmployee.offerRCL </p>
-                    @{var yearsE = offerEmployee.Experience != null ? (float)(DateTime.Now.Subtract(offerEmployee.Experience.Value).Days) / 365 : 0;}
+                    <p>Rate Card Level: @employee.RCL </p>
+                    @{var yearsE = employee.Experience != null ? (float)(DateTime.Now.Subtract(employee.Experience.Value).Days) / 356 : 0;}
                     <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
-                    <p><b>Rolle:</b> @offerEmployee.offerRole </p>
+                    <p><b>Rolle:</b> @employee.Roles.FirstOrDefault() mit RCL (@employee.Roles.FirstOrDefault().RCL)</p>
 
                 </div>
             </div>
@@ -56,7 +56,7 @@
             <CollapsibleCard CardHeaderTitle="Branchenwissen" ShowCardBody=true>
                 <CardBody>
                     <div class="scroll">
-                        @foreach (Field field in offerEmployee.Fields)
+                        @foreach (Field field in employee.Fields)
                         {
                             <p class="ml-2">@field <br></p>}
                     </div>
@@ -69,7 +69,7 @@
             <CollapsibleCard CardHeaderTitle="SoftSkills" ShowCardBody=true>
                 <CardBody>
                     <div class="scroll">
-                        @foreach (Skill sSkill in offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Softskill))
+                        @foreach (Skill sSkill in employee.Abilities.Where(x => x.Type == SkillGroup.Softskill))
                         {
                             <p class="ml-2"> @sSkill <br></p>}
                     </div>
@@ -81,7 +81,7 @@
             <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody=true>
                 <CardBody>
                     <div class="scroll2">
-                        @{ var hSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Hardskill);
+                        @{ var hSkills = employee.Abilities.Where(x => x.Type == SkillGroup.Hardskill);
                             if (hSkills.Any())
                             {
                                 var root = hSkills.First().Category.GetRoot();
@@ -160,7 +160,7 @@
                                         @pro.Title
                                     </td>
                                     <td class="pt-3-half">
-                                        @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(offerEmployee.PersoNumber)))
+                                        @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(employee.PersoNumber)))
                                         {
                                             @keyValue.Key
                                             <br>}
@@ -172,79 +172,32 @@
                 </CardBody>
             </CollapsibleCard>
         </div>
-
     </div>
-
-
 </div>
 
-
-
-<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc", generateService.GenerateSingleProfile(offerEmployee),"application/octet-stream"))>
+<button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc",  generateService.GenerateSingleProfile(employee),"application/octet-stream"))>
     Download des Einzelprofils
 </button>
-@if (Config != null)
-{
-    <a href="offer-employee-config-edit/@Id/@Config/@PersoNumber" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Dokumentenkonfiguration bearbeiten</a>
-} else
-{
-    <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Notify"> Dokumentenkonfiguration bearbeiten</button>
-}
-<a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zurück zum Angebot </a>
+<a href="employee-search" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Zurück zur Mitarbeitersuche </a>
 
-<Modal @ref="modal">
-    <Title> Bitte wählen Sie eine Dokumentenkonfiguration aus</Title>
-    <Body>
-        <ul class="alert alert-danger" role="alert">
-           Zur Bearbeitung einer Dokumentenkonfiguration ist es notwendig eine Konfiguration auszuwählen.
-        </ul>
-    </Body>
-    <Footer>
-        <a href="offer/@Id" class="btn btn-primary">Angebotsdetailansicht</a>
-        <button type="button" class="btn btn-secondary" @onclick="@Close">abbrechen</button>
-    </Footer>
-</Modal>
+
 
 @code
 {
     // Einzelprofil downloaden
     [Inject] public IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
 
-    private Modal modal { get; set; }
-    private void Notify() { modal.Open(); }
-    private void Close() { modal.Close(); }
-
     [Parameter]
-    public int Id { get; set; } // Of the parenting offer (identifies the parenting config in combination with PersoNumber below)
-    [Parameter]
-    public string Config { get; set; } // Used to identify the config which can be edited in the edit page with routing
-    [Parameter]
-    public string PersoNumber { get; set; }
+    public string PersoNumber { get; set; } // Of the parenting employee
 
     private ChangeResult changeInfo = new();
-    private Offer offer;
-    private Employee offerEmployee;
+    private Employee employee;
 
 
     protected override void OnInitialized()
     {
-        offer = offerService.ShowOffer(Id);
-        offerService.ChangeEventHandel += OnChangeReturn;
-        offerEmployee = profileService.ShowProfile(PersoNumber) ?? new Employee();
-        Employee temp = offerService.ShowOfferEmployee(Id, PersoNumber);
-        offerEmployee.offerRole = temp.offerRole;
-        offerEmployee.offerRCL = temp.offerRCL;
-        offerEmployee.offerWage = temp.offerWage;
-        offerEmployee.hoursPerDay = temp.hoursPerDay;
-        offerEmployee.daysPerRun = temp.daysPerRun;
-        offerEmployee.discount = temp.discount;
+        employee = profileService.ShowProfile(PersoNumber) ?? new Employee();
     }
-
-    private void OnSelected(string selection)
-    {
-        Console.WriteLine(selection);
-    }
-
 
     private void OnChangeReturn(object sender, ChangeResult e)
     {

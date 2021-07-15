@@ -10,14 +10,7 @@ namespace XCV.Data
         MaxLength(50, ErrorMessage = "Der Name der Brachen darf 50 Zeichen nicht überschreiten.")]
         public string Name { get; init; } = "";
 
-
-
-
-
-
         public override string ToString() => Name;
-
-
 
         public override bool Equals(object obj)
         {

@@ -90,8 +90,10 @@ namespace XCV.Data
                 infoMessages.Add("Deine Beschreibung würde geändert werden.");
             if (oldVersion.RCL != newVersion.RCL)
                 infoMessages.Add("Dein Rate Card Level würde geändert werden.");
-            if (oldVersion.Expirience != newVersion.Expirience)
+            if (!oldVersion.Experience.Equals(newVersion.Experience))
                 infoMessages.Add("Dein Berufserfahrung würde geändert werden.");
+            if (!oldVersion.Image.Equals(newVersion.Image))
+                infoMessages.Add("Dein Profilbild würde geändert werden.");
 
 
             if (!oldVersion.Languages.SetEquals(newVersion.Languages)) inlineWords.Add("Sprachen");
@@ -131,9 +133,9 @@ namespace XCV.Data
             if (newVersion.Roles.Where(x => x.Name == "Consultant").Any() && newVersion.RCL < 4)
                 errorMessages.Add("Consultant wird erst ab RCL:4 freigeschaltet");
             if (newVersion.Languages.Where(x => x.Level == "").Any())
-                errorMessages.Add("Mindesetens ein Sprache hat keine Level Angabe.");
+                errorMessages.Add("Mindestens ein Sprache hat keine Level Angabe.");
             if (newVersion.Abilities.Where(x => !_skillService.GetAllLevel().Contains(x.Level) && x.Type == SkillGroup.Hardskill).Any())
-                errorMessages.Add("Mindesetens ein Skill hat keine Level Angabe.");
+                errorMessages.Add("Mindestens ein Skill hat keine Level Angabe.");
             //-------------------------------------------------------------------------------------
 
             OnChange(new()
@@ -174,9 +176,6 @@ namespace XCV.Data
         // for definition see   IProfileService
         public async Task UploadeImage(string persoNumber, IBrowserFile image)
         {
-            // TODO Validation
-            //  for size/ContentType ...
-            //
             var nameInWWW = $"empPic{persoNumber}.{image.ContentType.Split('/')[1]}";
             var path = Path.Combine(env.WebRootPath, nameInWWW);
 
@@ -344,7 +343,7 @@ namespace XCV.Data
             {
                 con.Open();
                 con.Execute(@"Insert Into [Employee] Values (@PersoNumber, @Password, @FirstName, @LastName,
-                                                         @Description, @Image, null, null, @EmployyedSince, 0)", e);
+                                                         @Description, @Image, null, null, @EmployedSince, 0)", e);
                 foreach (int acR in e.AcRoles)
                     con.Execute("Insert Into [EmployeeHasAcrole] Values (@EnumInt, @E)", new { EnumInt = acR, E = e.PersoNumber });
             }
@@ -358,7 +357,7 @@ namespace XCV.Data
         /// </summary>
         ///
         /// <remarks>
-        ///         Updates [Employee] except(Password, EmployyedSince)
+        ///         Updates [Employee] except(Password, EmployedSince)
         ///         and [EmployeeHasField] [EmployeeHasRole] [EmployeeHasLanguage] [EmployeeHasSkill]  through DELETE all and INSERT
         /// </remarks>
         private void UpdateEmployee(Employee e)
@@ -368,7 +367,7 @@ namespace XCV.Data
             {
                 con.Open();
                 con.Execute(@"Update [Employee] Set [FirstName]=@FirstName, [LastName]=@LastName, [Description]=@Description, [Image]=@Image, [Rcl]=@Rcl,
-                                                    [Expirience]=@Expirience, [MadeFirstChangesOnProfile]=1   Where [PersoNumber]=@PersoNumber ", e);
+                                                    [Experience]=@Experience, [MadeFirstChangesOnProfile]=1   Where [PersoNumber]=@PersoNumber ", e);
 
                 con.Execute($"Delete From [EmployeeHasField] Where employee='{e.PersoNumber}'");
                 foreach (var field in e.Fields)

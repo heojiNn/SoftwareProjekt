@@ -1,382 +1,440 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using A = DocumentFormat.OpenXml.Drawing;
-using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
-using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+
 
 
 namespace XCV.Data
 {
     public class ConfigService : IConfigService
     {
-        public byte[] GenerateSingleProfile(Employee e)
+        private readonly string connectionString;
+        private readonly ILogger<ConfigService> log;
+        private readonly IProfileService cProfileService;
+        private readonly IProjectService cProjectService;
+        private readonly ISkillService cSkillService;
+
+        public ConfigService(IConfiguration config, ILogger<ConfigService> logger, ISkillService skillService, IProfileService profileService, IProjectService projectService)
         {
-            byte[] templateBytes = XCV.Properties.Resources.Vorlage1; // Template (can be adapted without impact on the following (Additions are made to the first line after the last line of the template).
+            connectionString = config.GetConnectionString("MS_SQL_Connection");
+            log = logger;
+            cProfileService = profileService;
+            cSkillService = skillService;
+            cProjectService = projectService;
 
-            using (MemoryStream templateStream = new MemoryStream())
+        }
+
+        //-----------------------------------------------------------------------------------------
+        //---------------------------------Business Logic------------------------------------------
+
+        public void ValidateUpdate(Offer o, DocumentConfig newVersion, EmployeeConfig opt)
+        {
+            errorMessages = new();
+            infoMessages = new();
+            inlineWords = new();
+
+            //-------------------------------------------------------------------------------------errorMessages
+            // adds the Model-Validation to the List of Errors
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(newVersion, new ValidationContext(newVersion), results, true))
+                errorMessages = results.Select(e => e.ErrorMessage).ToList();
+
+            if (errorMessages.Count == 0)
+                infoMessages.Add("Die Änderung war erfolgreich.");
+            //-------------------------------------------------------------------------------------
+
+            OnChange(new()
             {
-                templateStream.Write(templateBytes, 0, (int)templateBytes.Length);
-                using (WordprocessingDocument doc = WordprocessingDocument.Open(templateStream, true)) // 'WordprocessingDocument.Open' takes a stream as input in this implementation.
+                InfoMessages = infoMessages,
+                ErrorMessages = errorMessages
+            });
+        }
+
+        public void ValidateCreate(Offer o, DocumentConfig newVersion)
+        {
+            errorMessages = new();
+            infoMessages = new();
+            inlineWords = new();
+
+            //-------------------------------------------------------------------------------------errorMessages
+            // adds the Model-Validation to the List of Errors
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(newVersion, new ValidationContext(newVersion), results, true))
+                errorMessages = results.Select(e => e.ErrorMessage).ToList();
+
+            if (newVersion == null)
+                errorMessages.Add("Es wurde keine Referenz erzeugt.");
+            if (GetAllDocumentConfigs(o).Where(x => x.Name == newVersion.Name).Any())
+                errorMessages.Add("Der Name der Dokumentenkonfiguration muss einzigartig sein - keine Duplikate.");
+
+
+            if (errorMessages.Count == 0)
+                infoMessages.Add("Die Erzeugung war erfolgreich.");
+            //-------------------------------------------------------------------------------------
+
+            OnChange(new()
+            {
+                InfoMessages = infoMessages,
+                ErrorMessages = errorMessages
+            });
+        }
+
+        //-------------------------------------Persistence-----------------------------------------
+        //-----------------------------------------------------------------------------------------
+        //--read   -------------------------------------------------------------------------------
+
+        public DocumentConfig GetDocumentConfig(Offer o, string name)
+        {
+            return GetAllDocumentConfigs(o).FirstOrDefault(x => x.Name == name);
+        }
+
+        public IEnumerable<DocumentConfig> GetAllDocumentConfigs(Offer o)
+        {
+            errorMessages = new();
+            using var con = new SqlConnection(connectionString);
+            con.Open();
+            IEnumerable<DocumentConfig> configs = con.Query<DocumentConfig>($"Select [Offer] as offerId, [Config] as Name From [offerHasConfig] Where [Offer] = {o.Id}");
+            con.Close();
+            if (!errorMessages.Any())
+            {
+                con.Open();
+                try
                 {
-                    MainDocumentPart mainPart = doc.MainDocumentPart;
-                    Body body = doc.MainDocumentPart.Document.Body; // Reference to the existing body.
-
-                    //==================='Selection' of Worddocument's content.=========================//
-
-                    // -------------------Single Input:------------------------------
-
-                    // add Heading
-                    Paragraph para = body.AppendChild(new Paragraph());
-                    ParagraphProperties pPr = para.AppendChild(new ParagraphProperties());
-                    pPr.ParagraphStyleId = new ParagraphStyleId() { Val = "Heading1" };
-                    Run run = para.AppendChild(new Run());
-                    run.AppendChild(new Text($"MitarbeiterIn:") { Space = SpaceProcessingModeValues.Preserve });
-                    run.AppendChild(new Break());
-
-                    //add Image
-                    if (e.Image.Length != 0)
+                    foreach (DocumentConfig cfg in configs)
                     {
-                        ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                        using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot\", e.Image), FileMode.Open))
+                        cfg.employeeConfigs = new List<EmployeeConfig>();
+                        var persNrs = con.Query<string>($"Select [Employee] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}'"); // All PersNrs in the current Config
+                        foreach (string pnr in persNrs) //Reconstruct the EmployeeConfigs from Database
                         {
-                            imagePart.FeedData(stream);
-                        }
-                        AddImageToBody(doc, mainPart.GetIdOfPart(imagePart));
-                    }
+                            #nullable enable
+                            //config
+                            string? FirstName = con.QuerySingleOrDefault<string>($"Select [FirstName] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
+                            string? LastName = con.QuerySingleOrDefault<string>($"Select [LastName] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
+                            string? Description = con.QuerySingleOrDefault<string>($"Select [Description] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
+                            string? Image = con.QuerySingleOrDefault<string>($"Select [Image] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
+                            DateTime? Experience = con.QuerySingleOrDefault<DateTime?>($"Select [Experience] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
+                            DateTime? EmployedSince = con.QuerySingleOrDefault<DateTime?>($"Select [EmployedSince] From [config] Where [Offer] = {o.Id} And [Name] = '{cfg.Name}' And [Employee] = '{pnr}'");
 
-                    // add PersoNumber
-                    Paragraph para1 = body.AppendChild(new Paragraph());
-                    Run run1 = para1.AppendChild(new Run());
-                    if (e.PersoNumber.Length != 0)
-                        run1.AppendChild(new Text($"Personalnummer: {e.PersoNumber}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run1.AppendChild(new Text($"Personalnummer: -") { Space = SpaceProcessingModeValues.Preserve });
+                            //configHasField
+                            IEnumerable<string>? fieldsAsString = con.Query<string>($"Select [Field] From [configHasField] Where [Offer] = {o.Id} And [Config] = '{cfg.Name}' And [cfgEmployee] = '{pnr}'");
+                            ISet<Field> fields = new HashSet<Field>();
+                            foreach (string f in fieldsAsString)
+                                fields.Add(new Field() { Name = f });
+                            #nullable disable
 
-                    // add FirstName
-                    Paragraph para2 = body.AppendChild(new Paragraph());
-                    Run run2 = para2.AppendChild(new Run());
-                    if (e.FirstName.Length != 0)
-                        run2.AppendChild(new Text($"Vorname: {e.FirstName}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run1.AppendChild(new Text($"Vorname: -") { Space = SpaceProcessingModeValues.Preserve });
+                            //configHasSkill
+                            var skills = con.Query<Skill, string, Skill>(@$"Select s.Skill as Name,  sl.Name as Level,  s.Skill_Cat as Category
+                                                                        From [configHasSkill] s  Left Join [Skill_Level] sl   ON s.Skill_Level = sl.Level
+                                                                    Where [Offer] = {o.Id} And [Config] = '{cfg.Name}' And [cfgEmployee] = '{pnr}'",
+                                                                            (skill, category) =>
+                                                                            {
+                                                                                if (skill != null)
+                                                                                    skill.Category = new SkillCategory() { Name = category };
+                                                                                return skill;
+                                                                            }, splitOn: "Category").ToHashSet();
+                            //configHasActivity
+                            var proAndAct = con.Query<(int project, string activity)>($"Select [Project], [Activity] From [configHasActivity] Where [Offer] = {o.Id} And [Config] = '{cfg.Name}' And [cfgEmployee] = '{pnr}'");
 
-                    // add LastName
-                    Paragraph para3 = body.AppendChild(new Paragraph());
-                    Run run3 = para3.AppendChild(new Run());
-                    if (e.LastName.Length != 0)
-                        run3.AppendChild(new Text($"Nachname: {e.LastName}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run3.AppendChild(new Text($"Nachname: -") { Space = SpaceProcessingModeValues.Preserve });
+                            IList<(int project, string activity)> projects = new List<(int project, string activity)>();
+                            foreach (var paA in proAndAct)
+                            {
+                                Project temp = cProjectService.ShowProject(paA.project);
+                                projects.Add((temp.Id, temp.Title));
+                            }
 
-                    // add Description
-                    Paragraph para4 = body.AppendChild(new Paragraph());
-                    Run run4 = para4.AppendChild(new Run());
-                    if (e.Description.Length != 0)
-                        run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                            //if (fieldsAsString.Count() == 0) Console.Write($"COnfig: KEine Felder {cfg.Name} {pnr}");
+                            //if (skills.Where(s => s.Type == SkillGroup.Softskill).ToHashSet().Count() == 0) Console.Write("COnfig: KEine Softskills" );
+                            //if (skills.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet().Count() == 0) Console.Write($"COnfig: KEine Hardskills {cfg.Name} {pnr}");
+                            //if (proAndAct.Count() == 0 || proAndAct == null) Console.Write($"COnfig: KEine Projekte! {cfg.Name} {pnr}");
 
-                    // add RCL
-                    Paragraph para5 = body.AppendChild(new Paragraph());
-                    Run run5 = para5.AppendChild(new Run());
-                    if (e.RCL != 0)
-                        run5.AppendChild(new Text($"RCL: {e.RCL}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run5.AppendChild(new Text($"RCL: -") { Space = SpaceProcessingModeValues.Preserve });
-
-                    // add WorkingSince
-                    Paragraph para6 = body.AppendChild(new Paragraph());
-                    Run run6 = para6.AppendChild(new Run());
-                    run6.AppendChild(new Text($"Beschreibung: {e.EmployyedSince.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
-
-                    //
-                    // ----------------------Multiple Inputs:------------------------
-                    //
-                    //Simple Enumeration of Contents in new Appends as Strings (Alternative: i.e. Bullet Lists)
+                            EmployeeConfig employeeConfig = new EmployeeConfig
+                            {
+                                PersNr = pnr,
+                                FirstName = FirstName ?? null,
+                                LastName = LastName ?? null,
+                                Description = Description ?? null,
+                                Image = Image ?? null,
+                                Experience = Experience ?? null,
+                                EmployedSince = EmployedSince ?? null,
+                                selectedFields = fields,
+                                selectedSoftSkills = skills.Where(s => s.Type == SkillGroup.Softskill).ToHashSet(),
+                                selectedHardSkills = skills.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet(),
+                                selectedProjects = projects,
+                            };
 
 
-                    // Roles
-                    Paragraph para7 = body.AppendChild(new Paragraph());
-                    Run run7 = para7.AppendChild(new Run());
-                    run7.AppendChild(new Text($"Rollen: "));
-                    if ((e.Roles.Count() != 0) && e.Roles != null)
-                    {
-
-                        Role lastR = e.Roles.Last();
-                        foreach (Role r in e.Roles)
-                        {
-                            if (!r.Equals(lastR))
-                                run7.AppendChild(new Text($"{r.Name}, "));
-                            else
-                                run7.AppendChild(new Text($"{r.Name}") { Space = SpaceProcessingModeValues.Preserve });
+                            cfg.employeeConfigs.Add(employeeConfig);
                         }
                     }
-                    else
-                    {
-                        run7.AppendChild(new Text($"-"));
-                    }
+                } catch (Exception e)
+                {
+                    log.LogError($"Error getting Config from database: {e.Message} \n");
+                }
+                con.Close();
+            }
+            return configs;
+        }
 
-                    // Fields
-                    Paragraph para8 = body.AppendChild(new Paragraph());
-                    Run run8 = para8.AppendChild(new Run());
-                    run8.AppendChild(new Text($"Branchenwissen: "));
-                    if ((e.Fields.Count() != 0) && e.Fields != null)
-                    {
-                        Field lastF = e.Fields.Last();
-                        foreach (Field f in e.Fields)
-                        {
-                            if (!f.Equals(lastF))
-                                run8.AppendChild(new Text($"{f.Name}, "));
-                            else
-                                run8.AppendChild(new Text($"{f.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                        }
-                    }
-                    else
-                    {
-                        run8.AppendChild(new Text($"-"));
-                    }
+        public DocumentConfig GetSelectedConfig(Offer o)
+        {
+            errorMessages = new();
+            using var con = new SqlConnection(connectionString);
+            con.Open();
+            var configs = con.Query<(int, string)>("Select * From [offerHasActiveConfig]");
+            con.Close();
+            try
+            {
+                con.Open();
+                foreach (var item in configs)
+                {
+                    if (item.Item1 == o.Id)
+                        return GetDocumentConfig(o, item.Item2);
+                }
+                con.Close();
 
+                return null;
+            } catch (Exception e)
+            {
+                log.LogError($"Error returning selected Config from database: {e.Message} \n");
+                return null;
+            }
+        }
 
-                    /*
-                    // Languages
-                    Paragraph para9 = body.AppendChild(new Paragraph());
-                    Run run9 = para9.AppendChild(new Run());
-                    run9.AppendChild(new Text($"Sprachen: "));
-                    Language lastL = e.Languages.Last();
-                    foreach (Language l in e.Languages)
-                    {
-                        if (!l.Equals(lastL))
-                            run9.AppendChild(new Text($"{l.Name}, "));
-                        else
-                            run9.AppendChild(new Text($"{l.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                    }
-
-                    // Softskills
-                    Paragraph para10 = body.AppendChild(new Paragraph());
-                    Run run10 = para10.AppendChild(new Run());
-                    run10.AppendChild(new Text($"Rollen: "));
-                    List<Skill> temp = e.Abilities.Where(s => s.Type == SkillGroup.Softskill).ToList();
-                    Skill lastSS = temp.Last();
-                    foreach (Skill s in temp)
-                    {
-                        if (!s.Equals(lastSS))
-                            run10.AppendChild(new Text($"{s.Name}, "));
-                        else
-                            run10.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                    }
-
-                    // Hardskills
-                    Paragraph para11 = body.AppendChild(new Paragraph());
-                    Run run11 = para10.AppendChild(new Run());
-                    run10.AppendChild(new Text($"Rollen: "));
-                    List<Skill> temp2 = e.Abilities.Where(s => s.Type == SkillGroup.Hardskill).ToList();
-                    Skill lastHS = temp2.Last();
-                    foreach (Skill s in temp2)
-                    {
-                        if (!s.Equals(lastSS))
-                            run11.AppendChild(new Text($"{s.Name}, "));
-                        else
-                            run11.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                    }
-                    */
-
-                    // Projects - Bulletpointlist(unordered)-example:
-                    Paragraph para12 = body.AppendChild(new Paragraph());
-                    Run run12 = para12.AppendChild(new Run());
-                    run12.AppendChild(new Text("Projekte: "));
-                    SpacingBetweenLines sblUl = new SpacingBetweenLines() { After = "0" };
-                    Indentation iUl = new Indentation() { Hanging = "360" };
-                    NumberingProperties npUl = new NumberingProperties(
-                        new NumberingLevelReference() { Val = 1 },
-                        new NumberingId() { Val = 2 }
-                    );
-                    ParagraphProperties ppUnordered = new ParagraphProperties(npUl, sblUl, iUl);
-                    ppUnordered.ParagraphStyleId = new ParagraphStyleId() { Val = "ListParagraph" };
-                    if (e.Projects.Count != 0 && e.Projects != null)
-                    {
-                        int length = e.Projects.Count();
-                        int i = 0;
-                        Paragraph[] parAr = new Paragraph[length];
+        
+        //---write --------------------------------------------------------------------------------
 
 
-                        //----------------by mario
-                        ////            projectservice Get(  e.Projects.ProNumber  )
-                        // foreach (Project p in e.Projects)
-                        // {
-                        //     parAr[i] = new Paragraph();
-                        //     parAr[i].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-                        //     parAr[i].Append(new Run(new Text(p.Title)));
-                        //     body.Append(parAr[i]);
-                        //     i++;
-                        // }
-                    }
-                    else
-                    {
-                        run12.AppendChild(new Text("-") { Space = SpaceProcessingModeValues.Preserve });
-                    }
-
-
-
-                    //==================================================================================//
-
-                    // Returns the stream.
-                    mainPart.Document.Save();
-                    doc.Close(); // Closes the handle explicitly.
-                    templateStream.Position = 0;
-                    return templateStream.ToArray();
+        public void DeleteDocumentConfig(Offer parent, DocumentConfig cfg)
+        {
+            if (parent != null && cfg != null)
+            {
+                try
+                {
+                    using var con = new SqlConnection(connectionString);
+                    con.Open();
+                    con.Execute($"IF EXISTS (SELECT [Config] From [offerHasConfig] Where [Offer]={parent.Id} And [Config]='{cfg.Name}') DELETE FROM [offerHasConfig] Where [Config] = '{cfg.Name}';");
+                    con.Close();
+                }
+                catch (Exception e)
+                {
+                    log.LogError($"Error deleting Config in database: {e.Message} \n");
                 }
             }
         }
 
-        public byte[] GenerateDocumentConfig(DocumentConfig config)
+        public void UpdateDocumentConfig(DocumentConfig cfg)
         {
-            byte[] templateBytes = XCV.Properties.Resources.Vorlage1; // Template (can be adapted without impact on the following/Additions are made to the first line after the last line of the template)
+            // change name , change employees, change etc.
+            throw new NotImplementedException();
+        }
 
-            using (MemoryStream templateStream = new MemoryStream())
+        public void UpdateEmployeeConfig(Offer o, DocumentConfig c, string persnr, EmployeeConfig cfg)
+        {
+            errorMessages = new();
+            ValidateUpdate(o, c, cfg);
+            if (errorMessages.Any())
             {
-                templateStream.Write(templateBytes, 0, (int)templateBytes.Length);
-                using (WordprocessingDocument doc = WordprocessingDocument.Open(templateStream, true)) // 'WordprocessingDocument.Open' takes a stream as input in this implementation.
+                OnChange(new() { ErrorMessages = errorMessages });
+                return;
+            }
+            using var con = new SqlConnection(connectionString);
+            try
+            {   // Null: Unchecked on page || Not Null: Checked on page
+                con.Open();
+
+                //Profileinformation
+                if (cfg.FirstName == null)
+                    con.Execute($"Update [config] Set [FirstName] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [FirstName] = '{cfg.FirstName}' Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+
+                if (cfg.LastName == null)
+                    con.Execute($"Update [config] Set [LastName] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [LastName] = '{cfg.LastName}' Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+
+                if (cfg.Description == null)
+                    con.Execute($"Update [config] Set [Description] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [Description] = '{cfg.Description}' Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+
+                if (cfg.Image == null)
+                    con.Execute($"Update [config] Set [Image] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [Image] = '{cfg.Image}' Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+
+                if (cfg.Experience == null)
+                    con.Execute($"Update [config] Set [Experience] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [Experience] = @Experience Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';", new { Experience = cfg.Experience });
+
+                if (cfg.EmployedSince == null)
+                    con.Execute($"Update [config] Set [EmployedSince] = NULL Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';");
+                else
+                    con.Execute($"Update [config] Set [EmployedSince] = @EmployedSince Where [Offer] = {o.Id} And [Name] = '{c.Name}' And [Employee] = '{persnr}';", new { EmployedSince = cfg.EmployedSince });
+
+                //Fields, Softskills, Hardskills, Projects&activities
+                if (cfg.selectedFields == null)
                 {
-                    MainDocumentPart mainPart = doc.MainDocumentPart;
-                    Body body = doc.MainDocumentPart.Document.Body; // Reference to the existing body.
-
-                    //==================='Selection' of Worddocument's content.=========================//
-
-                    foreach (EmployeeConfig ec in config.employeeConfigs)
-                    {
-                        // Add the selected Properties of Employee X.
-                    }
-
-                    // Table with Wages - Blueprint:
-                    /*
-                    Table table = new Table();
-                    TableRow tr1 = new TableRow();
-
-                    TableCell tc11 = new TableCell();
-                    Paragraph p11 = new Paragraph(new Run(new text("A")));
-                    tc11.Append(p11);
-                    tr1.Append(tc11);
-
-                    TableCell tc12 = new TableCell();
-                    Paragraph p12 = new Paragraph();
-                    Run r12 = new Run();
-                    RunProperties rp12 = new RunProperties();
-                    rp12.Bold = new Bold();
-                    r12.Append(rp12);
-                    r12.Append(new Text("Nice"));
-                    p12.Append(r12);
-                    tc12.Append(p12);
-
-                    tr1.Append(tc12);
-                    table.Append(tr1);
-
-                    TableRow tr2 = new TableRow();
-
-
-                    TableCell tc21 = new TableCell();
-                    Paragraph p21 = new Paragraph(new Run(new text("Little")));
-                    tc21.Append(p21);
-                    tr2.Append(tc21);
-
-                    TableCell tc22 = new TableCell();
-                    Paragraph p22 = new Paragraph();
-                    ParagraphProperties pp22 = new ParagraphProperties();
-                    pp22.Justification = new Justification() { Val = JustificationValues.Center };
-                    p22.Append(pp22);
-                    p22.Append(new Run(new Text("Table")));
-                    tc22.Append(p22);
-
-                    tr2.Append(tc22);
-                    table.Append(tr2);
-
-                    // Add your table to docx body
-                    docBody.Append(table);
-                     */
-                    //==================================================================================//
-
-                    // Returns the stream.
-                    mainPart.Document.Save();
-                    doc.Close(); // Closes the handle explicitly.
-                    templateStream.Position = 0;
-                    return templateStream.ToArray();
+                    con.Execute($"Delete From [configHasField] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}'");
+                } else
+                {
+                    con.Execute($"Delete From [configHasField] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}'");
+                    foreach (var fld in cfg.selectedFields)
+                        con.Execute($"Insert Into [configHasField] Values ({o.Id}, '{c.Name}', '{persnr}', '{fld.Name}')");
                 }
-            };
+                
+                if (cfg.selectedSoftSkills == null)
+                {
+                    con.Execute($"Delete From [configHasSkill] Where [Offer]={o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] = 'SoftSkills';");
+                } else
+                {
+                    con.Execute($"Delete From [configHasSkill] Where [Offer]={o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] = 'SoftSkills';");
+                    foreach (var sk in cfg.selectedSoftSkills.Where(x => x.Type == SkillGroup.Softskill))
+                        con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, '{c.Name}', '{persnr}', '{sk.Name}', 'SoftSkills', NULL)");
+                }
+                
+                if (cfg.selectedHardSkills == null)
+                {
+                    con.Execute($"Delete From [configHasSkill] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] <> 'SoftSkills';");
+                }
+                else
+                {
+                    con.Execute($"Delete From [configHasSkill] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] <> 'SoftSkills';");
+                    foreach (var sk in cfg.selectedHardSkills.Where(x => x.Type == SkillGroup.Hardskill))
+                        con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, '{c.Name}', '{persnr}', '{sk.Name}', '{sk.Category.Name}', {sk.Level});");
+                }
+
+                if (cfg.selectedProjects == null)
+                {
+                    con.Execute($"Delete From [configHasActivity] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}';");
+                }
+                else
+                {
+                    con.Execute($"Delete From [configHasActivity] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}';");
+                    foreach (var pro in cfg.selectedProjects)
+                        con.Execute($"Insert Into [configHasActivity] Values ({o.Id}, '{c.Name}', '{persnr}', {pro.project}, '{pro.activity}')");
+                }
+
+                OnChange(new() { SuccesMessage = "Die Änderungen an der Konfiguration wurden übernommen" });
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"Error updating Employeeconfig: \n{e.Message}\n");
+            }
+            finally { con.Close(); }
         }
 
-        // Refers to the Image - https://docs.microsoft.com/en-us/office/open-xml/how-to-insert-a-picture-into-a-word-processing-document?redirectedfrom=MSDN
-        private static void AddImageToBody(WordprocessingDocument wordDoc, string relationshipId)
+        public DocumentConfig CreateDefaultDocumentConfig(Offer parent, string name)
         {
-            // Define the reference of the image.
-            var element =
-                 new Drawing(
-                     new DW.Inline(
-                         new DW.Extent() { Cx = 990000L, Cy = 792000L },
-                         new DW.EffectExtent()
-                         {
-                             LeftEdge = 0L,
-                             TopEdge = 0L,
-                             RightEdge = 0L,
-                             BottomEdge = 0L
-                         },
-                         new DW.DocProperties()
-                         {
-                             Id = (UInt32Value)1U,
-                             Name = "Picture 1"
-                         },
-                         new DW.NonVisualGraphicFrameDrawingProperties(
-                             new A.GraphicFrameLocks() { NoChangeAspect = true }),
-                         new A.Graphic(
-                             new A.GraphicData(
-                                 new PIC.Picture(
-                                     new PIC.NonVisualPictureProperties(
-                                         new PIC.NonVisualDrawingProperties()
-                                         {
-                                             Id = (UInt32Value)0U,
-                                             Name = "New Bitmap Image.jpg"
-                                         },
-                                         new PIC.NonVisualPictureDrawingProperties()),
-                                     new PIC.BlipFill(
-                                         new A.Blip(
-                                             new A.BlipExtensionList(
-                                                 new A.BlipExtension()
-                                                 {
-                                                     Uri =
-                                                        "{28A0092B-C50C-407E-A947-70E740481C1C}"
-                                                 })
-                                         )
-                                         {
-                                             Embed = relationshipId,
-                                             CompressionState =
-                                             A.BlipCompressionValues.Print
-                                         },
-                                         new A.Stretch(
-                                             new A.FillRectangle())),
-                                     new PIC.ShapeProperties(
-                                         new A.Transform2D(
-                                             new A.Offset() { X = 0L, Y = 0L },
-                                             new A.Extents() { Cx = 990000L, Cy = 792000L }),
-                                         new A.PresetGeometry(
-                                             new A.AdjustValueList()
-                                         )
-                                         { Preset = A.ShapeTypeValues.Rectangle }))
-                             )
-                             { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" })
-                     )
-                     {
-                         DistanceFromTop = (UInt32Value)0U,
-                         DistanceFromBottom = (UInt32Value)0U,
-                         DistanceFromLeft = (UInt32Value)0U,
-                         DistanceFromRight = (UInt32Value)0U,
-                         EditId = "50D07946"
-                     });
+            DocumentConfig defaultcfg = new DocumentConfig() { offerId = parent.Id, Name = name, employeeConfigs = new List<EmployeeConfig>()};
+            if (parent.participants.Count == 0)
+                return defaultcfg; // Kann in weiterer Fehlerbehandlung abgehandelt werden. -> ValidateUpdate
+            errorMessages = new();
+            ValidateUpdate(parent, defaultcfg, null);
+            if (!errorMessages.Any())
+            {
+                using var con = new SqlConnection(connectionString);
+                try
+                {
+                    con.Open();
+                    con.Execute($"Insert Into [offerHasConfig] Values ({parent.Id}, '{name}')");
+                    foreach (Employee e in parent.participants)
+                    {
+                        Employee emp = cProfileService.ShowProfile(e.PersoNumber);
+                        con.Execute($"Insert Into [config] Values (@Offer, @Name, @PersoNumber, @FirstName , @LastName, @Description, @Image, @Experience, @EmployedSince)",
+                            new { Offer = parent.Id, Name = name, PersoNumber = emp.PersoNumber, FirstName = emp.FirstName, LastName = emp.LastName, Description = emp.Description, Image = emp.Image,
+                            Experience = emp.Experience, EmployedSince = emp.EmployedSince}); 
+                        foreach (Field f in emp.Fields)
+                            con.Execute($"Insert Into [configHasField] Values ({parent.Id}, '{name}', '{emp.PersoNumber}', '{f.Name}')");
+                        foreach (Skill s in emp.Abilities)
+                        {
+                            int? level = Array.FindIndex(cSkillService.GetAllLevel(), x => x == s.Level) + 1;
+                            if (s.Type == SkillGroup.Softskill)
+                                level = null;
+                            con.Execute($"Insert Into [configHasSkill] Values ({parent.Id}, @Name, @Employee, @Skill, @Cat, @Level)", new { Name = name, Employee = emp.PersoNumber, Skill = s.Name, Cat = s.Category.Name, level });
+                        }
+                        foreach (var p in emp.Projects)
+                        {
+                            con.Execute($"Insert Into [configHasActivity] Values ({parent.Id}, @Name, @Employee, @Project, @Activity)", new { Name = name, Employee = emp.PersoNumber, Project = p.project, Activity = p.activity });
 
-            // Append the reference to body, the element should be in a Run.
-            wordDoc.MainDocumentPart.Document.Body.AppendChild(new Paragraph(new Run(element)));
+                        }
+                    }
+                    con.Close();
+                }
+                catch (SqlException e)
+                {
+                    log.LogError($"Error creating default config on database: {e.Message} \n");
+                }
+            }
+            return defaultcfg;
         }
+
+
+        public void SaveSelectedConfig(Offer o, DocumentConfig cfg)
+        {
+            if (o != null && cfg != null)
+            {
+                using var con = new SqlConnection(connectionString);
+                try
+                {
+                    con.Open();
+                    con.Execute($"Delete From [offerHasActiveConfig] Where [Offer] = {o.Id}");
+                    con.Execute($"Insert Into [offerHasActiveConfig] Values ({o.Id}, '{cfg.Name}')");
+                    OnChange(new() { InfoMessages = new string[] { $"Neue Konfiguration aktiviert." } });
+                    con.Close();
+                } catch (SqlException e)
+                {
+                    log.LogError($"Error creating default config on database: {e.Message} \n");
+                }
+            }
+            else
+                return;
+        }
+
+        public void DeleteSelectedConfig(Offer o, DocumentConfig cfg)
+        {
+            errorMessages = new();
+            using var con = new SqlConnection(connectionString);
+            con.Open();
+            var configs = con.Query<(int, string)>("Select * From [offerHasActiveConfig]");
+            con.Close();
+            try
+            {
+                con.Open();
+                con.Execute($"Delete From [offerHasActiveConfig] Where [Offer] = {o.Id}");
+                con.Close();
+            }
+            catch (Exception e)
+            {
+                log.LogError($"Error deleting selected Config from database: {e.Message} \n");
+            }
+        }
+
+
+        //-------------------------------------User Messaging--------------------------------------
+        public event EventHandler<NoResult> SearchEventHandel;
+        protected virtual void OnEmptyResult(NoResult e) => SearchEventHandel?.Invoke(this, e);
+        //-----------------------------------------------------------------------------------------
+        private List<string> errorMessages = new();
+        private List<string> infoMessages = new();
+        private List<string> inlineWords = new();
+        public event EventHandler<ChangeResult> ChangeEventHandel;
+        protected virtual void OnChange(ChangeResult e)
+        {
+            if (e.InfoMessages.Any() || e.ErrorMessages.Any() || e.SuccesMessage != "")
+                ChangeEventHandel?.Invoke(this, e);
+        }
+
     }
 }
