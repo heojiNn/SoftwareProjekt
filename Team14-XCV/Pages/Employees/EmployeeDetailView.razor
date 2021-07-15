@@ -15,7 +15,7 @@
 
     <div class="card my-1">
         <div class="card-header text-center">
-            <h3>Mitarbeiterdetailansicht Übersicht von @employee.PersoNumber</h3>
+            <h3>Mitarbeiterdetailansicht von @(new String(employee.FirstName + " " + employee.LastName.Substring(0, 1) + "."))</h3>
         </div>
         <div width="40" height="40">
             <style>
@@ -33,12 +33,9 @@
 
         <div class="row g-0">
             <div class="col-md-4">
-                <img src="@employee.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <h5 class="card-title">@employee.FirstName &nbsp; @employee.LastName</h5>
-                    <p class="card-text" style="min-height: 150px;">
                         <pre>@employee.Description</pre>
                     </p>
                     <p>Rate Card Level: @employee.RCL </p>
@@ -140,7 +137,7 @@
                     </div>
                 </CardBody>
             </CollapsibleCard>
-        </div>
+</div>
 
         <div class="col-sm-6 mb-3" style="min-height: 200px;">
             <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>

@@ -53,6 +53,15 @@ namespace XCV.Pages.OfferNamespace
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
 
+        }
+
+        private void UpdateOffer()
+        {
+            myOffer.Fields = SelectedFields;
+            //...
+            offerService.Update(myOffer);
+        }
+
             if (offerData.offerStore == null) // Create new storage and add Offervalues in Page
             {
                 offerData.offerStore = new Offer();

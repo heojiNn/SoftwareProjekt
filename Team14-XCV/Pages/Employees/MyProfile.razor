@@ -43,7 +43,7 @@
                         <pre>@myProfile.Description</pre>
                          </p>
                         <p>Rate Card Level: @myProfile.RCL </p>
-                    @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
+                    @{var yearsE = myProfile.Expirience != null ? (float)(DateTime.Now.Subtract(myProfile.Expirience.Value).Days) / 356 : 0;}
                     <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
                 </div>
             </div>
