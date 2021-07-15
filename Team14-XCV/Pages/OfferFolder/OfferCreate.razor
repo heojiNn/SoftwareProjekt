@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <CollapsibleCard CardHeaderTitle="Branchen">
+     <CollapsibleCard CardHeaderTitle="Branchen">
         <CardBody>
             <input class="form-control" id="skiSer" placeholder="suche" @bind="@fieldSearch" @bind:event="oninput" />
             @if (fieldSearch == "")
@@ -63,18 +63,17 @@
                 var fields = fieldService.GetAllFields().ToList();
                 if (fields.Any())
                 {
-<div class="scroll ml-2" style="overflow-x: hidden;">
-    <CheckBoxList Data="@fields" TextField="@((item)=>item.ToString())" SelectedValues="@SelectedFields" />
-</div>
-}
-}
-else
-{
-var sResults = fieldService.GetAllFields().Where(x => x.Name.ToLower().StartsWith(fieldSearch.ToLower())).OrderBy(x => x.Name);
-<div class="scroll ml-2" style="overflow-x: hidden;">
-    <CheckBoxList Data="@sResults" TextField="@((item)=>item.ToString())" SelectedValues="@SelectedFields" />
-</div>
-}
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                    <CheckBoxList Data="@fields" TextField="@((item)=>item.ToString())" SelectedValues="@SelectedFields" />
+                    </div>
+                }
+            }
+            else
+            { var sResults = fieldService.GetAllFields().Where(x => x.Name.ToLower().StartsWith(fieldSearch.ToLower())).OrderBy(x => x.Name);
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                    <CheckBoxList Data="@sResults" TextField="@((item)=>item.ToString())" SelectedValues="@SelectedFields" />
+                    </div>
+            }
         </CardBody>
     </CollapsibleCard>
 
@@ -207,14 +206,17 @@ var sResults = fieldService.GetAllFields().Where(x => x.Name.ToLower().StartsWit
                                     Stundensatz <input type="number" @bind="@em.offerWage">
                                     Std/Tag <input type="number" min="0" max="24" @bind="@em.hoursPerDay" />
                                     <br />
-                                    Tage/Laufzeit <input type="number" @bind="@em.daysPerRun" />
-                                    Rabatt(0-100) <input type="number" min="0" max="100" @bind="@em.discount" />
+                                    Tage/Laufzeit <input type="number" @bind="@em.daysPerRun"/>
+                                    Rabatt(0-100) <input type="number" min="0" max="100"  @bind="@em.discount" />
                                 </div>
-                            </div>}}
+                            </div>
+                         }
+                    }
                 </div>
                 <button type="button" class="btn btn-secondary" style=" float:left; margin: 3em 1em" @onclick="RemoveAllEmployees"> Alle Entfernen </button>
                 <a href="offer-search-add" class="btn btn-secondary" style="float:left; margin: 3em 1em" @onclick="Store"> Hinzufügen </a>
-            </div>            }
+            </div>
+            }
     </div>
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Erstellen</button>
     <a href="offers" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Discard"> Verwerfen</a>
@@ -232,14 +234,14 @@ var sResults = fieldService.GetAllFields().Where(x => x.Name.ToLower().StartsWit
                 </li>
             }
         </ul>
-        @foreach (string line in changeInfo.InfoMessages)
-        {
-            <pre class="alert alert-info">@line</pre>
+            @foreach (string line in changeInfo.InfoMessages)
+            {
+                <pre class="alert alert-info">@line</pre>
 
-        }
+            }
     </Body>
     <Footer>
-        <a href="offers" class="btn btn-primary" @onclick="@CreateOffer">Erstellen</a>
+         <a href="offers" class="btn btn-primary" @onclick="@CreateOffer">Erstellen</a>
         <button type="button" class="btn btn-secondary" @onclick="@Close">Zurück</button>
     </Footer>
 </Modal>

@@ -37,7 +37,7 @@
             <div class="col-md-8">
                 <div class="card-body">
                         <pre>@employee.Description</pre>
-                    </p>
+                    
                     <p>Rate Card Level: @employee.RCL </p>
                     @{var yearsE = employee.Experience != null ? (float)(DateTime.Now.Subtract(employee.Experience.Value).Days) / 356 : 0;}
                     <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>

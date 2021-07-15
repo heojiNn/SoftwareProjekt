@@ -32,7 +32,7 @@ namespace XCV.Pages.OfferNamespace
         private ISet<Skill> SelectedSkills = new SortedSet<Skill>();
         private ISet<Field> SelectedFields = new SortedSet<Field>();
         private IList<Employee> SelectedParticipants = new List<Employee>();
-        private ISet<(Employee, Role)> SelectedRoles = new HashSet<(Employee, Role)>();
+        private ISet<(Employee, Role)> SelectedRoles  = new HashSet<(Employee, Role)>();
 
 
 
@@ -47,13 +47,12 @@ namespace XCV.Pages.OfferNamespace
 
             SelectedStart = DateTime.Now;
             SelectedEnd = DateTime.Now;
-
+            
 
             if (offerData.offerStore == null) // Create empty storage
             {
                 offerData.offerStore = new Offer();
-            }
-            else if (offerData.offerStore != null) //Load in Data after searching employee
+            }else if (offerData.offerStore != null) //Load in Data after searching employee
             {
                 toCreate = offerData.offerStore;
                 title = offerData.offerStore.Title;
@@ -64,7 +63,7 @@ namespace XCV.Pages.OfferNamespace
                 SelectedParticipants = offerData.offerStore.participants;
                 SelectedStart = offerData.offerStore.Start;
                 SelectedEnd = offerData.offerStore.End;
-            }
+            } 
         }
 
         /// <summary>
@@ -167,8 +166,7 @@ namespace XCV.Pages.OfferNamespace
             SelectedSkills = SelectedSoftskills;
             SelectedSkills.UnionWith(SelectedHardskills);
 
-            Offer validate = new Offer
-            {
+            Offer validate = new Offer {
                 Title = title,
                 Description = description,
                 Start = SelectedStart,
