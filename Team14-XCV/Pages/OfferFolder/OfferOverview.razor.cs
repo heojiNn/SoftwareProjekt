@@ -55,6 +55,12 @@ namespace XCV.Pages.OfferNamespace
             Console.WriteLine(selection);
         }
 
+
+        private void OnSelected(string selection)
+        {
+            Console.WriteLine(selection);
+        }
+
         private void OnChangeReturn(object sender, ChangeResult e)
         {
             changeInfo = e;

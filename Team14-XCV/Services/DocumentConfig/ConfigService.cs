@@ -50,7 +50,7 @@ namespace XCV.Data
                 errorMessages = results.Select(e => e.ErrorMessage).ToList();
 
             if (errorMessages.Count == 0)
-                infoMessages.Add("Die Änderung war erfolgreich.");
+                infoMessages.Add("Die �nderung war erfolgreich.");
             //-------------------------------------------------------------------------------------
 
             OnChange(new()
@@ -326,7 +326,7 @@ namespace XCV.Data
                         con.Execute($"Insert Into [configHasActivity] Values ({o.Id}, '{c.Name}', '{persnr}', {pro.project}, '{pro.activity}')");
                 }
 
-                OnChange(new() { SuccesMessage = "Die Änderungen an der Konfiguration wurden übernommen" });
+                OnChange(new() { SuccesMessage = "Die �nderungen an der Konfiguration wurden �bernommen" });
             }
             catch (SqlException e)
             {

@@ -1,5 +1,5 @@
 @page "/change-json"
-
+@attribute [Authorize(Roles = "admin, sales")]
 
 @using Microsoft.AspNetCore.Hosting
 
@@ -25,7 +25,7 @@
         <InputFile OnChange="@ShowUpload" class="btn btn-sm btn-primary" />
         <div class="outerbox @(validJson ? "" : "invalid")">
             <textarea class="form-control" style="white-space: pre;" rows="30" @bind="@textareas[0]"
-                @bind:event="oninput">
+                      @bind:event="oninput">
             </textarea>
         </div>
         <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
@@ -64,40 +64,4 @@
 
 
 
-@code {
-    private string[] textareas = new string[5];
-    private bool validJson = true;
-
-
-    protected override void OnInitialized()
-    {
-        dataSetService.ChangeEventHandel += OnChange;
-        textareas = dataSetService.ShowCurrentDataSet();
-    }
-    private async Task ShowUpload(InputFileChangeEventArgs eventA)
-    {
-        textareas = await dataSetService.ShowBrowserFile(eventA.File);
-        //StateHasChanged();
-    }
-
-
-
-    private void Validate()
-    {
-        dataSetService.JsonUpdate(textareas[0]);// might show ChangeInfo and ChangeInfo.Error
-    }
-    private void Upload()
-    {
-        dataSetService.JsonUpdate(textareas[0], false); // shows either ChangeInfo.Error o. ChangeInfo.Succes
-    }
-
-
-
-
-    private ChangeResult changeInfo = new();
-    private void OnChange(object sender, ChangeResult e)
-    {
-        changeInfo = e;
-        validJson = (!e.ErrorMessages.Any());
-    }
-}
+   

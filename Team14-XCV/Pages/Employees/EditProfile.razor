@@ -35,241 +35,278 @@
         <div class="card-body">
 
             <div class="row">
-                <div class="col-md-4">
-                    <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
-                    <br>Bild hochladen
-                    <InputFile OnChange="@JustUpload" class="btn-sm btn-secondary p-0" />
+                <div class="col-md-4" style="text-align: center">
+                    <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em;">
+                    <br />
+                    <br />
+                    <div>
+                        <button class="btn btn-secondary" onclick="document.getElementById('browse-files').click()">
+                            Neues Profilbild
+                        </button>
+                        <br /><br />
+                        <InputFile OnChange="@JustUpload" multiple @attributes="browseAttributes" />
+                    </div>
                 </div>
+
                 <div class="col-md-8">
                     <!--Large lg ≥992px  Ist es eine Reihe -->
                     <!-- Small sm ≥576px  Sind es 2 Reihen-->
                     <div class="row">
-                        <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname</label>
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname:</label>
                         <div class="col-md-6 col-xl-4 ">
                             <input class="form-control" id="inputFirstName" @bind="@myProfile.FirstName">
                         </div>
-                        <label class="col-md-6 col-xl-2 col-form-label" for="inputLastName">Nachname</label>
+
+                        <label class="col-md-6 col-xl-2 col-form-label" for="inputLastName">Nachname:</label>
                         <div class="col-md-6 col-xl-4">
                             <input class="form-control" id="inputLastName" @bind="@myProfile.LastName">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="inputRcl">Beschreibung:</label>
-                        <textarea class="form-control " rows="4" @bind="@myProfile.Description"
+                        <label for="inputDescription">Beschreibung:</label>
+                        <textarea class="form-control " id="inputDescription" rows="4" @bind="@myProfile.Description"
                                   @onkeydown="(e) => KeyHandler(e, true)">
                         </textarea>
                     </div>
+
                     <div class="row">
-                        <label class="col-md-6  col-form-label " style="width:20px" for="RCL">Rate Card Level:</label>
-                        <select class="form-control form-control-sm" id="RCL" @bind="@myProfile.RCL" style="width: 80px;">
-                            @for (int i = 1; i <= 8; i++)
-                            {
-                                <option value="@i"> @i</option>
-                            }
-                        </select>
-                        <div class="wrap-collabsible ">
-                            @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
-                            <input id="collapsible" class="toggle" type="checkbox"> <label for="collapsible" class="lbl-toggle"><tag>Berufserfahrung:</tag> @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" )</label>
+                        <label class="col col-form-label" for="RCL" style="max-width: max-content">Rate Card Level:</label>
+                        <div class="col">
+                            <select class="form-control" id="RCL" style="float: left; max-width: max-content" @bind="@myProfile.RCL">
+                                @for (int i = 1; i < 8; i++)
+                                {
+                                    <option value="@i"> @i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="wrap-collabsible ml-3">
+
+                            @{var yearsE = myProfile.Expirience != null ? (float)(DateTime.Now.Subtract(myProfile.Expirience.Value).Days) / 356 : 0;}
+                            <input id="collapsible" class="toggle" type="checkbox">
+                            <label for="collapsible" class="lbl-toggle" style="margin-bottom:0">
+                                <tag>Relevante Berufserfahrung:</tag> @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2")} Jahre" )
+                                <div class="avatar-links" style="float: right" data-tooltip="Die relevante Berufserfahrung wird wie folgt berechnet: <Aktuelles Jahr> - <Jahre Berufserfahrung> - <0,5 x Jahre als Wissenschaftliche/r Mitarbeiterin> - <0,3 x Jahre als Studentische Hilfskraft>"></div>
+                            </label>
+
                             <div class="collapsible-content">
-                                <div class="row">
+                                <div class="row ml-1">
                                     <div class="col-4">
-                                        <label for="year">aktiv seit</label><br>
-                                        <input type="date" id="inputExpir" @bind="@startyear" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> im Tätigkeitsfeld </label>
+                                        <label for="fieldActive"> Im Tätigkeitsfeld aktiv seit:</label><br>
+                                        <input type="date" class="form-control" id="fieldActive" @bind="@startyear" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                     <div class="col-4">
-                                        <label for="min1">nur als wissen.Hilfe</label><br>
-                                        <input id="inputExpir" @bind="@reduceY1" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> wird mit 1/2 abgezogen</label>
+                                        <label for="timeAssistant">Zeit als wiss. Mitarbeiter</label><br>
+                                        <input id="timeAssistant" class="form-control" @bind="@reduceY1" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                     <div class="col-4">
-                                        <label for="min2">nur als stud.Hilfe</label><br>
-                                        <input id="inputExpir" @bind="@reduceY2" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
-                                        <label> wird mit 2/3 abgezogen</label>
+                                        <label for="timeStudent">Zeit als stud. Hilfskraft</label><br>
+                                        <input id="timeStudent" class="form-control" @bind="@reduceY2" @bind:event="oninput" @onfocus="@ChaExpirence"><br>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
-
-
-
                     </div>
-                    Angestellt seit @myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")
-                
+
+                    <!--hier fehlt noch DB Anbindung für Einstellungsdatum!-->
+                    <div class="row">
+                        <label class="col col-form-label" for="employedSince" style="max-width: max-content">Bei Xitaso angestellt seit:</label>
+                        <div class="col">
+                            <input type="date" class="form-control" id="employedSince" style="max-width: max-content;" placeholder="@myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")">
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            @{ var allRoles = roleService.GetAllRoles().Where(x => x.RCL == 0); }
+            <CollapsibleCard CardHeaderTitle="Rollen">
+                <CardBody>
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allRoles" TextField="@((item)=>item.Name.ToString())"
+                                      SelectedValues="myProfile.Roles" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            @{ var allFields = fieldService.GetAllFields(); }
+            <CollapsibleCard CardHeaderTitle="Branchenwissen">
+                <CardBody>
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allFields" TextField="@((item)=>item.Name.ToString())"
+                                      SelectedValues="myProfile.Fields" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            @{ var allSoftSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill); }
+            <CollapsibleCard CardHeaderTitle="Soft Skils">
+                <CardBody>
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allSoftSkills" TextField="@((item)=>item.Name.ToString())"
+                                      SelectedValues="myProfile.Abilities" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            @{ var allLanguages = langService.GetAllLanguages(); }
+            <CollapsibleCard CardHeaderTitle="Sprachen">
+                <CardBody>
+                    <div class="scroll ml-2" style="overflow-x: hidden;">
+                        <CheckBoxList Data="@allLanguages" TextField="@((item)=>item.Name.ToString())"
+                                      SelectedValues="myProfile.Languages" />
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+
+
+
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            <CollapsibleCard CardHeaderTitle="Hardskills">
+                <CardBody>
+                    <input class="form-control" id="skiSer" placeholder="suche" @bind="@skillSearch" @bind:event="oninput" />
+                    @if (skillSearch == "")
+                    {
+                        var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
+                        if (skills.Any())
+                        {
+                            var root = skills.First().Category.Parent;
+                            if (root.Parent != null)
+                                root = root.Parent;
+                            foreach (SkillCategory cat1 in root.Children)
+                            {
+                                var isSkill = (cat1.Children.First() is Skill);
+                                sBi++;
+                                <CollapsibleCard CardHeaderTitle="@cat1.Name" ShowCardBody="showB[sBi]" SmallInner="true">
+                                    <CardHeader> @(isSkill ? $"{cat1.Children.Count()} enthalten" : "")</CardHeader>
+                                    <CardBody>
+                                        @if (isSkill)
+                                        {
+                                            var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
+                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" />
+                                        }
+                                        else
+                                        {
+                                            foreach (SkillCategory cat in cat1.Children)
+                                            {
+                                                var skills = cat.Children.Cast<Skill>().OrderBy(x => x);
+                                                sBi++;
+                                                <CollapsibleCard CardHeaderTitle="@cat.Name" ShowCardBody="showB[sBi]" SmallInner="true">
+                                                    <CardHeader> @cat.Children.Count() enthalten</CardHeader>
+                                                    <CardBody>
+                                                        <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
+                                                                      SelectedValues="myProfile.Abilities" />
+                                                    </CardBody>
+                                                </CollapsibleCard>
+                                            }
+                                        }
+                                    </CardBody>
+                                </CollapsibleCard>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var sResulte = skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillSearch.ToLower())).OrderBy(x => x.Name);
+                        <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" />
+                    }
+                </CardBody>
+            </CollapsibleCard>
+        </div>
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+
+            <CollapsibleCard CardHeaderTitle="Projekte ">
+                <CardBody>
+                    <input class="form-control" id="proSer" placeholder="suche" @bind="@proSearch" @bind:event="oninput" />
+                    <div class="scroll2">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Projekt</th>
+                                    <th class="text-center">Tätigkeit</th>
+                                </tr>
+                            </thead>
+                            @{var pros = proSearch == "" ? proService.ShowAllProjects() : proService.ShowAllProjects().Where(x => x.Title.ToLower().StartsWith(proSearch.ToLower()));}
+                            @foreach (Project pro in pros)
+                            {
+                                <tr>
+                                    <td class="pt-3-half"> @pro.Title</td>
+                                    <td class="pt-3-half">
+                                        <div class="row mb-1">
+                                            <dv class="col-9">
+                                                ohne Tätigkeit:
+                                            </dv>
+                                            @if (pro.Activities[withoutActivity].persNr.Any(x => x == myProfile.PersoNumber))
+                                            {
+                                                <div class="col">
+                                                    <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
+                                                        <span class="oi oi-minus"></span>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col">
+                                                    <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, "") )">
+                                                        <span class="oi oi-plus"></span>
+                                                    </button>
+                                                </div>
+                                            }
+                                        </div>
+
+
+                                        @foreach (var key in pro.Activities.Keys.Where(x => x != withoutActivity))
+                                        {
+                                            <div class="row mb-1">
+                                                <dv class="col-9">
+                                                    @key
+                                                </dv>
+                                                @if (pro.Activities[key].persNr.Any(x => x == myProfile.PersoNumber))
+                                                {
+                                                    <div class="col">
+                                                        <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
+                                                            <span class="oi oi-minus"></span>
+                                                        </button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="col">
+                                                        <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, "") )">
+                                                            <span class="oi oi-plus"></span>
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </CardBody>
+            </CollapsibleCard>
         </div>
     </div>
 </div>
 
-        <div class="row gutters-sm">
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-                @{ var allRoles = roleService.GetAllRoles().Where(x => x.RCL == 0); }
-                <CollapsibleCard CardHeaderTitle="Rollen">
-                    <CardBody>
-                        <div class="scroll ml-2" style="overflow-x: hidden;">
-                            <CheckBoxList Data="@allRoles" TextField="@((item)=>item.Name.ToString())"
-                                          SelectedValues="myProfile.Roles" />
-                        </div>
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-                @{ var allFields = fieldService.GetAllFields(); }
-                <CollapsibleCard CardHeaderTitle="Branchenwissen">
-                    <CardBody>
-                        <div class="scroll ml-2" style="overflow-x: hidden;">
-                            <CheckBoxList Data="@allFields" TextField="@((item)=>item.Name.ToString())"
-                                          SelectedValues="myProfile.Fields" />
-                        </div>
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-
-
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-                @{ var allSoftSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill); }
-                <CollapsibleCard CardHeaderTitle="Soft Skils">
-                    <CardBody>
-                        <div class="scroll ml-2" style="overflow-x: hidden;">
-                            <CheckBoxList Data="@allSoftSkills" TextField="@((item)=>item.Name.ToString())"
-                                          SelectedValues="myProfile.Abilities" />
-                        </div>
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-                @{ var allLanguages = langService.GetAllLanguages(); }
-                <CollapsibleCard CardHeaderTitle="Sprachen">
-                    <CardBody>
-                        <div class="scroll ml-2" style="overflow-x: hidden;">
-                            <CheckBoxList Data="@allLanguages" TextField="@((item)=>item.Name.ToString())"
-                                          SelectedValues="myProfile.Languages" />
-                        </div>
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-
-
-
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-                <CollapsibleCard CardHeaderTitle="Hardskills">
-                    <CardBody>
-                        <input class="form-control" id="skiSer" placeholder="suche" @bind="@skillSearch" @bind:event="oninput" />
-                        @if (skillSearch == "")
-                        {
-                            var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
-                            if (skills.Any())
-                            {
-                                var root = skills.First().Category.Parent;
-                                if (root.Parent != null)
-                                    root = root.Parent;
-                                foreach (SkillCategory cat1 in root.Children)
-                                {
-                                    var isSkill = (cat1.Children.First() is Skill);
-                                    sBi++;
-                                    <CollapsibleCard CardHeaderTitle="@cat1.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                        <CardHeader> @(isSkill ? $"{cat1.Children.Count()} enthalten" : "")</CardHeader>
-                                        <CardBody>
-                                            @if (isSkill)
-                                            {
-                                                var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
-                                                <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" />
-                                            }
-                                            else
-                                            {
-                                                foreach (SkillCategory cat in cat1.Children)
-                                                {
-                                                    var skills = cat.Children.Cast<Skill>().OrderBy(x => x);
-                                                    sBi++;
-                                                    <CollapsibleCard CardHeaderTitle="@cat.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                                        <CardHeader> @cat.Children.Count() enthalten</CardHeader>
-                                                        <CardBody>
-                                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
-                                                                          SelectedValues="myProfile.Abilities" />
-                                                        </CardBody>
-                                                    </CollapsibleCard>
-                                                }
-                                            }
-                                        </CardBody>
-                                    </CollapsibleCard>
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var sResulte = skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillSearch.ToLower())).OrderBy(x => x.Name);
-                            <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" />
-                        }
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-            <div class="col-sm-6 mb-3" style="min-height: 100px;">
-
-                <CollapsibleCard CardHeaderTitle="Projekte ">
-                    <CardBody>
-                        <input class="form-control" id="proSer" placeholder="suche" @bind="@proSearch" @bind:event="oninput" />
-                        <div class="scroll2">
-                            <table class="table table-bordered table-striped text-center">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">Projekt</th>
-                                        <th class="text-center">Tätigkeit</th>
-                                    </tr>
-                                </thead>
-                                @{var pros = proSearch == "" ? proService.ShowAllProjects() : proService.ShowAllProjects().Where(x => x.Title.ToLower().StartsWith(proSearch.ToLower()));}
-                                @foreach (Project pro in pros)
-                                {
-                                    <tr>
-                                        <td class="pt-3-half"> @pro.Title</td>
-                                        <td class="pt-3-half">
-                                            ohne Tätigkeit eintragen:
-                                            @if (pro.Activities["ohne sepz. Aktivität"].persNr.Any(x => x == myProfile.PersoNumber))
-                                            {
-                                                <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, "") )">
-                                                    <span class="oi oi-minus"></span>
-                                                </button>
-                                                
-                                            }
-                                            else
-                                            {
-                                                <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, "") )">
-                                                    <span class="oi oi-plus"></span>
-                                                </button>
-                                            }   <br>
-                                            @foreach (var key in pro.Activities.Keys.Where(x => x != "ohne sepz. Aktivität"))
-                                            {
-                                                @key
-                                                @if (pro.Activities[key].persNr.Any(x => x == myProfile.PersoNumber))
-                                                {
-                                                    <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveMe(pro, @key) )">
-                                                        <span class="oi oi-minus"></span>
-                                                    </button>
-                                                     }
-                                                else
-                                                {
-                                                    <button class="btn btn-secondary btn-sm" @onclick="@(e => AddMe(pro, @key) )">
-                                                        <span class="oi oi-plus"></span>
-                                                    </button>
-                                                }<br>
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </table>
-                        </div>
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-        </div>
-    </div>
-
 <a href="my-Profile" class="btn btn-secondary"> Zurück zum Profil</a>
 <button type="submit" class="btn btn-secondary" @onclick="@Validate">Änderungen speichern.</button>
 <br>
-oder klick einfach Enter, sobad du was geändert hast
 <br>
 <br>
 <br>
@@ -277,117 +314,30 @@ oder klick einfach Enter, sobad du was geändert hast
     <Modal @ref="modal">
         <Title>Sie haben folgende Änderungen vogenommen</Title>
 
-        <Body>
-            <ul class="alert alert-danger" role="alert">
-                @foreach (string line in changeInfo.ErrorMessages)
-                {
-                    <li>
-                        <pre>@line</pre>
-                    </li>
-}
-            </ul>
-            <ul class="alert alert-info" role="alert">
-                @foreach (string line in changeInfo.InfoMessages)
-                {
-                    <li>
-                        <pre>@line</pre>
-                    </li>
-}
-            </ul>
-        </Body>
-        <Footer>
-            <button type="button" class="btn btn-primary" @onclick="@UpdateProfile">speichern</button>
-            <button type="button" class="btn btn-secondary" @onclick="@Close">schließen</button>
-        </Footer>
-    </Modal>
-   
-
-    @code {
-        private Modal modal { get; set; }
-        private Employee myProfile = new Employee();
-        private string skillSearch = "";
-        private string proSearch = "";
-
-        private DateTime startyear = DateTime.Now;
-        private float reduceY1;
-        private float reduceY2;
-        private bool[] showB = new bool[100];
-        private int sBi = 0;
-        private ChangeResult changeInfo = new();
-
-
-        protected override async Task OnInitializedAsync()
-        {
-            var authstate = await authentiProvider.GetAuthenticationStateAsync();
-            myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
-            profileService.ChangeEventHandel += OnChangeReturnEvent;
-        }
-        private void ChaExpirence()
-        {
-            var f = startyear.AddYears((int)(reduceY1 / 2)).AddYears((int)(reduceY2 * 2 / 3));
-            if (f > DateTime.Now.AddDays(-10))
-                myProfile.Experience = null;
-            else
-                myProfile.Experience = f;
-        }
-
-    private bool eventFromAreaCameBefore = true;
-    public void KeyHandler(KeyboardEventArgs e, bool isTextArea)
-    {
-        Close();
-        if ((e.Code == "Enter" || e.Code == "NumpadEnter") && !(eventFromAreaCameBefore || isTextArea))
-            Validate();
-        eventFromAreaCameBefore = isTextArea;
-    }
-    private void Validate()
-    {
-        profileService.ValidateUpdate(myProfile);
-        if (changeInfo.InfoMessages.Any() || changeInfo.ErrorMessages.Any())
-            modal.Open();
-    }
-
-    private void Discard()
-    {
-        // Asks if User want to discard changes and return
-    }
-
-    private void Close()
-    {
-        modal.Close();
-        changeInfo = new();
-    }
-    private async void UpdateProfile()
-    {
-        if (!changeInfo.ErrorMessages.Any())
-        {
-            profileService.UpdateProfile(myProfile);
-            modal.Close();
-            await JS.InvokeVoidAsync("scrollTop");
-        }
-    }
-    private async Task JustUpload(InputFileChangeEventArgs eventArgs)
-    {
-        await profileService.UploadeImage(myProfile.PersoNumber, eventArgs.File);
-    }
+    <Body>
+        <ul class="alert alert-danger" role="alert">
+            @foreach (string line in changeInfo.ErrorMessages)
+            {
+                <li>
+                    <pre>@line</pre>
+                </li>
+            }
+        </ul>
+        <ul class="alert alert-info" role="alert">
+            @foreach (string line in changeInfo.InfoMessages)
+            {
+                <li>
+                    <pre>@line</pre>
+                </li>
+            }
+        </ul>
+    </Body>
+    <Footer>
+        <button type="button" class="btn btn-primary" @onclick="@UpdateProfile">speichern</button>
+        <button type="button" class="btn btn-secondary" @onclick="@Close">schließen</button>
+    </Footer>
+</Modal>
 
 
 
-        private void AddMe(Project p, string act)
-        {
-            if (act == "")
-                proService.Add(p, myProfile);
-            else
-                proService.Add(p, myProfile, act);
 
-        }
-        private void RemoveMe(Project p, string act)
-        {
-            if (act == "")
-                proService.Remove(p, myProfile);
-            else
-                proService.Remove(p, myProfile, act);
-        }
-
-
-        private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
-    }

@@ -40,8 +40,8 @@ namespace XCV.Data
         {
             if (!_skillService.GetAllSkills().Any())
             {
-                var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-                var content = File.ReadAllText(Path.Combine(currentParent, "datenbasis.json"));
+                //var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
+                var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
                 _bDataSetService.JsonUpdate(content, false);
             }
         }
@@ -49,6 +49,10 @@ namespace XCV.Data
         {
             if (!_accountService.ShowAllProfiles().Any())
             {
+                //hier wird der Registrierungsaccount erstellt
+                Employee register = new Employee() { PersoNumber = "999-R", FirstName="Register", LastName="NewAccount", EmployedSince=DateTime.Now };
+                register.AcRoles.Add(AccessRole.Register);
+                _accountService.CreateAccount(register);
                 List<Employee> employyes6 = new()
                 {
                     // Wie Christian damals meinte im Allgemeinen sollte das Anstellungsdatum schon vor Profilanlegung geschehen koennen.
@@ -57,16 +61,20 @@ namespace XCV.Data
                     new Employee() { PersoNumber = "001", FirstName = "arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "002", FirstName = "brad", LastName = "pitt", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "003", FirstName = "daniel", LastName = "craig", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "004_A", FirstName = "Synnøve", LastName = "Nielsen", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "004", FirstName = "linus", LastName = "torvalds", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now }
                 };
+                foreach (var e in employyes6)
+                    e.AcRoles.Add(AccessRole.Employee);
                 employyes6[0].AcRoles.Add(AccessRole.Admin);
                 employyes6[1].AcRoles.Add(AccessRole.Admin);
                 employyes6[1].AcRoles.Add(AccessRole.Sales);
                 employyes6[2].AcRoles.Add(AccessRole.Sales);
                 employyes6[3].AcRoles.Add(AccessRole.Sales);
+                
+                
                 foreach (var e in employyes6)
                     _accountService.CreateAccount(e);               //creates 6 accounts
                 Thread.Sleep(1000);

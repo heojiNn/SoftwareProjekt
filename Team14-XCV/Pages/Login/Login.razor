@@ -30,6 +30,8 @@
                 </div>
 
                 <button class="btn btn-secondary" @onclick="LoginA">Login</button>
+                <button class="btn btn-secondary" @onclick="Register">Registrieren</button>
+                
             </div>
         </div>
         <table class="table table-sm">
@@ -42,7 +44,7 @@
             </tr>
             @foreach (Employee ac in accountService.ShowAllProfiles())
             {
-                var roles = String.Join(", ", ac.AcRoles);
+                var roles = String.Join(", ", ac.AcRoles.Where(role => role != AccessRole.Employee));
                 <tr>
                     <td @onclick="@(e => pNum = ac.PersoNumber)"> @ac.PersoNumber </td>
                     <td @onclick="@(e => password = ac.Password)"> @ac.Password</td>
@@ -78,28 +80,3 @@
 </div>
 
 
-@code {
-    private string pNum;
-    private string password;
-    private LoginResult validationInfo;
-
-    private string ePersToShow = "";
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authstate = await authentiProvider.GetAuthenticationStateAsync(); // insert PersoNumber if allready logdIN
-        pNum = authstate.User.Identity.Name;
-        authentiProvider.ValidationEventHandel += OnValidationReturn;
-    }
-
-
-    private async void LoginA()
-    {
-        if (await authentiProvider.Login(pNum, password))
-            NavigationManager.NavigateTo("/my-profile", forceLoad: true);
-    }
-
-
-
-    private void OnValidationReturn(object sender, LoginResult e) => validationInfo = e;
-}

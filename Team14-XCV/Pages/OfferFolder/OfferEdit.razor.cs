@@ -52,6 +52,18 @@ namespace XCV.Pages.OfferNamespace
             offerService.ChangeEventHandel += OnChangeReturn;
             skills = skillService.GetAllSkills().ToList();
             fields = fieldService.GetAllFields().ToList();
+            SelectedFields = myOffer.Fields;
+            SelectedSoftskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Softskill).ToList();
+            SelectedHardskills = myOffer.Requirements.Where(s => s.Type == SkillGroup.Hardskill).ToList();
+
+        }
+
+        private void UpdateOffer()
+        {
+            myOffer.Fields = SelectedFields;
+            //...
+            offerService.Update(myOffer);
+        }
 
             if (offerData.offerStore == null) // Create new storage and add Offervalues in Page
             {
