@@ -31,16 +31,18 @@
                                 <h4>
                                     <a style="color: #7A212E;" href="project/@project.Id">@project.Title</a>
 
-                                </h4>
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    
+                                    <p class="text-secondary">Zwecke:</p>
+                                    <p class="text-secondary"> <ul>@foreach (String pro in @project.Purpose) {<li>@pro</li> }</ul></p>
+                                    <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
+                                    <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p class="text-secondary"> @project.Description123</p>
-                                <p class="text-secondary"> @project.Purpose</p>
-                                <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
-                                <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
-                                <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
-                            </div>
-                        </div>
+                        </td>
                     </tr>
                 </div>}
         </div>
