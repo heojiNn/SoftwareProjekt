@@ -67,12 +67,12 @@
                     }
                     <br />
                     <br>
-                    <input class="form-control" id="newField" placeholder="neue Branche" style="display: inline-block; width: 60%;margin-left: 3px; margin-right: 3px;" @bind="@newField">
-                        <button class="btn btn-sm btn-secondary" style="margin-bottom: 3px;" @onclick="CreateField">Branche hinzufügen</button>
+                    <input class="form-control" id="newField" style="display: inline-block; width: 60%;margin-left: 3px; margin-right: 3px;" @bind="@newField">
+                    <button class="btn btn-sm btn-secondary" style="margin-bottom: 3px;" @onclick="CreateField">Branche hinzufügen</button>
                     <br>
                     <br />
 
-                    
+
                 </CardBody>
             </CollapsibleCard>
 
@@ -84,14 +84,18 @@
                 <div class="row">
                     @foreach (var role in newRoles.GroupBy(x => x.Name))
                     {
-                        <div class="col-2" style="text-align:center">
+                        <div class="col-4" style="text-align:center">
                             <b style="width: 80%; color: #7A212E;text-align: left; font-size: 1rem;">@role.Key</b>
                             <br />
                             @foreach (var r in role)
                             {
                                 if (r.Wage != 0)
                                 {
-                                    <p><b>RCL @r.RCL</b> <input id="inputExpir" style="width: 50px;" @bind="@r.Wage"><span>&euro;</span><br></p>
+                                    <p>
+                                        <b>RCL @r.RCL</b>
+                                        <input class="form-control" id="inputExpir" style="width: 55px; display: inline;" @bind="@r.Wage">
+                                        <span style="margin-left: 3px;">&euro;</span><br>
+                                    </p>
                                 }
                             }
                         </div>
@@ -101,11 +105,10 @@
 
 
                 </div>
+                <button class="btn btn-sm btn-secondary" style="margin-left: 3px;" @onclick="UpdateRoles">Löhne aktuallisieren</button>
                 <br>
-                <button class="btn btn-sm btn-secondary" @onclick="UpdateRoles">Löhne aktuallisieren</button>
                 <br>
-                <br>
-                
+
             </CardBody>
         </CollapsibleCard>
     </div>
@@ -129,18 +132,18 @@
                     }
                     <br>
                     <br>
-                    <input class="form-control" id="newLang" placeholder="neue Sprache" style="display: inline-block; width: 60%;margin-left: 3px; margin-right: 3px;" @bind="@newLang">
+                    <input class="form-control" id="newLang" style="display: inline-block; width: 60%;margin-left: 3px; margin-right: 3px;" @bind="@newLang">
                     <button class="btn btn-sm btn-secondary" style="margin-bottom: 3px;" @onclick="CreateLang">Sprache hinzufügen</button>
                     <br>
                     <div class="row">
                         <div class="wrap-collabsible ml-3">
 
                             <input id="collapsible" class="toggle" type="checkbox">
-                            <label for="collapsible" class="lbl-toggle" style="margin-bottom:0">
+                            <label for="collapsible" class="lbl-toggle" style="margin-bottom:0; width: 95.5%; margin-left: 3px;">
                                 <tag>Sprachlevel hinzufügen</tag>
                             </label>
 
-                            <div class="collapsible-content">
+                            <div class="collapsible-content" style="width: 95.5%; margin-left: 3px;">
                                 <div class="row ml-1">
                                     <div class="col-4">
                                         <label for="splvl">Level</label><br>
@@ -148,7 +151,7 @@
                                     </div>
                                     <div class="col-4">
                                         <label>Position:</label><br>
-                                        <select class="form-control" style="width: 120px;" @bind="@lvlInt">
+                                        <select class="form-control" style="width: 150px;" @bind="@lvlInt">
                                             @{
                                                 var langLvl = langService.GetAllLevel().Append("").ToArray();
                                                 <option value="0">/@langLvl[0]</option>
@@ -162,7 +165,7 @@
                                     </div>
                                     <div class="col-4">
                                         <br />
-                                        <button class="btn btn-sm btn-secondary" @onclick="IsertLvl">Level hinzufügen</button>
+                                        <button class="btn btn-sm btn-secondary" style="margin-top: 10px;" @onclick="IsertLvl">Level hinzufügen</button>
                                         <br>
 
 
@@ -173,7 +176,7 @@
                     </div>
 
                     <br>
-                    
+
                 </CardBody>
             </CollapsibleCard>
         </div>
@@ -186,61 +189,79 @@
                 <tag class="ml-2" style="font-size: 1.3rem;">Skills entfernen:</tag>
                 <br>
 
-                <input class="form-control" id="skillRemo" placeholder="Skillsuche" @bind="@skillRemo" @bind:event="oninput" />
+                <input class="form-control" id="skillRemo" placeholder="Skillsuche" style="margin-left: 3px; width: 98%" @bind="@skillRemo" @bind:event="oninput" />
                 @if (skillRemo != "")
                 {
                     foreach (var skill in skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillRemo.ToLower())))
                     {
 
-                        <button class="btn btn-outline-primary btn-sm" disabled>@skill.Name </button>
+                        <div style="display:inline-block; margin-right:12px">
+                            <div style="margin-left: 3px; margin-top: 3px; display:inline-block">
+                                <button class="btn btn-outline-primary btn-sm" disabled>@skill.Name </button>
+                                <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveSkill(skill) )">
+                                    <span class="oi oi-minus"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!--<button class="btn btn-outline-primary btn-sm" disabled>@skill.Name </button>
                         <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveSkill(skill) )" style="margin-right: 15px; margin-bottom: 5px">
                             <span class="oi oi-minus"></span>
-                        </button>
+                        </button>-->
 
                     }
                 }
 
-
-
                 <br>
 
-                <tag class="ml-2" style="font-size: 1.3rem;">aktuelle Skilllevelbezeichnungen:</tag>
+                <tag class="ml-2" style="font-size: 1.3rem;">aktuelle Skilllevel:</tag>
                 <br>
-                <div class="row" style="display:inline-flex">
+                <input id="lvl1" @bind="@skillLevel[0]" class="form-control" style="display: inline-block; margin-left: 3px; width: 49%">
+                <input id="lvl2" @bind="@skillLevel[1]" class="form-control" style="display: inline; width: 49%">
+                <input id="lvl3" @bind="@skillLevel[2]" class="form-control" style="display: inline-block; margin-left: 3px; margin-top: 3px; width: 49%">
+                <input id="lvl4" @bind="@skillLevel[3]" class="form-control" style="display: inline; width: 49%; margin-top: 3px;">
+                <button class="btn btn-sm btn-secondary mt-6" style="margin-top: 6px; margin-left: 3px;" @onclick="UpdateSkillLevels">
+                    Skilllevel aktualisieren
+                </button>
 
-
-                    <br>
-                    <div class="col-md-4">
-                        <input style="width:200px;  float: none; margin-bottom:5px;" id="lvl1" @bind="@skillLevel[0]" class="form-control">
-                        <input id="lvl2" @bind="@skillLevel[1]" style="width: 200px; margin-bottom: 5px;" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <input id="lvl3" @bind="@skillLevel[2]" style="width: 200px; margin-bottom: 5px;" class="form-control">
-                        <input id="lvl4" @bind="@skillLevel[3]" style="width: 200px; margin-bottom: 5px; " class="form-control">
-
-                    </div>
-                    <div class="col-md-4">
-                        <br>
-                        <br>
-                        <button class="btn btn-sm btn-secondary" @onclick="UpdateSkillLevels">
-                            Skilllevel aktualisieren
-                        </button>
-                    </div>
-                </div>
                 <br>
                 <br>
+
                 <div class="row">
                     <div class="wrap-collabsible2 ml-3">
                         <input id="collapsible2" class="toggle2" type="checkbox">
-                        <label for="collapsible2" class="lbl-toggle2" style="margin-bottom:0">
+                        <label for="collapsible2" class="lbl-toggle2" style="margin-bottom: 0; width: 95.5%; margin-left: 3px;">
                             <tag>Skill hinzufügen</tag>
 
                         </label>
 
-                        <div class="collapsible-content2">
-                            <div class="row">
-                                <div class="col-3">
-                                    <input id="name" @bind="@newSkill" placeholder="Titel" class="form-control" style="margin-top:2px;" />
+                        <div class="collapsible-content2" style="width: 95.5%; margin-left: 3px;">
+                            <div class="row ml-1">
+                                <div class="col-4">
+                                    <label for="splvl">Skill</label><br>
+                                    <input class="form-control" placeholder="Name" id="name" @bind="@newSkill" /><br>
+                                </div>
+                                <div class="col-4">
+                                    <label>Kategorie:</label><br>
+                                    <select class="form-control" style="width: 155px;" @bind="@skillCat">
+                                        @{
+                                            var cats = skillService.GetAllSkills().Select(x => x.Category).Distinct();
+                                            @foreach (var cat in cats)
+                                            {
+                                                <option value="@cat.Name"> @cat.Name</option>
+                                            }
+                                        }
+                                    </select>
+                                    <br>
+                                </div>
+                                <div class="col-4">
+                                    <br />
+                                    <button class="btn btn-sm btn-secondary" style="margin-top: 10px;" @onclick="CreateSkill">Skill hinzufügen</button>
+                                    <br>
+                                </div>
+
+                                <!--<div class="col-3">
+                                    <input id="name" @bind="@newSkill" placeholder="Name" class="form-control" style="margin-left: 3px;" />
                                 </div>
                                 <div class="col-3">
                                     <span style="margin-top:5px;"> in der Kategorie</span>
@@ -258,7 +279,7 @@
                                 </div>
                                 <div class="col-3">
                                     <button class="btn btn-sm btn-secondary" @onclick="CreateSkill" style="margin-top:8px; margin-left:5px;">hinzufügen</button><br>
-                                </div>
+                                </div>-->
                             </div>
                             <br>
                         </div>
@@ -268,7 +289,7 @@
                 </div>
 
 
-                
+
             </CardBody>
         </CollapsibleCard>
     </div>
