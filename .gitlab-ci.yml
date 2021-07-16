@@ -1,6 +1,5 @@
 stages:
   - build
-#  - deploy
   - test
 
 # baut das Projekt
@@ -9,8 +8,6 @@ build:
   image : mcr.microsoft.com/dotnet/sdk:5.0
   tags:
     - sopro
-  only:
-    - Staging
   script:
      - dotnet build Team14-XCV/XCV.csproj
 
@@ -31,8 +28,6 @@ test:
   image : mcr.microsoft.com/dotnet/sdk:5.0
   tags:
     - sopro
-  only:
-    - Staging
   services:
     - name: mcr.microsoft.com/mssql/server:2019-latest
       alias: ms-sql-server
