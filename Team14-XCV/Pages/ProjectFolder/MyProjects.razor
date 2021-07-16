@@ -20,32 +20,30 @@
 
     <input class="form-control" id="myInput" placeholder="Nach Projektstitel suchen" @bind="@searchTitle" @bind:event="oninput">
     <table id="myTable">
-        
+        <div class="row gutters-sm">
             @{var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower()));}
             @foreach (var project in projects.OrderBy(pro => pro.Title))
             {
-                
+                <div class="col mb-3">
                     <tr>
-                        <td>
-                            <div class="card" style="width:100%;">
-                                <div class="card-header">
-                                    <h4>
-                                        <a style="color: #7A212E;" href="project/@project.Id">@project.Title</a>
+                        <div class="card" style="width:100%;">
+                            <div class="card-header">
+                                <h4>
+                                    <a style="color: #7A212E;" href="project/@project.Id">@project.Title</a>
 
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    <p class="text-secondary"> @project.Description</p>
-                                    <p class="text-secondary"> @project.Purpose</p>
-                                    <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
-                                    <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
-                                    <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
-                                </div>
+                                </h4>
                             </div>
-                        </td>
+                            <div class="card-body">
+                                <p class="text-secondary"> @project.Description123</p>
+                                <p class="text-secondary"> @project.Purpose</p>
+                                <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
+                                <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
+                            </div>
+                        </div>
                     </tr>
-                }
-        
+                </div>}
+        </div>
         </table>
 
 </div> 
