@@ -19,25 +19,37 @@
 
 
     <input class="form-control" id="myInput" placeholder="Nach Projektstitel suchen" @bind="@searchTitle" @bind:event="oninput">
-
     <table id="myTable">
-        <tr class="header">
-            <th style="width:40%;">Name</th>
-            <th style="width:40%;">Laufzeit</th>
-            <th style="width:20%;"></th>
-        </tr>
-        @{ var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower())); }
-        @foreach (var project in projects.OrderBy(pro => pro.Title))
-        {
-            <tr>
-                <td>
-                    <a href="project/@project.Id" style="color:black; text-decoration:none"> @project.Title </a>
-                </td>
-                <td> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy") </td>
+        
+            @{var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower()));}
+            @foreach (var project in projects.OrderBy(pro => pro.Title))
+            {
+                
+                    <tr>
+                        <td>
+                            <div class="card" style="width:100%;">
+                                <div class="card-header">
+                                    <h4>
+                                        <a style="color: #7A212E;" href="project/@project.Id">@project.Title</a>
 
-            </tr>
-        }
-    </table>
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-secondary"> @project.Description</p>
+                                    <p class="text-secondary"> @project.Purpose</p>
+                                    <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
+                                    <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                    <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+        
+        </table>
+
+</div> 
 
 
-</div>
+
+   

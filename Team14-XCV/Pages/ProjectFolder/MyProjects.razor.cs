@@ -2,14 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
 using XCV.Data;
 
 namespace XCV.Pages.ProjectFolder
 {
     public partial class MyProjects
     {
+       
+
         private List<Project> myProjects = new();
         private string searchTitle = "";
+
+        private void DeleteProject(Project p)
+        {
+            projectService.Delete(p);
+        }
 
         protected override async Task OnInitializedAsync()
         {
