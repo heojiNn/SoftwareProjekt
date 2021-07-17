@@ -46,7 +46,7 @@ namespace XCV.Data
         {
             if (!_skillService.GetAllSkills().Any())
             {
-                var content = File.ReadAllText( "datenbasis.json");
+                var content = File.ReadAllText("datenbasis.json");
                 _bDataSetService.JsonUpdate(content, false);
             }
         }
@@ -55,7 +55,7 @@ namespace XCV.Data
             if (!_accountService.ShowAllProfiles().Any())
             {
                 //hier wird der Registrierungsaccount erstellt
-                Employee register = new Employee() { PersoNumber = "999-R", FirstName="Register", LastName="NewAccount", EmployedSince=DateTime.Now };
+                Employee register = new Employee() { PersoNumber = "999-R", FirstName = "Register", LastName = "NewAccount", EmployedSince = DateTime.Now };
                 register.AcRoles.Add(AccessRole.Register);
                 _accountService.CreateAccount(register);
                 List<Employee> employyes10 = new()
@@ -83,7 +83,6 @@ namespace XCV.Data
 
                 foreach (var e in employyes10)
                     _accountService.CreateAccount(e);               //creates 10 accounts
-                Thread.Sleep(1000);
                 foreach (var e in employyes10)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
                 _projectService.Create("Projekt1");                 // 2 projects
@@ -98,7 +97,6 @@ namespace XCV.Data
                     _projectService.Add(p, "Tätigkeit 1");
                     _projectService.Add(p, "Tätigkeit 2");
                 }
-                Thread.Sleep(1000);
                 pros = _projectService.ShowAllProjects();
                 var rand = new Random();
                 foreach (var p in pros)

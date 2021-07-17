@@ -1,3 +1,4 @@
+using System;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,7 @@ namespace XCV.Data
         ///         [employee],   [project], [activity], [activity_done_by], [project_purpose]
         ///         [employee_acrole], [employee_field], [employee_role], [employee_language], [employee_skill]
         ///         [offer], [offerHasEmployee], [offerHasField], [offerHasSkill], [offerhasConfig], [offerHasActiveConfig],
-        ///         [config], [configHasActivity], [configHasField], [configHasSkill], [configHasOrder]
+        ///         [config], [configHasActivity], [configHasField], [configHasSkill]
         /// </summary>
         public void CreateTables()
         {
@@ -77,9 +78,14 @@ namespace XCV.Data
                             ");");
                 con.Execute("IF OBJECT_ID('language_level', 'U') IS NULL " +             // Language_Level
                             "CREATE TABLE [language_level] ( " +                        // ref by employee_language
-                                    "[Level]        INT UNIQUE, " +
-                                    "[Name]         VARCHAR(50) PRIMARY KEY " +
-                            ");");                  //Key is Name   cause values can be  inserted,changed and deleted
+                                    "[Level]        INT PRIMARY KEY, " +
+                                    "[Name]         VARCHAR(50) UNIQUE " +
+                            ");");                   //Key is Level  cause  number 6 is fixed  ---(no insert or delete)----
+                con.Execute(@"IF NOT EXISTS (SELECT * FROM [language_level] ) " +
+                            "Insert Into [language_level] Values " +
+                                "(1, 'a'),  (2, 'ok'),  (3, 'g'),  (4, 'b') ,  (5, 's') ,  (6, 'ss') " +
+                            ";");
+
 
 
                 con.Execute("IF OBJECT_ID('skillCategory', 'U') IS NULL " +              // SkillCategory
@@ -102,7 +108,7 @@ namespace XCV.Data
                             ");");                  //Key is Level  cause  number 4 is fixed  ---(no insert or delete)----
                 con.Execute(@"IF NOT EXISTS (SELECT * FROM [skill_level] ) " +
                             "Insert Into [skill_level] Values " +
-                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelmaeßige'),  (4, 'erfahren') " +
+                                "(1, 'h'),  (2, 'p'),  (3, 'r'),  (4, 'e') " +
                             ";");
 
 
@@ -186,11 +192,11 @@ namespace XCV.Data
                 con.Execute("IF OBJECT_ID('employeeHasLanguage', 'U') IS NULL " +          // Employee Has Language
                             "CREATE TABLE [employeeHasLanguage] ( " +
                                     "[Language]       VARCHAR(50), " +
-                                    "[Language_Level] VARCHAR(50), " +      //can be Null (only when references is gone)
+                                    "[Language_Level] INT, " +      //can be Null (only when references is gone)
                                     "[Employee]       VARCHAR(20), " +
                                     "PRIMARY KEY (language, employee), " +
                                     "CONSTRAINT fK_e_l_lang FOREIGN KEY (language) REFERENCES  language(Name) ON DELETE CASCADE, " +
-                                    "CONSTRAINT fK_e_l_lvl FOREIGN KEY (language_level) REFERENCES  language_level(Name) ON DELETE SET Null, " +
+                                    "CONSTRAINT fK_e_l_lvl FOREIGN KEY (language_level) REFERENCES  language_level(Level), " +
                                     "CONSTRAINT fK_e_l_emp FOREIGN KEY (employee) REFERENCES  employee(PersoNumber) ON DELETE CASCADE " +
                             ");");
                 con.Execute("IF OBJECT_ID('employeeHasSkill', 'U') IS NULL " +             // Employee Has Skill
@@ -230,7 +236,7 @@ namespace XCV.Data
                             "CREATE TABLE [offerHasEmployee] ( " +
                                     "[Offer]        INT, " +
                                     "[PersoNumber]  VARCHAR(20), " +
-                                    "[Role]         VARCHAR(50), " + 
+                                    "[Role]         VARCHAR(50), " +
                                     "[RCL]          INT," +
                                     "[Wage]         DECIMAL(6, 2)," + //Max: (9999.99)                        // Default(null): Wage in dbo.role corresponding to (role, RCL), Else: Textinput on Page
                                     "[HoursPerDay]      INT," +                                               // Default(null): 8, Else: Textinput on Page
@@ -254,7 +260,7 @@ namespace XCV.Data
                                     "[Offer] INT, " +
                                     "[Skill]        VARCHAR(50), " +
                                     "[Skill_Cat]    VARCHAR(50), " +
-                                    "[Skill_Level]  INT, " +               
+                                    "[Skill_Level]  INT, " +
                                     "PRIMARY KEY (Offer, Skill, Skill_Cat), " +
                                     "CONSTRAINT fK_oid_ofsk FOREIGN KEY (Offer) REFERENCES  offer(Id) ON DELETE CASCADE, " +
                                     "CONSTRAINT fK_sk_ofsk FOREIGN KEY (Skill, Skill_Cat) REFERENCES skill(Name, Category) ON DELETE CASCADE, " +
@@ -266,7 +272,7 @@ namespace XCV.Data
                 con.Execute("IF OBJECT_ID('offerHasConfig', 'U') IS NULL " +
                             "CREATE TABLE [offerHasConfig] (" +
                                     "[Offer]        INT," +
-                                    "[Config]       VARCHAR(30)," + 
+                                    "[Config]       VARCHAR(30)," +
                                     "PRIMARY KEY(Offer, Config)," +
                                     "CONSTRAINT fK_ohc_of FOREIGN KEY (Offer) REFERENCES offer(Id) ON DELETE CASCADE," +
                             ");");
@@ -279,7 +285,7 @@ namespace XCV.Data
                             ");");
                 con.Execute("IF OBJECT_ID('config', 'U') IS NULL " +        // Candidate Key: (Offer, Name, Employee)
                            "CREATE TABLE [config] (" +
-                                    "[Offer]        INT," +                     
+                                    "[Offer]        INT," +
                                     "[Name]         VARCHAR(30)," +
                                     "[Employee]     VARCHAR(20)," +         // references employee->PersoNumber On Delete Cascade (the whole employeeconfig gets deleted if emp is removed from the active profiles, not from the offer though)
                                     "[FirstName]    VARCHAR(50), " +
@@ -295,7 +301,7 @@ namespace XCV.Data
                 con.Execute("IF OBJECT_ID('configHasField', 'U') IS NULL " +
                             "CREATE TABLE [configHasField] ( " +
                                     "[Offer]        INT," +
-                                    "[Config]       VARCHAR(30)," +   
+                                    "[Config]       VARCHAR(30)," +
                                     "[cfgEmployee]  VARCHAR(20), " +
                                     "[Field]        VARCHAR(50), " +
                                     "PRIMARY KEY (Offer, Config, cfgEmployee, Field), " +
@@ -338,8 +344,6 @@ namespace XCV.Data
                                     "PRIMARY KEY (Offer, Config), " +
                                     "CONSTRAINT fK_cho FOREIGN KEY (Offer, Config) REFERENCES offerHasConfig(Offer, Config) ON DELETE CASCADE" +
                             ");");
-
-                //------------Config------------------------------------------------
 
                 //-----------------------------------------------------------------------------------------------------
             }
