@@ -151,7 +151,7 @@
 
         <div class="col-sm-6 mb-3" style="min-height: 100px;">
             @{ var allSoftSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill); }
-            <CollapsibleCard CardHeaderTitle="Soft Skils">
+            <CollapsibleCard CardHeaderTitle="Softskills">
                 <CardBody>
                     <div class="scroll ml-2" style="overflow-x: hidden;">
                         <CheckBoxList Data="@allSoftSkills" TextField="@((item)=>item.Name.ToString())"

@@ -153,7 +153,7 @@ namespace Tests.Integration
         public static GenerateService GetGenerateService()
         {
             var sLogger = Mock.Of<ILogger<GenerateService>>();
-            var sut = new GenerateService(GetOfferService(), GetProjectService(), GetEmployeeService());
+            var sut = new GenerateService(/*GetTestConfig(), */sLogger, GetOfferService());
             return sut;
         }
 

@@ -61,7 +61,7 @@ namespace XCV.Data
         {
             var authstate = await GetAuthenticationStateAsync();
             await _jSRuntime.InvokeVoidAsync("sessionStorage.removeItem", sessionStorageKey);                                 //remove
-            _logger.LogInformation($"\"{authstate.User.Identity.Name}\" \t Loged out  and data removed from SessionStorage");
+            _logger.LogInformation($"\"{authstate.User.Identity.Name}\" \t Logged out and data removed from SessionStorage");
         }
 
 
