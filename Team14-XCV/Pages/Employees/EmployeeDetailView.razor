@@ -11,7 +11,7 @@
 
 
 
-<div class="container-fluid">
+
 
     <div class="card my-1">
         <div class="card-header text-center">
@@ -169,7 +169,7 @@
             </CollapsibleCard>
         </div>
     </div>
-</div>
+
 
 <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile("Mitarbeiter.doc",  generateService.GenerateSingleProfile(employee),"application/octet-stream"))>
     Download des Einzelprofils

@@ -17,21 +17,27 @@
 
 <Authorized>
 
-    <div class="container-fluid">
-        <div class="card my-1">
-            <div class="card-header text-center">
-                <h3>Angebotsübersicht</h3>
+    
+       
+    <div class="card my-1">
+        <div class="card-header text-center" style="position: relative">
+            <div style="position: absolute; margin-top: 0.4%;">
+                <a href="offer-create" class="btn btn-secondary" style="float: left; padding: 0px; border-color: #7A212E;">
+                    <i class="oi oi-plus" style="margin-right: 6px; margin-left: 6px"></i>
+                </a>
             </div>
-            <div>
-                <style>
-                    .btn-secondary {
-                        border-color: transparent;
-                    }
-                </style>
-                <a href="offer-create" class="btn btn-secondary oi oi-plus" style="margin: 1em 1em"></a>
-                <button type="button" class="btn btn-secondary oi oi-trash" style=" margin: 1em 1em; float:right;" @onclick="Validate"> Alle Löschen</button>
+            <!--<a href="edit-profile" class="btn btn-secondary" style="float: left; "><i class="oi oi-cog"></i> 1Bearbeiten</a>
+        <div style="position: absolute; margin-top: 0.1%;">
+            <a href="edit-profile" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E"> Bearbeiten</a>
+        </div>-->
+            <h3 style="text-align: center; display: inline; margin-left: 7%;">Angebotsübersicht</h3>
+            <div style="position: relative; display: inline; float: right; margin-top: 0.4%;">
+                <button class="btn btn-secondary oi oi-trash" style="float: right; padding: 4px; font-family: Arial, Helvetica, sans-serif, Icons; border-color: transparent;" @onclick="Validate">
+                    <p style="display: inline;">Alle Löschen</p>
+                </button>
             </div>
         </div>
+    </div>
 
         <br>
         <style>
@@ -98,9 +104,9 @@
         {
             @foreach (Offer o in offers.ToList())
             {
-                <div class="col-sm-6 mb-3 card border border-secondary rounded" style="background-color: lightgray; display: inline-block; width: 50%">
+                <div class="col-sm-6 mb-3 " style=" display: inline-block; width: 50%">
                     @*<br />*@
-                    <div class="card  order border-secondary rounded">
+                    <div class="card">
                         <div class="card-header">
                             <h4>
                                 <a href="offer/@o.Id" style="color: #7A212E;">@o.Title</a>
@@ -127,9 +133,9 @@
                                     </DropDown>
                                 </h4>
                             </div>
-                        </div>
-                        <br />
-                        <div class="card-body card border border-secondary rounded">
+                        
+                        
+                        <div class="card-body">
                             @if (!AngebotCCollapsed)
                             {
 
@@ -172,6 +178,7 @@
                             }
                         </div>
                         @*<br />*@
+                    </div>
                     </div>
                 }
         }
@@ -179,9 +186,9 @@
         {
             @foreach (Offer o in resultingOffers)
             {
-                <div class="col-sm-6 mb-3 card border border-secondary rounded" style="background-color: lightgray; display: inline-block; width: 50%">
+                <div class="col-sm-6 mb-3 " style=" display: inline-block; width: 50%">
                     @*<br />*@
-                    <div class="card  order border-secondary rounded">
+                    <div class="card  ">
                         <div class="card-header">
                             <h4>
                                 <a href="offer/@o.Id" style="color: #7A212E;">@o.Title</a>
@@ -208,9 +215,9 @@
                                     </DropDown>
                                 </h4>
                             </div>
-                        </div>
-                        <br />
-                        <div class="card-body card border border-secondary rounded">
+                        
+                        
+                        <div class="card-body ">
                             @if (!AngebotCCollapsed)
                             {
 
@@ -252,11 +259,12 @@
                                 </div>
                             }
                         </div>
+                        </div>
                         @*<br />*@
                     </div>
                 }
         }
-    </div>
+    
     <a href="offers" class="btn btn-secondary oi oi-arrow-circle-top" style=" float: right; margin: 3em 1em"></a>
     </Authorized>
 </AuthorizeView>

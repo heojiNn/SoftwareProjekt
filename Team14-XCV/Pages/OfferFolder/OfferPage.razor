@@ -11,12 +11,15 @@
 
 @using System.Globalization;
 
-<div class="container-fluid">
+
 
 
     <div class="card my-1">
         <div class="card-header">
             <h3> @myOffer.Title </h3>
+            <div style="position: absolute; margin-top: 0.1%;">
+                <a href="offer-edit/@myOffer.Id" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E">Bearbeiten</a>
+            </div>
             <h5 style="color: white; text-align: center;"> Von @(myOffer.Start.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))) - Bis @(myOffer.End.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))  </h5>
         </div>
     </div>
@@ -295,7 +298,7 @@
         <button type="button" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick=@(async () => await BlazorDownloadFileService.DownloadFile($"{myOffer.Title}" + ".doc", generateService.GenerateDocumentConfig(myOffer, configService.GetSelectedConfig(myOffer)),"application/octet-stream"))>
            Download
         </button>}
-</div>
+
 
 <Modal @ref="modal">
     <Title>Bei Bestätigung wird folgende Konfiguration gelöscht:</Title>

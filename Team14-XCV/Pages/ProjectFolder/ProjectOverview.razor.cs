@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Components;
 using XCV.Data;
 using XCV.Shared.Misc;
 
@@ -6,6 +7,8 @@ namespace XCV.Pages.ProjectFolder
 {
     public partial class ProjectOverview
     {
+        
+
         private string searchTitle ="";
         private Modal modal;
         private IEnumerable<Project> allProjects;
