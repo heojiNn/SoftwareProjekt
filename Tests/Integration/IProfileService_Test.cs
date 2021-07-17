@@ -1,7 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using XCV.Data;
-
+using System;
 
 namespace Tests.Integration
 {
@@ -40,6 +40,7 @@ namespace Tests.Integration
         //   Nachbedingungen: .PersoNumber .Password .FirstName .LastName  .AcRoles
         //                      1-zu-1 gespeichert
         [Test]
+        [Order(4)]
         public void UpdateAddTest()
         {
             //employeeService.CreateAccount(new Employee() { PersoNumber = "001", FirstName="Test", LastName="nach", Password="001" });
@@ -76,6 +77,7 @@ namespace Tests.Integration
 
 
         [Test]
+        [Order(3)]
         public void InvalidUpdateAddTest()
         {
             var employee = sut.ShowProfile("000");  //should have been created by Initializer.cs
@@ -109,6 +111,32 @@ namespace Tests.Integration
             var newEmployee3 = sut.ShowProfile("000");
             Assert.IsEmpty(newEmployee3.Roles.Where(r => r.Name == role.Name), "Rollen hat Constrains nicht eingehalten");
 
+        }
+
+        [Test]
+        [Order(1)]
+        public void CreateEmployeeTest()
+        {
+            var employed = DateTime.Now;
+            employeeService.CreateAccount(new Employee() { PersoNumber = "005", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
+
+            Employee employee = sut.ShowProfile("005");
+
+            Assert.IsNotNull(employee, "Employee wurde nicht erstellt");
+            Assert.AreEqual(employee.FirstName, "Nummer", "Employee.FirstName wurde nicht erstellt");
+            Assert.AreEqual(employee.LastName, "Fuenf", "Employee.LastName wurde nicht erstellt");
+            Assert.AreEqual(employee.EmployedSince, employee, "Employee.EmployedSince wurde nicht erstellt");
+        }
+
+        [Test]
+        [Order(2)]
+        public void DeleteEmployeeTest()
+        {
+            employeeService.DeleteAccount("005");
+
+            Employee employee = sut.ShowProfile("005");
+
+            Assert.IsNull(employee, "Employee wurde nicht geloescht");
         }
     }
 }
