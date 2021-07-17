@@ -15,4 +15,4 @@ services:
       SA_PASSWORD: "Pa55w0rd2021"
       MSSQL_PID: Express
     ports:
-      - "1443:1433"
+      - "1433:1433"

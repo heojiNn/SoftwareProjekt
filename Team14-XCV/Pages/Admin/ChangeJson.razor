@@ -51,26 +51,4 @@
 <br>
 
 
-@code {
-    private string textarea = "";
-    private bool validJson = true;
 
-    protected override void OnInitialized()
-    {
-        dataSetService.ChangeEventHandel += OnChange;
-        textarea = dataSetService.ShowCurrentDataSet();
-    }
-
-    private async Task ShowUpload(InputFileChangeEventArgs evA) => textarea = await dataSetService.ShowBrowserFile(evA.File);
-    private void Validate() => dataSetService.JsonUpdate(textarea);
-
-    private void Upload() => dataSetService.JsonUpdate(textarea, false);
-
-
-    private ChangeResult changeInfo = new();
-    private void OnChange(object sender, ChangeResult e)
-    {
-        changeInfo = e;
-        validJson = (!e.ErrorMessages.Any());
-    }
-}

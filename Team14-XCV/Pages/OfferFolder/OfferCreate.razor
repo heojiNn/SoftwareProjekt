@@ -182,7 +182,7 @@
                             <div class="card employee">
                                 <div class="card-header">
                                     @(new String(em.FirstName + " " + em.LastName.Substring(0, 1) + "."))
-                                    <button type="button" class="btn oi oi-trash btnhover" style="float:right; background-color:transparent;" @onclick="(e => SelectedParticipants.Remove(em))">Entfernen</button>
+                                    <button type="button" class="btn oi oi-trash btnhover" style="float: right; background-color: transparent; color: #7A212E;" @onclick="(e => SelectedParticipants.Remove(em))">Entfernen</button>
                                 </div>
                                 <div class="card-body">
                                     @{ var allRoles = roleService.GetAllRoles().Where(x => x.RCL == 0); }
@@ -190,7 +190,7 @@
                                         Rolle:
                                         @foreach (Role r in allRoles)
                                         {
-                                            <option value="@r.Name"> @r.Name </option>
+                                            <option value="@r.Name"><b>@r.Name</b> </option>
                                         }
                                     </select>
 
@@ -203,16 +203,29 @@
                                     </select>
 
                                     <br />
-                                    Stundensatz <input type="number" @bind="@em.offerWage">
-                                    Std/Tag <input type="number" min="0" max="24" @bind="@em.hoursPerDay" />
+                                    <div class="row gutters-sm">
+                                        <div class="col-sm-6 mb-3">
+                                            Stundensatz <input class="form-control"  type="number" @bind="@em.offerWage"style="width:80%" >
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            Std/Tag <input class="form-control"  type="number" min="0" max="24" @bind="@em.hoursPerDay" style="width:80%"/>
+                                        </div>
+                                    </div>
                                     <br />
-                                    Tage/Laufzeit <input type="number" @bind="@em.daysPerRun"/>
-                                    Rabatt(0-100) <input type="number" min="0" max="100"  @bind="@em.discount" />
+                                    <div class="row gutters-sm">
+                                        <div class="col-sm-6 mb-3">
+                                            Tage/Laufzeit <input class="form-control"   type="number" @bind="@em.daysPerRun" style="width:80%"/>
+                                        </div>
+                                        <div class="col-sm-6 mb-3">
+                                            Rabatt(0-100) <input  class="form-control" type="number" min="0" max="100" @bind="@em.discount" style="width:80%" />
+
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    }
                                 </div>
-                            </div>
-                         }
-                    }
-                </div>
                 <button type="button" class="btn btn-secondary" style=" float:left; margin: 3em 1em" @onclick="RemoveAllEmployees"> Alle Entfernen </button>
                 <a href="offer-search-add" class="btn btn-secondary" style="float:left; margin: 3em 1em" @onclick="Store"> Hinzufügen </a>
             </div>

@@ -6,15 +6,15 @@ using System.Linq;
 
 namespace XCV.Data
 {
-    public class SkillCategory : SkillTreeNode, IComparable
+    public class SkillCategory : SkilTreeNode, IComparable
     {
-        [MaxLength(40, ErrorMessage = "Der Name der Kategorie darf 40 Zeichen nicht überschreiten.")]
+        [MaxLength(40, ErrorMessage = "Der Name der Kategorie darf 50 Zeichen nicht überschreiten.")]
         public override string Name { get; set; } = "";
 
 
         public SkillCategory Parent { get; set; }
 
-        public List<SkillTreeNode> Children { get; set; } = new List<SkillTreeNode>();
+        public List<SkilTreeNode> Children { get; set; } = new List<SkilTreeNode>();
 
 
         public SkillCategory GetRoot()
@@ -67,7 +67,7 @@ namespace XCV.Data
 
 
 
-    public abstract class SkillTreeNode
+    public abstract class SkilTreeNode
     {
         public virtual string Name { get; set; }
     }

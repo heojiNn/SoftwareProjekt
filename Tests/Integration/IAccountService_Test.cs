@@ -32,7 +32,7 @@ namespace Tests.Integration
         //
         [TestCase("0A-1", "Test", "Tester", ExpectedResult = true)]
         [TestCase("0 1", "Test", "Tester", ExpectedResult = false)]
-        [TestCase("01", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Tester", ExpectedResult = false)]
+        [TestCase("01", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Tester", ExpectedResult = true)]
         [TestCase("01", "Test", "", ExpectedResult = false)]
         [TestCase("0''1", "Test", "Tester", ExpectedResult = false)]
         [Order(1)]

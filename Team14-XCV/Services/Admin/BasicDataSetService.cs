@@ -124,7 +124,7 @@ namespace XCV.Data
             newSkillTree.Children.Add(dataSkillTree.HardSkills);   // HardSkills
 
             var softSkills = new SkillCategory() { Name = "SoftSkills", Parent = newSkillTree };
-            IEnumerable<SkillTreeNode> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
+            IEnumerable<SkilTreeNode> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
             softSkills.Children = softChildren.ToList();
             newSkillTree.Children.Add(softSkills);                  // and SoftSkills
             var newSkillLvl = dataSkillTree.hardSkillLevels;
