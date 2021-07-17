@@ -46,8 +46,7 @@ namespace XCV.Data
         {
             if (!_skillService.GetAllSkills().Any())
             {
-                //var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-                var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
+                var content = File.ReadAllText( "datenbasis.json");
                 _bDataSetService.JsonUpdate(content, false);
             }
         }
@@ -80,8 +79,8 @@ namespace XCV.Data
                 employyes10[1].AcRoles.Add(AccessRole.Sales);
                 employyes10[2].AcRoles.Add(AccessRole.Sales);
                 employyes10[3].AcRoles.Add(AccessRole.Sales);
-                
-                
+
+
                 foreach (var e in employyes10)
                     _accountService.CreateAccount(e);               //creates 10 accounts
                 Thread.Sleep(1000);
@@ -182,7 +181,7 @@ namespace XCV.Data
                 {
                     _offerService.Create(o.Title, o.Description, o.Start, o.End);
                     o.Id = _offerService.GetLastId();
-                    
+
                     if (rand.Next(4) == 0)
                     {
                         foreach (Field f in fields) _offerService.Add(o, f);

@@ -69,17 +69,7 @@ namespace Tests.Integration
                 settingsPath = Path.Combine(currentParent, "testsettings.json");
 
             return new ConfigurationBuilder().AddJsonFile(settingsPath).Build();
-            //var stri = config().GetConnectionString("MS_SQL_Connection");
-            //Console.WriteLine(stri);
         }
-        // public static IConfiguration GetConfigMoq()
-        // {
-        //     var inMemoryConfiguration = new Dictionary<string, string> {
-        //         { "ConnectionStrings:MS_SQL_Connection", testConnection },
-        //         { "ConnectionStrings:MS_SQL_Connection_Root", testConnectionWhithout },
-        //         { "ConnectionStrings:DatabaseName", "IntegrationTests3" } };
-        //     return new ConfigurationBuilder().AddInMemoryCollection(inMemoryConfiguration).Build();
-        // }
         public static IWebHostEnvironment GetEnvMoq()
         {
             var mockEnvironment = new Mock<IWebHostEnvironment>();
@@ -160,11 +150,7 @@ namespace Tests.Integration
         public static void DoJsonUpdate()
         {
             var bdsService = GetBDSService();
-            var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
-            currentParent = Directory.GetParent(currentParent).FullName;
-            currentParent = Directory.GetParent(currentParent).FullName;
-            //currentParent = Directory.GetParent(currentParent).FullName;    //now git root directory
-            var content = File.ReadAllText(/*Path.Combine(currentParent, */"datenbasis.json"/*)*/);
+            var content = File.ReadAllText("datenbasis.json");
             bdsService.JsonUpdate(content, false);
         }
 

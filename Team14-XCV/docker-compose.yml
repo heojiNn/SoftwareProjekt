@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  xcv:
+    image: ${DOCKER_REGISTRY-}xcv
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+  ms-sql-server:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Pa55w0rd2021"
+      MSSQL_PID: Express
+    ports:
+      - "1435:1433"
