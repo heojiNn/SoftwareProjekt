@@ -21,14 +21,16 @@ namespace XCV.Data
 {
     public class GenerateService : IGenerateService
     {
-        private readonly ILogger<GenerateService> log;
-        private readonly IOfferService offerService;
         private readonly IProjectService projectService;
+        private readonly IOfferService offerService;
+        private readonly IProfileService profileService;
+         
 
-        public GenerateService(ILogger<GenerateService> logger, IOfferService gofferService)
+        public GenerateService(IOfferService gofferService, IProjectService gprojectService, IProfileService gprofileService)
         {
-            log = logger;
             offerService = gofferService;
+            projectService = gprojectService;
+            profileService = gprofileService;
         }
 
 
@@ -60,7 +62,7 @@ namespace XCV.Data
                     if (e.Image.Length != 0)
                     {
                         ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                        using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot\", e.Image), FileMode.Open))
+                        using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot", e.Image), FileMode.Open))
                         {
                             imagePart.FeedData(stream);
                         }
@@ -92,12 +94,16 @@ namespace XCV.Data
                         run3.AppendChild(new Text($"Nachname: -") { Space = SpaceProcessingModeValues.Preserve });
 
                     // add Description
-                    Paragraph para4 = body.AppendChild(new Paragraph());
-                    Run run4 = para4.AppendChild(new Run());
-                    if (e.Description.Length != 0)
-                        run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
-                    else
-                        run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                    if (e.Description != "")
+                    {
+                        Paragraph para4 = body.AppendChild(new Paragraph());
+                        Run run4 = para4.AppendChild(new Run());
+                        if (e.Description.Length != 0)
+                            run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                        else
+                            run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                    }
+                   
 
                     // add RCL
                     Paragraph para5 = body.AppendChild(new Paragraph());
@@ -216,31 +222,34 @@ namespace XCV.Data
                     ParagraphProperties ppUnordered = new ParagraphProperties(npUl, sblUl, iUl);
                     ppUnordered.ParagraphStyleId = new ParagraphStyleId() { Val = "ListParagraph" };
 
+                    Employee pre = profileService.ShowProfile(e.PersoNumber); //or adapt code where employee is given as input to generate.
 
-                    if (e.Projects.Count != 0 && e.Projects != null)
+                    if (pre.Projects.Count != 0 && pre.Projects != null)
                     {
-                        int length = e.Projects.Count();
-                        //int i = 0;
+                        int length = pre.Projects.Count();
+                        int i = 0;
                         Paragraph[] parAr = new Paragraph[length];
-
-
-                        //----------------by mario
-                        ////            projectservice Get(  e.Projects.ProNumber  )
-                        // foreach (Project p in e.Projects)
-                        // {
-                        //     parAr[i] = new Paragraph();
-                        //     parAr[i].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-                        //     parAr[i].Append(new Run(new Text(p.Title)));
-                        //     body.Append(parAr[i]);
-                        //     i++;
-                        // }
+                        foreach (var p in pre.Projects.Select(x => x.project).Distinct())
+                        {
+                            parAr[i] = new Paragraph();
+                            parAr[i].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
+                            parAr[i].Append(new Run(new Text(projectService.ShowProject(p).Title + ": ")));
+                            foreach (var pr in e.Projects.Where(x => x.project == p).ToHashSet())
+                            {
+                                var last = pre.Projects.Where(x => x.project == p).ToHashSet().Last();
+                                if (!pr.Equals(last)) parAr[i].Append(new Run(new Text(pr.activity + ", ")));
+                                else parAr[i].Append(new Run(new Text(pr.activity)));                                               
+                                                                                                                                    
+                            }
+                            body.Append(parAr[i]);
+                            i++;
+                        }
                     }
                     else
                     {
                         run12.AppendChild(new Text("-") { Space = SpaceProcessingModeValues.Preserve });
                     }
-
-
+              
 
                     //==================================================================================//
 
@@ -292,7 +301,6 @@ namespace XCV.Data
                         Run run0 = para0.AppendChild(new Run());
                         run0.AppendChild(new Text($"Keine Mitarbeiter oder Leere Konfigurationen!") { Space = SpaceProcessingModeValues.Preserve });
                         run0.AppendChild(new Break());
-
                     }
                     else
                     {
@@ -306,154 +314,174 @@ namespace XCV.Data
                             run.AppendChild(new Text($"{oe.offerRole}:") { Space = SpaceProcessingModeValues.Preserve });
                             run.AppendChild(new Break());
 
-                            if (e.FirstName != null)
+                            for (int n=0; n < 5; ++n) 
                             {
-                                Paragraph para2 = body.AppendChild(new Paragraph());
-                                Run run2 = para2.AppendChild(new Run());
-                                if (e.FirstName.Length != 0)
-                                    run2.AppendChild(new Text($"Vorname: {e.FirstName}") { Space = SpaceProcessingModeValues.Preserve });
-                                else
-                                    run2.AppendChild(new Text($"Vorname: -") { Space = SpaceProcessingModeValues.Preserve });
-                            }
-
-                            if (e.LastName != null)
-                            {
-                                Paragraph para3 = body.AppendChild(new Paragraph());
-                                Run run3 = para3.AppendChild(new Run());
-                                if (e.LastName.Length != 0)
-                                    run3.AppendChild(new Text($"Nachname: {e.LastName}") { Space = SpaceProcessingModeValues.Preserve });
-                                else
-                                    run3.AppendChild(new Text($"Nachname: -") { Space = SpaceProcessingModeValues.Preserve });
-                            }
-
-                            if (e.Description != null)
-                            {
-                                Paragraph para4 = body.AppendChild(new Paragraph());
-                                Run run4 = para4.AppendChild(new Run());
-                                if (e.Description.Length != 0)
-                                    run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
-                                else
-                                    run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
-                            }
-
-                            if (e.Image != null)
-                            {
-                                if (e.Image.Length != 0)
+                                switch (e.order[n]) // Determines the order
                                 {
-                                    ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                                    using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot", e.Image), FileMode.Open))
-                                    {
-                                        imagePart.FeedData(stream);
-                                    }
-                                    AddImageToBody(body, mainPart.GetIdOfPart(imagePart));
+                                    case 1:
+                                        if (e.Image != null)
+                                        {
+                                            if (e.Image.Length != 0)
+                                            {
+                                                ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
+                                                using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot", e.Image), FileMode.Open))
+                                                {
+                                                    imagePart.FeedData(stream);
+                                                }
+                                                AddImageToBody(body, mainPart.GetIdOfPart(imagePart));
+                                            }
+                                        }
+
+                                        if (e.FirstName != null)
+                                        {
+                                            Paragraph para2 = body.AppendChild(new Paragraph());
+                                            Run run2 = para2.AppendChild(new Run());
+                                            if (e.FirstName.Length != 0)
+                                                run2.AppendChild(new Text($"Vorname: {e.FirstName}") { Space = SpaceProcessingModeValues.Preserve });
+                                            else
+                                                run2.AppendChild(new Text($"Vorname: -") { Space = SpaceProcessingModeValues.Preserve });
+                                        }
+
+                                        if (e.LastName != null)
+                                        {
+                                            Paragraph para3 = body.AppendChild(new Paragraph());
+                                            Run run3 = para3.AppendChild(new Run());
+                                            if (e.LastName.Length != 0)
+                                                run3.AppendChild(new Text($"Nachname: {e.LastName}") { Space = SpaceProcessingModeValues.Preserve });
+                                            else
+                                                run3.AppendChild(new Text($"Nachname: -") { Space = SpaceProcessingModeValues.Preserve });
+                                        }
+
+                                        if (e.Description != null)
+                                        {
+                                            Paragraph para4 = body.AppendChild(new Paragraph());
+                                            Run run4 = para4.AppendChild(new Run());
+                                            if (e.Description.Length != 0)
+                                                run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                                            else
+                                                run4.AppendChild(new Text($"Beschreibung: {e.Description}") { Space = SpaceProcessingModeValues.Preserve });
+                                        }
+
+
+
+                                        if (e.Experience.HasValue)
+                                        {
+                                            Paragraph para6 = body.AppendChild(new Paragraph());
+                                            Run run6 = para6.AppendChild(new Run());
+                                            run6.AppendChild(new Text($"Berufserfahrung: {e.EmployedSince.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
+                                        }
+
+                                        if (e.EmployedSince.HasValue)
+                                        {
+                                            Paragraph para7 = body.AppendChild(new Paragraph());
+                                            Run run7 = para7.AppendChild(new Run());
+                                            run7.AppendChild(new Text($"Angestellt seit: {e.EmployedSince.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
+                                        }
+                                        break;
+                                    case 2:
+                                        if (e.selectedFields != null && e.selectedFields.Count != 0)
+                                        {
+                                            Paragraph para9 = body.AppendChild(new Paragraph());
+                                            Run run9 = para9.AppendChild(new Run());
+                                            run9.AppendChild(new Text($"Branchenwissen: "));
+                                            if ((e.selectedFields.Count() != 0) && e.selectedFields != null)
+                                            {
+                                                Field lastF = e.selectedFields.Last();
+                                                foreach (Field f in e.selectedFields)
+                                                {
+                                                    if (!f.Equals(lastF))
+                                                        run9.AppendChild(new Text($"{f.Name}, "));
+                                                    else
+                                                        run9.AppendChild(new Text($"{f.Name}") { Space = SpaceProcessingModeValues.Preserve });
+                                                }
+                                            }
+                                            else
+                                            {
+                                                run9.AppendChild(new Text($"-"));
+                                            }
+                                        }
+                                        break;
+                                    case 3:
+                                        if (e.selectedSoftSkills != null && e.selectedSoftSkills.Count != 0)
+                                        {
+                                            Paragraph paraA = body.AppendChild(new Paragraph());
+                                            Run runA = paraA.AppendChild(new Run());
+                                            runA.AppendChild(new Text($"Softskills: "));
+                                            List<Skill> temp = e.selectedSoftSkills.Where(s => s.Type == SkillGroup.Softskill).ToList();
+                                            Skill lastSS = temp.Last();
+                                            if ((temp.Count() != 0) && temp != null)
+                                                foreach (Skill s in temp)
+                                                {
+                                                    if (!s.Equals(lastSS))
+                                                        runA.AppendChild(new Text($"{s.Name}, "));
+                                                    else
+                                                        runA.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
+                                                }
+                                            else
+                                            {
+                                                runA.AppendChild(new Text($"-"));
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        if (e.selectedHardSkills != null && e.selectedHardSkills.Count != 0)
+                                        {
+                                            Paragraph paraA = body.AppendChild(new Paragraph());
+                                            Run runA = paraA.AppendChild(new Run());
+                                            runA.AppendChild(new Text($"Hardskills: "));
+                                            List<Skill> temp = e.selectedHardSkills.Where(s => s.Type == SkillGroup.Hardskill).ToList();
+                                            Skill lastSS = temp.Last();
+                                            if ((temp.Count() != 0) && temp != null)
+                                                foreach (Skill s in temp)
+                                                {
+                                                    if (!s.Equals(lastSS))
+                                                        runA.AppendChild(new Text($"{s.Name}, "));
+                                                    else
+                                                        runA.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
+                                                }
+                                            else
+                                            {
+                                                runA.AppendChild(new Text($"-"));
+                                            }
+                                        }
+                                        break;
+                                    case 5:
+                                        if (e.selectedProjects != null && e.selectedProjects.Count != 0)
+                                        {
+                                            // Projects - Bulletpointlist(unordered)-example:
+                                            Paragraph paraB = body.AppendChild(new Paragraph());
+                                            Run runB = paraB.AppendChild(new Run());
+                                            runB.AppendChild(new Text("Projekte: "));
+                                            SpacingBetweenLines sblUl = new SpacingBetweenLines() { After = "0" };
+                                            Indentation iUl = new Indentation() { Hanging = "360" };
+                                            NumberingProperties npUl = new NumberingProperties(
+                                                new NumberingLevelReference() { Val = 1 },
+                                                new NumberingId() { Val = 2 }
+                                            );
+                                            ParagraphProperties ppUnordered = new ParagraphProperties(npUl, sblUl, iUl);
+                                            ppUnordered.ParagraphStyleId = new ParagraphStyleId() { Val = "ListParagraph" };
+                                            int length = e.selectedProjects.Count();
+                                            int j = 0;
+                                            Paragraph[] parAr = new Paragraph[length];
+
+                                            foreach (int p in e.selectedProjects.Select(x => x.project).Distinct())
+                                            {
+                                                parAr[j] = new Paragraph();
+                                                parAr[j].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
+                                                parAr[j].Append(new Run(new Text(projectService.ShowProject(p).Title + ": ")));
+                                                foreach (var pr in e.selectedProjects.Where(x => x.project == p).ToHashSet())
+                                                {
+                                                    var last = e.selectedProjects.Where(x => x.project == p).ToHashSet().Last();
+                                                    if (!pr.Equals(last)) parAr[j].Append(new Run(new Text(pr.activity + ", ")));      //if activity equals "", it was deselected on config-edit-page.
+                                                    else parAr[j].Append(new Run(new Text(pr.activity)));                                                   //this assures that you can select projects and projectactivities mutually exclusive
+                                                }                                                                                                           //with the restriction you can't show projectactivites without the parent project
+                                                body.Append(parAr[j]);
+                                                j++;
+                                            }
+                                        }
+                                        break;
                                 }
                             }
-
-                            if (e.Experience.HasValue)
-                            {
-                                Paragraph para6 = body.AppendChild(new Paragraph());
-                                Run run6 = para6.AppendChild(new Run());
-                                run6.AppendChild(new Text($"Berufserfahrung: {e.EmployedSince.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
-                            }
-
-                            if (e.EmployedSince.HasValue)
-                            {
-                                Paragraph para7 = body.AppendChild(new Paragraph());
-                                Run run7 = para7.AppendChild(new Run());
-                                run7.AppendChild(new Text($"Angestellt seit: {e.EmployedSince.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))}") { Space = SpaceProcessingModeValues.Preserve });
-                            }
-
-                            // Collections
-                            if (e.selectedFields != null && e.selectedFields.Count != 0)
-                            {
-                                Paragraph para9 = body.AppendChild(new Paragraph());
-                                Run run9 = para9.AppendChild(new Run());
-                                run9.AppendChild(new Text($"Branchenwissen: "));
-                                if ((e.selectedFields.Count() != 0) && e.selectedFields != null)
-                                {
-                                    Field lastF = e.selectedFields.Last();
-                                    foreach (Field f in e.selectedFields)
-                                    {
-                                        if (!f.Equals(lastF))
-                                            run9.AppendChild(new Text($"{f.Name}, "));
-                                        else
-                                            run9.AppendChild(new Text($"{f.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                                    }
-                                }
-                                else
-                                {
-                                    run9.AppendChild(new Text($"-"));
-                                }
-                            }
-                            if (e.selectedSoftSkills != null && e.selectedSoftSkills.Count != 0)
-                            {
-                                Paragraph paraA = body.AppendChild(new Paragraph());
-                                Run runA = paraA.AppendChild(new Run());
-                                runA.AppendChild(new Text($"Softskills: "));
-                                List<Skill> temp = e.selectedSoftSkills.Where(s => s.Type == SkillGroup.Softskill).ToList();
-                                Skill lastSS = temp.Last();
-                                if ((temp.Count() != 0) && temp != null)
-                                    foreach (Skill s in temp)
-                                {
-                                    if (!s.Equals(lastSS))
-                                        runA.AppendChild(new Text($"{s.Name}, "));
-                                    else
-                                        runA.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                                }
-                                 else
-                                {
-                                    runA.AppendChild(new Text($"-"));
-                                }
-                            }
-                            if (e.selectedHardSkills != null && e.selectedHardSkills.Count != 0)
-                            {
-                                Paragraph paraA = body.AppendChild(new Paragraph());
-                                Run runA = paraA.AppendChild(new Run());
-                                runA.AppendChild(new Text($"Hardskills: "));
-                                List<Skill> temp = e.selectedHardSkills.Where(s => s.Type == SkillGroup.Hardskill).ToList();
-                                Skill lastSS = temp.Last();
-                                if ((temp.Count() != 0) && temp != null)
-                                    foreach (Skill s in temp)
-                                    {
-                                        if (!s.Equals(lastSS))
-                                            runA.AppendChild(new Text($"{s.Name}, "));
-                                        else
-                                            runA.AppendChild(new Text($"{s.Name}") { Space = SpaceProcessingModeValues.Preserve });
-                                    }
-                                else
-                                {
-                                    runA.AppendChild(new Text($"-"));
-                                }
-                            }
-                            // Kleiner Fehler irgendwo - nullreference
-                            //if (e.selectedProjects != null && e.selectedProjects.Count != 0)
-                            //{
-                            //    // Projects - Bulletpointlist(unordered)-example:
-                            //    Paragraph paraB = body.AppendChild(new Paragraph());
-                            //    Run runB = paraB.AppendChild(new Run());
-                            //    runB.AppendChild(new Text("Projekte: "));
-                            //    SpacingBetweenLines sblUl = new SpacingBetweenLines() { After = "0" };
-                            //    Indentation iUl = new Indentation() { Hanging = "360" };
-                            //    NumberingProperties npUl = new NumberingProperties(
-                            //        new NumberingLevelReference() { Val = 1 },
-                            //        new NumberingId() { Val = 2 }
-                            //    );
-                            //    ParagraphProperties ppUnordered = new ParagraphProperties(npUl, sblUl, iUl);
-                            //    ppUnordered.ParagraphStyleId = new ParagraphStyleId() { Val = "ListParagraph" };
-                            //    int length = e.selectedProjects.Count();
-                            //    int j = 0;
-                            //    Paragraph[] parAr = new Paragraph[length];
-                            //    foreach (var p in e.selectedProjects)
-                            //    {
-                            //        parAr[j] = new Paragraph();
-                            //        parAr[j].ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-                            //        parAr[j].Append(new Run(new Text(projectService.ShowProject(p.project).Title)));
-                            //        foreach (var pa in e.selectedProjects.Where(x => x.project == p.project))
-                            //            parAr[j].Append(new Run(new Text(pa.activity)));
-                            //        body.Append(parAr[j]);
-                            //        j++;
-                            //    }
-                            //}
                             AddPageBreak(body);
                         }
 
@@ -554,8 +582,8 @@ namespace XCV.Data
                         int i = 0;
                         int cntDays = 0;
                         double cost = 0;
-                        double[] mean = new double[o.participants.Count];
                         double discounts = 0;
+                        double feePt = 0;
                         foreach (Employee e in o.participants)
                         {
                            // Create a row.
@@ -578,7 +606,6 @@ namespace XCV.Data
                                 runProperties.AppendChild(strike);
                                 run.AppendChild(new Text($"{(e.offerWage * e.hoursPerDay)}€/PT"));
                                 tcb.Append(new Paragraph(new Run(new Text($"{e.discount}%"))));
-                                discounts += (e.offerWage * e.hoursPerDay) - ((e.offerWage * e.hoursPerDay) - (e.discount/100 * e.offerWage * e.hoursPerDay)); 
                             }
                             else tcb.Append(new Paragraph(new Run(new Text(""))));
 
@@ -599,8 +626,9 @@ namespace XCV.Data
                             trx.Append(tca, tcb, tcc, tcd, tce);
                             table.Append(trx);
 
-                            mean[i] = (e.offerWage - (e.discount * (1 / 100) * e.offerWage)) * e.hoursPerDay * e.daysPerRun;
-                            cost += (e.offerWage - (e.discount * (1 / 100) * e.offerWage)) * e.hoursPerDay * e.daysPerRun;
+                            discounts += (e.offerWage * e.hoursPerDay) - ((e.offerWage - (e.discount * 1 / 100 * e.offerWage)) * e.hoursPerDay);
+                            feePt += (e.offerWage - (e.offerWage * e.discount * 1 / 100)) * e.hoursPerDay;
+                            cost += (e.offerWage - (e.discount / 100 * e.offerWage)) * e.hoursPerDay * e.daysPerRun;
                             cntDays += e.daysPerRun;
                         }
 
@@ -636,14 +664,21 @@ namespace XCV.Data
                         tcH.Append(new Paragraph(new Run(new Text($""))));
                         TableCell tcI = new TableCell();
                         tcI.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
-                        tcI.Append(new Paragraph(new Run(new Text($"Ø {Mean(mean)}"))));
+                        tcI.Append(new Paragraph(new Run(new Text($"Ø {feePt/o.participants.Count}"))));
                         TableCell tcJ = new TableCell();
                         tcJ.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
                         tcJ.Append(new Paragraph(new Run(new Text($""))));
                         TableCell tcK = new TableCell();
                         tcK.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
                         tcK.Append(new Paragraph(new Run(new Text(cntDays + " PT"))));
-                        tcK.Append(new Paragraph(new Run(new Text($"{cost} €"))));
+                        Paragraph paraF = tcK.AppendChild(new Paragraph());
+                        Run runF = paraF.AppendChild(new Run());
+                        RunProperties runPropertiesF = runF.AppendChild(new RunProperties());
+                        Bold boldF = new Bold();
+                        Color colorF = new Color() { Val = "000000" }; //black (val in hex)
+                        runPropertiesF.AppendChild(boldF);
+                        runPropertiesF.AppendChild(colorF);
+                        runF.AppendChild(new Text($"{cost} €"));
 
                         tr4.Append(tcG, tcH, tcI, tcJ, tcK);
                         table.Append(tr4);
@@ -664,7 +699,8 @@ namespace XCV.Data
                         tcE.Append(new Paragraph(new Run(new Text($""))));
                         TableCell tcF = new TableCell();
                         tcF.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
-                        tcF.Append(new Paragraph(new Run(new Text($"{cost + discounts} €"))));
+                        
+                        tcF.Append(new Paragraph(new Run(new Text($"{cost + discounts} €"))));                    
                         tcF.Append(new Paragraph(new Run(new Text($"-{discounts} €"))));
 
                         tr3.Append(tcB, tcC, tcD, tcE, tcF);
@@ -685,14 +721,6 @@ namespace XCV.Data
                 }
             }
         }
-
-        public double Mean(double[] arg)
-        {
-            double sum = 0.0;
-            for (int i = 0; i < arg.Length; ++i) sum += arg[i];
-            return (1 / arg.Length) * sum;
-        }
-
 
         public void AddPageBreak(Body body)
         {

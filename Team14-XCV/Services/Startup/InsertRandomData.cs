@@ -15,6 +15,8 @@ namespace XCV.Data
         private readonly ILanguageService _languageService;
         private readonly IFieldService _fieldService;
         private readonly IProjectService _projectService;
+        private readonly IOfferService _offerService;
+        private readonly IRoleService _roleService;
 
 
         public InsertRandomData(IFieldService fieldService,
@@ -23,7 +25,9 @@ namespace XCV.Data
                                 IBasicDataSetService bDataSetService,
                                 IAccountService accountService,
                                 IProfileService profileService,
-                                IProjectService projectService)
+                                IProjectService projectService,
+                                IOfferService offerService,
+                                IRoleService roleService)
         {
             _fieldService = fieldService;
             _languageService = languageService;
@@ -32,6 +36,8 @@ namespace XCV.Data
             _accountService = accountService;
             _profileService = profileService;
             _projectService = projectService;
+            _offerService = offerService;
+            _roleService = roleService;
         }
 
 
@@ -45,7 +51,7 @@ namespace XCV.Data
                 _bDataSetService.JsonUpdate(content, false);
             }
         }
-        public void Insert6Employyes()
+        public void Insert10Employyes()
         {
             if (!_accountService.ShowAllProfiles().Any())
             {
@@ -53,32 +59,33 @@ namespace XCV.Data
                 Employee register = new Employee() { PersoNumber = "999-R", FirstName="Register", LastName="NewAccount", EmployedSince=DateTime.Now };
                 register.AcRoles.Add(AccessRole.Register);
                 _accountService.CreateAccount(register);
-                List<Employee> employyes6 = new()
+                List<Employee> employyes10 = new()
                 {
-                    // Wie Christian damals meinte im Allgemeinen sollte das Anstellungsdatum schon vor Profilanlegung geschehen koennen.
-                    // Sind aber nur Testdaten
-                    new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "001", FirstName = "arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "002", FirstName = "brad", LastName = "pitt", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "003", FirstName = "daniel", LastName = "craig", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "004", FirstName = "linus", LastName = "torvalds", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "000", FirstName = "Admin", LastName = "admin", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "001", FirstName = "Arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "002", FirstName = "Brad", LastName = "Pitt", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "003", FirstName = "Daniel", LastName = "Craig", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "004", FirstName = "Linus", LastName = "Torvalds", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployedSince = DateTime.Now },
                     new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now }
+                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "008", FirstName = "Hubert", LastName = "Wolfe­schlegel­stein", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "009", FirstName = " Uvuvwevwevwe ", LastName = "onyetenyevwe ugwemuhwem osas", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "010", FirstName = "Rainer", LastName = "Wahnsinn", EmployedSince = DateTime.Now },
                 };
-                foreach (var e in employyes6)
+                foreach (var e in employyes10)
                     e.AcRoles.Add(AccessRole.Employee);
-                employyes6[0].AcRoles.Add(AccessRole.Admin);
-                employyes6[1].AcRoles.Add(AccessRole.Admin);
-                employyes6[1].AcRoles.Add(AccessRole.Sales);
-                employyes6[2].AcRoles.Add(AccessRole.Sales);
-                employyes6[3].AcRoles.Add(AccessRole.Sales);
+                employyes10[0].AcRoles.Add(AccessRole.Admin);
+                employyes10[1].AcRoles.Add(AccessRole.Admin);
+                employyes10[1].AcRoles.Add(AccessRole.Sales);
+                employyes10[2].AcRoles.Add(AccessRole.Sales);
+                employyes10[3].AcRoles.Add(AccessRole.Sales);
                 
                 
-                foreach (var e in employyes6)
-                    _accountService.CreateAccount(e);               //creates 6 accounts
+                foreach (var e in employyes10)
+                    _accountService.CreateAccount(e);               //creates 10 accounts
                 Thread.Sleep(1000);
-                foreach (var e in employyes6)
+                foreach (var e in employyes10)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
                 _projectService.Create("Projekt1");                 // 2 projects
                 _projectService.Create("Projekt2");
@@ -98,9 +105,9 @@ namespace XCV.Data
                 foreach (var p in pros)
                     foreach (var pActi in p.Activities.Keys)
                     {
-                        _projectService.Add(p, employyes6[rand.Next(6)], pActi);    // adds 1-3 random employyes to each activity
-                        _projectService.Add(p, employyes6[rand.Next(6)], pActi);
-                        _projectService.Add(p, employyes6[rand.Next(6)], pActi);
+                        _projectService.Add(p, employyes10[rand.Next(10)], pActi);    // adds 1-3 random employyes to each activity
+                        _projectService.Add(p, employyes10[rand.Next(10)], pActi);
+                        _projectService.Add(p, employyes10[rand.Next(10)], pActi);
                     }
 
 
@@ -153,6 +160,53 @@ namespace XCV.Data
 
             _profileService.UpdateProfile(e);
         }
+
+        public void Insert4Offers()
+        {
+            if (!_offerService.ShowAllOffers().Any())
+            {
+                var rand = new Random();
+
+                List<Offer> list = new()
+                {
+                    new() { Title = "Angebot-Microsoft", Description = "Windows 12 entwickeln", Start = DateTime.Now, End = DateTime.Now.AddDays(5)},
+                    new() { Title = "Angebot-Apple", Description = "iPhone 30 entwickeln", Start = DateTime.Now, End = DateTime.Now.AddDays(4) },
+                    new() { Title = "Angebot-Samsung", Description = "", Start = DateTime.Now, End = DateTime.Now.AddDays(12) },
+                    new() { Title = "Angebot-Tesla", Description = "Layer2-solution Blockchain", Start = DateTime.Now, End = DateTime.Now.AddDays(100) }
+                };
+
+                var fields = _fieldService.GetAllFields();
+                var skills = _skillService.GetAllSkills().GroupBy(x => x.Category.Name);
+                var sLvel = _skillService.GetAllLevel();
+                foreach (Offer o in list)
+                {
+                    _offerService.Create(o.Title, o.Description, o.Start, o.End);
+                    o.Id = _offerService.GetLastId();
+                    
+                    if (rand.Next(4) == 0)
+                    {
+                        foreach (Field f in fields) _offerService.Add(o, f);
+                    }
+                    foreach (var cat in skills)
+                        if (rand.Next(3) == 0)      //for a third of the cats
+                            foreach (var skill in cat)
+                                if (rand.Next(4) == 0)      // adds every 4 skill
+                                {
+                                    var lvl = sLvel[rand.Next(4)];
+                                    skill.Level = lvl;
+                                    o.Requirements.Add(skill);
+                                }
+                    var sSkills = _skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill);
+                    foreach (var s in sSkills)
+                        if (rand.Next(3) == 0)
+                            o.Requirements.Add(s);
+                    foreach (var os in o.Requirements)
+                        _offerService.Add(o, os);
+                }
+            }
+        }
+
+
 
     }
 }

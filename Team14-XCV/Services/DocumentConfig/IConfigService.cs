@@ -8,32 +8,26 @@ namespace XCV.Data
 {
     public interface IConfigService
     {
-
-        // General Interaction
-        // Possible Methods:
-        // selected/deselect/delete/create/update//clear/undo/redo/reset/copy/rename/download
-
-        // Document of Employee Detailview: Possible Methods:
-        // selected/deselect/delete/create/update//clear/undo/redo/reset/copy/rename/download
-
-
         //=======================================================
         //============= Methods for DocumentConfigs =============
         //=======================================================
 
-        // General ideas and possible additions:
+        // General ideas:
 
         // States:
-        // User must have at least one DocumentConfig in order to generate a Document(else no Input can be processed) [Alternative: Define a copy of the generate Function that prints the defaults{all Employees with all data}] or to enter the OfferEmployeeConfigEdit page.
+        // User must have at least one active DocumentConfig in order to generate a Document or enter the OfferEmployeeConfigEdit page.
         // User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
-        // Upon entering the OfferPage, the latest selected DocumentConfig should be preselected [Alternative: Feature for setting a "favorite" Config for an offer which is preselected instead.]
+        // Upon entering the OfferPage, a "favorite"/active, previously selected DocumentConfig should be selected
 
         // Functions:
-        // User can selected/deselect/delete/create/copy/rename a configuration
+        // User can selected/deselect/delete/create/download a configuration for each single offer (many configs may exists parallel in one offer)
         // select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
         // deselect: deactivate the prior config -> in this state no config is selected
         // delete: removes an item from the "DocumentConfigurationList"
         // create: creates a new DocumentConfig instance within "DocumentConfigurationList"
+
+        //Possible future additions:
+
         // copy: copies a certain DocumentConfig with a default description of "<name> (1)" or "<name> (2)", as long as the previous copynumber doesn't exist/ is unique
         // rename: change of the description of DocumentConfig, must be unique
 
@@ -72,6 +66,21 @@ namespace XCV.Data
 
 
         public void UpdateDocumentConfig(DocumentConfig cfg);
+
+        /// <summary>
+        /// Adds a new EmployeeConfig to each DocumentConfig (with all data selected)
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="toAdd"></param>
+        public void Add(Offer o, Employee toAdd);
+
+        /// <summary>
+        /// Removes a EmployeeConfig from each DocumentConfig. <para></para>
+        /// If a config contains 0 EmployeeConfigs it will be removed automatically.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="toRemove"></param>
+        public void Remove(Offer o, Employee toRemove);
 
 
         //=======================================================

@@ -12,14 +12,16 @@ namespace XCV.Pages.OfferNamespace
 {
     public partial class OfferCreate
     {
+        //Parameters and References:
         private Modal modal { get; set; }
         private string fieldSearch = "";
         private string skillSearch = "";
         private bool[] showB = new bool[100];
         private int sBi = 0;
         private ChangeResult changeInfo = new();
-        private bool eventFromAreaCameBefore = true;
-
+        // All Skills and Fields for the search
+        private List<Skill> skills;
+        private List<Field> fields;
 
         // Intermediate storage for Data which may or may not be added to an offer.
         private string title { get; set; } = "";
@@ -34,11 +36,9 @@ namespace XCV.Pages.OfferNamespace
         private IList<Employee> SelectedParticipants = new List<Employee>();
         private ISet<(Employee, Role)> SelectedRoles  = new HashSet<(Employee, Role)>();
 
-
-
-        // All Skills and Fields for the search
-        private List<Skill> skills;
-        private List<Field> fields;
+        /// <summary>
+        /// Initializes Parameters and storage
+        /// </summary>
         protected override void OnInitialized()
         {
             skills = skillService.GetAllSkills().ToList();
@@ -67,7 +67,7 @@ namespace XCV.Pages.OfferNamespace
         }
 
         /// <summary>
-        /// Stores Data before searching employee, so it remains on the Create page after leaving it to search.
+        /// Stores selected Data before searching an employee, so it remains on the Create page after leaving it to search.
         /// </summary>
         private void Store()
         {
@@ -85,6 +85,9 @@ namespace XCV.Pages.OfferNamespace
             };
         }
 
+        /// <summary>
+        /// Removes the employees currently in the offerstorage
+        /// </summary>
         private void RemoveAllEmployees()
         {
             SelectedParticipants = new List<Employee>();
@@ -98,11 +101,16 @@ namespace XCV.Pages.OfferNamespace
             offerData.offerStore = null;
         }
 
+
+        /// <summary>
+        /// Creates the offer with respect to the items in the storage. <para></para>
+        /// Sessionstorage(OfferData) is nullified so on the next page visit the inputs are empty again
+        /// </summary>
         private async void CreateOffer()
         {
             if (!changeInfo.ErrorMessages.Any())
             {
-                offerService.Create(title, description, SelectedStart, SelectedEnd); //First Creates the offer
+                offerService.Create(title, description, SelectedStart, SelectedEnd);
                 toCreate = new Offer { Id = offerService.GetLastId(), Title = title, Description = description, Start = SelectedStart, End = SelectedEnd };
 
                 if (SelectedFields != null)
@@ -131,7 +139,6 @@ namespace XCV.Pages.OfferNamespace
                     foreach (Employee e in SelectedParticipants)
                     {
                         offerService.Add(toCreate, e);
-                        //offerService.Add(toCreate, e, new Role() { Name = e.tempOfferRole, RCL = e.RCL} );
                     }
                 }
 
@@ -142,25 +149,8 @@ namespace XCV.Pages.OfferNamespace
         }
 
         /// <summary>
-        /// Returns end - start in Days
+        /// Validates input's correctness (within Offerservice), and outputs an according Modal pop-up.
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public int Runtime(DateTime end, DateTime start)
-        {
-            return (end - start).Days;
-        }
-
-        public void KeyHandler(KeyboardEventArgs e, bool isTextArea)
-        {
-            Close();
-            if ((e.Code == "Enter" || e.Code == "NumpadEnter") && !(eventFromAreaCameBefore || isTextArea))
-                Validate();
-            eventFromAreaCameBefore = isTextArea;
-        }
-
-
         private void Validate()
         {
             SelectedSkills = SelectedSoftskills;
@@ -187,6 +177,8 @@ namespace XCV.Pages.OfferNamespace
             modal.Close();
             changeInfo = new();
         }
+
+        // Standart Tasks:
 
         private void OnChangeReturn(object sender, ChangeResult e)
         {
@@ -218,5 +210,7 @@ namespace XCV.Pages.OfferNamespace
         {
             MitarbeiterCollapsed = !MitarbeiterCollapsed;
         }
+
+        //
     }
 }

@@ -95,7 +95,7 @@ namespace XCV.Data
 
         public DocumentConfig GetDocumentConfig(Offer o, string name)
         {
-            return GetAllDocumentConfigs(o).FirstOrDefault(x => x.Name == name);
+            return GetAllDocumentConfigs(o).Single(x => x.Name == name);
         }
 
         public IEnumerable<DocumentConfig> GetAllDocumentConfigs(Offer o)
@@ -145,17 +145,22 @@ namespace XCV.Data
                             //configHasActivity
                             var proAndAct = con.Query<(int project, string activity)>($"Select [Project], [Activity] From [configHasActivity] Where [Offer] = {o.Id} And [Config] = '{cfg.Name}' And [cfgEmployee] = '{pnr}'");
 
-                            IList<(int project, string activity)> projects = new List<(int project, string activity)>();
+                            ISet<(int project, string activity)> projects = new SortedSet<(int project, string activity)>();
                             foreach (var paA in proAndAct)
                             {
                                 Project temp = cProjectService.ShowProject(paA.project);
-                                projects.Add((temp.Id, temp.Title));
+                                projects.Add((temp.Id, paA.activity));
                             }
 
-                            //if (fieldsAsString.Count() == 0) Console.Write($"COnfig: KEine Felder {cfg.Name} {pnr}");
-                            //if (skills.Where(s => s.Type == SkillGroup.Softskill).ToHashSet().Count() == 0) Console.Write("COnfig: KEine Softskills" );
-                            //if (skills.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet().Count() == 0) Console.Write($"COnfig: KEine Hardskills {cfg.Name} {pnr}");
-                            //if (proAndAct.Count() == 0 || proAndAct == null) Console.Write($"COnfig: KEine Projekte! {cfg.Name} {pnr}");
+                            var ordAr = con.Query<(int pos1, int pos2, int pos3, int pos4, int pos5)>($"Select [pos1], [pos2], [pos3], [pos4], [pos5] From [configHasOrder] Where [Offer] = {o.Id} And [Config] = '{cfg.Name}'");
+
+                            int[] ordA = new int[5] {
+                                ordAr.Select(x => x.pos1).Single(),
+                                ordAr.Select(x => x.pos2).Single(),
+                                ordAr.Select(x => x.pos3).Single(),
+                                ordAr.Select(x => x.pos4).Single(),
+                                ordAr.Select(x => x.pos5).Single()
+                            };
 
                             EmployeeConfig employeeConfig = new EmployeeConfig
                             {
@@ -170,8 +175,8 @@ namespace XCV.Data
                                 selectedSoftSkills = skills.Where(s => s.Type == SkillGroup.Softskill).ToHashSet(),
                                 selectedHardSkills = skills.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet(),
                                 selectedProjects = projects,
-                            };
-
+                                order = ordA
+                        };
 
                             cfg.employeeConfigs.Add(employeeConfig);
                         }
@@ -325,12 +330,13 @@ namespace XCV.Data
                     foreach (var pro in cfg.selectedProjects)
                         con.Execute($"Insert Into [configHasActivity] Values ({o.Id}, '{c.Name}', '{persnr}', {pro.project}, '{pro.activity}')");
                 }
+                con.Execute($"Update [configHasOrder] Set [pos1]={cfg.order[0]}, [pos2]={cfg.order[1]}, [pos3]={cfg.order[2]}, [pos4]={cfg.order[3]}, [pos5]={cfg.order[4]} Where [Offer]={o.Id} And [Config]='{c.Name}'");
 
-                OnChange(new() { SuccesMessage = "Die �nderungen an der Konfiguration wurden �bernommen" });
+                OnChange(new() { SuccesMessage ="Die Änderungen an der Konfiguration wurden übernommen" });
             }
             catch (SqlException e)
             {
-                log.LogError($"Error updating Employeeconfig: \n{e.Message}\n");
+                log.LogError($"Error updating Employee-config: \n{e.Message}\n");
             }
             finally { con.Close(); }
         }
@@ -367,8 +373,8 @@ namespace XCV.Data
                         foreach (var p in emp.Projects)
                         {
                             con.Execute($"Insert Into [configHasActivity] Values ({parent.Id}, @Name, @Employee, @Project, @Activity)", new { Name = name, Employee = emp.PersoNumber, Project = p.project, Activity = p.activity });
-
                         }
+                        con.Execute($"Insert Into [configHasOrder] Values ({parent.Id}, '{name}', 1, 2, 3, 4, 5)");
                     }
                     con.Close();
                 }
@@ -378,6 +384,77 @@ namespace XCV.Data
                 }
             }
             return defaultcfg;
+        }
+
+        public void Add(Offer o, Employee toAdd)
+        {
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                var cfgnames = con.Query<string>($"Select [Config] from [offerHasConfig] Where [Offer] = {o.Id}");
+                foreach (var cfg in cfgnames)
+                {
+                    Employee emp = cProfileService.ShowProfile(toAdd.PersoNumber);
+                    con.Execute($"Insert Into [config] Values (@Offer, @Name, @PersoNumber, @FirstName , @LastName, @Description, @Image, @Experience, @EmployedSince)",
+                        new
+                        {
+                            Offer = o.Id,
+                            Name = cfg,
+                            PersoNumber = emp.PersoNumber,
+                            FirstName = emp.FirstName,
+                            LastName = emp.LastName,
+                            Description = emp.Description,
+                            Image = emp.Image,
+                            Experience = emp.Experience,
+                            EmployedSince = emp.EmployedSince
+                        });
+                    foreach (Field f in emp.Fields)
+                        con.Execute($"Insert Into [configHasField] Values ({o.Id}, '{cfg}', '{emp.PersoNumber}', '{f.Name}')");
+                    foreach (Skill s in emp.Abilities)
+                    {
+                        int? level = Array.FindIndex(cSkillService.GetAllLevel(), x => x == s.Level) + 1;
+                        if (s.Type == SkillGroup.Softskill)
+                            level = null;
+                        con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, @Name, @Employee, @Skill, @Cat, @Level)", new { Name = cfg, Employee = emp.PersoNumber, Skill = s.Name, Cat = s.Category.Name, level });
+                    }
+                    foreach (var p in emp.Projects)
+                    {
+                        con.Execute($"Insert Into [configHasActivity] Values ({o.Id}, @Name, @Employee, @Project, @Activity)", new { Name = cfg, Employee = emp.PersoNumber, Project = p.project, Activity = p.activity });
+
+                    }
+                }
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"Error creating default config on database: {e.Message} \n");
+            }
+        }
+
+        public void Remove(Offer o, Employee toRemove)
+        {
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                var cfgnames = con.Query<string>($"Select [Config] from [offerHasConfig] Where [Offer] = {o.Id}");
+                foreach (var cfg in cfgnames)
+                {
+                    var get = GetDocumentConfig(o, cfg);
+                    con.Execute($"Delete From [config] Where [Employee] = '{toRemove.PersoNumber}')");
+                    if (get.employeeConfigs == null || get.employeeConfigs.Count == 0)
+                    {
+                        con.Execute($"Delete From [offerHasConfig] Where [Name] = '{cfg}')");
+                    }
+                }
+
+                con.Close();
+            }
+            catch (SqlException e)
+            {
+                log.LogError($"Error creating default config on database: {e.Message} \n");
+            }
         }
 
 

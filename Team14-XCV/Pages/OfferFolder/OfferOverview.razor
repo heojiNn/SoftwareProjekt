@@ -3,6 +3,7 @@
 
 @inject IJSRuntime JS
 @inject IOfferService offerService
+@inject ISkillService skillService 
 @inject NavigationManager navManager
 @namespace XCV.Pages.OfferNamespace
 
@@ -149,7 +150,7 @@
                                         Von: @(o.Start.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
                                     </div>
                                     <div class="col-sm-4">
-                                        Bis: @(o.Start.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
+                                        Bis: @(o.End.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
                                     </div>
                                 </div>
                                 <div class="dropdown-divider"></div>
@@ -176,7 +177,7 @@
         }
         else
         {
-            @foreach (Offer o in SelectedOffers)
+            @foreach (Offer o in resultingOffers)
             {
                 <div class="col-sm-6 mb-3 card border border-secondary rounded" style="background-color: lightgray; display: inline-block; width: 50%">
                     @*<br />*@
@@ -230,7 +231,7 @@
                                         Von: @(o.Start.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
                                     </div>
                                     <div class="col-sm-4">
-                                        Bis: @(o.Start.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
+                                        Bis: @(o.End.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")))
                                     </div>
                                 </div>
                                 <div class="dropdown-divider"></div>
