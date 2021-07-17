@@ -49,15 +49,15 @@ namespace Tests.Integration
             var roles = roleService.GetAllRoles();
             
             // PreCondition
-            /*var skill = skills.Take(1).ToArray()[0];
+            var skill = skills.Take(1).ToArray()[0];
             skill.Level = levels[2];
-            var role = roles.Take(1).ToArray()[0];*/
+            var role = roles.Take(1).ToArray()[0];
             string firstname = "FirstName";
             string lastname = "lastname";
 
             // Act
-            //toBeUpdated2.Abilities.Add(skill);
-            //toBeUpdated2.Roles.Add(role);
+            toBeUpdated2.Abilities.Add(skill);
+            toBeUpdated2.Roles.Add(role);
             toBeUpdated2.FirstName = firstname;
             toBeUpdated2.LastName = lastname;
             
@@ -68,8 +68,8 @@ namespace Tests.Integration
 
             Assert.NotNull(requestAgain);
             //Assert.True(1 == 0,requestAgain.FirstName);
-            //Assert.Contains(skill, requestAgain.Abilities.ToList(), "Skill wasn't updated");
-            //Assert.Contains(role, requestAgain.Roles.ToList(), "Role wasn't updated");
+            Assert.Contains(skill, requestAgain.Abilities.ToList(), "Skill wasn't updated");
+            Assert.Contains(role, requestAgain.Roles.ToList(), "Role wasn't updated");
             Assert.True(firstname == requestAgain.FirstName, "FirstName wasn't updated");
             Assert.True(lastname == requestAgain.LastName, "LastName wasn't updated");
         }
