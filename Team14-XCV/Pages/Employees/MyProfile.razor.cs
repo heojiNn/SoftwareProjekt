@@ -6,24 +6,19 @@ namespace XCV.Pages.Employees
 {
     public partial class MyProfile
     {
+    private Employee myProfile = new Employee();
+    private ValueWrapper<bool>[] ColabseState = new ValueWrapper<bool>[100];
+    private int ColabseNum =0;
 
 
-        private Employee myProfile = new Employee();
+    protected override async Task OnInitializedAsync()
+    {
+        for (int i = 0; i < 100; i++ )
+            ColabseState[i] = new ValueWrapper<bool>(true);
 
-
-        protected override async Task OnInitializedAsync()
-        {
-            var authstate = await authentiProvider.GetAuthenticationStateAsync();
-
-            myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
-        }
-
-        private void OnSelected(string selection)
-        {
-            Console.WriteLine(selection);
-        }
-
-
+        var authstate = await authentiProvider.GetAuthenticationStateAsync();
+        myProfile = profileService.ShowProfile(authstate.User.Identity.Name) ?? new Employee();
+    }
 
 
     }

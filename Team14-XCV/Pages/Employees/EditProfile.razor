@@ -1,7 +1,6 @@
 @page "/edit-profile"
 @attribute [Authorize]
 
-@using XCV.Shared.Misc
 
 @inject IJSRuntime JS
 @inject CustomAuthentiProvider authentiProvider
@@ -35,23 +34,21 @@
         <div class="card-body">
 
             <div class="row">
+                <div class="col-md-4">
+                    <img src="profile/@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
+                    <br>Bild hochladen
+                    <br>
+                    <br>
 
-                <div class="col-md-4" style="text-align: center">
-                    <img src="@myProfile.Image" alt="Profilbild" class="rounded" style="margin:1em;">
-                    <br />
-                    <br />
-                    <div>
                         <button class="btn btn-secondary" onclick="document.getElementById('browse-files').click()">
                             Neues Profilbild
                         </button>
                         <br /><br />
-                        <InputFile OnChange="@JustUpload" multiple @attributes="browseAttributes" />
-                    </div>
+                        <InputFile OnChange="@JustUpload" @attributes="browseAttributes" />
+
                 </div>
 
                 <div class="col-md-8">
-                    <!--Large lg ≥992px  Ist es eine Reihe -->
-                    <!-- Small sm ≥576px  Sind es 2 Reihen-->
                     <div class="row">
                         <label class="col-md-6 col-xl-2 col-form-label" for="inputFirstName">Vorname:</label>
                         <div class="col-md-6 col-xl-4 ">
@@ -75,15 +72,13 @@
                         <label class="col col-form-label" for="RCL" style="max-width: max-content">Rate Card Level:</label>
                         <div class="col">
                             <select class="form-control" id="RCL" style="float: left; max-width: max-content" @bind="@myProfile.RCL">
-                                @for (int i = 1; i < 8; i++)
+                                @for (int i = 1; i <= 8; i++)
                                 {
                                     <option value="@i"> @i</option>
                                 }
                             </select>
                         </div>
-                    </div>
-
-                    <div class="row">
+                    </div>                    <div class="row">
                         <div class="wrap-collabsible ml-3">
 
                             @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
@@ -125,111 +120,111 @@
     </div>
 
     <div class="row gutters-sm">
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
             @{ var allRoles = roleService.GetAllRoles().Where(x => x.RCL == 0); }
-            <CollapsibleCard CardHeaderTitle="Rollen">
+            <CollapsibleCard2 CardHeaderTitle="Rollen">
                 <CardBody>
                     <div class="scroll ml-2" style="overflow-x: hidden;">
                         <CheckBoxList Data="@allRoles" TextField="@((item)=>item.Name.ToString())"
                                       SelectedValues="myProfile.Roles" />
                     </div>
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
             @{ var allFields = fieldService.GetAllFields(); }
-            <CollapsibleCard CardHeaderTitle="Branchenwissen">
+            <CollapsibleCard2 CardHeaderTitle="Branchenwissen">
                 <CardBody>
                     <div class="scroll ml-2" style="overflow-x: hidden;">
                         <CheckBoxList Data="@allFields" TextField="@((item)=>item.Name.ToString())"
                                       SelectedValues="myProfile.Fields" />
                     </div>
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
 
 
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
             @{ var allSoftSkills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Softskill); }
-            <CollapsibleCard CardHeaderTitle="Softskills">
+            <CollapsibleCard2 CardHeaderTitle="Softskills">
                 <CardBody>
                     <div class="scroll ml-2" style="overflow-x: hidden;">
                         <CheckBoxList Data="@allSoftSkills" TextField="@((item)=>item.Name.ToString())"
                                       SelectedValues="myProfile.Abilities" />
                     </div>
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
-
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
             @{ var allLanguages = langService.GetAllLanguages(); }
-            <CollapsibleCard CardHeaderTitle="Sprachen">
+            <CollapsibleCard2 CardHeaderTitle="Sprachen">
                 <CardBody>
                     <div class="scroll ml-2" style="overflow-x: hidden;">
                         <CheckBoxList Data="@allLanguages" TextField="@((item)=>item.Name.ToString())"
                                       SelectedValues="myProfile.Languages" />
                     </div>
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
 
 
 
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
-            <CollapsibleCard CardHeaderTitle="Hardskills">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
+            <CollapsibleCard2 CardHeaderTitle="Hardskills">
                 <CardBody>
-                    <input class="form-control" id="skiSer" placeholder="suche" @bind="@skillSearch" @bind:event="oninput" />
-                    @if (skillSearch == "")
+                    <input id="onlm" type="checkbox" @bind="@onlySele" /> nur zuvor ausgewählte anzeien  &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp;
+                    <input id="skiSer" placeholder="oder suchen" @bind="@skillSearch" @bind:event="oninput" />
+                    <br><br>
+                    @if (onlySele)
                     {
-                        var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
-                        if (skills.Any())
-                        {
-                            var root = skills.First().Category.Parent;
-                            if (root.Parent != null)
-                                root = root.Parent;
-                            foreach (SkillCategory cat1 in root.Children)
-                            {
-                                var isSkill = (cat1.Children.First() is Skill);
-                                sBi++;
-                                <CollapsibleCard CardHeaderTitle="@cat1.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                    <CardHeader> @(isSkill ? $"{cat1.Children.Count()} enthalten" : "")</CardHeader>
-                                    <CardBody>
-                                        @if (isSkill)
-                                        {
-                                            var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
-                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" />
-                                        }
-                                        else
-                                        {
-                                            foreach (SkillCategory cat in cat1.Children)
-                                            {
-                                                var skills = cat.Children.Cast<Skill>().OrderBy(x => x);
-                                                sBi++;
-                                                <CollapsibleCard CardHeaderTitle="@cat.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                                    <CardHeader> @cat.Children.Count() enthalten</CardHeader>
-                                                    <CardBody>
-                                                        <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
-                                                                      SelectedValues="myProfile.Abilities" />
-                                                    </CardBody>
-                                                </CollapsibleCard>
-                                            }
-                                        }
-                                    </CardBody>
-                                </CollapsibleCard>
-                            }
+                <CheckBoxList Data="@myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill)" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" /> }
+            else if (skillSearch == "")
+            {
+                var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
+                if (skills.Any())
+                {
+                    var root = skills.First().Category.Parent;
+                    if (root.Parent != null)
+                        root = root.Parent;
+                    foreach (SkillCategory cat1 in root.Children)
+                    {
+                        var isSkill = (cat1.Children.First() is Skill);
+                        <CollapsibleCard2 CardHeaderTitle="@cat1.Name" SmallInner="true">
+                            <CardHeader> @(isSkill ? $"{cat1.Children.Count()} Skills" : $"{cat1.Children.Count()} Kategorien" )</CardHeader>
+                                <CardBody>
+                                @if (isSkill)
+                                {
+                                var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
+                                <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="myProfile.Abilities" /> }
+                                else
+                                {
+                                    foreach (SkillCategory cat in cat1.Children)
+                                    {
+                                        var skills = cat.Children.Cast<Skill>().OrderBy(x => x);
+                                    <CollapsibleCard2 CardHeaderTitle="@cat.Name" SmallInner="true">
+                                        <CardHeader> @cat.Children.Count() Skills</CardHeader>
+                                        <CardBody>
+                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
+                                                        SelectedValues="myProfile.Abilities" />
+                                        </CardBody>
+                                    </CollapsibleCard2>
+                                    }
+                                }
+                                </CardBody>
+                            </CollapsibleCard2> 
                         }
+                    }
                     }
                     else
                     {
-                        var sResulte = skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillSearch.ToLower())).OrderBy(x => x.Name);
-                        <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" />
+                    var sResulte = skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillSearch.ToLower())).OrderBy(x => x.Name);
+                    <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" />
                     }
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
-
-            <CollapsibleCard CardHeaderTitle="Projekte ">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
+            <CollapsibleCard2 CardHeaderTitle="Projekte ">
                 <CardBody>
                     <div class="avatar-links" style="float: right" data-tooltip="Ihre Änderungen werden direkt übernommen!"></div>
 
@@ -279,10 +274,11 @@
                         </table>
                     </div>
                 </CardBody>
-            </CollapsibleCard>
+            </CollapsibleCard2>
         </div>
     </div>
 </div>
+
 
 <a href="my-Profile" class="btn btn-secondary"> Zurück zum Profil</a>
 <button type="submit" class="btn btn-secondary" @onclick="@Validate">Änderungen speichern.</button>
@@ -317,7 +313,3 @@
         <button type="button" class="btn btn-secondary" @onclick="@Close">schließen</button>
     </Footer>
 </Modal>
-
-
-
-

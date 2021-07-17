@@ -21,15 +21,15 @@ namespace XCV.Data
         private readonly string connectionString;
         private readonly ILogger<EmployeeService> log;
         private readonly ISkillService _skillService;
+        private readonly ILanguageService _langService;
 
-        public bool imageChanged = false;
-
-        public EmployeeService(IConfiguration config, ILogger<EmployeeService> logger, ISkillService skillService, IWebHostEnvironment environment)
+        public EmployeeService(IConfiguration config, ILogger<EmployeeService> logger, ISkillService skillService, ILanguageService langService, IWebHostEnvironment environment)
         {
             connectionString = config.GetConnectionString("MS_SQL_Connection");
             log = logger;
             env = environment;          // for image directiory
             _skillService = skillService;
+            _langService = langService;
         }
 
 
@@ -49,7 +49,7 @@ namespace XCV.Data
         {
             var all = GetAllEmployees().OrderBy(x => x.PersoNumber);
             foreach (var employee in all)
-                _skillService.HangThemOnATree(employee.Abilities);
+                _skillService.SetCategoryRelationTree(employee.Abilities);
             return all;
         }
 
@@ -94,8 +94,9 @@ namespace XCV.Data
                 infoMessages.Add("Das Rate Card Level wurde verändert.");
             if (!oldVersion.Experience.Equals(newVersion.Experience))
                 infoMessages.Add("Die Berufserfahrung wurde verändert.");
-            if (imageChanged)
-                infoMessages.Add("Das Profilbild wurde verändert.");
+            if (newVersion.Image.StartsWith("TEMP"))
+                infoMessages.Add("Der upload ihres Bildes wurde noch nicht bestätigt");
+
 
             if (!oldVersion.Languages.SetEquals(newVersion.Languages)) inlineWords.Add("Sprachen");
             else
@@ -122,7 +123,7 @@ namespace XCV.Data
 
             if (!oldVersion.Roles.SetEquals(newVersion.Roles)) inlineWords.Add("Rollen");
             if (inlineWords.Any())
-                infoMessages.Add($"Deine {String.Join(", ", inlineWords)} würden geändert werden.");
+                infoMessages.Add($"Deine {string.Join(", ", inlineWords)} würden geändert werden.");
 
 
             //-------------------------------------------------------------------------------------errorMessages
@@ -133,7 +134,7 @@ namespace XCV.Data
 
             if (newVersion.Roles.Where(x => x.Name == "Consultant").Any() && newVersion.RCL < 4)
                 errorMessages.Add("Consultant wird erst ab RCL:4 freigeschaltet");
-            if (newVersion.Languages.Where(x => x.Level == "").Any())
+            if (newVersion.Languages.Where(x => x.Level == "").Any())        // even if its never shown in the current frontEnd the Messa. is used for validation
                 errorMessages.Add("Mindestens ein Sprache hat keine Level Angabe.");
             if (newVersion.Abilities.Where(x => !_skillService.GetAllLevel().Contains(x.Level) && x.Type == SkillGroup.Hardskill).Any())
                 errorMessages.Add("Mindestens ein Skill hat keine Level Angabe.");
@@ -162,6 +163,13 @@ namespace XCV.Data
             }
             try
             {
+                if (newVersion.Image.StartsWith("TEMP"))
+                {
+                    var tempPath = Path.Combine(env.WebRootPath, "profile", "temp", newVersion.Image);
+                    var imgagPath = Path.Combine(env.WebRootPath, "profile", newVersion.Image[5..]);
+                    File.Move(tempPath, imgagPath, true);
+                    newVersion.Image = newVersion.Image[5..];
+                }
                 UpdateEmployee(newVersion);
                 OnChange(new() { SuccesMessage = $" {newVersion.FirstName}, deine Daten wurden gespeichert." });
             }
@@ -173,23 +181,25 @@ namespace XCV.Data
         }
 
         // for definition see   IProfileService
-        public async Task UploadImage(Employee e, IBrowserFile image)
+        public async Task<string> UploadImage(string persoNumber, IBrowserFile image)
         {
-            var nameInWWW = $"empPic{e.PersoNumber}.{image.ContentType.Split('/')[1]}";
-            var path = Path.Combine(env.WebRootPath, nameInWWW);
+            // TODO Validation
+            //  for size/ContentType ...
+            //
+            var nameInWWW = $"TEMP_empPic{persoNumber}.{image.ContentType.Split('/')[1]}";
+            var path = Path.Combine(env.WebRootPath, "profile", "temp", nameInWWW);
+
             try
             {
                 await using FileStream fs = new(path, FileMode.Create);
                 await image.OpenReadStream().CopyToAsync(fs);
-                e.Image = nameInWWW;
-                UpdateEmployee(e);
-                imageChanged = true;
             }
             catch (Exception ex)
             {                                                    // it is risky to show the user unknown, possible sensitive.infos
                 OnChange(new() { ErrorMessages = new[] { $"Es trat ein Fehler in der Persistenz auf\n {ex.Message}" } });
                 log.LogError($"UploadeImage() persitence Error: \n{ex.Message}\n");
             }
+            return nameInWWW;
         }
 
         // for definition see   IAccountService
@@ -264,13 +274,14 @@ namespace XCV.Data
             try
             {
                 con.Open();
-                var query = @"SELECT  e.*,  a.EnumerationInt,   f.Field,  r.Role as Name, r.Role_Rcl as Rcl, rw.Wage,   l.Language, l.Language_Level,  ac.Project, ac.Activity
+                var query = @"SELECT  e.*,  a.EnumerationInt,   f.Field,  r.Role as Name, r.Role_Rcl as Rcl, rw.Wage,   l.Language, ll.Name as Language_Level,  ac.Project, ac.Activity
                             FROM Employee e
                             LEFT JOIN EmployeeHasAcrole a   ON e.PersoNumber = a.Employee
                             LEFT JOIN EmployeeHasField  f   ON e.PersoNumber = f.Employee
                             LEFT JOIN EmployeeHasRole   r   ON e.PersoNumber = r.Employee
                             LEFT JOIN Role rw    ON r.Role = rw.Name AND r.Role_Rcl = rw.Rcl
                             LEFT JOIN EmployeeHasLanguage l   ON e.PersoNumber = l.Employee
+                            Left Join [Language_Level] ll   ON l.Language_Level = ll.Level
                             LEFT JOIN ActivityHasEmployee ac   ON e.PersoNumber = ac.Employee";
 
                 var multiEmployees = con.Query<Employee, AccessRole?, string, Role, (string language, string language_level), (int project, string activity), Employee>(query,
@@ -376,8 +387,10 @@ namespace XCV.Data
                 }
                 con.Execute($"Delete From [EmployeeHasLanguage] Where employee='{e.PersoNumber}'");
                 foreach (var lang in e.Languages)
-                    con.Execute("Insert Into [EmployeeHasLanguage] Values (@Language, @Level, @E)", new { Language = lang.Name, lang.Level, E = e.PersoNumber });
-
+                {
+                    int? level = Array.FindIndex(_langService.GetAllLevel(), x => x == lang.Level) + 1;
+                    con.Execute("Insert Into [EmployeeHasLanguage] Values (@Language, @Level, @E)", new { Language = lang.Name, level, E = e.PersoNumber });
+                }
                 con.Execute($"Delete From [EmployeeHasSkill] Where employee='{e.PersoNumber}'");
                 foreach (var skill in e.Abilities)
                 {
