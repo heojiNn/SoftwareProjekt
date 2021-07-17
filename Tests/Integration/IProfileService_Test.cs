@@ -95,13 +95,13 @@ namespace Tests.Integration
             employee.FirstName = firstname;
             sut.UpdateProfile(employee);
             var newEmployee1 = sut.ShowProfile("000");
-            Assert.False(newEmployee1.FirstName == firstname, "FirstName hat Constrains nicht eingehalten");
+            Assert.AreEqual(newEmployee1.FirstName, firstname, "FirstName hat Constrains nicht eingehalten");
 
             string lastname = new string('a',21);
             employee.LastName = lastname;
             sut.UpdateProfile(employee);
             var newEmployee2 = sut.ShowProfile("000");
-            Assert.False(newEmployee2.LastName == lastname, "LastName hat Constrains nicht eingehalten");
+            Assert.AreEqual(newEmployee2.LastName, lastname, "LastName hat Constrains nicht eingehalten");
 
             var role = new Role() { Name = new string('a', 51) };
             employee.Roles.Add(role);
