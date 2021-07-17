@@ -50,7 +50,7 @@ namespace XCV.Data
                 errorMessages = results.Select(e => e.ErrorMessage).ToList();
 
             if (errorMessages.Count == 0)
-                infoMessages.Add("Die �nderung war erfolgreich.");
+                infoMessages.Add("Die Änderung war erfolgreich.");
             //-------------------------------------------------------------------------------------
 
             OnChange(new()
@@ -219,15 +219,15 @@ namespace XCV.Data
         //---write --------------------------------------------------------------------------------
 
 
-        public void DeleteDocumentConfig(Offer parent, DocumentConfig cfg)
+        public void DeleteDocumentConfig(Offer o, DocumentConfig cfg)
         {
-            if (parent != null && cfg != null)
+            if (o != null && cfg != null)
             {
                 try
                 {
                     using var con = new SqlConnection(connectionString);
                     con.Open();
-                    con.Execute($"IF EXISTS (SELECT [Config] From [offerHasConfig] Where [Offer]={parent.Id} And [Config]='{cfg.Name}') DELETE FROM [offerHasConfig] Where [Config] = '{cfg.Name}';");
+                    con.Execute($"IF EXISTS (SELECT [Config] From [offerHasConfig] Where [Offer]={o.Id} And [Config]='{cfg.Name}') DELETE FROM [offerHasConfig] Where [Config] = '{cfg.Name}';");
                     con.Close();
                 }
                 catch (Exception e)
@@ -305,7 +305,7 @@ namespace XCV.Data
                 } else
                 {
                     con.Execute($"Delete From [configHasSkill] Where [Offer]={o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] = 'SoftSkills';");
-                    foreach (var sk in cfg.selectedSoftSkills.Where(x => x.Type == SkillGroup.Softskill))
+                    foreach (var sk in cfg.selectedSoftSkills)
                         con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, '{c.Name}', '{persnr}', '{sk.Name}', 'SoftSkills', NULL)");
                 }
                 
@@ -316,8 +316,11 @@ namespace XCV.Data
                 else
                 {
                     con.Execute($"Delete From [configHasSkill] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}' And [Skill_Cat] <> 'SoftSkills';");
-                    foreach (var sk in cfg.selectedHardSkills.Where(x => x.Type == SkillGroup.Hardskill))
-                        con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, '{c.Name}', '{persnr}', '{sk.Name}', '{sk.Category.Name}', {sk.Level});");
+                    foreach (var sk in cfg.selectedHardSkills)
+                    {
+                        int? level = Array.FindIndex(cSkillService.GetAllLevel(), x => x == sk.Level) + 1;
+                        con.Execute($"Insert Into [configHasSkill] Values ({o.Id}, '{c.Name}', '{persnr}', '{sk.Name}', '{sk.Category.Name}', {level});");
+                    }      
                 }
 
                 if (cfg.selectedProjects == null)
@@ -329,6 +332,7 @@ namespace XCV.Data
                     con.Execute($"Delete From [configHasActivity] Where [Offer] = {o.Id} And [Config] = '{c.Name}' And [cfgEmployee] = '{persnr}';");
                     foreach (var pro in cfg.selectedProjects)
                         con.Execute($"Insert Into [configHasActivity] Values ({o.Id}, '{c.Name}', '{persnr}', {pro.project}, '{pro.activity}')");
+                    
                 }
                 con.Execute($"Update [configHasOrder] Set [pos1]={cfg.order[0]}, [pos2]={cfg.order[1]}, [pos3]={cfg.order[2]}, [pos4]={cfg.order[3]}, [pos5]={cfg.order[4]} Where [Offer]={o.Id} And [Config]='{c.Name}'");
 

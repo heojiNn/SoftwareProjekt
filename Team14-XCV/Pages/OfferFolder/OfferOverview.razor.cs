@@ -58,31 +58,38 @@ namespace XCV.Pages.OfferNamespace
         /// </summary>
         private void ShowResults()
         {
-            if (SelectedOffers.Count == 0 && SelectedSoftskills.Count == 0 && SelectedHardskills.Count == 0 && SelectedFields.Count == 0) showSearchResults = false;
+            if (SelectedOffers.Count == 0 && SelectedSoftskills.Count == 0 && SelectedHardskills.Count == 0 && SelectedFields.Count == 0)
+            {
+                showSearchResults = false;
+                resultingOffers = new List<Offer>();
+            }
             else
             {
-                
                 if (SelectedOffers != null && SelectedOffers.Count > 0)
                 {
-                    resultingOffers = SelectedOffers;
-                    showSearchResults = true;
+                    foreach (Offer o in SelectedOffers)
+                    {
+                        if (!resultingOffers.Contains(o))
+                        {
+                            showSearchResults = true;
+                            resultingOffers.Add(o);
+                        }
+                    }      
                 }
                 if (SelectedSoftskills != null && SelectedSoftskills.Count > 0)
                 {
                     foreach (Offer o in offers)
                     {
-                        foreach (Skill s in SelectedSoftskills) {
+                        foreach (Skill s in SelectedSoftskills)
+                        {
                             if (o.Requirements.Where(o => o.Name.Equals(s.Name)).Any())
                             {
-                                if (!resultingOffers.Contains(o))
-                                {
-                                    resultingOffers.Add(o);
-                                    showSearchResults = true;
-                                }
+                                showSearchResults = true;
+                                if (!resultingOffers.Contains(o)) resultingOffers.Add(o);
                             }
                         }
                     }
-                }
+                } 
                 if (SelectedHardskills != null && SelectedHardskills.Count > 0)
                 {
                     foreach (Offer o in offers)
@@ -91,11 +98,8 @@ namespace XCV.Pages.OfferNamespace
                         {
                             if (o.Requirements.Where(o => o.Name.Equals(s.Name)).Any())
                             {
-                                if (!resultingOffers.Contains(o))
-                                {
-                                    resultingOffers.Add(o);
-                                    showSearchResults = true;
-                                }
+                                showSearchResults = true;
+                                if (!resultingOffers.Contains(o)) resultingOffers.Add(o);
                             }
                         }
                     }

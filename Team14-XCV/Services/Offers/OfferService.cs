@@ -424,6 +424,7 @@ namespace XCV.Data
             {
                 con.Execute($"Insert Into [offerHasEmployee]" +
                             $" Values ({o.Id}, '{e.PersoNumber}', '{e.offerRole}', {e.RCL}, {e.offerWage}, {e.hoursPerDay}, {e.daysPerRun}, {e.discount})");
+
                 OnChange(new() { InfoMessages = new string[] { "MitarbeiterIn hinzugefügt" } });
             }
             con.Close();

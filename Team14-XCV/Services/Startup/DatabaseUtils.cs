@@ -102,7 +102,7 @@ namespace XCV.Data
                             ");");                  //Key is Level  cause  number 4 is fixed  ---(no insert or delete)----
                 con.Execute(@"IF NOT EXISTS (SELECT * FROM [skill_level] ) " +
                             "Insert Into [skill_level] Values " +
-                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelm��ige'),  (4, 'erfahren') " +
+                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelmaeßige'),  (4, 'erfahren') " +
                             ";");
 
 
