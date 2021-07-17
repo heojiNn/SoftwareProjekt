@@ -39,7 +39,7 @@ namespace XCV.Data
             }
             catch (InvalidOperationException)
             {
-                OnValidation(new() { ErrorMessage = $"Kombination aus {name} und {password} ungültig." });
+                OnValidation(new() { ErrorMessage = $"Kombination aus Personalnummer und Passwort ungültig." });
                 return false;
             }
 

@@ -43,7 +43,7 @@
                 <th style="width:40%;">Laufzeit</th>
                 <th style="width:20%;"></th>
             </tr>
-            @{ var projects = (searchTitle == "") ? allProjects : allProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower())); }
+            @{ var projects = (searchTitle == "") ? allProjects : allProjects.Where(pro => pro.Title.ToLower().Contains(searchTitle.ToLower())); }
             @foreach (var project in projects.OrderBy(pro => pro.Title))
             {
         <tr>
