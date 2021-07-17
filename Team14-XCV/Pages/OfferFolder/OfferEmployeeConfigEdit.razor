@@ -14,7 +14,7 @@
 @using Blazored.Typeahead
 
 
-<div class="container-fluid">
+
     <div class="alert alert-success" role="alert">
         @changeInfo?.SuccesMessage
     </div>
@@ -254,7 +254,7 @@
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Bestätigen</button>
     @*<a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Reset"> Änderungen zurücksetzen</a>*@
     <a href="offer-employee-detail-view/@Id/@Config/@PersoNumber" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Discard"> Zurück zur Mitarbeiteransicht</a>
-</div>
+
 
     <Modal @ref="modal">
         <Title>Möchten Sie die Mitarbeiterkonfiguration speichern?</Title>

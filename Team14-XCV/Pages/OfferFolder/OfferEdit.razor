@@ -14,7 +14,7 @@
 @using Blazored.Typeahead
 
 
-<div class="container-fluid">
+
     <div class="alert alert-success" role="alert">
         @changeInfo?.SuccesMessage
     </div>
@@ -47,13 +47,13 @@
             <div class="card ">
                 <div class="row">
                     <div class="col-6">
-                        <label for="year">Projektstart:</label><br>
-                        <input type="date" @bind="@SelectedStart" @bind:event="oninput"><br>
+                        <label  class="ml-2" for="year">Projektstart:</label><br>
+                        <input class="form-control ml-2" type="date" @bind="@SelectedStart" @bind:event="oninput" style="width:80%"><br>
                         <label> </label><br>
                     </div>
                     <div class="col-6">
-                        <label for="year">Projektende:</label><br>
-                        <input type="date" @bind="@SelectedEnd" @bind:event="oninput"><br>
+                        <label class="ml-2" for="year">Projektende:</label><br>
+                        <input class="form-control ml-2" type="date" @bind="@SelectedEnd" @bind:event="oninput" style="width:80%"><br>
                         <label> </label><br>
                     </div>
                     <br />
@@ -230,7 +230,7 @@
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Bestätigen</button>
     @*<a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Reset"> Änderungen zurücksetzen</a>*@
     <a href="offer/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Discard"> Zurück zum Angebot</a>
-</div>
+
 
 <Modal @ref="modal">
     <Title>Sie haben folgende Änderungen vorgenommen:</Title>

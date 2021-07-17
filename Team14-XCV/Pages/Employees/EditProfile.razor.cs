@@ -25,11 +25,6 @@ namespace XCV.Pages.Employees
         private int sBi = 0;
         private ChangeResult changeInfo = new();
 
-        private string withoutActivity = "ohne Tätigkeit";
-
-        
-
-
         readonly Dictionary<string, object> browseAttributes = new Dictionary<string, object> {
         //{ "accept", ".txt,.csv" },   // filter pattern -> begrenzt zunächst die im Fileexplorer angezeigten Dateien(extensions)
         { "style", "display:none" }, // for custon label
@@ -94,12 +89,12 @@ namespace XCV.Pages.Employees
 
         private void AddMe(Project p, string act)
         {
-            proService.Add(p, myProfile, act);
+            proService.Add(p.Id, myProfile.PersoNumber, act);
 
         }
         private void RemoveMe(Project p, string act)
         {
-            proService.Remove(p, myProfile, act);
+            proService.Remove(p.Id, myProfile.PersoNumber, act);
         }
 
         private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
