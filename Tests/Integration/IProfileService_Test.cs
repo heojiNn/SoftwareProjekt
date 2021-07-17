@@ -93,13 +93,13 @@ namespace Tests.Integration
             var newEmployee = sut.ShowProfile("000");
             Assert.False(newEmployee.Abilities.Contains(skill));
 
-            string firstname = new string('a', 21);
+            string firstname = new string('a', 41);
             employee.FirstName = firstname;
             sut.UpdateProfile(employee);
             var newEmployee1 = sut.ShowProfile("000");
             Assert.AreEqual(newEmployee1.FirstName, firstname, "FirstName hat Constrains nicht eingehalten");
 
-            string lastname = new string('a',21);
+            string lastname = new string('a',41);
             employee.LastName = lastname;
             sut.UpdateProfile(employee);
             var newEmployee2 = sut.ShowProfile("000");
@@ -126,6 +126,30 @@ namespace Tests.Integration
             Assert.AreEqual(employee.FirstName, "Nummer", "Employee.FirstName wurde nicht erstellt");
             Assert.AreEqual(employee.LastName, "Fuenf", "Employee.LastName wurde nicht erstellt");
             Assert.AreEqual(employee.EmployedSince.ToString("dd.MM.yyyy"), employed.ToString("dd.MM.yyyy"), "Employee.EmployedSince wurde nicht erstellt");
+        }
+
+        [Test]
+        [Order(5)]
+        public void InvalidCreateEmployeeTest()
+        {
+            var employed = DateTime.Now;
+            employeeService.CreateAccount(new Employee() { PersoNumber = "00", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
+            employeeService.CreateAccount(new Employee() { PersoNumber = "0000005", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
+            employeeService.CreateAccount(new Employee() { PersoNumber = "005?", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
+            employeeService.CreateAccount(new Employee() { PersoNumber = "005", FirstName = new string('c',41), LastName = "Fuenf", EmployedSince = employed });
+            employeeService.CreateAccount(new Employee() { PersoNumber = "006", FirstName = "Nummer", LastName = new string('c',41), EmployedSince = employed });
+
+            Employee employee1 = sut.ShowProfile("00");
+            Employee employee2 = sut.ShowProfile("0000005");
+            Employee employee3 = sut.ShowProfile("005?");
+            Employee employee4 = sut.ShowProfile("005");
+            Employee employee5 = sut.ShowProfile("006");
+
+            Assert.Null(employee1, "PersoNummer > 2 chr. constraint fehlgeschlagen");
+            Assert.Null(employee2, "PersoNummer < 7 chr. constraint fehlgeschlagen");
+            Assert.Null(employee3, "PersoNummer aus [a-zA-Z0-9_\\-,.]* constraint fehlgeschlagen");
+            Assert.Null(employee4, "FirstName < 40 chr. constraint fehlgeschlagen");
+            Assert.Null(employee5, "LastName < 40 chr. constraint fehlgeschlagen");
         }
 
         [Test]
