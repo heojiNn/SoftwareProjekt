@@ -9,15 +9,8 @@ namespace XCV.Pages.ProjectFolder
 {
     public partial class MyProjects
     {
-       
-
         private List<Project> myProjects = new();
         private string searchTitle = "";
-
-        private void DeleteProject(Project p)
-        {
-            projectService.Delete(p);
-        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -25,12 +18,9 @@ namespace XCV.Pages.ProjectFolder
 
             foreach (var pro in projectService.ShowAllProjects())
             {
-                foreach (var kvp in pro.Activities)
+                foreach(var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(authstate.User.Identity.Name)))
                 {
-                    if (kvp.Value.persNr.Contains(authstate.User.Identity.Name))
-                    {
-                        myProjects.Add(pro);
-                    }
+                    myProjects.Add(pro);
                 }
             }
         }

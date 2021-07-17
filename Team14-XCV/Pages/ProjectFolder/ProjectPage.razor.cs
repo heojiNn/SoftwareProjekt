@@ -18,6 +18,10 @@ namespace XCV.Pages.ProjectFolder
             project = projectService.ShowProject(int.Parse(Id));
         }
 
+        /// <summary>
+        /// Deletes a project p irreversibly.
+        /// </summary>
+        /// <param name="p"></param>
         private void DeleteProject(Project p)
         {
             projectService.Delete(p);
