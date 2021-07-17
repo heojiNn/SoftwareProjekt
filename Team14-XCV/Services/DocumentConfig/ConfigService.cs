@@ -12,8 +12,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-
-
 namespace XCV.Data
 {
     public class ConfigService : IConfigService
@@ -31,7 +29,6 @@ namespace XCV.Data
             cProfileService = profileService;
             cSkillService = skillService;
             cProjectService = projectService;
-
         }
 
         //-----------------------------------------------------------------------------------------
@@ -215,9 +212,7 @@ namespace XCV.Data
             }
         }
 
-        
         //---write --------------------------------------------------------------------------------
-
 
         public void DeleteDocumentConfig(Offer o, DocumentConfig cfg)
         {
@@ -359,6 +354,8 @@ namespace XCV.Data
                 {
                     con.Open();
                     con.Execute($"Insert Into [offerHasConfig] Values ({parent.Id}, '{name}')");
+                    con.Execute($"IF NOT EXISTS (Select * From [offerHasActiveConfig] Where [Offer]={parent.Id})" + // First config? Make it active.
+                                $"Insert Into [offerHasActiveConfig] Values ({parent.Id}, '{name}');");
                     foreach (Employee e in parent.participants)
                     {
                         Employee emp = cProfileService.ShowProfile(e.PersoNumber);
@@ -378,8 +375,8 @@ namespace XCV.Data
                         {
                             con.Execute($"Insert Into [configHasActivity] Values ({parent.Id}, @Name, @Employee, @Project, @Activity)", new { Name = name, Employee = emp.PersoNumber, Project = p.project, Activity = p.activity });
                         }
-                        con.Execute($"Insert Into [configHasOrder] Values ({parent.Id}, '{name}', 1, 2, 3, 4, 5)");
                     }
+                    con.Execute($"Insert Into [configHasOrder] Values ({parent.Id}, '{name}', 1, 2, 3, 4, 5)"); // For whole offer
                     con.Close();
                 }
                 catch (SqlException e)
@@ -396,7 +393,7 @@ namespace XCV.Data
             try
             {
                 con.Open();
-                var cfgnames = con.Query<string>($"Select [Config] from [offerHasConfig] Where [Offer] = {o.Id}");
+                var cfgnames = con.Query<string>($"Select [Config] from [offerHasConfig] Where [Offer] = {o.Id}"); // Target all configs of the offer to insert the Employee into.
                 foreach (var cfg in cfgnames)
                 {
                     Employee emp = cProfileService.ShowProfile(toAdd.PersoNumber);
@@ -447,12 +444,12 @@ namespace XCV.Data
                 {
                     var get = GetDocumentConfig(o, cfg);
                     con.Execute($"Delete From [config] Where [Employee] = '{toRemove.PersoNumber}')");
-                    if (get.employeeConfigs == null || get.employeeConfigs.Count == 0)
-                    {
-                        con.Execute($"Delete From [offerHasConfig] Where [Name] = '{cfg}')");
-                    }
+                    con.Execute($"IF NOT EXISTS (Select [Employee] From [config] Where [Offer]={o.Id} And [Config]='{cfg})'" + // If the deletion of the single Employee results into an empty Config, 
+                                        $"BEGIN" +                                                                             // (because prior to deletion he was the only one in it), the config gets deleted itself.
+                                        $"Delete From [offerHasConfig] Where [Name] = '{cfg}';" +
+                                        $"Delete From [offerHasActiveConfig] Where [Config]='{cfg}';" +
+                                        $"END;");
                 }
-
                 con.Close();
             }
             catch (SqlException e)
@@ -460,7 +457,6 @@ namespace XCV.Data
                 log.LogError($"Error creating default config on database: {e.Message} \n");
             }
         }
-
 
         public void SaveSelectedConfig(Offer o, DocumentConfig cfg)
         {
@@ -502,7 +498,6 @@ namespace XCV.Data
             }
         }
 
-
         //-------------------------------------User Messaging--------------------------------------
         public event EventHandler<NoResult> SearchEventHandel;
         protected virtual void OnEmptyResult(NoResult e) => SearchEventHandel?.Invoke(this, e);
@@ -516,6 +511,5 @@ namespace XCV.Data
             if (e.InfoMessages.Any() || e.ErrorMessages.Any() || e.SuccesMessage != "")
                 ChangeEventHandel?.Invoke(this, e);
         }
-
     }
 }

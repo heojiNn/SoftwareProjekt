@@ -14,7 +14,7 @@
 @using Blazored.Typeahead
 
 
-<div class="container-fluid">
+
     <div class="alert alert-success" role="alert">
         @changeInfo?.SuccesMessage
     </div>
@@ -61,7 +61,7 @@
             <div class="card ">
                 <div class="card-header">
                     - Reihenfolge festlegen -
-                    <div class="avatar-links" style="float: right" data-tooltip="Jeder Kategorie wird eine Zahl zwischen 1-5 zugewiesen aber keine Zahl sollte doppelt vorkommen, da sonst keine Ordnung definiert werden kann."></div>
+                    <div class="avatar-links" style="float: right" data-tooltip="Die Reihenfolge richtet sich nach den Zahlen 1-5 aufsteigend sortiert."></div>
                 </div>
                 <div class="card-body">
                         <div class="text-body">
@@ -254,7 +254,7 @@
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Bestätigen</button>
     @*<a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Reset"> Änderungen zurücksetzen</a>*@
     <a href="offer-employee-detail-view/@Id/@Config/@PersoNumber" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Discard"> Zurück zur Mitarbeiteransicht</a>
-</div>
+
 
     <Modal @ref="modal">
         <Title>Möchten Sie die Mitarbeiterkonfiguration speichern?</Title>

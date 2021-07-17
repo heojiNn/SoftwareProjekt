@@ -115,8 +115,8 @@ namespace XCV.Data
                 errorMessages = results.Select(e => e.ErrorMessage).ToList();
             if (ShowAllProjects().Where(p => p.Id != newVersion.Id).Any(x => x.Title.ToLower() == newVersion.Title.ToLower()))
                 errorMessages.Add("Es existiert schon ein Projekt mit diesem Titel.");
-            if (newVersion.Start < new DateTime(2000, 1, 1))
-                errorMessages.Add("Der Projektanfang kann nicht vor dem Jahr 2000 liegen.");
+            if (newVersion.Start < new DateTime(2011, 1, 1))
+                errorMessages.Add("Der Projektanfang kann nicht vor dem Jahr 2011 liegen.");
             if (newVersion.Start > newVersion.End.AddSeconds(1))
                 errorMessages.Add("Das Enddatum muss hinter den Beginn liegen.");
             if (newVersion.End > new DateTime(2100, 1, 1))
@@ -221,35 +221,6 @@ namespace XCV.Data
 
 
         //---write --------------------------------------------------------------------------------
-        public void Create(string title)
-        {
-            errorMessages = new();
-            var p = new Project() { Title = title };
-            Validate(p);
-            if (errorMessages.Any())
-            {
-                OnChange(new() { ErrorMessages = errorMessages });
-                return;
-            }
-
-            using var con = new SqlConnection(connectionString);
-            try
-            {
-                con.Open();
-                con.Execute($"Insert Into [Project] Values ( @Title,  @Description,  @Start,  @End,  @Field)", p);
-            }
-            catch (SqlException e)
-            {
-                log.LogError($" Create() persistence Error:: \n{e.Message}\n");
-            }
-            finally { con.Close(); }
-
-            var newID = ShowAllProjects().FirstOrDefault(x => x.Title == title).Id;
-            con.Open();
-            con.Execute($"Insert Into [ProjectHasActivity]  Values ('ohne Tätigkeit', @newID)", new { newID });
-            con.Close();
-            OnChange(new() { SuccesMessage = $"Das Projekt:{title} wurde  mit der ID:{newID} erstellt." });
-        }
 
         public void Create(Project p)
         {
@@ -367,10 +338,11 @@ namespace XCV.Data
 
         private bool Add(int pId, string activity)
         {
+            bool success = false;
             if (activity.Length > 50)
             {
                 OnChange(new() { ErrorMessages = new string[] { "Eine Tätigkeit darf nicht länger als 50 Zeichen sein." } });
-                return false;
+                return success;
             }
             using var con = new SqlConnection(connectionString);
             try
@@ -383,61 +355,18 @@ namespace XCV.Data
                     con.Execute($"Insert Into [ProjectHasActivity]  Values ('{activity}', {pId})");
                     OnChange(new() { SuccesMessage = "Tätigkeit hinzugefügt" });
                 }
+                success = true;
             }
-            catch (SqlException) { }
-            finally { con.Close(); }
-            return true;
-        }
-        public void Add(Project p, string activity)
-        {
-            if (activity.Length > 50)
+            catch (SqlException e)
             {
-                OnChange(new() { ErrorMessages = new string[] { "Nicht mehr als 50 Zeichen" } });
-                return;
+                success = false;
+                log.LogError($" Add(projectId, activity) persistence Error:: \n{e.Message}\n");
             }
-            using var con = new SqlConnection(connectionString);
-            try
-            {
-                con.Open();
-                if (con.Query($"SELECT [Project] From [ProjectHasActivity] Where [Project] = {p.Id} And [Name] = '{activity}' ").Any())
-                    OnChange(new() { ErrorMessages = new[] { "Eine Activität mit diesen Namen ist schon vohanden" } });
-                else
-                {
-                    con.Execute($"Insert Into [ProjectHasActivity]  Values ('{activity}', {p.Id})");
-                    OnChange(new() { SuccesMessage = "Aktivität hinzugefügt" });
-                }
-            }
-            catch (SqlException) { }
             finally { con.Close(); }
+            return success;
         }
 
-
-        public void Remove(Project p, string activity)
-        {
-            using var con = new SqlConnection(connectionString);
-            con.Open();
-            con.Execute($"Delete From [ProjectHasActivity]  Where [Project]={p.Id} And [Name]='{activity}' ");
-            con.Close();
-            OnChange(new() { SuccesMessage = "Aktivität entfernt" });
-        }
-
-        public void Add(Project p, Employee doneBy, string activity = "ohne Tätigkeit")
-        {
-            using var con = new SqlConnection(connectionString);
-            try
-            {
-                con.Open();
-                con.Execute($"Insert Into [activityHasEmployee] Values('{activity}', {p.Id}, '{doneBy.PersoNumber}' )");
-
-                con.Execute($"IF EXISTS ( SELECT * FROM [ActivityHasEmployee] " +
-                                                $"Where  [Activity]<>'ohne Tätigkeit' And [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' )" +
-            $"Delete From [ActivityHasEmployee]  Where  [Activity]='ohne Tätigkeit'  And  [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' "
-                );
-            }
-            catch (SqlException) { }
-            finally { con.Close(); }
-        }
-        private void Add(int pId, string doneBy, string activity = "ohne Tätigkeit")
+        public void Add(int pId, string doneBy, string activity)
         {
             using var con = new SqlConnection(connectionString);
             try
@@ -454,22 +383,15 @@ namespace XCV.Data
             finally { con.Close(); }
         }
 
-        private void Remove(int pId, string doneBy, string activity = "ohne Tätigkeit")
+        public void Remove(int pId, string doneBy, string activity)
         {
             using var con = new SqlConnection(connectionString);
             con.Open();
             con.Execute($"Delete From [ActivityHasEmployee]  Where  [Activity]='{activity}' And [Project]={pId} And [Employee]='{doneBy}' ");
             con.Close();
         }
-        public void Remove(Project p, Employee doneBy, string activity = "ohne Tätigkeit")
-        {
-            using var con = new SqlConnection(connectionString);
-            con.Open();
-            con.Execute($"Delete From [ActivityHasEmployee]  Where  [Activity]='{activity}' And [Project]={p.Id} And [Employee]='{doneBy.PersoNumber}' ");
-            con.Close();
-        }
 
-        private void Add(int pId, Skill skill, string activity = "ohne Tätigkeit")
+        private void Add(int pId, Skill skill, string activity)
         {
             using var con = new SqlConnection(connectionString);
             try
@@ -488,14 +410,6 @@ namespace XCV.Data
 
             }
             finally { con.Close(); }
-        }
-
-        public void Remove(int pId, Skill skill, string activity = "ohne Tätigkeit")
-        {
-            using var con = new SqlConnection(connectionString);
-            con.Open();
-            con.Execute($"Delete From [ActivityHasSkill]  Where  [Activity]='{activity}' And [Project]={pId}  And [Skill_name]='{skill.Name}' And [Skill_cat]='{skill.Category.Name}' ");
-            con.Close();
         }
 
 

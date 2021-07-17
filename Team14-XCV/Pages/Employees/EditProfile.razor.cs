@@ -86,12 +86,12 @@ readonly Dictionary<string, object> browseAttributes = new Dictionary<string, ob
 
     private void AddMe(Project p, string act)
     {
-        proService.Add(p, myProfile, act);
+        proService.Add(p.Id, myProfile.PersoNumber, act);
 
     }
     private void RemoveMe(Project p, string act)
     {
-        proService.Remove(p, myProfile, act);
+        proService.Remove(p.Id, myProfile.PersoNumber, act);
     }
 
 
