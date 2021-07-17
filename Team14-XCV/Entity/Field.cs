@@ -6,7 +6,7 @@ namespace XCV.Data
 {
     public class Field : IComparable
     {
-        [Required(ErrorMessage = "Brachen benötigen einen Namen."),
+        [Required(ErrorMessage = "Branchen benötigen einen Namen."),
         MaxLength(50, ErrorMessage = "Der Name der Brachen darf 50 Zeichen nicht überschreiten.")]
         public string Name { get; init; } = "";
 

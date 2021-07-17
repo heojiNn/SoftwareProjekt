@@ -6,7 +6,37 @@ namespace XCV.Data
 {
     public interface IOfferService
     {
+
         ///--------------------------------------------------------------//
+        /// Business:
+
+        /// <summary>
+        /// Processes Events.
+        /// </summary>
+        public event EventHandler<ChangeResult> ChangeEventHandel;
+        /// <summary>
+        /// Validates the Changes made to an offer
+        /// </summary>
+        /// <param name="newVersion"></param>
+        public void ValidateUpdate(Offer newVersion);
+        /// <summary>
+        /// Validates the Creation of a new offer
+        /// </summary>
+        /// <param name="newVersion"></param>
+        public void ValidateCreate(Offer newVersion);
+        /// <summary>
+        /// Returns end - start in Days (int)
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public int Runtime(DateTime end, DateTime start);
+
+
+
+
+        ///--------------------------------------------------------------//
+        /// Persistence:
         /// Read:
 
         /// <summary>
@@ -14,6 +44,18 @@ namespace XCV.Data
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Offer> ShowAllOffers();
+
+        /// <summary>
+        /// Returns a Collection which contains all the skills all exisitng Offer(s) have combined.
+        /// </summary>
+        /// <returns></returns>
+        public List<Skill> ShowAllOfferSkills();
+
+        /// <summary>
+        /// Returns a Collection which contains all the fields all exisitng Offer(s) have combined.
+        /// </summary>
+        /// <returns></returns>
+        public List<Field> ShowAllOfferFields();
 
         /// <summary>
         /// Returns an existing Offer with the specified id.
@@ -77,7 +119,7 @@ namespace XCV.Data
         /// <param name="o"></param>
         public void Delete(Offer o);
         /// <summary>
-        /// Adds an Employee to an existing Offer o.
+        /// Adds an Employee to an existing Offer o. 
         /// </summary>
         /// <param name="o"></param>
         /// <param name="offerEmp"></param>
@@ -117,23 +159,5 @@ namespace XCV.Data
         /// </summary>
         /// <param name="o"></param>
         public void Copy(Offer o);
-
-        ///--------------------------------------------------------------//
-        /// Business:
-
-        /// <summary>
-        /// Processes Events.
-        /// </summary>
-        public event EventHandler<ChangeResult> ChangeEventHandel;
-        /// <summary>
-        /// Validates the Changes made to an offer
-        /// </summary>
-        /// <param name="newVersion"></param>
-        public void ValidateUpdate(Offer newVersion);
-        /// <summary>
-        /// Validates the Creation of a new offer
-        /// </summary>
-        /// <param name="newVersion"></param>
-        public void ValidateCreate(Offer newVersion);
     }
 }

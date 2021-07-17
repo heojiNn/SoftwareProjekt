@@ -121,7 +121,7 @@ namespace XCV.Pages.OfferNamespace
 
         public void CreateDefault(Offer o, string name)
         {
-            configs.Add(configService.CreateDefaultDocumentConfig(o, name));
+            configs.Add(configService.CreateDefaultDocumentConfig(offerService.ShowOffer(o.Id), name));
         }
 
         private void DeleteConfig(Offer o, DocumentConfig cfg)
@@ -147,18 +147,6 @@ namespace XCV.Pages.OfferNamespace
                 configService.DeleteSelectedConfig(myOffer, selected);
             }
         }
-
-        /// <summary>
-        /// Returns end - start in Days
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public int Runtime(DateTime end, DateTime start)
-        {
-            return (end - start).Days;
-        }
-
 
         // ChangeEvents
 

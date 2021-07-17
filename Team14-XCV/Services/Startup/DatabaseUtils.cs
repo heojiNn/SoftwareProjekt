@@ -48,7 +48,7 @@ namespace XCV.Data
         ///         [employee],   [project], [activity], [activity_done_by], [project_purpose]
         ///         [employee_acrole], [employee_field], [employee_role], [employee_language], [employee_skill]
         ///         [offer], [offerHasEmployee], [offerHasField], [offerHasSkill], [offerhasConfig], [offerHasActiveConfig],
-        ///         [config], [configHasActivity], [configHasField], [configHasSkill]
+        ///         [config], [configHasActivity], [configHasField], [configHasSkill], [configHasOrder]
         /// </summary>
         public void CreateTables()
         {
@@ -102,7 +102,7 @@ namespace XCV.Data
                             ");");                  //Key is Level  cause  number 4 is fixed  ---(no insert or delete)----
                 con.Execute(@"IF NOT EXISTS (SELECT * FROM [skill_level] ) " +
                             "Insert Into [skill_level] Values " +
-                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelm��ige'),  (4, 'erfahren') " +
+                                "(1, 'hobby'),  (2, 'produktiv'),  (3, 'regelmaeßige'),  (4, 'erfahren') " +
                             ";");
 
 
@@ -324,8 +324,21 @@ namespace XCV.Data
                                     "[Activity]     VARCHAR(100), " +
                                     "PRIMARY KEY (Offer, Config, cfgEmployee, Activity, Project), " +
                                     "CONSTRAINT fK_cha_f_emp FOREIGN KEY (Offer, Config, cfgEmployee) REFERENCES  config(Offer, Name, Employee) ON DELETE CASCADE, " +
-                                    "CONSTRAINT fK_cha_akti FOREIGN KEY (activity, project) REFERENCES  ProjectHasActivity(Name, Project) ON DELETE CASCADE, " +
+                                    "CONSTRAINT fK_cha_pro FOREIGN KEY (project) REFERENCES  project(Id) ON DELETE CASCADE, " +
                             ");");
+                con.Execute("IF OBJECT_ID('configHasOrder', 'U') IS NULL " +
+                            "CREATE TABLE [configHasOrder] ( " +
+                                    "[Offer]        INT," +
+                                    "[Config]       VARCHAR(30)," +
+                                    "[pos1]         INT," +
+                                    "[pos2]         INT," +
+                                    "[pos3]         INT, " +
+                                    "[pos4]         INT,  " +
+                                    "[pos5]         INT, " +
+                                    "PRIMARY KEY (Offer, Config), " +
+                                    "CONSTRAINT fK_cho FOREIGN KEY (Offer, Config) REFERENCES offerHasConfig(Offer, Config) ON DELETE CASCADE" +
+                            ");");
+
                 //------------Config------------------------------------------------
 
                 //-----------------------------------------------------------------------------------------------------

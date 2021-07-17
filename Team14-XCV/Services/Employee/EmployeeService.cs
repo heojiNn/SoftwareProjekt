@@ -303,7 +303,7 @@ namespace XCV.Data
                         if (groupedFirst.Abilities.Any())
                             groupedFirst.Abilities = g.Select(e => e.Abilities.First()).ToHashSet();
                         if (groupedFirst.Projects.Any())
-                            groupedFirst.Projects = g.Select(e => e.Projects.First()).Distinct().ToList();
+                            groupedFirst.Projects = g.Select(e => e.Projects.First()).Distinct().ToHashSet();
                         return groupedFirst;
                     }).ToList();    //--------------------------------ToDebuk
 

@@ -182,7 +182,7 @@
                                 <p> RCL: @e.offerRCL </p>
                                 <p> Stundensatz: @(e.offerWage + " EUR/Std")</p>
                                 <p> Std/Tag: @(e.hoursPerDay + "/24")</p>
-                                <p> Tag/Laufzeit: @(e.daysPerRun + "/" + @Runtime(myOffer.End, myOffer.Start) + "T")</p>
+                                <p> Tag/Laufzeit: @(e.daysPerRun + "/" + @offerService.Runtime(myOffer.End, myOffer.Start) + "T")</p>
                                 <p> Rabatt: @(e.discount + "%")</p>
                             </div>
                         </div>
@@ -282,19 +282,6 @@
             </div>
         }
     </div>
-
-    @*<div class="col-sm-6 mb-3" style="min-height: 100px;">
-               <CollapsibleCard CardHeaderTitle="Dokumentenkonfigurationen">
-                   <CardBody>
-                       <div class="scroll" style="overflow-x: hidden;">
-                           <CheckBoxList Data="@configs" TextField="@((item)=>item.Name.ToString())" SelectedValues="@selectedConfig2" />
-                       </div>
-                   </CardBody>
-               </CollapsibleCard>
-        </div>*@
-
-
-
     <a href="offers" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Angebotsübersicht </a>
     <a href="offers" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteOffer(myOffer))">Löschen</a>
     <a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten</a>

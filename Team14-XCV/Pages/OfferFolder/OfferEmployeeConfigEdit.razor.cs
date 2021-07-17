@@ -22,9 +22,11 @@ namespace XCV.Pages.OfferNamespace
 
 
         private Modal modal { get; set; }
+        private Modal modal2 { get; set; }
         private string fieldSearch = "";
         private string hskillSearch = "";
         private string sskillSearch = "";
+        private string error = "";
 
         //======================     Booleans     =========================//
 
@@ -68,9 +70,11 @@ namespace XCV.Pages.OfferNamespace
         public ISet<Field>? selectedFields { get; set; }
         public ISet<Skill>? selectedSoftSkills { get; set; }
         public ISet<Skill>? selectedHardSkills { get; set; }
-        public IList<(int project, string activity)>? selectedProjects { get; set; }
+        public ISet<(int project, string activity)>? selectedProjects { get; set; }
 
         #nullable disable
+
+        public int[] order { get; set; }
 
         //==================================================//
         // All possible Data to show for the employee (checked and unchecked)
@@ -87,12 +91,9 @@ namespace XCV.Pages.OfferNamespace
             //load offer
             offer = offerService.ShowOffer(Id);
             offerService.ChangeEventHandel += OnChangeReturn;
-            //load profile
+            //load all profile data
             offerEmployee = profileService.ShowProfile(PersoNumber); // Persistence of the employee independent from a config -> used to show all possible features to include in a config
             profileService.ChangeEventHandel += OnChangeReturn;
-            //load config
-            EmployeeConfig ecfg = configService.GetDocumentConfig(offer, Config).employeeConfigs.Where(x => x.PersNr.Equals(PersoNumber)).First(); // Persistence of the employeeconfig in db
-            configService.ChangeEventHandel += OnChangeReturn;
 
             FirstName = offerEmployee.FirstName;
             LastName = offerEmployee.LastName;
@@ -100,51 +101,63 @@ namespace XCV.Pages.OfferNamespace
             Image = offerEmployee.Image;
             Experience = offerEmployee.Experience;
             EmployedSince = offerEmployee.EmployedSince;
-            selectedFields = offerEmployee.Fields;
-            selectedSoftSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Softskill).ToHashSet();
-            selectedHardSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Hardskill).ToHashSet();
-            selectedProjects = offerEmployee.Projects;
 
-            if (ecfg == null)
-            {
-                Console.WriteLine("Error!");
-            } else
-            {
-                try
-                {
-                    if (ecfg.FirstName != null) showFirstName = true;
-                    if (ecfg.LastName != null)  showLastName = true;
-                    if (ecfg.Description != null) showDescription = true;
-                    if (ecfg.Image != null)  showImage = true;
-                    if (ecfg.Experience.HasValue) showExperience = true;
-                    if (ecfg.EmployedSince.HasValue)  showEmployedSince = true;
-                    if (showFirstName || showLastName || showDescription || showImage || showExperience || showEmployedSince) //If unchecked all will be removed and vice verca
-                        showpersonalData = true;
-                    if (ecfg.selectedFields != null && ecfg.selectedFields.Count != 0) showfieldData = true;
-                    else Console.WriteLine("Felder nicht vorhanden");
-                    if (ecfg.selectedSoftSkills != null && ecfg.selectedSoftSkills.Count != 0) showSSkill = true;
-                    else Console.WriteLine("Softskills nicht vorhanden");
-                    if (ecfg.selectedHardSkills != null && ecfg.selectedHardSkills.Count != 0) showHSkill = true;
-                    else Console.WriteLine("Hardskills nicht vorhanden");
-                    if (ecfg.selectedProjects != null && ecfg.selectedProjects.Count != 0) showProjects = true;
-                    else Console.WriteLine("Projekte nicht vorhanden");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Creation failed" + e.Message);
+            //load config
+            EmployeeConfig ecfg = configService.GetDocumentConfig(offer, Config).employeeConfigs.Where(x => x.PersNr.Equals(PersoNumber)).Single(); // Persistence of the employeeconfig in db
+            configService.ChangeEventHandel += OnChangeReturn;
 
-                }
+            selectedFields = ecfg.selectedFields;
+            selectedSoftSkills = ecfg.selectedSoftSkills;
+            selectedHardSkills = ecfg.selectedHardSkills;
+            selectedProjects = ecfg.selectedProjects;
+            order = ecfg.order;
+
+            try//If unchecked all will be removed and vice verca
+            {
+                if (ecfg.FirstName != null) showFirstName = true;
+
+                if (ecfg.LastName != null)  showLastName = true;
+
+                if (ecfg.Description != null && !ecfg.Description.Equals("")) showDescription = true;
+
+                if (ecfg.Image != null)  showImage = true;
+
+                if (ecfg.Experience.HasValue) showExperience = true;
+
+                if (ecfg.EmployedSince.HasValue)  showEmployedSince = true;
+
+                if (showFirstName || showLastName || showDescription || showImage || showExperience || showEmployedSince) showpersonalData = true;
+
+                if (ecfg.selectedFields != null && ecfg.selectedFields.Count != 0) showfieldData = true;
+
+                if (ecfg.selectedSoftSkills != null && ecfg.selectedSoftSkills.Count != 0) showSSkill = true;
+
+                if (ecfg.selectedHardSkills != null && ecfg.selectedHardSkills.Count != 0) showHSkill = true;
+
+                if (ecfg.selectedProjects != null && ecfg.selectedProjects.Count != 0) showProjects = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Creation failed" + e.Message);
+
             }
         }
 
-        // Update the config
-        private void Validate()
-        {
-            modal.Open();
+        private void Validate() {
+            if (order.Length != order.Distinct().Count())
+            {
+                error = "Die Angabe der Reihenfolge enthält Duplikate";
+                modal2.Open();
+            } else
+            {
+                modal.Open();
+            }
         }
         private void Close()
         {
             modal.Close();
+            modal2.Close();
             changeInfo = new();
         }
 
@@ -162,38 +175,86 @@ namespace XCV.Pages.OfferNamespace
                 toUpdate.Image = null;
                 toUpdate.Experience = null;
                 toUpdate.EmployedSince = null;
+            } else
+            {
+                toUpdate.FirstName = showFirstName == true ? FirstName : null;
+                toUpdate.LastName = showLastName == true ? LastName : null;
+                toUpdate.Description = showDescription == true ? Description : null;
+                toUpdate.Image = showImage == true ? Image : null;
+                toUpdate.Experience = showExperience == true ? Experience : null;
+                toUpdate.EmployedSince = showEmployedSince == true ? EmployedSince : null;
             }
-            toUpdate.FirstName = showFirstName == true ? FirstName : null;
-            toUpdate.LastName = showLastName == true ? LastName : null;
-            toUpdate.Description = showDescription == true ? Description : null;
-            toUpdate.Image = showImage == true ? Image : null;
-            toUpdate.Experience = showExperience == true ? Experience : null;
-            toUpdate.EmployedSince = showEmployedSince == true ? EmployedSince : null;
             if (!showfieldData)
             {
                 toUpdate.selectedFields = null;
             } else 
-                toUpdate.selectedFields = selectedFields == null ? null : selectedFields;
+                toUpdate.selectedFields = selectedFields ?? null;
             if (!showSSkill)
             {
                 toUpdate.selectedSoftSkills = null;
             } else
-                toUpdate.selectedSoftSkills = selectedSoftSkills == null ? null : selectedSoftSkills;
+                toUpdate.selectedSoftSkills = selectedSoftSkills ?? null;
 
             if (!showHSkill)
             {
                 toUpdate.selectedHardSkills = null;
             }  else
-                toUpdate.selectedHardSkills = selectedHardSkills == null ? null : selectedHardSkills;
+                toUpdate.selectedHardSkills = selectedHardSkills ?? null;
 
             if (!showProjects)
             {
                 toUpdate.selectedProjects = null;
             } else
-                toUpdate.selectedProjects = selectedProjects == null ? null : selectedProjects;
+                toUpdate.selectedProjects = selectedProjects ?? null;
+
+            toUpdate.order = order;
             configService.UpdateEmployeeConfig(offer, configService.GetDocumentConfig(offer, Config), offerEmployee.PersoNumber, toUpdate);
             Close();
         }
+
+
+        // 4 states: Project checked/unchecked, Projectactivity checked/unchecked
+
+        /// <summary>
+        /// Adds or removes all projects with all activities
+        /// </summary>
+        /// <param name="marked"></param>
+        /// <param name="pro"></param>
+        /// <param name="act"></param>
+        public void ProjectsClicked(object marked, int pro, string[] act)
+        {
+            if ((bool)marked)
+            {
+                foreach (string activity in act)
+                {
+                    selectedProjects.Add((pro, activity));
+                }
+            } else
+            {
+                foreach (string activity in act)
+                {
+                    selectedProjects.Remove((pro, activity));
+                }
+            }
+        }
+
+        public void ProjectActivitiesClicked(object marked, int pro, string[] act)
+        {
+            if ((bool)marked)
+            {
+                if (!selectedProjects.Contains((pro, act[0])))
+                    selectedProjects.Add((pro, act[0]));
+            } else
+            {
+                if (selectedProjects.Contains((pro, act[0])))
+                    selectedProjects.Remove((pro, act[0]));
+                if (!selectedProjects.Contains((pro, ""))) //i.e. one project with two acts: checked project, unchecked both activites -> project only has "" activities -> display only project.
+                    selectedProjects.Add((pro, ""));
+            } 
+        }
+
+
+
 
         private void Discard()
         {
@@ -202,17 +263,12 @@ namespace XCV.Pages.OfferNamespace
         //
 
 
+
+
         private void OnChangeReturn(object sender, ChangeResult e)
         {
             changeInfo = e;
         }
-
         private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
-
-        public bool MitarbeiterCollapsed { get; set; }
-        void MitarbeiterToggle()
-        {
-            MitarbeiterCollapsed = !MitarbeiterCollapsed;
-        }
     }
 }

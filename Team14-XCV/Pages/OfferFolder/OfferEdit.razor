@@ -85,7 +85,6 @@
 
     <br />
     <div class="row gutters-sm">
-        @* Hardskills *@
         <div class="col-sm-6 mb-3" style="min-height: 100px;">
             <CollapsibleCard CardHeaderTitle="Hardskills">
                 <CardBody>
@@ -108,7 +107,7 @@
                                         @if (isSkill)
                                         {
                                             var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
-                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="@SelectedHardskills" />
+                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="SelectedHardskills" />
                                         }
                                         else
                                         {
@@ -120,7 +119,7 @@
                                                     <CardHeader> @cat.Children.Count() enthalten</CardHeader>
                                                     <CardBody>
                                                         <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
-                                                                      SelectedValues="@SelectedHardskills" />
+                                                                      SelectedValues="SelectedHardskills" />
                                                     </CardBody>
                                                 </CollapsibleCard>
                                             }
@@ -133,7 +132,7 @@
                     else
                     {
                         var sResulte = skillService.GetAllSkills().Where(x => x.Name.ToLower().StartsWith(skillSearch.ToLower())).OrderBy(x => x.Name);
-                        <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="@SelectedHardskills" />
+                        <CheckBoxList Data="@sResulte" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="SelectedHardskills" />
                     }
                 </CardBody>
             </CollapsibleCard>
@@ -215,7 +214,7 @@
                                     Stundensatz <input type="number" min="0" max="9999" @bind="@em.offerWage">
                                     Std/Tag <input type="number" min="0" max="24" @bind="@em.hoursPerDay" />
                                     <br />
-                                    Tage/Laufzeit <input type="number" min="0" max="@Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun"/>
+                                    Tage/Laufzeit <input type="number" min="0" max="@offerService.Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun"/>
                                     Rabatt(0-100) <input type="number" min="0" max="100" @bind="@em.discount" />
                                 </div>
                             </div>
