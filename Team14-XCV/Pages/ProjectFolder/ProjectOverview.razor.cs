@@ -7,8 +7,7 @@ namespace XCV.Pages.ProjectFolder
 {
     public partial class ProjectOverview
     {
-        
-
+        //Parameters and References:
         private string searchTitle ="";
         private Modal modal;
         private IEnumerable<Project> allProjects;
@@ -16,10 +15,18 @@ namespace XCV.Pages.ProjectFolder
         {
             allProjects = projectService.ShowAllProjects();
         }
+
+        /// <summary>
+        /// Deletes a project p irreversibly.
+        /// </summary>
+        /// <param name="p"></param>
         private void DeleteProject(Project p)
         {
             projectService.Delete(p);
         }
+        /// <summary>
+        /// Deletes all projects irreversibly after confirmation.
+        /// </summary>
         private void DeleteAll()
         {
             foreach (var p in allProjects)
@@ -28,7 +35,9 @@ namespace XCV.Pages.ProjectFolder
             }
             navManager.NavigateTo("/projects", true);
         }
-
+        /// <summary>
+        /// Opens a modal dialogue to confirm that all projects should be deleted. 
+        /// </summary>
         private void Confirm()
         {
             modal.Open();

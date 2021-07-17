@@ -15,10 +15,14 @@
 
     <div class="card my-1">
         <div class="card-header" style="position: relative">
-            <div style="position: absolute; margin-top: 0.1%;">
-                <a href="project-edit/@project.Id" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E"> Bearbeiten</a>
-            </div>
+            <AuthorizeView Context="Usercontext" Roles="sales, admin">
+                <Authorized>
 
+                    <div style="position: absolute; margin-top: 0.1%;">
+                        <a href="project-edit/@project.Id" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E"> Bearbeiten</a>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
             <h3 style="text-align: center">@project.Title </h3>
         </div>
     </div>
@@ -239,8 +243,6 @@
     </div>
     <AuthorizeView Context="Usercontext" Roles="sales, admin">
         <Authorized>
-
-
             <a href="project-edit/@project.Id" class="btn btn-secondary" style="float:right; margin: 3em 1em"> Bearbeiten </a>
             <a href="projects" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="(e => DeleteProject(project))"> Löschen </a>
             <a href="projects" class="btn btn-secondary" style="float:left; margin: 3em 1em"> Projektübersicht </a>
