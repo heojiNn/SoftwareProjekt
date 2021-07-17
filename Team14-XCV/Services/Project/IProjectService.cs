@@ -31,11 +31,6 @@ namespace XCV.Data
         /// <summary>
         ///     Creates a project with a unique id.
         /// </summary>
-        /// <param name="title"></param>
-        public void Create(string title);
-        /// <summary>
-        ///     Creates a project with a unique id.
-        /// </summary>
         /// <remarks>
         ///     uses Validate(Project p)
         ///     <para> Error: through the method constraints </para>
@@ -110,31 +105,19 @@ namespace XCV.Data
         public void Delete(Project toDelete);
 
         /// <summary>
-        /// Adds an activity to a project.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="activity"></param>
-        public void Add(Project p, string activity);
-        /// <summary>
-        /// Removes an activity from a project.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="activity"></param>
-        public void Remove(Project p, string activity);
-        /// <summary>
         /// Adds an employee to a project activity.
         /// </summary>
         /// <param name="p"></param>
         /// <param name="doneBy"></param>
         /// <param name="activity"></param>
-        public void Add(Project p, Employee doneBy, string activity = "ohne Tätigkeit");
+        public void Add(int pId, string doneBy, string activity);
         /// <summary>
         /// Removes an employee from a project activity.
         /// </summary>
         /// <param name="p"></param>
         /// <param name="doneBy"></param>
         /// <param name="activity"></param>
-        public void Remove(Project p, Employee doneBy, string activity = "ohne Tätigkeit");
+        public void Remove(int pId, string doneBy, string activity);
 
 
 
