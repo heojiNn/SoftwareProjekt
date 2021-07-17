@@ -19,18 +19,16 @@
 
     <ul class="nav flex-column">
 
-        <Authorized>
-            <li class="nav-item px-3 pb-4">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home"></span> Profil
-                </NavLink>
-            </li>
-            <li class="nav-item px-3 pb-4">
-                <NavLink class="nav-link" href="my-projects">
-                    <span class="oi oi-box" aria-hidden="true"></span> Meine Projekte
-                </NavLink>
-            </li>
-        </Authorized>
+        <li class="nav-item px-3 pb-4">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home"></span> Profil
+            </NavLink>
+        </li>
+        <li class="nav-item px-3 pb-4">
+            <NavLink class="nav-link" href="my-projects">
+                <span class="oi oi-box" aria-hidden="true"></span> Meine Projekte
+            </NavLink>
+        </li>
 
         <AuthorizeView Roles="sales, admin">
             <li class="nav-item px-3 pb-4">

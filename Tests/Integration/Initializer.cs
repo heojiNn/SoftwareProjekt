@@ -62,11 +62,7 @@ namespace Tests.Integration
             var currentParent = Directory.GetParent(Directory.GetCurrentDirectory()).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
             currentParent = Directory.GetParent(currentParent).FullName;
-            string settingsPath;
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Staging")
-                settingsPath = Path.Combine(currentParent, "testsettings.Staging.json");
-            else
-                settingsPath = Path.Combine(currentParent, "testsettings.json");
+            var settingsPath = Path.Combine(currentParent, "testsettings.json");
 
             return new ConfigurationBuilder().AddJsonFile(settingsPath).Build();
         }
@@ -89,7 +85,7 @@ namespace Tests.Integration
         public static EmployeeService GetEmployeeService()
         {
             var eLogger = Mock.Of<ILogger<EmployeeService>>();
-            var sut = new EmployeeService(GetTestConfig(), eLogger, GetSkillService(), GetEnvMoq());
+            var sut = new EmployeeService(GetTestConfig(), eLogger, GetSkillService(), GetLangService(), GetEnvMoq());
             return sut;
         }
         public static ProjectService GetProjectService()

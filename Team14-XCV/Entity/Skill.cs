@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace XCV.Data
 {
-    public class Skill : SkilTreeNode, IComparable
+    public class Skill : SkillTreeNode, IComparable
     {
         [Required(ErrorMessage = "Skills benötigen einen Namen."),
         MaxLength(50, ErrorMessage = "Der Name des Skill darf {1} Zeichen nicht überschreiten.")]
