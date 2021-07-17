@@ -92,11 +92,24 @@ namespace XCV.Pages.OfferNamespace
                 myOffer.Requirements = SelectedSkills;
                 myOffer.participants = SelectedParticipants;
 
+                // Adapt Configs:
+                var temp = offerService.ShowOffer(Id); // old collection
+                foreach (var p in temp.participants.Select(x=>x.PersoNumber))
+                {
+                    if (!myOffer.participants.Select(x => x.PersoNumber).Contains(p)) // Employee has been removed -> remove Config.
+                        configService.Remove(myOffer, profileService.ShowProfile(p));
+                }
+                foreach (var p in myOffer.participants.Select(x => x.PersoNumber))
+                {
+                    if (!temp.participants.Select(x => x.PersoNumber).Contains(p)) // Employee has been added -> add Config.
+                        configService.Add(myOffer, profileService.ShowProfile(p));
+                }
+
+
                 offerService.Update(myOffer);
                 offerData.offerStore = null;
                 modal.Close();
                 await JS.InvokeVoidAsync("scrollTop");
-
             }
         }
 
