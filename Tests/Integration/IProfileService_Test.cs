@@ -79,6 +79,7 @@ namespace Tests.Integration
         public void InvalidUpdateAddTest()
         {
             var employee = sut.ShowProfile("000");  //should have been created by Initializer.cs
+
             var level = skillService.GetAllLevel()[3];
             var skill = new Skill() { Name = "C", Level = level, Category = new SkillCategory() { Name = "Sprach" } };
             employee.Abilities.Add(skill);
@@ -89,9 +90,26 @@ namespace Tests.Integration
             // Assert
             var newEmployee = sut.ShowProfile("000");
             Assert.False(newEmployee.Abilities.Contains(skill));
+
+            string firstname = new string('a', 21);
+            employee.FirstName = firstname;
+            sut.UpdateProfile(employee);
+            var newEmployee1 = sut.ShowProfile("000");
+            Assert.False(newEmployee1.FirstName == firstname, "FirstName hat Constrains nicht eingehalten");
+
+            string lastname = new string('a',21);
+            employee.LastName = lastname;
+            sut.UpdateProfile(employee);
+            var newEmployee2 = sut.ShowProfile("000");
+            Assert.False(newEmployee2.LastName == lastname, "LastName hat Constrains nicht eingehalten");
+
+            var role = new Role() { Name = new string('a', 51) };
+            employee.Roles.Add(role);
+            sut.UpdateProfile(employee);
+            var newEmployee3 = sut.ShowProfile("000");
+            Assert.IsEmpty(newEmployee3.Roles.Where(r => r.Name == role.Name), "Rollen hat Constrains nicht eingehalten");
+
         }
-
-
     }
 }
 

@@ -37,7 +37,7 @@ namespace Tests.Integration
             var eService = GetEmployeeService();
             foreach (var e in eService.ShowAllProfiles())
                 eService.DeleteAccount(e.PersoNumber);
-            eService.CreateAccount(new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployedSince = DateTime.Now, Experience=DateTime.Now });
+            eService.CreateAccount(new Employee() { PersoNumber = "000", FirstName = "admin", LastName = "admin", EmployedSince = DateTime.Now });
 
             Assert.AreEqual(1, eService.ShowAllProfiles().Count());       // and one fresh account
             var pService = GetProjectService();
