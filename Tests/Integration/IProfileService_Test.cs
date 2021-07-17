@@ -125,7 +125,7 @@ namespace Tests.Integration
             Assert.IsNotNull(employee, "Employee wurde nicht erstellt");
             Assert.AreEqual(employee.FirstName, "Nummer", "Employee.FirstName wurde nicht erstellt");
             Assert.AreEqual(employee.LastName, "Fuenf", "Employee.LastName wurde nicht erstellt");
-            Assert.AreEqual(employee.EmployedSince, employed, "Employee.EmployedSince wurde nicht erstellt");
+            Assert.AreEqual(employee.EmployedSince.ToString("dd.MM.yyyy"), employed.ToString("dd.MM.yyyy"), "Employee.EmployedSince wurde nicht erstellt");
         }
 
         [Test]
