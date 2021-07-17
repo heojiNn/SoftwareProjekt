@@ -8,17 +8,6 @@ namespace XCV.Data
     public interface ILanguageService
     {
         /// <summary>
-        ///         Validates against DataAnotations on the  Language-Entity
-        /// </summary>
-        ///
-        /// <returns>
-        ///          ErrorMessages
-        /// </returns>
-        public IEnumerable<string> ValidateLanguages(IEnumerable<Language> languages);
-
-
-
-        /// <summary>
         ///         GetAllLanguages from persistence.
         /// </summary>
         /// <remarks>
@@ -27,10 +16,9 @@ namespace XCV.Data
         /// </remarks>
         ///
         /// <returns>
-        ///          A collection of Languages, that might be empty.
+        ///          A collection of languages, that might be empty.
         /// </returns>
         public IEnumerable<Language> GetAllLanguages();
-
 
         /// <summary>
         ///         GetAllLevel correctly orderd from persistence.
@@ -42,11 +30,41 @@ namespace XCV.Data
         public string[] GetAllLevel();
 
 
+
+        /// <summary>
+        ///         Adds one Language to persistence.
+        /// </summary>
+        /// <remarks>
+        ///         Catches SqlExceptions and just logs them
+        /// </remarks>
+        ///
+        /// <event cref="OnChange">
+        ///         Succes: {toAdd}, wurde zur Liste der Sprachen hinzugefügt.
+        /// or
+        ///static   Error:  Name.Length war nicht (<50 && <1) {newField}
+        ///dyn      Error:  {toAdd}, kann nicht hinzugefügt werden, da es schon enthalten ist.
+        /// </event>
+        public int CreateLanguage(Language toAdd, bool justValidate = false);
+        /// <summary>
+        ///         Removes one Language to persistence.
+        /// </summary>
+        /// <remarks>
+        ///         Catches SqlExceptions and just logs them
+        /// </remarks>
+        ///
+        /// <event cref="OnChange">
+        ///         Succes: {toRemove}, wurde aus Liste der Sprachen entfernt.
+        /// or
+        ///static   Error:  {toRemove}, kann nicht entfernt werden, da es nicht enthalten ist.
+        /// </event>
+        public int DeleteLanguage(Language toRemove);
+
+
+
         /// <summary>
         ///         UpdateAllLanguages in persistence.
         /// </summary>
         /// <remarks>
-        ///         uses ValidateLanguages(roles),
         ///         catches SqlExceptions and logs them
         /// </remarks>
         ///
@@ -57,19 +75,19 @@ namespace XCV.Data
         /// <event cref="OnChange">
         ///     Succes: {languages}: wurde entfernt\hinzugefügt.
         /// or
-        ///     Error:  {languages}: Sprachen benötigen einen Namen / darf 50 Zeichen ...
+        ///     Error:  {languages}: see Create/Delete
         ///</event>
-        public (int added, int removed) UpdateAllLanguages(IEnumerable<Language> languages);
-
+        public (int added, int removed) UpdateAllLanguages(IEnumerable<Language> languages, bool justValidate = false);
 
         /// <summary>
-        ///         UpdateAllLevels in persistence.
+        ///         Updates(Renames)AllLevels in persistence.
         /// </summary>
         ///
         /// <param name="levels">
-        ///         The ordered levels
+        ///         a correctly order array of size 6
+        ///         for each element (.lenght > 1 && lenght < 30)  &&  uniqe(caseinsensitve)
         /// </param>
-        public (int added, int removed) UpdateAllLevels(string[] levels);
+        public int UpdateAllLevels(string[] levels, bool justValidate = false);
 
 
 

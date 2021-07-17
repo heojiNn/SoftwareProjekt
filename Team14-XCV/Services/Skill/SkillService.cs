@@ -17,7 +17,6 @@ namespace XCV.Data
     {
         private readonly string connectionString;
         private readonly ILogger<SkillService> log;
-        private IEnumerable<Skill> cache = new List<Skill>();
         private string[] lvlCache = Array.Empty<string>();
 
         public SkillService(IConfiguration config, ILogger<SkillService> logger)
@@ -33,9 +32,9 @@ namespace XCV.Data
         {
             infoMessages = new();
             errorMessages = new();
-            (var cats, var skills) = MarkDouble(tree);
-            ValidateSkillCategory(cats);
-            ValidateSkill(skills);
+            (var cats, var skills) = MarkDouble(tree);  //1. kind of Validation
+            ValidateSkillCategory(cats);                //2.
+            ValidateSkill(skills);                      //and 3.
             OnChange(new() { InfoMessages = infoMessages, ErrorMessages = errorMessages });
             return (cats, skills);
         }
@@ -46,7 +45,7 @@ namespace XCV.Data
                 var results = new List<ValidationResult>();
                 if (!Validator.TryValidateObject(skill, new ValidationContext(skill), results, true))
                     foreach (var result in results)
-                        errorMessages.Add($"{skill}: {result.ErrorMessage}");
+                        errorMessages.Add($"{skill}: {result.ErrorMessage}"); ;        //just on check .length < 50
             }
             return errorMessages;
         }
@@ -57,7 +56,7 @@ namespace XCV.Data
                 var results = new List<ValidationResult>();
                 if (!Validator.TryValidateObject(cat, new ValidationContext(cat), results, true))
                     foreach (var result in results)
-                        errorMessages.Add($"{cat.Name}: {result.ErrorMessage}");
+                        errorMessages.Add($"{cat.Name}: {result.ErrorMessage}");        //just on check .length < 40
             }
             return errorMessages;
         }
@@ -92,9 +91,6 @@ namespace XCV.Data
             try
             {
                 con.Open();
-                int i = con.ExecuteScalar<int>("Select Count(*) From [Skill]");
-                if (i == cache.Count()) return cache;
-
                 skills = con.Query<Skill, string, Skill>("Select * From [Skill]",
                     (skill, category) =>
                     {
@@ -107,8 +103,7 @@ namespace XCV.Data
                 log.LogError($"GetAllSkills() persitence Error: \n{e.Message}\n");
             }
             finally { con.Close(); }
-            HangThemOnATree(skills);
-            cache = skills;
+            SetCategoryRelationTree(skills);
             return skills;
         }
 
@@ -120,7 +115,7 @@ namespace XCV.Data
             con.Open();
             var lvl = con.Query<string>("Select [Name] From [Skill_Level] Order By [Level]").ToArray();
             con.Close();
-            lvlCache = lvl;
+            lvlCache = (string[])lvl.Clone();
             return lvl;
         }
         public IEnumerable<SkillCategory> GetAllCategories()
@@ -143,7 +138,6 @@ namespace XCV.Data
         }
 
 
-        //---write --------------------------------------------------------------------------------
         private (int added, int removed) UpdateSkills(IEnumerable<Skill> skills)
         {
             int addedRows = 0;
@@ -154,7 +148,7 @@ namespace XCV.Data
             var toRemove = oldSkills.Except(skills);
             var allCats = GetAllCategories();
 
-            Parallel.ForEach(toAdd, skill =>        // reduces runtime significant  on 460 skills databasis load
+            Parallel.ForEach(toAdd, skill =>        // reduces runtime  on full databasis load
             {
                 addedRows += InsertSkill(skill);
             });
@@ -166,9 +160,17 @@ namespace XCV.Data
 
             return (addedRows, removedRows);
         }
-        public int InsertSkill(Skill skill)
+        public int InsertSkill(Skill skill, bool justValidate = false)
         {
             int i = 0;
+            errorMessages = new();
+            ValidateSkill(new[]{skill});
+            if (errorMessages.Any() || justValidate)
+            {
+                OnChange(new() { ErrorMessages = errorMessages });
+                return 0;
+            }
+            //-----------------------------------------------------------------------MS-SQL-Command
             using var con = new SqlConnection(connectionString);
             try
             {
@@ -177,11 +179,14 @@ namespace XCV.Data
             }
             catch (SqlException e) { log.LogError($"InsertSkill() persitence Error: \n{e.Message}\n"); }
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
+            OnChange(new() { SuccesMessage = $"({skill}), wurde hinzugefügt." }); //SuccesM.
             return i;
         }
         public int DeleteSkill(Skill skill)
         {
             int i = 0;
+            //-----------------------------------------------------------------------MS-SQL-Command
             using var con = new SqlConnection(connectionString);
             try
             {
@@ -190,30 +195,40 @@ namespace XCV.Data
             }
             catch (SqlException e) { log.LogError($"DeleteSkill() persitence Error: \n{e.Message}\n"); }
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
+            OnChange(new() { SuccesMessage = $"({skill}), wurde entfernt." }); //SuccesM.
             return i;
         }
-        public int UpdateAllLevels(string[] levels)
+        public int UpdateAllLevels(string[] levels, bool justValidate = false)
         {
             int changed = 0;
-            if (levels.Length != 4 || GetAllLevel().SequenceEqual(levels))
+            //---------------------------------------------------------------------------Validation
+            if (levels.Select(x => x.Trim().ToLower()).Distinct().Count() != 4)
+                OnChange(new() { ErrorMessages = new[] { "Es müssen 4 verschiede Level eingegeben werden." } });
+            if (levels.Any(x => x.Length > 30 || x.Length < 2))
+                OnChange(new() { ErrorMessages = new[] { "Alle Skill-Level müssen zwischen 2 und 30 Zeichen liegen" } });
+            if (GetAllLevel().SequenceEqual(levels) || justValidate || errorMessages.Any())
+            {
+                OnChange(new() { ErrorMessages = errorMessages });
                 return 0;
-
+            }
+            //-------------------------------------------------------------------------------------
+            levels = levels.Select(x => x.Trim()).ToArray();
+            //-----------------------------------------------------------------------MS-SQL-Command
             using var con = new SqlConnection(connectionString);
             try
             {
                 con.Open();
                 for (int i = 0; i < levels.Length; i++)
-                    con.Execute($"Update [Skill_Level]  Set [Name]={i}  Where Level={i + 1}"); // if order changes cause unique
+                    con.Execute($"Update [Skill_Level]  Set [Name]={i}  Where Level={i + 1}"); // if order changes  avoids conflicts cause unique(name)
                 for (int i = 0; i < levels.Length; i++)
                     changed += con.Execute($"Update [Skill_Level]  Set [Name]=@Name  Where Level={i + 1}", new { Name = levels[i] });
             }
-            catch (SqlException e)
-            {
-                log.LogError($"UpdateAllLevels() persitence Error: \n{e.Message}\n");
-                OnChange(new() { ErrorMessages = new[] { e.Message } });
-            }
+            catch (SqlException e) { log.LogError($"UpdateAllLevels() persitence Error: \n{e.Message}\n"); }
             finally { con.Close(); }
-            cache = new List<Skill>();
+            //-------------------------------------------------------------------------------------
+            OnChange(new() { SuccesMessage = $"Alle Sprachlevel wurden aktualisiert." }); //SuccesM.
+            lvlCache = Array.Empty<string>();
             return changed;
         }
 
@@ -226,6 +241,7 @@ namespace XCV.Data
             var toAdd = cats.Except(oldCats).Select(x => new { x.Name, Parent = x.Parent.Name });
             var toRemove = oldCats.Except(cats);
 
+            //-----------------------------------------------------------------------MS-SQL-Command
             using var con = new SqlConnection(connectionString);
             try
             {
@@ -235,15 +251,15 @@ namespace XCV.Data
             }
             catch (SqlException e) { log.LogError($"UpdateCategories() persitence Error: \n{e.Message}\n"); }
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
             return (addedRows, removedRows);
         }
-        //--End Persistence------------------------------------------------------------------------
 
 
 
         //---------------------------------------Helper--------------------------------------------
         //-----------------------------------------------------------------------------------------
-        public void HangThemOnATree(IEnumerable<Skill> skills)
+        public void SetCategoryRelationTree(IEnumerable<Skill> skills)
         {
             var cats = GetAllCategories().ToList();
             cats.Add(new SkillCategory() { Name = "" });

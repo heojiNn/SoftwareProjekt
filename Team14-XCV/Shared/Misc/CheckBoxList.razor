@@ -1,4 +1,5 @@
-@inject IJSRuntime JS
+
+
 @inject ILanguageService langService
 @inject ISkillService skillService
 
@@ -12,59 +13,49 @@
 
         if ((item is Skill skillCast) && skillCast.Type == SkillGroup.Hardskill)
         {
-            var lvlInSelected = ((ISet<Skill>)SelectedValues).FirstOrDefault(x => x.Name == skillCast.Name && x.Category.Name == skillCast.Category.Name)?.Level ?? "";
+            var lvlInSelected = ((ISet<Skill>)SelectedValues).FirstOrDefault(x => x.Name == skillCast.Name)?.Level ?? "";
             var allLvl = skillService.GetAllLevel();
-            var lvlIndex = Array.FindIndex(allLvl, (x => x == lvlInSelected));
-            var lvlCount = allLvl.Length - 1;
+                    <div class="row" style="overflow-x: hidden;">
+                        <div class="col-md-7">
+                            <span ><input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" /> @nameToShow</span>
+                        </div>
 
-            <div class="row m-1" style="overflow-x: hidden;">
-                <div class="col-md-4  p-0">
-                    <label>
-                        <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
-                        <span style="min-width: 100px; margin-left: 4px"> @nameToShow</span>
-                    </label>
-                </div>
-
-                <div class="col-md-5  p-0 @(containt ? "" : "d-none")">
-                    <input type="range" class="custom-range w-75 @(lvlIndex == -1 ? "bg-secondary" : "")" min="0" max="@lvlCount" value="@lvlIndex" @onchange="@(async e => await RefreshAsync(item, e.Value) )">
-                </div>
-                <div class="col-md-3 p-0   @(containt ? "" : "d-none")">
-                    <span id="@nameToShow"> </span>
-                </div>
-            </div>
+                        <div class="col-md-3 ml-auto  @(containt ? "" : "d-none")" >
+                            <div class="form-inline @(lvlInSelected == "" ? "bg-warning" : "")">
+                                <select class="form-control form-control-sm" value="@lvlInSelected"  @onchange="@(async e => Refresh(item, e.Value) )">
+                            @for (int i = 0; i < allLvl.Length; i++)
+                            {
+                                <option value="@allLvl[i]"> @allLvl[i]</option>
+                            }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
         }
-
         else if (item is Language langCast)
         {
             var lvlInSelected = ((ISet<Language>)SelectedValues).FirstOrDefault(x => x.Name == langCast.Name)?.Level ?? "";
             var allLvl = langService.GetAllLevel();
-            <div class="row" style="overflow-x: hidden;">
-                <div class="col-md-5">
-                    <label>
-                        <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
-                        <span style="min-width: 70px; margin-left: 4px"> @nameToShow</span>
-                    </label>
-                </div>
+            if(lvlInSelected == "")lvlInSelected =  allLvl[0];  //default
+                    <div class="row" style="overflow-x: hidden;">
+                        <div class="col-md-5">
+                            <input type="checkbox" checked=@containt @onchange="e => { CheckboxClicked( e.Value, item); }" />
+                            <span> @nameToShow</span>
+                        </div>
 
-                <div class="col-md-6 @(containt ? "" : "d-none")">
-                    <div class="form-inline @(lvlInSelected == "" ? "bg-secondary" : "")">
-                        <select class="form-control form-control-sm" value="@lvlInSelected" @onchange="@(async e => Refresh(item, e.Value) )">
-                            @for (int i = 0; i <= allLvl.Length; i++)
+                        <div class="col-md-6 @(containt ? "" : "d-none")">
+                            <div class="form-inline @(lvlInSelected == "" ? "bg-warning" : "")">
+                                <select class="form-control form-control-sm" value="@lvlInSelected"  @onchange="@(async e => Refresh(item, e.Value) )">
+                            @for (int i = 0; i < allLvl.Length; i++)
                             {
-                                if (i == allLvl.Length)
-                                {
-                                    <option value=""> </option>
-                                }
-                                else
-                                {
-                                    <option value="@allLvl[i]"> @allLvl[i]</option>
-                                }
+                                <option value="@allLvl[i]"> @allLvl[i]</option>
                             }
                         </select>
                     </div>
                 </div>
             </div>
         }
+
         else
         {
             <div>
@@ -92,24 +83,15 @@
     //public Dictionary<string, int> NameLevel { get; set; } = new();
 
 
-    public async Task RefreshAsync(TItem itemm, Object val)
-    {
-        SelectedValues.Remove(itemm);
-        if (itemm is Skill skillCast)
-        {
-            skillCast.Level = skillService.GetAllLevel()[int.Parse(val.ToString())];
-            ((ISet<Skill>)SelectedValues).Add(skillCast);
-            foreach (Skill s in ((ISet<Skill>)SelectedValues).Where(x => x.Type == SkillGroup.Hardskill))
-                await JS.InvokeVoidAsync("setElementTextId", s.ToString(), s.Level);
-        }
-        StateHasChanged();
-    }
+
 
     public void Refresh(TItem itemm, Object val)
     {
         SelectedValues.Remove(itemm);
         if (itemm is Language lanCast)
             lanCast.Level = val.ToString();
+        if (itemm is Skill skillCast)
+            skillCast.Level = val.ToString();
         SelectedValues.Add(itemm);
     }
 

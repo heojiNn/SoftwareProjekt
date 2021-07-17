@@ -22,58 +22,46 @@ namespace XCV.Data
             connectionString = config.GetConnectionString("MS_SQL_Connection");
         }
 
-        //-------------------------------------Business Logic--------------------------------------
-        //-----------------------------------------------------------------------------------------
-        // for definition see   IRoleService
-        public IEnumerable<string> ValidateRoles(IEnumerable<Role> roles)
-        {
-            errorMessages = new();
-            foreach (var role in roles)
-            {
-                var results = new List<ValidationResult>();
-                if (!Validator.TryValidateObject(role, new ValidationContext(role), results, true))
-                    foreach (var result in results)
-                        errorMessages.Add($"{result.ErrorMessage} {role}");
-            }
-            return errorMessages;
-        }
 
 
 
-
-        //-------------------------------------Persistence-----------------------------------------
-        //--read   --------------------------------------------------------------------------------
         // for definition see   IRoleService
         public IEnumerable<Role> GetAllRoles()
         {
             IEnumerable<Role> roles = new List<Role>();
+            //-------------------------------------------------------------------------MS-SQL-Query
             using var con = new SqlConnection(connectionString);
             try
             {
                 con.Open();
                 roles = con.Query<Role>("Select * From [Role]");
             }
-            catch (SqlException e)
-            {
-                log.LogError($"GetAllRoles() persitence Error: \n{e.Message}\n");
-            }
+            catch (SqlException e) { log.LogError($"GetAllRoles() persistence Error: \n{e.Message}\n"); }  //log Fail
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
             return roles;
         }
-        //---write --------------------------------------------------------------------------------
-        public (int added, int changed, int removed) UpdateAllRoles(IEnumerable<Role> roles)
+
+        // for definition see   IRoleService
+        public (int added, int changed, int removed) UpdateAllRoles(IEnumerable<Role> roles, bool justValidate = false)
         {
+            errorMessages = new();
             int addedRows = 0;
             int changedRows = 0;
             int removedRows = 0;
             var oldRoles = GetAllRoles();
-            var toAdd = roles.Except(oldRoles, new RoleComparerAnything());
-            var toRemove = oldRoles.Except(roles, new RoleComparerAnything());
-            ValidateRoles(toAdd);
-            if (errorMessages.Any())
+            var toAddAny = roles.Except(oldRoles, new RoleComparerAnything());
+            var toRemoveAny = oldRoles.Except(roles, new RoleComparerAnything());
+            //---------------------------------------------------------------------------Validation
+            foreach (var role in toAddAny)
+                ValidateDataAno(role);
+            if (errorMessages.Any() || justValidate)
             {
-                return (0, 0, 0);    // if a new one(name) is invalid, nothing changes
+                OnChange(new() { ErrorMessages = errorMessages });                          //Validation-Fail + ErrorMessages
+                return (0, 0, 0);    // if one of the (new names) is invalid, nothing changes
             }
+            //-------------------------------------------------------------------------------------
+            //-----------------------------------------------------------------------MS-SQL-Command
             var toAddWage = roles.Except(oldRoles, new RoleComparer_NameOrRCL());
             var toRemoveWage = oldRoles.Except(roles, new RoleComparer_NameOrRCL());
 
@@ -81,21 +69,46 @@ namespace XCV.Data
             try
             {
                 con.Open();
-                if (!toAddWage.Any() && !toRemoveWage.Any()) // rcl and names didnt change
-                    changedRows += con.Execute("Update [Role] Set [Wage] = @Wage   Where [Name] = @Name And [Rcl] = @Rcl", toAdd);
+                if (!toAddWage.Any() && !toRemoveWage.Any()) // rcl and names didn't change, but wages did
+                    changedRows += con.Execute("Update [Role] Set [Wage] = @Wage   Where [Name] = @Name And [Rcl] = @Rcl", toAddAny);
                 else
                 {
-                    removedRows += con.Execute("Delete From [Role] Where [Name] = @Name And [Rcl] = @Rcl", toRemove);
-                    addedRows += con.Execute("Insert Into [Role] Values (@Name, @Rcl, @Wage)", toAdd);
+                    removedRows += con.Execute("Delete From [Role] Where [Name] = @Name And [Rcl] = @Rcl", toRemoveAny);
+                    addedRows += con.Execute("Insert Into [Role] Values (@Name, @Rcl, @Wage)", toAddAny);
                 }
             }
-            catch (SqlException e)
-            {
-                log.LogError($"UpdateAllRoles() persitence Error: \n{e.Message}\n");
-            }
+            catch (SqlException e) { log.LogError($"UpdateAllRoles() persistence Error: \n{e.Message}\n"); }    //log SQL-Fail
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
+            if (changedRows > 0)
+                OnChange(new() { SuccesMessage = $"{changedRows}: Löhne aktualisiert." });
+            if (addedRows > 0)
+                OnChange(new() { SuccesMessage = $"{addedRows}: Einträge hinzugefügt." });
+            if (removedRows > 0)
+                OnChange(new() { SuccesMessage = $"{addedRows}: Einträge entfernt." });
             return (addedRows, changedRows, removedRows);
         }
+
+
+
+
+
+
+        /// <summary>
+        ///         Validates against DataAnotation(.Name.Length <50 && <2)
+        /// </summary>
+        /// <remarks>
+        ///         used by Update
+        /// </remarks>
+        private IEnumerable<string> ValidateDataAno(Role role)
+        {
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(role, new ValidationContext(role), results, true))
+                foreach (var result in results)
+                    errorMessages.Add($"{result.ErrorMessage}");
+            return errorMessages;
+        }
+
 
         //-------------------------------------User Messaging--------------------------------------
         private List<string> errorMessages = new();

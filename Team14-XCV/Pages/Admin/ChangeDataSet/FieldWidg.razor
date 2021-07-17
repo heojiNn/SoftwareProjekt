@@ -1,0 +1,71 @@
+@using Microsoft.AspNetCore.Components
+
+
+<div class="col-12 mb-3  @(SWidth ? "col-xl-12" : "col-xl-6") " style="min-height: 100px;" @onclick="@(e => changeInfo = new())">
+    <div class="card mr-0 my-0">
+        <div class="card-header" style= "padding: 10px;" @onclick="Toggle">
+            <span style= "color: #7A212E; font-size: 1.5rem;"> Branchen</span>
+            <span class="@BtnClass"></span>
+        </div>
+
+        @if (ShowCardBody.Value)
+        {
+        <div @onclick="WidthToggle">
+            <span class="@WidthClass" style= "font-size: 1.5rem;"></span>
+        </div>
+            <div class="card-body p-0">
+                    @foreach (var field in fiService.GetAllFields())
+                    {
+                        <span style="white-space:nowrap; margin-right: 15px;  line-height: 2.3rem;">
+                            <button class="btn btn-outline-primary btn-sm" disabled>@field</button>
+                            <button type="button" class="btn btn-light btn-sm"  @onclick="@(e => RemoveField(field) )">
+                                <span class="oi oi-minus"></span>
+                            </button>
+                        </span> <span style="white-space:normal;"></span>
+                    }
+                    <br>
+                    <input id="newField" class="mx-2 my-4" placeholder="Name" @bind="@newField.Name" @bind:event="oninput" >
+                    <button class="btn btn-sm btn-secondary m-1" @onclick="CreateField" @onmouseover="VCreateField" @onmouseout="VCreateField">neue Branche hinzufügen</button>
+                    <ul class="alert alert-danger" role="alert">
+                        @foreach (string line in changeInfo.ErrorMessages)
+                        {
+                        <li>
+                            <pre>@line</pre>
+                        </li>
+                        }
+                    </ul>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public IFieldService fiService { get; set; }
+    [Parameter] public ValueWrapper<bool> ShowCardBody { get; set; } = new ValueWrapper<bool>(false);
+
+
+    private Field newField = new();
+
+    protected override void OnInitialized()
+    {
+        fiService.ChangeEventHandel += OnChange;
+    }
+
+
+    private void CreateField() => fiService.CreateField(newField);
+    private void VCreateField() => fiService.CreateField(newField, justValidate:true);
+    private void RemoveField(Field fi) => fiService.DeleteField(fi);
+
+
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e) => changeInfo = e;
+
+
+
+
+    public string BtnClass => ShowCardBody.Value ? "oi oi-caret-top" : "oi oi- oi-caret-bottom";
+    public void Toggle() => ShowCardBody.Value = !ShowCardBody.Value;
+    private bool SWidth = false;
+    public string WidthClass => SWidth ? "oi  oi-resize-height" : "oi oi- oi-resize-width";
+    public void WidthToggle() => SWidth = !SWidth;
+}

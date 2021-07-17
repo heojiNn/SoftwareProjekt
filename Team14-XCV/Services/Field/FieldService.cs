@@ -21,104 +21,139 @@ namespace XCV.Data
             log = logger;
             connectionString = config.GetConnectionString("MS_SQL_Connection");
         }
-        //-------------------------------------Business Logic--------------------------------------
-        //-----------------------------------------------------------------------------------------
-        // for definition see   IFieldService
-        public IEnumerable<string> ValidateFields(IEnumerable<Field> fields)
-        {
-            errorMessages = new();
-            foreach (var field in fields)
-            {
-                var results = new List<ValidationResult>();
-                if (!Validator.TryValidateObject(field, new ValidationContext(field), results, true))
-                    foreach (var result in results)
-                        errorMessages.Add($"{result.ErrorMessage} ({field})");
-            }
-            return errorMessages;
-        }
 
-        // for definition see   IFieldService
-        public void CreateField(Field newField)
-        {
-            var oldFields = GetAllFields();
-            if (oldFields.Contains(newField))
-
-                OnChange(new() { ErrorMessages = new[] { $"({newField}): kann nicht hinzugefügt werden, da es schon enthalten ist." } });
-            else
-                UpdateAllFields(oldFields.Append(newField));
-        }
-        // for definition see   IFieldService
-        public void RemoveField(Field field)
-        {
-            var oldFields = GetAllFields().ToList(); ;
-            if (!oldFields.Contains(field))
-
-                OnChange(new() { ErrorMessages = new[] { $"({field}): kann nicht entfernt werden, da es nicht enthalten ist." } });
-            else
-            {
-                oldFields.Remove(field);
-                UpdateAllFields(oldFields);
-            }
-        }
-
-
-
-
-
-        //-------------------------------------Persistence-----------------------------------------
-        //--read   --------------------------------------------------------------------------------
         // for definition see   IFieldService
         public IEnumerable<Field> GetAllFields()
         {
             IEnumerable<Field> fields = new List<Field>();
+            //-------------------------------------------------------------------------MS-SQL-Query
             using var con = new SqlConnection(connectionString);
             try
             {
                 con.Open();
                 fields = con.Query<Field>("Select * From [Field]");
             }
-            catch (SqlException e)
-            {
-                log.LogError($"GetAllFields() persitence Error: \n{e.Message}\n");
-            }
+            catch (SqlException e) { log.LogError($"GetAllFields() persistence Error: \n{e.Message}\n"); } //log Fail
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
             return fields;
         }
-        //---write --------------------------------------------------------------------------------
-        public (int added, int removed) UpdateAllFields(IEnumerable<Field> fields)
-        {
-            int addedRows = 0;
-            int removedRows = 0;
-            var oldFields = GetAllFields();
-            var toAdd = fields.Except(oldFields);
-            var toRemove = oldFields.Except(fields);
-            ValidateFields(toAdd);
-            if (errorMessages.Any())
-            {
-                OnChange(new() { ErrorMessages = errorMessages });
-                return (0, 0);    // if a new one(name) is invalid, nothing changes
-            }
 
+
+
+
+        //---write  Commands with validation-------------------------------------------------------
+        // for definition see   IFieldService
+        public int CreateField(Field toAdd, bool justValidate = false)
+        {
+            errorMessages = new();
+            int changedRows = 0;
+            toAdd.Name = toAdd.Name.Trim();
+            //---------------------------------------------------------------------------Validation
+            ValidateDataAno(toAdd);
+            if (GetAllFields().Any(x => x.Name.ToLower() == toAdd.Name.ToLower()))
+                errorMessages.Add($"({toAdd}), kann nicht hinzugefügt werden, da sie schon enthalten ist.");
+            if (errorMessages.Any() || justValidate)
+            {
+                OnChange(new() { ErrorMessages = errorMessages });                          //ErrorM
+                return 0;
+            }
+            //-------------------------------------------------------------------------------------
+            //-----------------------------------------------------------------------MS-SQL-Command
             using var con = new SqlConnection(connectionString);
             try
             {
                 con.Open();
-                removedRows += con.Execute("Delete From [Field] Where [Name] = @Name", toRemove);
-                addedRows += con.Execute("Insert Into [Field] Values (@Name)", toAdd);
+                changedRows += con.Execute("Insert Into [Field] Values (@Name)", toAdd);
             }
-            catch (SqlException e)
-            {
-                log.LogError($"UpdateAllFields() persitence Error: \n{e.Message}\n");
-            }
+            catch (SqlException e) { log.LogError($"CreateField() persistence Error: \n{e.Message}\n"); } //log Fail
             finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
+            OnChange(new() { SuccesMessage = $"({toAdd}), wurde zu den Branchen hinzugefügt." }); //SuccesM.
+            return changedRows;
+        }
+
+        // for definition see   IFieldService
+        public int DeleteField(Field toRemove)
+        {
+            int changedRows = 0;
+            //---------------------------------------------------------------------------Validation
+            if (!GetAllFields().Contains(toRemove))
+            {
+                OnChange(new() { ErrorMessages = new[] { $"({toRemove}), kann nicht entfernt werden, da sie nicht (mehr) enthalten ist." } });
+                return 0;
+            }
+            //-------------------------------------------------------------------------------------
+            //-----------------------------------------------------------------------MS-SQL-Command
+            using var con = new SqlConnection(connectionString);
+            try
+            {
+                con.Open();
+                changedRows += con.Execute("Delete From [Field] Where [Name] = @Name", toRemove);
+            }
+            catch (SqlException e) { log.LogError($"DeleteField() persistence Error: \n{e.Message}\n"); } //log Fail
+            finally { con.Close(); }
+            //-------------------------------------------------------------------------------------
+            OnChange(new() { SuccesMessage = $"({toRemove}), wurde aus den Branchen entfernt." }); //SuccesM.
+            return changedRows;
+        }
+
+        // for definition see   IFieldService
+        public (int added, int removed) UpdateAllFields(IEnumerable<Field> fields, bool justValidate = false)
+        {
+            errorMessages = new();
+            int addedRows = 0;
+            int removedRows = 0;
+            //---------------------------------------------------------------------------Validation
+            foreach (var field in fields)
+            {
+                field.Name = field.Name.Trim();
+                ValidateDataAno(field);
+            }
+            if (errorMessages.Any() || justValidate)
+            {
+                OnChange(new() { ErrorMessages = errorMessages });
+                return (0, 0);
+            }
+            //-------------------------------------------------------------------------------------
+            var oldFields = GetAllFields();
+            var toAdd = fields.Except(oldFields).ToList();
+            var toRemove = oldFields.Except(fields).ToList();
+
+            foreach (var a in toAdd)
+                addedRows += CreateField(a);
+            foreach (var r in toRemove)
+                removedRows += DeleteField(r);
+
             var succes = "";
-            if (toAdd.Any())
-                succes += $"{string.Join(", ", toAdd)} wurde hinzugefügt.";
-            if (toRemove.Any())
-                succes += $"{string.Join(", ", toRemove)} wurde entfernt.";
-            OnChange(new() { SuccesMessage = succes });
+            if (addedRows > 5)
+                succes += $"{addedRows} Branchen wurden hinzugefügt.\n";
+            else if (addedRows > 0)
+                succes += $"{string.Join(", ", toAdd)} wurden hinzugefügt.\n";
+            if (removedRows > 5)
+                succes += $"{removedRows} Branchen wurden entfernt.\n";
+            else if (removedRows > 0)
+                succes += $"{string.Join(", ", toRemove)} wurden entfernt.\n";
+            OnChange(new() { SuccesMessage = succes });                         //SuccesMessage
             return (addedRows, removedRows);
         }
+
+
+        /// <summary>
+        ///         Validates against DataAnotation(.Name.Length <50 && >1)
+        /// </summary>
+        /// <remarks>
+        ///         used by Update and Create
+        /// </remarks>
+        private IEnumerable<string> ValidateDataAno(Field field)
+        {
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(field, new ValidationContext(field), results, true))
+                foreach (var result in results)
+                    errorMessages.Add($"{result.ErrorMessage} ({field})");
+            return errorMessages;
+        }
+
 
         //-------------------------------------User Messaging--------------------------------------
         private List<string> errorMessages = new();

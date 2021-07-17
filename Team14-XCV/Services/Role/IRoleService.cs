@@ -8,16 +8,6 @@ namespace XCV.Data
     public interface IRoleService
     {
         /// <summary>
-        ///         Validates against DataAnotations on the  Role-Entity
-        /// </summary>
-        ///
-        /// <returns>
-        ///          ErrorMessages
-        /// </returns>
-        public IEnumerable<string> ValidateRoles(IEnumerable<Role> roles);
-
-
-        /// <summary>
         ///         GetAllRoles from persistence.
         /// </summary>
         /// <remarks>
@@ -32,7 +22,7 @@ namespace XCV.Data
 
 
         /// <summary>
-        ///         updates that Role in the persistence.
+        ///         Updates roles in the persistence.
         ///         via delet/insert normally  and  update if only wage changes
         /// </summary>
         /// <remarks>
@@ -43,7 +33,7 @@ namespace XCV.Data
         /// <param name="roles">
         ///         The roles to replace the old ones.
         /// </param>
-        public (int added, int changed, int removed) UpdateAllRoles(IEnumerable<Role> roles);
+        public (int added, int changed, int removed) UpdateAllRoles(IEnumerable<Role> roles, bool justValidate = false);
 
 
         public event EventHandler<ChangeResult> ChangeEventHandel;

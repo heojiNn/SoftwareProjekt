@@ -25,18 +25,21 @@ namespace XCV.Data
         public BasicDataSetService(IFieldService fieldService, IRoleService roleService, ILanguageService languageService, ISkillService skillService)
         {
             _fieldService = fieldService;
+            _fieldService.ChangeEventHandel += OnInternalMess;
             _roleService = roleService;
-            _skillService = skillService;
+            _roleService.ChangeEventHandel += OnInternalMess;
             _languageService = languageService;
+            _languageService.ChangeEventHandel += OnInternalMess;
+            _skillService = skillService;
+            _skillService.ChangeEventHandel += OnInternalMess;
         }
 
 
         //-------------------------------------Business Logic--------------------------------------
         //-----------------------------------------------------------------------------------------
         // for definition see   IBasicDataSetService
-        public string[] ShowCurrentDataSet()
+        public string ShowCurrentDataSet()
         {
-            var result = new string[5];
             dataSet databaseReturns = new();
 
             IEnumerable<string> fields = _fieldService.GetAllFields().Select(x => x.Name);  // Field names
@@ -55,22 +58,17 @@ namespace XCV.Data
             var langLvls = _languageService.GetAllLevel();
             dataSetLanguages languages = new() { elements = languagesNames, levels = langLvls };
             databaseReturns.languages = languages;
-
-
-            result[1] = Format(JsonSerializer.Serialize(fields, options));      // "fields": ["Archite,  "Automobil", .....
-            result[2] = Format(JsonSerializer.Serialize(roles, options));       // "roles":[{"name":"agileC", "wages": [{"RCL": 0, "PerHour": 0}, {"RC...
-            result[3] = Format(JsonSerializer.Serialize(languages, options));   // "languages":{"levels": ["spricht",  "ok",  "gut" ],
-                                                                                //              "elements": ["Arabis...
-
-
+            //result[1] = Format(JsonSerializer.Serialize(fields, options));
+            //result[2] = Format(JsonSerializer.Serialize(roles, options));
+            //result[3] = Format(JsonSerializer.Serialize(languages, options));
             dataSetSkills skillsDset = new();
             skillsDset.hardSkillLevels = _skillService.GetAllLevel();
             var skills = _skillService.GetAllSkills();
             if (!skills.Any())
-                return result;
+                return "err";
 
             var root = skills.First().Category.GetRoot();
-            result[4] = Format(JsonSerializer.Serialize(root, options));
+            //result[4] = Format(JsonSerializer.Serialize(root, options));
 
             var softCat = skills.FirstOrDefault(x => x.Category.Name == "SoftSkills").Category;
             root.Children.Remove(softCat);
@@ -79,17 +77,14 @@ namespace XCV.Data
             skillsDset.HardSkills = hardCat;
             skillsDset.SoftSkills = softCat.Children.Select(x => ((Skill)x).Name).ToArray();
             databaseReturns.skills = skillsDset;
-            result[0] = Format(JsonSerializer.Serialize(databaseReturns, options));// the whole file
 
-            return result;
+            return Format(JsonSerializer.Serialize(databaseReturns, options));
         }
-        public async Task<string[]> ShowBrowserFile(IBrowserFile browserFile)
+        public async Task<string> ShowBrowserFile(IBrowserFile browserFile)
         {
             var fileContent = await new StreamReader(browserFile.OpenReadStream())
                                         .ReadToEndAsync();
-            var result = ShowCurrentDataSet();
-            result[0] = fileContent;
-            return result;
+            return fileContent;
         }
 
 
@@ -99,6 +94,8 @@ namespace XCV.Data
             errorMessages = new();
             infoMessages = new();
             dataSet wholeJson;
+
+            //---------------------------------------------------------------------------Validation
             try
             {
                 wholeJson = JsonSerializer.Deserialize<dataSet>(json, options);
@@ -109,18 +106,18 @@ namespace XCV.Data
                 return;
             }
 
-            var newFields = wholeJson.fields.Select(x => new Field() { Name = x.Trim() });              // for ValidateFields() + UpdateAllFields()
+            var newFields = wholeJson.fields.Select(x => new Field() { Name = x.Trim() });
 
-            var newRoles = new List<Role>();                                                            // for ValidateRoles() + UpdateAllRoles()
+            var newRoles = new List<Role>();
             foreach (var roleKind in wholeJson.roles)
                 foreach (var wage in roleKind.wages)
                     newRoles.Add(new Role() { Name = roleKind.name, RCL = wage.RCL, Wage = wage.PerHour });
 
             var languagesDataSet = wholeJson.languages;
-            var newLanguages = languagesDataSet.elements.Select(x => new Language() { Name = x.Trim() });// for ValidateLanguages() + UpdateAllLanguages()
-            var newLangLvl = languagesDataSet.levels;                                                    // for                       UpdateAllLevels()
+            var newLanguages = languagesDataSet.elements.Select(x => new Language() { Name = x.Trim() });
+            var newLangLvl = languagesDataSet.levels;
 
-            var newSkillTree = new SkillCategory();                // a tree with two children            for ValidateSkill() + UpdateAllSkills()
+            var newSkillTree = new SkillCategory();
             var dataSkillTree = wholeJson.skills;
             dataSkillTree.HardSkills.Name = "HardSkills";
             dataSkillTree.HardSkills.Parent = newSkillTree;
@@ -130,39 +127,62 @@ namespace XCV.Data
             IEnumerable<SkilTreeNode> softChildren = dataSkillTree.SoftSkills.Select(x => new Skill() { Name = x, Category = softSkills });
             softSkills.Children = softChildren.ToList();
             newSkillTree.Children.Add(softSkills);                  // and SoftSkills
+            var newSkillLvl = dataSkillTree.hardSkillLevels;
 
 
-            errorMessages = errorMessages.Concat(_fieldService.ValidateFields(newFields)).ToList();
-            errorMessages = errorMessages.Concat(_roleService.ValidateRoles(newRoles)).ToList();
-            errorMessages = errorMessages.Concat(_languageService.ValidateLanguages(newLanguages)).ToList();
+
+            _fieldService.UpdateAllFields(newFields, justValidate: true);
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+            _roleService.UpdateAllRoles(newRoles, justValidate: true);
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+
+            _languageService.UpdateAllLanguages(newLanguages, justValidate: true);
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+            _languageService.UpdateAllLevels(newLangLvl, justValidate: true);
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+
             (var cats, var skills) = _skillService.ValidateSkill(newSkillTree);
             errorMessages = errorMessages.Concat(_skillService.ValidateSkillCategory(cats)).ToList();
             errorMessages = errorMessages.Concat(_skillService.ValidateSkill(skills)).ToList();
-            if (dryRun || errorMessages.Any())
+            changeInfo = new();
+            _skillService.UpdateAllLevels(newSkillLvl, justValidate: true);
+            errorMessages = errorMessages.Concat(changeInfo.ErrorMessages).ToList();
+            if (dryRun || errorMessages.Any())                              //if dryrun(justValidate)
             {
                 OnChange(new() { ErrorMessages = errorMessages });
                 return;
             }
+            //-------------------------------------------------------------------------------------
 
-
+            //--------------------------------------------------------------------------Persistence
             int addedRows, removedRows, changed;
             (addedRows, removedRows) = _fieldService.UpdateAllFields(newFields);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Brachen hinzugefügt/entfernt.");
+            if (changeInfo.SuccesMessage != "")
+                infoMessages.Add(changeInfo.SuccesMessage);
 
             (addedRows, changed, removedRows) = _roleService.UpdateAllRoles(newRoles);
-            infoMessages.Add($"Es wurden: {addedRows}/{changed}/{removedRows} (Rollen mit Lohn) hinzugefügt/geändert/entfernt.");
+            if (changed != 0)
+                infoMessages.Add($"Es wurden: {changed} Löhne geändert.");
+            if (addedRows != 0 || removedRows != 0)
+                infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Rollen hinzugefügt/entfernt.");
 
             (addedRows, removedRows) = _languageService.UpdateAllLanguages(newLanguages);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} Sprachen hinzugefügt/entfernt.");
-            (addedRows, removedRows) = _languageService.UpdateAllLevels(newLangLvl);
-            infoMessages.Add($"Es wurden: {addedRows}/{removedRows} SprachenLevel geändert.");
+            if (changeInfo.SuccesMessage != "")
+                infoMessages.Add(changeInfo.SuccesMessage); ;
+            changed = _languageService.UpdateAllLevels(newLangLvl);
+            if (changed != 0)
+                infoMessages.Add($"Es wurden: {changed} SprachenLevel geändert.");
+
 
             (var added, var removed) = _skillService.UpdateAllSkills(newSkillTree);
-            infoMessages.Add($"Es wurden: {added[0]}/{removed[0]} SkillsKategorien hinzugefügt/entfernt.");
-            infoMessages.Add($"Es wurden: {added[1]}/{removed[1]} Skills hinzugefügt/entfernt.");
-            changed = _skillService.UpdateAllLevels(dataSkillTree.hardSkillLevels);
-            infoMessages.Add($"Es wurden: {changed} Skill Level geändert.");
-
+            if (added[0] != 0 || removed[0] != 0)
+                infoMessages.Add($"Es wurden: {added[0]}/{removed[0]} SkillsKategorien hinzugefügt/entfernt.");
+            if (added[1] != 0 || removed[1] != 0)
+                infoMessages.Add($"Es wurden: {added[1]}/{removed[1]} Skills hinzugefügt/entfernt.");
+            changed = _skillService.UpdateAllLevels(newSkillLvl);
+            if (changed != 0)
+                infoMessages.Add($"Es wurden: {changed} Skill Level geändert.");
+            //-------------------------------------------------------------------------------------
             OnChange(new() { SuccesMessage = "Änderungen in die Datenbank übernommen.", InfoMessages = infoMessages });
         }
 
@@ -187,49 +207,11 @@ namespace XCV.Data
         private List<string> infoMessages = new();
         public event EventHandler<ChangeResult> ChangeEventHandel;
         protected virtual void OnChange(ChangeResult e) => ChangeEventHandel?.Invoke(this, e);
-    }
-    //----------------------------------Helper Classes-----------------------------------------
-    //-----------------------------------------------------------------------------------------
-    /// <summary>
-    ///         the Class/Struct that represents the datenbasis.json
-    /// </summary>
-    struct dataSet
-    {
-        public IEnumerable<string> fields;  //nur elements
-        public dataSetLanguages languages;  //elements und wages
-        public dataSetSkills skills;  //elements und wages
-        public IEnumerable<dataSetrole> roles;  //elements und wages
-    }
 
-    /// <summary>
-    ///         a internal strutcure of the datenbasis.json
-    /// </summary>
-    public struct dataSetrole
-    {
-        public string name;
-        public dataSetWage[] wages;
-    }
-    public struct dataSetWage
-    {
-        public int RCL;
-        public float PerHour;
-    }
-    /// <summary>
-    ///         a internal strutcure of the datenbasis.json
-    /// </summary>
-    struct dataSetLanguages
-    {
-        public string[] levels;
-        public IEnumerable<string> elements;
-    }
 
-    /// <summary>
-    ///         a internal strutcure of the datenbasis.json
-    /// </summary>
-    struct dataSetSkills
-    {
-        public string[] hardSkillLevels;
-        public SkillCategory HardSkills;
-        public string[] SoftSkills;
+
+        private ChangeResult changeInfo = new();
+        private void OnInternalMess(object sender, ChangeResult e) => changeInfo = e;
+
     }
 }

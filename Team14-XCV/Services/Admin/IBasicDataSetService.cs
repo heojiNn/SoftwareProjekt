@@ -16,13 +16,13 @@ namespace XCV.Data
         ///          An array of seriallised objects that the json contains
         ///          [0] is the whole databasis  [1] the fields .....
         /// </returns>
-        public string[] ShowCurrentDataSet();
+        public string ShowCurrentDataSet();
 
 
         /// <summary>
         ///         Reads the file and shows it split up
         /// </summary>
-        public Task<string[]> ShowBrowserFile(IBrowserFile browserFile);
+        public Task<string> ShowBrowserFile(IBrowserFile browserFile);
 
 
         /// <summary>
@@ -37,20 +37,20 @@ namespace XCV.Data
         /// <event cref="OnChange">
         ///     Succes: Änderungen in die Datenbank übernommen.
         /// and
-        ///     Info:  Es wurden: {addRows}/{removoRows} Brachen hinzugefügt/entfernt.
-        ///     Info:  Es wurden: {aR}{cR}{rR} (Rollen mit Lohn) hinzugefügt/geändert/entfernt
-        ///     Info:  Es wurden: {aR}{rR}  Sprachen hinzugefügt/entfernt"
+        ///     Info:  SuccesM put through from FieldService
+        ///     Info:  Es wurden: {changed} Löhne geändert.
+        ///            Es wurden: {addedRows}/{removedRows} Rollen hinzugefügt/entfernt.
+        ///     Info:  SuccesM put through from LanguageService
         ///     Info:   Es wurden: {cR}     Sprachen Level geändert
         ///     Info:  Es wurden: {aR}{rR}  SkillsKategorien hinzugefügt/entfernt.
         ///     Info:   Es wurden: {aR}{rR} Skills hinzugefügt/entfernt.
         ///     Info:   Es wurden: {cR}     Skill Level geändert.
         /// or
-        ///     Error:  {Name} Brachen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
-        ///     Error:  {Name} Rollen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
-        ///     Error:  {Name} Sprachen brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
-        ///     Error:  {Name} Skill brauchen einen Namen./Der Name muss unter 50 Zeichen sein.
-        ///     Error:  {Name} SkillCategory brauchen einen Namen./Der Name muss unter 40 Zeichen sein.
-        ///     Error:  Es trat ein Fehler in der Persistenz auf {ex.Message}.
+        ///     Error:  Json Format
+        ///     Error:  ErrorM from FieldService
+        ///     Error:  ErrorM from RoleService
+        ///     Error:  ErrorM from LanguageService
+        ///     Error:  ErrorM from Skillervice
         /// </event>
         public void JsonUpdate(string json, bool dryRun = true);
 

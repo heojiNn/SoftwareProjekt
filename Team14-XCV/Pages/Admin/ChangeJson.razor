@@ -1,40 +1,33 @@
 @page "/change-json"
 @attribute [Authorize(Roles = "admin, sales")]
 
-@using Microsoft.AspNetCore.Hosting
-
-@inject IWebHostEnvironment Environment
-@inject IJSRuntime JS
 @inject IBasicDataSetService dataSetService
-@inject IFieldService fieldService
-@inject IRoleService roleService
-@inject ILanguageService langService
-@inject ISkillService skillService
 
 
 <b>Datenbasis: ändern</b>
 <br>
-
-<div class="alert alert-success" role="alert">
-    @changeInfo?.SuccesMessage
-</div>
-
 <div class="row ">
 
     <div class="col-6">
         <InputFile OnChange="@ShowUpload" class="btn btn-sm btn-primary" />
         <div class="outerbox @(validJson ? "" : "invalid")">
-            <textarea class="form-control" style="white-space: pre;" rows="30" @bind="@textareas[0]"
-                      @bind:event="oninput">
+            <textarea class="form-control" style="white-space: pre;" rows="25" @bind="@textarea"
+                @bind:event="oninput">
             </textarea>
         </div>
-        <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
-            diese Version in die Datenbank laden
-        </button>
-
     </div>
 
     <div class="col-6">
+        <button class="btn btn-secondary" style="margin: 0.2em;" @onclick="Upload" @onmouseover="Validate">
+                    diese Version in die Datenbank laden
+        </button><br>
+            <small>Streife über den Button, um das Dokument auf Format und BusinessConstraints zu überprüfen.<br>
+            Man kann dadurch mal schnell viele Backend Überprüfeng Kontrollieren.
+            </small>
+
+        <div class="alert alert-success" role="alert">
+            @changeInfo?.SuccesMessage
+        </div>
         <ul class="alert alert-danger" role="alert">
             @foreach (string line in changeInfo.ErrorMessages)
             {
@@ -54,14 +47,30 @@
     </div>
 
 </div>
-
 <br>
 <br>
-<br>
 
 
+@code {
+    private string textarea = "";
+    private bool validJson = true;
+
+    protected override void OnInitialized()
+    {
+        dataSetService.ChangeEventHandel += OnChange;
+        textarea = dataSetService.ShowCurrentDataSet();
+    }
+
+    private async Task ShowUpload(InputFileChangeEventArgs evA) => textarea = await dataSetService.ShowBrowserFile(evA.File);
+    private void Validate() => dataSetService.JsonUpdate(textarea);
+
+    private void Upload() => dataSetService.JsonUpdate(textarea, false);
 
 
-
-
-   
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e)
+    {
+        changeInfo = e;
+        validJson = (!e.ErrorMessages.Any());
+    }
+}

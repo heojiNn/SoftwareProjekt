@@ -10,19 +10,20 @@ namespace XCV.Data
         //----------------------------------------Logic--------------------------------------------
         /// <summary>
         ///         Instantiates all Category.Parent,  with pointers to navigate  up and down the tree
+        ///         modifies the input so that the category structure represents the one from the json
         /// </summary>
         ///
         /// <param name="skills">
-        ///         their .Category property which will be modified/replaced
+        ///         their .Category property will be modified/replaced
         /// </param>
-        public void HangThemOnATree(IEnumerable<Skill> skills);
+        public void SetCategoryRelationTree(IEnumerable<Skill> skills);
 
         /// <summary>
         ///         Validates a tree against DataAnotations on the  Skill- + SkillCategory-Entity
         /// </summary>
         ///
         /// <event cref="OnChange">
-        ///     Info: Akzeptabels Duplikat: {Skill} und {Skill}    in:   {Cat} und {Cat}
+        ///     Info: Akzeptabels Duplikat: {Skill} und {Skill}    in:   {Cat} und {DiffCat}
         /// or
         ///     Error: Inakzeptabels Duplikat: {Skill} und {Skill}    in:   {Cat} und {Cat}
         ///</event>
@@ -58,15 +59,18 @@ namespace XCV.Data
         /// </param>
         public (int[] added, int[] removed) UpdateAllSkills(SkillCategory tree);
 
+
+
         /// <summary>
-        ///         UpdateAllLevels in persistence.
+        ///         Updates(Renames)AllLevels in persistence.
         /// </summary>
         ///
         /// <param name="levels">
         ///         a correctly order array of size 4
+        ///         for each element (.lenght > 1 && lenght < 30)  &&  uniqe(caseinsensitve)
         /// </param>
-        public int UpdateAllLevels(string[] levels);
-        public int InsertSkill(Skill skill);
+        public int UpdateAllLevels(string[] levels, bool justValidate = false);
+        public int InsertSkill(Skill skill, bool justValidate = false);
         public int DeleteSkill(Skill skill);
 
         public event EventHandler<ChangeResult> ChangeEventHandel;
