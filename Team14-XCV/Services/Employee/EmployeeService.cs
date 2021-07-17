@@ -176,7 +176,9 @@ namespace XCV.Data
         // for definition see   IProfileService
         public async Task UploadeImage(string persoNumber, IBrowserFile image)
         {
-            var nameInWWW = $"empPic{persoNumber}.{image.ContentType.Split('/')[1]}";
+            //var nameInWWW = $"empPic{persoNumber}.{image.ContentType.Split('/')[1]}";
+            var nameInWWW = $"empPic{persoNumber}." + "jpeg";
+            System.Console.WriteLine(nameInWWW);
             var path = Path.Combine(env.WebRootPath, nameInWWW);
 
             try
