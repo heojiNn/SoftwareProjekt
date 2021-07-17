@@ -133,7 +133,7 @@ namespace Tests.Integration
         public void InvalidCreateEmployeeTest()
         {
             var employed = DateTime.Now;
-            employeeService.CreateAccount(new Employee() { PersoNumber = "00", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
+            employeeService.CreateAccount(new Employee() { PersoNumber = "0", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
             employeeService.CreateAccount(new Employee() { PersoNumber = "0000005", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
             employeeService.CreateAccount(new Employee() { PersoNumber = "005?", FirstName = "Nummer", LastName = "Fuenf", EmployedSince = employed });
             employeeService.CreateAccount(new Employee() { PersoNumber = "005", FirstName = new string('c',41), LastName = "Fuenf", EmployedSince = employed });
@@ -145,7 +145,7 @@ namespace Tests.Integration
             Employee employee4 = sut.ShowProfile("005");
             Employee employee5 = sut.ShowProfile("006");
 
-            Assert.Null(employee1, "PersoNummer > 2 chr. constraint fehlgeschlagen");
+            Assert.Null(employee1, "PersoNummer > 1 chr. constraint fehlgeschlagen");
             Assert.Null(employee2, "PersoNummer < 7 chr. constraint fehlgeschlagen");
             Assert.Null(employee3, "PersoNummer aus [a-zA-Z0-9_\\-,.]* constraint fehlgeschlagen");
             Assert.Null(employee4, "FirstName < 40 chr. constraint fehlgeschlagen");
