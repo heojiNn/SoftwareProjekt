@@ -448,15 +448,16 @@ namespace XCV.Data
                                     case 5:
                                         if (e.selectedProjects != null && e.selectedProjects.Count != 0)
                                         {
-                                            // Projects - Bulletpointlist(unordered)-example:
+
+                                            // Projects - Bulletpointlist:
                                             Paragraph paraB = body.AppendChild(new Paragraph());
                                             Run runB = paraB.AppendChild(new Run());
                                             runB.AppendChild(new Text("Projekte: "));
                                             SpacingBetweenLines sblUl = new SpacingBetweenLines() { After = "0" };
                                             Indentation iUl = new Indentation() { Hanging = "360" };
                                             NumberingProperties npUl = new NumberingProperties(
-                                                new NumberingLevelReference() { Val = 1 },
-                                                new NumberingId() { Val = 2 }
+                                                new NumberingLevelReference() { Val = 0 },
+                                                new NumberingId() { Val = 1 }
                                             );
                                             ParagraphProperties ppUnordered = new ParagraphProperties(npUl, sblUl, iUl);
                                             ppUnordered.ParagraphStyleId = new ParagraphStyleId() { Val = "ListParagraph" };
@@ -472,13 +473,15 @@ namespace XCV.Data
                                                 foreach (var pr in e.selectedProjects.Where(x => x.project == p).ToHashSet())
                                                 {
                                                     var last = e.selectedProjects.Where(x => x.project == p).ToHashSet().Last();
-                                                    if (!pr.Equals(last)) parAr[j].Append(new Run(new Text(pr.activity + ", ")));      //if activity equals "", it was deselected on config-edit-page.
-                                                    else parAr[j].Append(new Run(new Text(pr.activity)));                                                   //this assures that you can select projects and projectactivities mutually exclusive
-                                                }                                                                                                           //with the restriction you can't show projectactivites without the parent project
+                                                    if (!pr.Equals(last)) parAr[j].Append(new Run(new Text(pr.activity + ", ")));      
+                                                    else parAr[j].Append(new Run(new Text(pr.activity)));                                                   
+                                                }                                                                                                           
                                                 body.Append(parAr[j]);
                                                 j++;
                                             }
+                                            new NumberingRestart();
                                         }
+                                        
                                         break;
                                 }
                             }
@@ -579,11 +582,11 @@ namespace XCV.Data
                         tr2.Append(tc6, tc7, tc8, tc9, tcA);
                         table.Append(tr2);
 
-                        int i = 0;
+                        
                         int cntDays = 0;
                         double cost = 0;
-                        double discounts = 0;
                         double feePt = 0;
+
                         foreach (Employee e in o.participants)
                         {
                            // Create a row.
@@ -626,7 +629,6 @@ namespace XCV.Data
                             trx.Append(tca, tcb, tcc, tcd, tce);
                             table.Append(trx);
 
-                            discounts += (e.offerWage * e.hoursPerDay) - ((e.offerWage - (e.discount * 1 / 100 * e.offerWage)) * e.hoursPerDay);
                             feePt += (e.offerWage - (e.offerWage * e.discount * 1 / 100)) * e.hoursPerDay;
                             cost += (e.offerWage - (e.discount / 100 * e.offerWage)) * e.hoursPerDay * e.daysPerRun;
                             cntDays += e.daysPerRun;
@@ -699,9 +701,13 @@ namespace XCV.Data
                         tcE.Append(new Paragraph(new Run(new Text($""))));
                         TableCell tcF = new TableCell();
                         tcF.Append(new TableCellProperties(new TableCellWidth() { Type = TableWidthUnitValues.Dxa, Width = "2400" }));
-                        
+                        double discounts = 0;
+                        foreach (Employee e in o.participants)
+                        {
+                            discounts += e.offerWage * e.hoursPerDay - (e.offerWage - (e.offerWage * e.discount / 100)) * e.hoursPerDay;
+                        }
                         tcF.Append(new Paragraph(new Run(new Text($"{cost + discounts} €"))));                    
-                        tcF.Append(new Paragraph(new Run(new Text($"-{discounts} €"))));
+                        tcF.Append(new Paragraph(new Run(new Text($"-{Math.Round(discounts)} €"))));
 
                         tr3.Append(tcB, tcC, tcD, tcE, tcF);
                         table.Append(tr3);
@@ -710,7 +716,7 @@ namespace XCV.Data
                         body.Append(table);
 
 
-                        //========== @@Graphische Gegenüberstellung@@ ==================//
+                        //========== @@(Graphische) Gegenüberstellung@@ ==================//
 
                     }
                     // Returns the stream.
@@ -834,10 +840,7 @@ namespace XCV.Data
             }
         }
 
-
-
-
-
+      
         //class
     }
     //ns

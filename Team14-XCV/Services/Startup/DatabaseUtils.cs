@@ -49,7 +49,7 @@ namespace XCV.Data
         ///         [employee],   [project], [activity], [activity_done_by], [project_purpose]
         ///         [employee_acrole], [employee_field], [employee_role], [employee_language], [employee_skill]
         ///         [offer], [offerHasEmployee], [offerHasField], [offerHasSkill], [offerhasConfig], [offerHasActiveConfig],
-        ///         [config], [configHasActivity], [configHasField], [configHasSkill]
+        ///         [config], [configHasActivity], [configHasField], [configHasSkill], [configHasOrder]
         /// </summary>
         public void CreateTables()
         {

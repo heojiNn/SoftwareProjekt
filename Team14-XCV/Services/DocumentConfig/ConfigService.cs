@@ -354,8 +354,8 @@ namespace XCV.Data
                 {
                     con.Open();
                     con.Execute($"Insert Into [offerHasConfig] Values ({parent.Id}, '{name}')");
-                    con.Execute($"IF NOT EXISTS (Select * From [offerHasActiveConfig] Where [Offer]={parent.Id})" + // First config? Make it active.
-                                $"Insert Into [offerHasActiveConfig] Values ({parent.Id}, '{name}');");
+                    con.Execute($"IF NOT EXISTS (Select * From [offerHasActiveConfig] Where [Offer]={parent.Id})" +
+                                $" Insert Into [offerHasActiveConfig] Values ({parent.Id}, '{name}')");
                     foreach (Employee e in parent.participants)
                     {
                         Employee emp = cProfileService.ShowProfile(e.PersoNumber);
@@ -376,7 +376,8 @@ namespace XCV.Data
                             con.Execute($"Insert Into [configHasActivity] Values ({parent.Id}, @Name, @Employee, @Project, @Activity)", new { Name = name, Employee = emp.PersoNumber, Project = p.project, Activity = p.activity });
                         }
                     }
-                    con.Execute($"Insert Into [configHasOrder] Values ({parent.Id}, '{name}', 1, 2, 3, 4, 5)"); // For whole offer
+                    con.Execute($"Insert Into [configHasOrder] Values (@Offer, @Name, @pos1, @pos2, @pos3, @pos4, @pos5)", new { Offer = parent.Id, Name = name, pos1 = 1, pos2 = 2, pos3 = 3, pos4 = 4, pos5 = 5 }); // For whole offer
+                    Console.Write("5");
                     con.Close();
                 }
                 catch (SqlException e)
@@ -429,7 +430,7 @@ namespace XCV.Data
             }
             catch (SqlException e)
             {
-                log.LogError($"Error creating default config on database: {e.Message} \n");
+                log.LogError($"Error adding default config to database: {e.Message} \n");
             }
         }
 
@@ -443,18 +444,19 @@ namespace XCV.Data
                 foreach (var cfg in cfgnames)
                 {
                     var get = GetDocumentConfig(o, cfg);
-                    con.Execute($"Delete From [config] Where [Employee] = '{toRemove.PersoNumber}')");
-                    con.Execute($"IF NOT EXISTS (Select [Employee] From [config] Where [Offer]={o.Id} And [Config]='{cfg})'" + // If the deletion of the single Employee results into an empty Config, 
-                                        $"BEGIN" +                                                                             // (because prior to deletion he was the only one in it), the config gets deleted itself.
-                                        $"Delete From [offerHasConfig] Where [Name] = '{cfg}';" +
-                                        $"Delete From [offerHasActiveConfig] Where [Config]='{cfg}';" +
-                                        $"END;");
+                    con.Execute($"Delete From [config] Where [Offer] = {o.Id} And [Name] = '{cfg}' And [Employee] = '{toRemove.PersoNumber}'");
+                    //optional:
+                    //con.Execute($"IF NOT EXISTS (Select [Employee] From [config] Where [Offer]={o.Id} And [Config]='{cfg}')'" + // If the deletion of the single Employee results into an empty Config, 
+                    //                    $"BEGIN" +                                                                             // (when prior to deletion he was the only one in it), the config gets deleted itself.
+                    //                    $"Delete From [offerHasConfig] Where [Name] = '{cfg}';" +
+                    //                    $"Delete From [offerHasActiveConfig] Where [Config]='{cfg}';" +
+                    //                    $"END;");
                 }
                 con.Close();
             }
             catch (SqlException e)
             {
-                log.LogError($"Error creating default config on database: {e.Message} \n");
+                log.LogError($"Error deleting config from database: {e.Message} \n");
             }
         }
 
