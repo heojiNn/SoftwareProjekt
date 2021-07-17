@@ -188,33 +188,36 @@
 
     <div class="col-sm-6 mb-3" style="min-height: 200px;">
         <CollapsibleCard2 CardHeaderTitle="Projekte"   ShowCardBody="@ColabseState[5]">
-            <CardBody>
-                <div class="scroll2">
-                    <table class="table table-bordered table-striped text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center">beteiligte Projekte</th>
-                                <th class="text-center">Tätigkeiten im Projekt</th>
-                            </tr>
-                        </thead>
-                        @foreach (Project pro in proService.ShowAllProjects())
-                        {
-                            <tr>
-                                <td class="pt-3-half">
-                                    @pro.Title
-                                </td>
-                                <td class="pt-3-half">
-                                    @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
-                                myProfile.PersoNumber)))
-                                    {
-                                        @keyValue.Key
-                                        <br>}
-                                </td>
-                            </tr>
-}
-                    </table>
-                </div>
-            </CardBody>
+                <CardBody>
+                    <div class="scroll2">
+                        <table class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">beteiligte Projekte</th>
+                                    <th class="text-center">Tätigkeiten im Projekt</th>
+                                </tr>
+                            </thead>
+                            @foreach (Project pro in proService.ShowAllProjects())
+                            {
+                                if (pro.Activities.Any(x => x.Value.persNr.Contains(myProfile.PersoNumber)))
+                                {
+                                    <tr>
+                                        <td class="pt-3-half">
+                                            @pro.Title
+                                        </td>
+                                        <td class="pt-3-half">
+                                            @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
+                                       myProfile.PersoNumber)))
+                                            {
+                                                @keyValue.Key
+                                                <br>}
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                </CardBody>
         </CollapsibleCard2>
     </div>
 

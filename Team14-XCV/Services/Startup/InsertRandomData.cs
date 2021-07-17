@@ -40,12 +40,20 @@ namespace XCV.Data
         }
 
 
-
+       private ChangeResult changeInfo = new();
+        private void OnChange(object sender, ChangeResult e)
+        {
+            changeInfo = e;
+        }
         public void InsertJson()
         {
             if (!_skillService.GetAllSkills().Any())
             {
                 var content = File.ReadAllText("datenbasis.json");
+                _bDataSetService.ChangeEventHandel += OnChange;
+                _bDataSetService.JsonUpdate(content, false);
+                    Console.WriteLine($"\n Beim intitalen einlesen der Json traten folgende Fehler auf:\n\n {string.Join(", ", changeInfo.ErrorMessages)}\n\n");
+                    Console.WriteLine($"und diese infos {string.Join(", ", changeInfo.InfoMessages)}\n\n");
             }
         }
         public void Insert10Employyes()
@@ -83,6 +91,10 @@ namespace XCV.Data
                     _accountService.CreateAccount(e);               //creates 10 accounts
                 foreach (var e in employyes10)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
+
+
+
+
                 _projectService.Create(new Project
                 {
                     Title = "XITASO CV (XCV)",
