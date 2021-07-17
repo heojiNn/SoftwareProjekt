@@ -26,30 +26,36 @@
             {
                 <div class="col mb-3">
                     <tr>
-                        <div class="card" style="width:100%;">
+                        <div class="card scroll" style="width:450px; height:300px;">
                             <div class="card-header">
                                 <h4>
                                     <a style="color: #7A212E;" href="project/@project.Id">@project.Title</a>
 
-                                    </h4>
-                                </div>
-                                <div class="card-body">
-                                    
-                                    <p class="text-secondary">Zwecke:</p>
-                                    <p class="text-secondary"> <ul>@foreach (String pro in @project.Purpose) {<li>@pro</li> }</ul></p>
-                                    <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
-                                    <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
-                                    <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
-                                </div>
+                                </h4>
                             </div>
-                        </td>
+                            <div class="card-body">
+                                <p class="text-secondary"><b>Projektzwecke:</b></p>
+
+                                <p class="text-secondary">
+                                    <ul>
+            @foreach (string purpose in @project.Purpose.Take(3))
+            {
+                <li>  @purpose </li>  }</ul>
+                                   
+                                </p>
+                                
+
+                                <p class="text-secondary"> @project.Start.ToString("dd.MM.yyyy") - @project.End.ToString("dd.MM.yyyy")</p>
+                                <a href="project/@project.Id" class="btn btn-secondary" type="submit"> Anzeigen </a>
+                                <a href="javascript:location.reload(true)" class="btn btn-secondary" @onclick="(e => DeleteProject(project))">Entfernen</a>
+                            </div>
+                            </div>
                     </tr>
                 </div>}
         </div>
-        </table>
+    </table>
 
-</div> 
+</div>
 
 
 
-   
