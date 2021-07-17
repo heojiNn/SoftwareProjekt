@@ -20,9 +20,9 @@ namespace Tests.Integration
 
         //--------------------------UpdateAllRoles(roles)--------------------------
         //
-        // Vorbeding.: keine einziger (.Name.Length>50)
-        // Nachbedin.: alle Rollen die nicht mehr in roles enthalten sind,  wurden mit ihren refs. gelöscht
-        //               alle neuen Rollen wurden in der Persistenz geändert
+        // Vorbeding.: .Name.Length <50 && <2 && unique
+        // Nachbedin.:  alle Rollen die nicht mehr im EingabeParameter(roles) enthalten sind,
+        ///             wurden mit ihren refs. gelöscht  alle neuen wurden in Persistenz geschrieben
         [Test]
         public void UpdateAll()
         {
@@ -41,7 +41,7 @@ namespace Tests.Integration
 
             Assert.AreEqual(3, addedRows);
             Assert.AreEqual(oldCount, remoRows, "old Fields weren't removed");
-            Assert.True(newRoles.SetEquals(requestAgain), "Roles weren't stored");
+            Assert.True(newRoles.SetEquals(requestAgain), "Values weren't correctlly stored");
         }
         [Test]
         public void UpdateWages()
@@ -60,7 +60,7 @@ namespace Tests.Integration
             Assert.AreEqual(0, addedRows);
             Assert.AreEqual(3, chang);
             Assert.AreEqual(0, remoRows);
-            Assert.True(rolesToUpdate.SetEquals(requestAgain), "Roles weren't stored");
+            Assert.True(rolesToUpdate.SetEquals(requestAgain), "Values weren't correctlly stored");
         }
         //-----------------------------------------------------------------------------------------
         //     bei invaliden EingabeParametern : nichts in der Persistenz ändert sich

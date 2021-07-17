@@ -55,7 +55,7 @@ namespace Tests.Integration
         }
         [TestCase("")]
         [TestCase("123456789-123456789-123456789-123456789-123456789-skill")]
-        public void Invalid_Skil(string name)
+        public void Invalid_Skill(string name)
         {
             // Act
             var skill = new Skill() { Name = name };
@@ -84,10 +84,10 @@ namespace Tests.Integration
             var newLvl = new[] { "ho", "pro", "reg", "ex" };
 
             // Act
-            int changed = sut.UpdateAllLevels(newLvl);
+            int changed = GetSkillService().UpdateAllLevels(newLvl);
 
             // Assert
-            var requestAgain = GetSkillService().GetAllLevel(); //watch for cache
+            var requestAgain = GetSkillService().GetAllLevel();
             Assert.AreEqual(4, changed);
             Assert.AreEqual(newLvl, requestAgain);
 

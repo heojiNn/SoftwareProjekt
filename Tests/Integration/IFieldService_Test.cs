@@ -22,15 +22,19 @@ namespace Tests.Integration
         {
             sut = GetFieldService();
             sut.ChangeEventHandel += OnEventReturn;
+
+            // Assert
+            var content = sut.GetAllFields();
+            Assert.True(content.Count() > 10, "Not enough Filds for testing");
         }
 
 
 
         //--------------------------UpdateAllFields(fields)--------------------------
         //
-        // Vorbedingungen:  keine einziger (.Name.Length>50)
-        // Nachbedingungen: die Brachen die in der Persistenz waren, aber nicht in fields wurden gelöscht.
-        //                   alle Brachen die in fields waren wurden inserted wenn nötig und sind nun abrufbar
+        // Vorbedingungen:  .Name.Length <50 && <1 && unique
+        // Nachbedingungen: die Brachen die in der Persistenz waren, aber nicht im EingabeParameter wurden gelöscht.
+        //                  alle Brachen die in fields waren wurden inserted wenn nötig und sind nun abrufbar
         [TestCase(10)]
         [TestCase(50)]  // 50 random strings of length==36
         public void UpdateAll(int size)
@@ -51,6 +55,9 @@ namespace Tests.Integration
             Assert.AreEqual(newFields.Count, addedRows);
             Assert.AreEqual(oldFieldsCount, remoRows, "not all old Fields were removed");
             Assert.True(newFields.SetEquals(requestAgain), "new Fields weren't stored correctly");
+
+            Assert.False(changeRes.ErrorMessages.Any(), "User got a ErrorMessages");
+            Assert.AreNotEqual("", changeRes.SuccesMessage, "User didn't got a SuccesMessage");
         }
         //-----------------------------------------------------------------------------------------
         //     bei invaliden EingabeParametern : nichts in der Persistenz ändert sich
@@ -77,9 +84,9 @@ namespace Tests.Integration
 
         //---------------------------CreateField(field)--------------------------
         //
-        // Vorbedingungen:  .Name existiert noch nicht Persistenz && Name.Length < 50
+        // Vorbedingungen:  .Name.Length <50 && <1 && unique
         // Nachbedingungen: neue Brache gespeichert und abrufbar
-        //                    die anderen Brache(und ihren Referenzen) wurden nicht verändert
+        //                  die anderen Brache(und ihren Referenzen) wurden nicht verändert
         [TestCase("Brache 1")]
         [TestCase("Brache 2")]
         [TestCase("Brache 3")]
@@ -99,10 +106,11 @@ namespace Tests.Integration
 
             Assert.AreEqual(combindFields.Count, requestAgain.Count());
             Assert.True(combindFields.SetEquals(requestAgain), "invalid change");
+
             Assert.AreNotEqual("", changeRes.SuccesMessage, "User didn't got a SuccesMessage");
         }
         //-----------------------------------------------------------------------------------------
-        //   bei invaliden EingabeParametern : nichts in der Persistenz ändert sich
+        //     bei invaliden EingabeParametern : nichts in der Persistenz ändert sich
         [TestCase("")]
         [TestCase("123456789-123456789-123456789-123456789-123456789-field")]
         [TestCase("Brache 1")]

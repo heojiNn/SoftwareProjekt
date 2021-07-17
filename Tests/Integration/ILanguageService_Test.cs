@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NUnit.Framework;
 using XCV.Data;
@@ -20,14 +21,18 @@ namespace Tests.Integration
         {
             sut = GetLangService();
             sut.ChangeEventHandel += OnEventReturn;
+
+            // Assert
+            var content = sut.GetAllLanguages();
+            Assert.True(content.Count() > 3, "Not enough Languages for testing");
         }
 
 
         //--------------------------UpdateAllLanguages(languages)--------------------------
         //
-        // Vorbeding.: keine einziger (.Name.Length>50)
-        // Nachbedin.: alle Sprachen die nicht mehr in languages enthalten sind,  wurden mit ihren refs. gelöscht
-        //               alle neuen Sprachen wurden in der Persistenz gespeichert
+        // Vorbeding.: .Name.Length <50 && <1 && unique
+        // Nachbedin.: alle Sprachen die nicht mehr in EingabeParameter enthalten sind,  wurden mit ihren refs. gelöscht
+        //             alle neuen Sprachen wurden in der Persistenz gespeichert
         [Test]
         public void UpdateAll()
         {
@@ -45,8 +50,10 @@ namespace Tests.Integration
             var requestAgain = sut.GetAllLanguages();
 
             Assert.AreEqual(2, addedRows);
-            Assert.AreEqual(oldCount, remoRows, "not all old Languages weren't removed");
+            Assert.AreEqual(oldCount, remoRows, "not all old Languages were removed");
             Assert.True(newLanguages.SetEquals(requestAgain), "Languages weren't stored correctly");
+
+            Assert.False(changeRes.ErrorMessages.Any(), "User got a ErrorMessages");
             Assert.AreNotEqual("", changeRes.SuccesMessage, "User didn't got a SuccesMessage");
         }
         //-----------------------------------------------------------------------------------------
@@ -74,30 +81,41 @@ namespace Tests.Integration
         [Test]
         public void UpdateAllLevels()
         {
-            var lvl = sut.GetAllLevel().Append("extra").ToArray();
-
-            // Act
-            (var addedRows, var remoRows) = sut.UpdateAllLevels(lvl);
-
-            // Assert
-            var requestAgain = sut.GetAllLevel();
-            Assert.AreEqual(1, addedRows);
-            Assert.AreEqual(0, remoRows);
-            Assert.AreEqual(lvl, requestAgain);
-        }
-        [Test]
-        public void ChangeLevelOrder()
-        {
             var lvl = sut.GetAllLevel().Reverse().ToArray();
 
             // Act
-            (var addedRows, var remoRows) = sut.UpdateAllLevels(lvl);
+            var rows = sut.UpdateAllLevels(lvl);
 
             // Assert
             var requestAgain = sut.GetAllLevel();
-            Assert.AreEqual(0, addedRows);
-            Assert.AreEqual(0, remoRows);
-            Assert.AreEqual(lvl, requestAgain);
+
+            Assert.AreEqual(6, rows);
+            Assert.AreEqual(lvl, requestAgain, "Values not updated correctly");
+
+            // Act
+            lvl[4] = "supergut";
+            sut.UpdateAllLevels(lvl);
+
+            // Assert
+            requestAgain = sut.GetAllLevel();
+            Assert.AreEqual("supergut", requestAgain[4]);
+        }
+
+        [Test]
+        public void Invalid_UpdateAllLevels()
+        {
+            var old = sut.GetAllLevel();
+            var lvl = sut.GetAllLevel();
+            lvl[2] = "super";
+            lvl[4] = "Super ";
+
+            // Act
+            var rows = sut.UpdateAllLevels(lvl);
+
+            // Assert
+            var requestAgain = sut.GetAllLevel();
+            Assert.AreEqual(0, rows);
+            Assert.AreEqual(old, requestAgain);
         }
 
     }
