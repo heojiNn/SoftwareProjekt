@@ -187,19 +187,22 @@
                             </thead>
                             @foreach (Project pro in proService.ShowAllProjects())
                             {
-                                <tr>
-                                    <td class="pt-3-half">
-                                        @pro.Title
-                                    </td>
-                                    <td class="pt-3-half">
-                                        @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
-                                    myProfile.PersoNumber)))
-                                        {
-                                            @keyValue.Key
-                                            <br>}
-                                    </td>
-                                </tr>
-}
+                                if (pro.Activities.Any(x => x.Value.persNr.Contains(myProfile.PersoNumber)))
+                                {
+                                    <tr>
+                                        <td class="pt-3-half">
+                                            @pro.Title
+                                        </td>
+                                        <td class="pt-3-half">
+                                            @foreach (var keyValue in pro.Activities.Where(x => x.Value.persNr.Contains(
+                                       myProfile.PersoNumber)))
+                                            {
+                                                @keyValue.Key
+                                                <br>}
+                                        </td>
+                                    </tr>
+                                }
+                            }
                         </table>
                     </div>
                 </CardBody>

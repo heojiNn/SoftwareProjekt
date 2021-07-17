@@ -27,7 +27,7 @@
             <th style="width:20%;"></th>
         </tr>
         @{ var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower())); }
-        @foreach (var project in projects.OrderBy(pro => pro.Title))
+        @foreach (var project in projects.Distinct().OrderBy(pro => pro.Title))
         {
             <tr>
                 <td>

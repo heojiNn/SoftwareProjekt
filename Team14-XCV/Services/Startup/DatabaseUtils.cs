@@ -125,7 +125,7 @@ namespace XCV.Data
                             "CREATE TABLE [project] ( " +                               // ref by pro_purpose, activitie
                                     "[Id]           INT IDENTITY(1,1) PRIMARY KEY, " +
                                     "[Title]        VARCHAR(50) NOT NULL, " +
-                                    "[Description]  VARCHAR(1000) NOT NULL, " +
+                                    "[Description]  VARCHAR(400) NOT NULL, " +
                                     "[Start]        DATE NOT NULL, " +
                                     "[End]          DATE NOT NULL, " +
                                     "[Field]        VARCHAR(50), " +                //can be Null
