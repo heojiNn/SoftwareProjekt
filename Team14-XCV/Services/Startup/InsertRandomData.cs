@@ -100,7 +100,7 @@ namespace XCV.Data
                         { "Anforderungsanalyse",
                             (
                             new List<string>(){
-                                employyes6[0].PersoNumber },
+                                employyes10[0].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Analytische Fähigkeiten"),
                                 _skillService.GetAllSkills().First(x => x.Name == "Organisationsfähigkeit")
@@ -109,7 +109,7 @@ namespace XCV.Data
                         { "GUI-Design",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber, employyes6[2].PersoNumber
+                                employyes10[1].PersoNumber, employyes10[2].PersoNumber
                                     },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name ==  "C#"),
@@ -121,7 +121,7 @@ namespace XCV.Data
                         { "Persistenz",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber, employyes6[3].PersoNumber,employyes6[4].PersoNumber }
+                                employyes10[1].PersoNumber, employyes10[3].PersoNumber,employyes10[4].PersoNumber }
                             ,
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "C#"),
@@ -135,7 +135,7 @@ namespace XCV.Data
                         { "Review und Testen",
                             (
                             new List<string>(){
-                                employyes6[0].PersoNumber },
+                                employyes10[0].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Methodische und strukturierte Vorgehensweise"),
                                 _skillService.GetAllSkills().First(x => x.Name == ".NET Core"),
@@ -147,7 +147,7 @@ namespace XCV.Data
                         { "ohne Tätigkeit",
                             (
                             new List<string>(){
-                                employyes6[0].PersoNumber },
+                                employyes10[0].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Methodische und strukturierte Vorgehensweise")
                             } )
@@ -155,7 +155,7 @@ namespace XCV.Data
                         { "Einsatz und Wartung",
                             (
                             new List<string>(){
-                                employyes6[0].PersoNumber, employyes6[7].PersoNumber },
+                                employyes10[0].PersoNumber, employyes10[7].PersoNumber },
                             
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Kommunikationsfähigkeit"),
@@ -180,7 +180,7 @@ namespace XCV.Data
                         { "Anforderungsanalyse",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber },
+                                employyes10[1].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Beratungsfähigkeit"),
                                 _skillService.GetAllSkills().First(x => x.Name == "Verhandlungsgeschick")
@@ -189,7 +189,7 @@ namespace XCV.Data
                         { "statische Analyse",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber, employyes6[2].PersoNumber
+                                employyes10[1].PersoNumber, employyes10[2].PersoNumber
                                     },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name ==  "Organisationsfähigkeit"),
@@ -200,7 +200,7 @@ namespace XCV.Data
                         { "dynamische Analyse",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber, employyes6[3].PersoNumber,employyes6[4].PersoNumber }
+                                employyes10[1].PersoNumber, employyes10[3].PersoNumber,employyes10[4].PersoNumber }
                             ,
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Impulsgeben"),
@@ -210,7 +210,7 @@ namespace XCV.Data
                         { "Prototyping",
                             (
                             new List<string>(){
-                                employyes6[3].PersoNumber },
+                                employyes10[3].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Methodische und strukturierte Vorgehensweise"),
                                 _skillService.GetAllSkills().First(x => x.Name == "CSS"),
@@ -221,7 +221,7 @@ namespace XCV.Data
                         { "ohne Tätigkeit",
                             (
                             new List<string>(){
-                                employyes6[8].PersoNumber },
+                                employyes10[8].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Zielorientiertes Führen")
                             } )
@@ -229,7 +229,7 @@ namespace XCV.Data
                         { "Erstellung der Website",
                             (
                             new List<string>(){
-                                employyes6[5].PersoNumber, employyes6[6].PersoNumber },
+                                employyes10[5].PersoNumber, employyes10[6].PersoNumber },
 
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Kommunikationsfähigkeit"),
@@ -255,7 +255,7 @@ namespace XCV.Data
                         { "Kundenbetreuung und Analyse",
                             (
                             new List<string>(){
-                                employyes6[5].PersoNumber },
+                                employyes10[5].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Beratungsfähigkeit"),
                                 _skillService.GetAllSkills().First(x => x.Name == "Verhandlungsgeschick"),
@@ -267,7 +267,7 @@ namespace XCV.Data
                         { "GUI-Design",
                             (
                             new List<string>(){
-                                employyes6[1].PersoNumber, employyes6[2].PersoNumber
+                                employyes10[1].PersoNumber, employyes10[2].PersoNumber
                                     },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name ==  "Angular")
@@ -276,7 +276,7 @@ namespace XCV.Data
                         { "Persistenz",
                             (
                             new List<string>(){
-                                employyes6[5].PersoNumber, employyes6[6].PersoNumber,employyes6[8].PersoNumber }
+                                employyes10[5].PersoNumber, employyes10[6].PersoNumber,employyes10[8].PersoNumber }
                             ,
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "MySQL"),
@@ -288,7 +288,7 @@ namespace XCV.Data
                         { "Backend-Entwicklung",
                             (
                             new List<string>(){
-                                employyes6[3].PersoNumber },
+                                employyes10[3].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Methodische und strukturierte Vorgehensweise"),
                                 _skillService.GetAllSkills().First(x => x.Name == "Problemlösungsfähigkeit"),
@@ -301,7 +301,7 @@ namespace XCV.Data
                         { "ohne Tätigkeit",
                             (
                             new List<string>(){
-                                employyes6[6].PersoNumber },
+                                employyes10[6].PersoNumber },
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Saltstack")
                             } )
@@ -309,7 +309,7 @@ namespace XCV.Data
                         { "Einsatz und Wartung",
                             (
                             new List<string>(){
-                                employyes6[5].PersoNumber, employyes6[6].PersoNumber },
+                                employyes10[5].PersoNumber, employyes10[6].PersoNumber },
 
                             new List<Skill>() {
                                 _skillService.GetAllSkills().First(x => x.Name == "Kommunikationsfähigkeit"),
