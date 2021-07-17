@@ -2,6 +2,9 @@
   "ConnectionStrings": {
     "MS_SQL_Connection": "Server=ms-sql-server,1433;Initial Catalog=IntegrationTestDB;User ID=SA;Password=Pa55w0rd2021",
     "MS_SQL_Connection_Root": "Server=ms-sql-server,1433;User ID=SA;Password=Pa55w0rd2021",
+    //für lokale Tests unten stehenden connection string benutzen
+    //"MS_SQL_Connection": "Server=(localdb)\\MSSQLLocalDB; Integrated Security=true;  Database=SoPro2021_3;",
+    //"MS_SQL_Connection_Root": "Server=(localdb)\\MSSQLLocalDB; Integrated Security=true;",
     "DatabaseName": "IntegrationTestDB"
   },
   "DetailedErrors": true,

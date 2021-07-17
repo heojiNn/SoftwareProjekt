@@ -41,7 +41,7 @@ namespace XCV
             services.AddTransient<IGenerateService, GenerateService>();
             services.AddSingleton<OfferData>();
 
-            services.AddSingleton<ISkillService, SkillService>();
+            services.AddTransient<ISkillService, SkillService>();
             services.AddTransient<IFieldService, FieldService>();
             services.AddTransient<ILanguageService, LanguageService>();
             services.AddTransient<IRoleService, RoleService>();

@@ -53,8 +53,8 @@ namespace Tests.Integration
             var requestAgain = sut.ShowProfile(toBeUpdated.PersoNumber);
 
             Assert.NotNull(requestAgain);
-            Assert.Contains(skill1, requestAgain.Abilities.ToList(), "Skill wasn't updated");
-            Assert.Contains(skill2, requestAgain.Abilities.ToList(), "Skill wasn't updated");
+            Assert.Contains(skill1, requestAgain.Abilities.ToList(), "Skill1 wasn't updated ");
+            Assert.Contains(skill2, requestAgain.Abilities.ToList(), "Skill2 wasn't updated");
         }
 
 

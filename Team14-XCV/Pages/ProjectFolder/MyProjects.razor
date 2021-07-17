@@ -21,7 +21,7 @@
     <input class="form-control" id="myInput" placeholder="Nach Projektstitel suchen" @bind="@searchTitle" @bind:event="oninput">
     <table id="myTable">
         <div class="row gutters-sm">
-            @{var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().StartsWith(searchTitle.ToLower()));}
+            @{var projects = (searchTitle == "") ? myProjects : myProjects.Where(pro => pro.Title.ToLower().Contains(searchTitle.ToLower()));}
             @foreach (var project in projects.Distinct().OrderBy(pro => pro.Title))
             {
                 <div class="col mb-3">
