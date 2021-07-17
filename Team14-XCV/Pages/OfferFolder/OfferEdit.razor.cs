@@ -12,8 +12,7 @@ namespace XCV.Pages.OfferNamespace
     public partial class OfferEdit
     {
 
-        //Storage, Parameters and References
-
+        //Parameters and References
         [Parameter]
         public int Id { get; set; }
         private ChangeResult changeInfo = new();
@@ -27,7 +26,7 @@ namespace XCV.Pages.OfferNamespace
         private int sBi = 0;
         private string error = "";
 
-        // Values in/out the page
+        // Values in/out the page (like OfferCreate)
         private string title { get; set; } = "";
         private string description { get; set; } = "";
         private DateTime SelectedStart { get; set; }
@@ -42,9 +41,6 @@ namespace XCV.Pages.OfferNamespace
         private List<Skill> skills;
         private List<Field> fields;
 
-        
-
-        
         protected override void OnInitialized()
         {
             myOffer = offerService.ShowOffer(Id);
@@ -78,6 +74,9 @@ namespace XCV.Pages.OfferNamespace
             }  
         }
 
+        /// <summary>
+        /// Called when the edit is finished and accept-button is pressed.
+        /// </summary>
         private async void UpdateOffer()
         {
             if (!changeInfo.ErrorMessages.Any())
@@ -177,19 +176,8 @@ namespace XCV.Pages.OfferNamespace
             SelectedParticipants.Remove(e);
         }
 
-        /// <summary>
-        /// Returns end - start in Days
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public int Runtime(DateTime end, DateTime start)
-        {
-            return (end - start).Days;
-        }
-
-        // Parameters and else
-
+        
+        // Standart Tasks:
 
         private async Task<IEnumerable<Skill>> SearchHardskills(string searchText)
         {
@@ -237,5 +225,6 @@ namespace XCV.Pages.OfferNamespace
         {
             BrancheCollapsed = !BrancheCollapsed;
         }
+        //
     }
 }

@@ -27,9 +27,11 @@ namespace XCV.Pages.Employees
 
         private string withoutActivity = "ohne Tätigkeit";
 
+        
+
 
         readonly Dictionary<string, object> browseAttributes = new Dictionary<string, object> {
-        { "accept", ".txt,.csv" },   // filter pattern
+        //{ "accept", ".txt,.csv" },   // filter pattern -> begrenzt zunächst die im Fileexplorer angezeigten Dateien(extensions)
         { "style", "display:none" }, // for custon label
         { "id", "browse-files" }     // for custom label
         };
@@ -84,12 +86,11 @@ namespace XCV.Pages.Employees
                 await JS.InvokeVoidAsync("scrollTop");
             }
         }
+
         private async Task JustUpload(InputFileChangeEventArgs eventArgs)
         {
-            await profileService.UploadeImage(myProfile.PersoNumber, eventArgs.File);
+            await profileService.UploadImage(myProfile, eventArgs.File);
         }
-
-
 
         private void AddMe(Project p, string act)
         {
@@ -100,7 +101,6 @@ namespace XCV.Pages.Employees
         {
             proService.Remove(p, myProfile, act);
         }
-
 
         private void OnChangeReturnEvent(object sender, ChangeResult e) => changeInfo = e;
     }

@@ -18,12 +18,12 @@ namespace XCV.Data
 
 
         [Required(ErrorMessage = "Es muss eine Eingabe zum Vorname gemacht werden."),
-        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu opimieren, \n" +
+        MaxLength(40, ErrorMessage = "Um Gestaltung und Marketing zu opimieren, \n" +
                                         "lässt das System keine Vornamen über 20 Zeichen zu.")]
         public string FirstName { get; set; } = "";
 
         [Required(ErrorMessage = "Es muss eine Eingabe zum Nachname gemacht werden."),
-        MaxLength(20, ErrorMessage = "Um Gestaltung und Marketing zu optimieren, \n" +
+        MaxLength(40, ErrorMessage = "Um Gestaltung und Marketing zu optimieren, \n" +
                                         "lässt das System keine Nachname über 20 Zeichen zu")]
         public string LastName { get; set; } = "";
 
@@ -45,7 +45,7 @@ namespace XCV.Data
         public ISet<Language> Languages { get; set; } = new SortedSet<Language>();
         public ISet<Skill> Abilities { get; set; } = new SortedSet<Skill>();
 
-        public List<(int project, string activity)> Projects { get; set; } = new();
+        public ISet<(int project, string activity)> Projects { get; set; } = new SortedSet<(int project, string activity)>();
 
 
         public bool MadeFirstChangesOnProfile = false;

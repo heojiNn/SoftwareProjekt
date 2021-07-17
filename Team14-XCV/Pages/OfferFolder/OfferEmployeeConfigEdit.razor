@@ -35,12 +35,12 @@
             <div class="card ">
                 <div class="card-header">
                     <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showpersonalData/>
+                        <input type="checkbox" @bind=@showpersonalData />
                         <span style="min-width: 100px;"> Profildetails </span>
                     </div>
                 </div>
                 <div class="card-body">
-                    <input type="checkbox" @bind="@showImage"/>
+                    <input type="checkbox" @bind="@showImage" />
                     <div class="col-md-4">
                         <img src="@Image" alt="Profilbild" class="rounded" style="margin:1em; max-width:90%">
                     </div>
@@ -57,81 +57,49 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <div class="col-md-4  p-0">
-                <input type="checkbox" @bind=@showfieldData/>
-                <span style="min-width: 100px;"> Branchen anzeigen </span>
+        <div class="col-sm-6 mb-3">
+            <div class="card ">
+                <div class="card-header">
+                    - Reihenfolge festlegen -
+                    <div class="avatar-links" style="float: right" data-tooltip="Jeder Kategorie wird eine Zahl zwischen 1-5 zugewiesen aber keine Zahl sollte doppelt vorkommen, da sonst keine Ordnung definiert werden kann."></div>
+                </div>
+                <div class="card-body">
+                        <div class="text-body">
+                            <input type="number" min="1" max="5" @bind=@order[0]/>
+                            <label>Profildetails</label>
+                        </div>
+                        
+                        <div class="text-body">
+                            <input type="number" min="1" max="5" @bind=@order[1] />
+                            <label>Fields</label>
+                        </div>
+                        
+                        <div class="text-body">
+                            <input type="number" min="1" max="5" @bind=@order[2] />
+                            <label>Softskills</label>
+                        </div>
+                        
+                        <div class="text-body">
+                            <input type="number" min="1" max="5" @bind=@order[3] />
+                            <label>Hardskills</label>
+                        </div>
+                       
+                        <div class="text-body">
+                            <input type="number" min="1" max="5" @bind=@order[4] />
+                            <label>Projects</label>
+                        </div>
+                </div>
             </div>
         </div>
-        <CollapsibleCard CardHeaderTitle="Branchen" ShowCardBody="true">
-            <CardBody>
-                <input class="form-control" id="skiSer" placeholder="suche" @bind="@fieldSearch" @bind:event="oninput" />
-                @if (fieldSearch == "")
-                {
-                    var fields = offerEmployee.Fields;
-                    if (fields.Any())
-                    {
-                        <div class="scroll ml-2" style="overflow-x: hidden;">
-                            <CheckBoxList Data="@fields" TextField="@((item)=>item.ToString())" SelectedValues="@selectedFields" />
-                        </div>
-                    }
-                }
-                else
-                {
-                    var sResults = fieldService.GetAllFields().Where(x => x.Name.ToLower().StartsWith(fieldSearch.ToLower())).OrderBy(x => x.Name);
-                    <div class="scroll ml-2" style="overflow-x: hidden;">
-                        <CheckBoxList Data="@sResults" TextField="@((item)=>item.ToString())" SelectedValues="@selectedFields" />
-                    </div>
-                }
-            </CardBody>
-        </CollapsibleCard>
     </div>
-        <br />
 
     <div class="row gutters-sm">
-        @* Hardskills *@
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
-            <div class="card">
-                <div class="card-header">
-                    <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showHSkill/>
-                        <span style="min-width: 100px;"> Hardskills anzeigen </span>
-                    </div>
-                </div>
-                @{ var allHardSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Hardskill); }
-                <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody="true">
-                    <CardBody>
-                        <input class="form-control" id="skiSer" placeholder="suche" @bind="@hskillSearch" @bind:event="oninput" />
-                        @if (hskillSearch == "")
-                        {
-                            if (allHardSkills.Any())
-                            {
-                                <div class="scroll ml-2" style="overflow-x: hidden;">
-                                    <CheckBoxList Data="@allHardSkills" TextField="@((item)=>item.ToString())" SelectedValues="@selectedHardSkills" />
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            var sResults = allHardSkills.Where(x => x.Name.ToLower().StartsWith(hskillSearch.ToLower())).OrderBy(x => x.Name);
-                            <div class="scroll ml-2" style="overflow-x: hidden;">
-                                <CheckBoxList Data="@sResults" TextField="@((item)=>item.ToString())" SelectedValues="@selectedHardSkills" />
-                            </div>
-                        }
-                    </CardBody>
-                </CollapsibleCard>
-            </div>
-        </div>
-
         @* Softskills *@
         <div class="col-sm-6 mb-3" style="min-height: 100px;">
             <div class="card">
                 <div class="card-header">
                     <div class="col-md-4  p-0">
-                        <input type="checkbox" @bind=@showSSkill/>
+                        <input type="checkbox" @bind=@showSSkill />
                         <span style="min-width: 100px;"> Softskills anzeigen </span>
                     </div>
                 </div>
@@ -159,35 +127,129 @@
                 </CollapsibleCard>
             </div>
         </div>
+
+        @* Hardskills *@
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-md-4  p-0">
+                        <input type="checkbox" @bind=@showHSkill />
+                        <span style="min-width: 100px;"> Hardskills anzeigen </span>
+                    </div>
+                </div>
+                @{ var allHardSkills = offerEmployee.Abilities.Where(x => x.Type == SkillGroup.Hardskill); }
+                <CollapsibleCard CardHeaderTitle="Hardskills" ShowCardBody="true">
+                    <CardBody>
+                        <input class="form-control" id="skiSer" placeholder="suche" @bind="@hskillSearch" @bind:event="oninput" />
+                        @if (hskillSearch == "")
+                        {
+                            if (allHardSkills.Any())
+                            {
+                                <div class="scroll ml-2" style="overflow-x: hidden;">
+                                    <CheckBoxList Data="@allHardSkills" TextField="@((item)=>item.ToString())" SelectedValues="@selectedHardSkills" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            var sResults = allHardSkills.Where(x => x.Name.ToLower().StartsWith(hskillSearch.ToLower())).OrderBy(x => x.Name);
+                            <div class="scroll ml-2" style="overflow-x: hidden;">
+                                <CheckBoxList Data="@sResults" TextField="@((item)=>item.ToString())" SelectedValues="@selectedHardSkills" />
+                            </div>
+                        }
+                    </CardBody>
+                </CollapsibleCard>
+            </div>
+        </div>
     </div>
 
-    <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
-                <CardBody>
-                    <div class="scroll2">
-                        <table class="table table-bordered table-striped text-center">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">beteiligte Projekte</th>
-                                    <th class="text-center">Tätigkeiten im Projekt</th>
-                                </tr>
-                            </thead>
-                            @foreach (var pro in selectedProjects)
-                            {
-                                <tr>
-                                    <td class="pt-3-half">
-                                        @(proService.ShowProject(pro.project).Title)
-                                    </td>
-                                    <td class="pt-3-half">
-                                       @pro.activity
-                                    </td>
-                                </tr>
-                            }
-                        </table>
+    <div class="row gutters-sm">
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-md-4  p-0">
+                        <input type="checkbox" @bind=@showfieldData />
+                        <span style="min-width: 100px;"> Branchen anzeigen </span>
                     </div>
-                </CardBody>
-            </CollapsibleCard>
+                </div>
+                @{var fields = profileService.ShowProfile(PersoNumber).Fields;}
+                <CollapsibleCard CardHeaderTitle="Branchen" ShowCardBody="true">
+                    <CardBody>
+                        <input class="form-control" id="fieldSer" placeholder="suche" @bind="@fieldSearch" @bind:event="oninput" />
+                        @if (fieldSearch == "")
+                        {
+                            if (fields.Any())
+                            {
+                                <div class="scroll ml-2" style="overflow-x: hidden;">
+                                    <CheckBoxList Data="@fields" TextField="@((item)=>item.ToString())" SelectedValues="@selectedFields" />
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            var fsResults = fields.Where(x => x.Name.ToLower().StartsWith(fieldSearch.ToLower())).OrderBy(x => x.Name);
+                            <div class="scroll ml-2" style="overflow-x: hidden;">
+                                <CheckBoxList Data="@fsResults" TextField="@((item)=>item.ToString())" SelectedValues="@selectedFields" />
+                            </div>
+                        }
+                    </CardBody>
+                </CollapsibleCard>
+            </div>
         </div>
+
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-md-4  p-0">
+                        <input type="checkbox" @bind=@showProjects />
+                        <span style="min-width: 100px;"> Projekte anzeigen </span>
+                    </div>
+                </div>
+                @{var projects = profileService.ShowProfile(PersoNumber).Projects; }
+                <CollapsibleCard CardHeaderTitle="Projekte " ShowCardBody=true>
+                    <CardBody>
+                        <div class="scroll2">
+                            <table class="table table-bordered table-striped text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Projekt</th>
+                                        <th class="text-center">Aktivität</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var pro in projects.Select(x => x.project).Distinct())
+                                {
+                                    var containsPro = selectedProjects.Select(x => x.project).Distinct().ToList().Contains(pro);
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <input type="checkbox" checked=@containsPro @onchange="@(e => { ProjectsClicked( e.Value, pro, projects.Select(x => x.activity).Distinct().ToArray()); })" />
+                                                <span style="min-width: 70px; margin-left: 4px"> @(proService.ShowProject(pro).Title)</span>
+                                            </label>
+                                        </td>
+                                        <td style="overflow:auto">
+                                            @foreach (var act in projects.Where(x => x.project == pro))
+                                            {
+                                                var containsAct = selectedProjects.Contains((pro, act.activity));
+                                                if (containsPro) 
+                                                {
+                                                    <input type="checkbox" checked=@containsAct @onchange="e => { ProjectActivitiesClicked( e.Value, pro, new string[1] { act.activity }); }" />
+                                                    <span style="min-width: 70px; margin-left: 4px"> @act.activity</span>
+                                                }
+                                                else //activities shan't be selected whenever project is deselected
+                                                {
+                                                    <input type="checkbox" checked=@containsAct disabled />
+                                                    <span style="min-width: 70px; margin-left: 4px"> @act.activity</span>}
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </CardBody>
+                </CollapsibleCard>
+            </div>
+        </div>
+    </div>
 
     <button type="button" class="btn btn-secondary" style=" float: right; margin: 3em 1em" @onclick="Validate"> Bestätigen</button>
     @*<a href="offer-edit/@Id" class="btn btn-secondary" style="float:right; margin: 3em 1em" @onclick="Reset"> Änderungen zurücksetzen</a>*@
@@ -200,8 +262,8 @@
             @if (showpersonalData)
             {
                 <ul>
-                    Profileinträge werden angezeigt:
-                    
+                    Profileinträge werden angezeigt
+
                 </ul> }
             else
             {
@@ -210,34 +272,34 @@
                 </ul>}
             @if (showfieldData)
             {
-        <ul>
-            Branchen werden angezeigt
-        </ul> }
+                <ul>
+                    Branchen werden angezeigt
+                </ul> }
             else
             {
-        <ul class="alert alert-danger" role="alert">
-            Branchen werden nicht angezeigt
-        </ul>}
+                <ul class="alert alert-danger" role="alert">
+                    Branchen werden nicht angezeigt
+                </ul>}
             @if (showSSkill)
             {
-        <ul>
-            Softskills werden angezeigt
-        </ul>}
-            else
-            {
-        <ul class="alert alert-danger" role="alert">
-            Softskills werden nicht angezeigt
-        </ul>}
-            @if (showHSkill)
-            {
                 <ul>
-                   Hardskills werden angezeigt
+                    Softskills werden angezeigt
                 </ul>}
             else
             {
-        <ul class="alert alert-danger" role="alert">
-            Hardskills werden nicht angezeigt
-        </ul>   }
+                <ul class="alert alert-danger" role="alert">
+                    Softskills werden nicht angezeigt
+                </ul>}
+            @if (showHSkill)
+            {
+                <ul>
+                    Hardskills werden angezeigt
+                </ul>}
+            else
+            {
+                <ul class="alert alert-danger" role="alert">
+                    Hardskills werden nicht angezeigt
+                </ul>}
             @if (showProjects)
             {
                 <ul>
@@ -245,12 +307,23 @@
                 </ul>}
             else
             {
-        <ul class="alert alert-danger" role="alert">
-            Projekte werden nicht angezeigt
-        </ul>                }
+                <ul class="alert alert-danger" role="alert">
+                    Projekte werden nicht angezeigt
+                </ul>}
         </Body>
         <Footer>
             <a href="offer/@Id" type="button" class="btn btn-primary" @onclick="@UpdateConfig">speichern</a>
             <button type="button" class="btn btn-secondary" @onclick="@Close">nicht speichern</button>
         </Footer>
     </Modal>
+
+    <Modal @ref="modal2">
+        <Title>Es ist ein Fehler aufgetreten</Title>
+        <Body>
+           @error
+        </Body>
+        <Footer>
+            <button type="button" class="btn btn-secondary" @onclick="@Close">Zurück</button>
+        </Footer>
+    </Modal>
+

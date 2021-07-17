@@ -16,7 +16,7 @@
             <div style="position: absolute; margin-top: 0.1%;">
                 <a href="edit-profile" class="btn btn-secondary oi oi-cog" style="border-color: #7A212E"> Bearbeiten</a>
             </div>
-            <h3 style="text-align: center">Profil Übersicht von @myProfile.PersoNumber</h3>
+            <h3 style="text-align: center">Profil Übersicht von @myProfile.FirstName @myProfile.LastName</h3>
         </div>
     </div>
         @if (!myProfile.MadeFirstChangesOnProfile)
@@ -76,7 +76,7 @@
 
 
         <div class="col-sm-6 mb-3" style="min-height: 200px;">
-            <CollapsibleCard CardHeaderTitle="SoftSkills" ShowCardBody=true>
+            <CollapsibleCard CardHeaderTitle="Softskills" ShowCardBody=true>
                 <CardBody>
                     <div class="scroll">
                         @foreach (Skill sSkill in myProfile.Abilities.Where(x => x.Type == SkillGroup.Softskill))

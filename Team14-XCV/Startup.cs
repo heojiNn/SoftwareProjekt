@@ -73,8 +73,9 @@ namespace XCV
             var ird = sp.GetService<InsertRandomData>();
             ird.InsertJson();
             Thread.Sleep(1000);
-            ird.Insert6Employyes();
-
+            ird.Insert10Employyes();
+            Thread.Sleep(100);
+            ird.Insert4Offers();
 
             app.UseStaticFiles();
 

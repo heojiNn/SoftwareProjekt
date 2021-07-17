@@ -166,6 +166,10 @@ namespace XCV.Data
             });
         }
 
+        public int Runtime(DateTime end, DateTime start)
+        {
+            return (end - start).Days;
+        }
 
         //-------------------------------------Persistence-----------------------------------------
         //-----------------------------------------------------------------------------------------
@@ -232,6 +236,62 @@ namespace XCV.Data
             }
             return offers;
         }
+
+        public List<Skill> ShowAllOfferSkills()
+        {
+            using var con = new SqlConnection(connectionString);
+            con.Open();
+            var offers = con.Query<Offer>("Select * From [offer]");
+            con.Close();
+            List<Skill> skills = new List<Skill>();
+            try
+            {
+                con.Open();
+                foreach (var of in offers)
+                {
+                    var offerSkills = con.Query<Skill, string, Skill>(@$"SELECT  s.Skill as Name,  sl.Name as Level,  s.skill_cat as Category
+                                                                        From [offerHasSkill] s  Left Join [Skill_Level] sl   ON s.Skill_Level = sl.Level
+                                                                    Where [Offer] = {of.Id}",
+                                                                        (skill, category) =>
+                                                                        {
+                                                                            if (skill != null)
+                                                                                skill.Category = new SkillCategory() { Name = category };
+                                                                            return skill;
+                                                                        }, splitOn: "Category").ToList();
+                    skills.Union(offerSkills);
+                }
+            }
+            finally
+            {
+                con.Close();
+            }
+            return skills;
+        }
+
+
+        public List<Field> ShowAllOfferFields()
+        {
+            using var con = new SqlConnection(connectionString);
+            con.Open();
+            var offers = con.Query<Offer>("Select * From [offer]");
+            con.Close();
+            List<Field> fields = new List<Field>();
+            try
+            {
+                con.Open();
+                foreach (var of in offers)
+                {
+                    var offerFields = con.Query<Field>($"Select [Field] as Name From [offerHasField] Where [Offer] = {of.Id}");
+                    fields.Concat(offerFields);
+                }
+            }
+            finally
+            {
+                con.Close();
+            }
+            return fields;
+        }
+
 
         public int GetLastId()
         {
@@ -364,6 +424,7 @@ namespace XCV.Data
             {
                 con.Execute($"Insert Into [offerHasEmployee]" +
                             $" Values ({o.Id}, '{e.PersoNumber}', '{e.offerRole}', {e.RCL}, {e.offerWage}, {e.hoursPerDay}, {e.daysPerRun}, {e.discount})");
+
                 OnChange(new() { InfoMessages = new string[] { "MitarbeiterIn hinzugefügt" } });
             }
             con.Close();

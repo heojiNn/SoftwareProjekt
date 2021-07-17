@@ -1,39 +1,40 @@
-image : mcr.microsoft.com/dotnet/sdk:5.0
-
-
 stages:
   - build
-  - deploy
   - test
 
 # baut das Projekt
 build:
   stage: build
+  image : mcr.microsoft.com/dotnet/sdk:5.0
   tags:
     - sopro
-  only:
-    - Staging
   script:
      - dotnet build Team14-XCV/XCV.csproj
 
 # Baut eine Release-Version des Projekts und ein DockerImage
-deploy:
-  stage: deploy
-  tags:
-    - sopro
-  only:
-    - staging
-  script:
-    - dotnet publish -c Release Team14-XCV/XCV.csproj
-    - docker build -t xcv-image -f Dockerfile .
+#deploy:
+#  stage: deploy
+#  tags:
+#    - sopro
+#  only:
+#    - staging
+#  script:
+#    - dotnet publish -c Release Team14-XCV/XCV.csproj
+#    - docker build -t xcv-image -f Dockerfile .
 
 # lässt Testprogramm über das Projekt laufen
 test:
   stage: test
+  image : mcr.microsoft.com/dotnet/sdk:5.0
   tags:
     - sopro
-  only:
-    - Staging
+  services:
+    - name: mcr.microsoft.com/mssql/server:2019-latest
+      alias: ms-sql-server
+  variables:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Pa55w0rd2021"
+      MSSQL_PID: Express
   script:
     - dotnet test Tests/Tests.csproj
 

@@ -7,8 +7,8 @@ namespace XCV.Pages.Employees
     public partial class MyProfile
     {
 
-      
-    private Employee myProfile = new Employee();
+
+        private Employee myProfile = new Employee();
 
 
         protected override async Task OnInitializedAsync()
@@ -25,6 +25,6 @@ namespace XCV.Pages.Employees
 
 
 
-    
-}
+
+    }
 }

@@ -20,7 +20,9 @@ namespace XCV.Data
         public ISet<Field>? selectedFields { get; set; }
         public ISet<Skill>? selectedSoftSkills { get; set; }
         public ISet<Skill>? selectedHardSkills { get; set; }
-        public IList<(int project, string activity)>? selectedProjects { get; set; }
+        public ISet<(int project, string activity)>? selectedProjects { get; set; }
         #nullable disable
+
+        public int[] order { get; set; } = new int[5];
     }       
 }
