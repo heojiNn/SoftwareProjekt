@@ -1,15 +1,22 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace XCV.Data
 {
     public class Role : IComparable
     {
-        [Required(ErrorMessage = "Rollen benötigen einen Namen."),
-        MaxLength(50, ErrorMessage = "Der Name der Rolle darf 50 Zeichen nicht überschreiten.")]
+        [MinLength(3, ErrorMessage = "Rollen benötigen einen Namen, mit min 3 Zeichen. {0}"),
+        MaxLength(50, ErrorMessage = "Rollen namen dürfen 50 Zeichen nicht überschreiten. {0}")]
         public string Name { get; init; }
+
+
+        [Range(0, 8, ErrorMessage = "Rate Card Level nur zwischen 1 und {2}.")]
         public int RCL { get; init; }
+
+        [Range(0F, 999.99, ErrorMessage = "{0} muss zwischen {1}€ und {2}€ liegen.")]
         public float Wage { get; set; } //Per hour, i.e. x8 Per day
+
         public override string ToString() => Name;
         public override bool Equals(object obj)
         {

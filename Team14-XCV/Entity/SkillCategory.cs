@@ -8,7 +8,7 @@ namespace XCV.Data
 {
     public class SkillCategory : SkilTreeNode, IComparable
     {
-        [MaxLength(40, ErrorMessage = "Der Name der Kategorie darf 50 Zeichen nicht überschreiten.")]
+        [MaxLength(40, ErrorMessage = "Der Name der Kategorie darf 40 Zeichen nicht überschreiten.")]
         public override string Name { get; set; } = "";
 
 

@@ -6,9 +6,9 @@ namespace XCV.Data
 {
     public class Language : IComparable
     {
-        [Required(ErrorMessage = "Sprachen benötigen einen Namen."),
-        MaxLength(50, ErrorMessage = "Der Name der Sprache darf 50 Zeichen nicht überschreiten.")]
-        public string Name { get; init; } = "";
+        [MinLength(2, ErrorMessage = "Sprachen benötigen einen Namen, mit min {1} Zeichen."),
+        MaxLength(50, ErrorMessage = "Sprachnamen dürfen {1} Zeichen nicht überschreiten.")]
+        public string Name { get; set; } = "";
 
         public string Level { get; set; } = "";
 

@@ -7,10 +7,10 @@ namespace XCV.Data
     public class Skill : SkilTreeNode, IComparable
     {
         [Required(ErrorMessage = "Skills benötigen einen Namen."),
-        MaxLength(50, ErrorMessage = "Der Name des Skill darf 50 Zeichen nicht überschreiten.")]
+        MaxLength(50, ErrorMessage = "Der Name des Skill darf {1} Zeichen nicht überschreiten.")]
         public override string Name { get; set; } = "";
 
-        public string Level { get; set; } = "";                                     //in Db Key would be the associated nummber,  cause names can be changed
+        public string Level { get; set; } = "";                         // SQL-Key would be the associated nummber,  cause names can be changed
         public SkillGroup Type
         {
             get => Category.Name == "SoftSkills" ? SkillGroup.Softskill : SkillGroup.Hardskill;
