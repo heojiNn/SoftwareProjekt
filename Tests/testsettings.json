@@ -1,8 +1,13 @@
 {
   "ConnectionStrings": {
-    "MS_SQL_Connection": "Server=ms-sql-server,1433;Initial Catalog=IntegrationTestDB;User ID=SA;Password=Pa55w0rd2021",
-    "MS_SQL_Connection_Root": "Server=ms-sql-server,1433;User ID=SA;Password=Pa55w0rd2021",
-    "DatabaseName": "IntegrationTestDB"
+    //Für lokale testausführung notwendig
+    "MS_SQL_Connection": "Data Source=(localdb)\\MSSQLLocalDB;  Initial Catalog=IntegrationTests_4;  Integrated Security=True ",
+    "MS_SQL_Connection_Root": "Data Source=(localdb)\\MSSQLLocalDB; Integrated Security=True",
+    "DatabaseName": "IntegrationTests_4",
+    //Für CI/CD Pipeline-Tests notwendig
+    //"MS_SQL_Connection": "Server=ms-sql-server,1433;Initial Catalog=IntegrationTestDB;User ID=SA;Password=Pa55w0rd2021",
+    //"MS_SQL_Connection_Root": "Server=ms-sql-server,1433;User ID=SA;Password=Pa55w0rd2021",
+    
   },
   "DetailedErrors": true,
   "Logging": {

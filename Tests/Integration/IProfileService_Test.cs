@@ -11,16 +11,23 @@ namespace Tests.Integration
     {
         private IProfileService sut;
         private ISkillService skillService;
-
+        private IRoleService roleService;
+        private ChangeResult changeRes;
+        private void OnEventReturn(object sender, ChangeResult e) => changeRes = e;
+        private IProfileService profileService;
+        private IAccountService accountService;
+        private EmployeeService employeeService;
         private Employee toBeUpdated;
 
         [OneTimeSetUp]
         public void GetSut()
         {
             skillService = GetSkillService();
-
+            roleService = GetRoleService();
+            employeeService = GetEmployeeService();
             sut = GetEmployeeService();
             toBeUpdated = sut.ShowAllProfiles().First();
+            sut.ChangeEventHandel += OnEventReturn;
         }
 
 
@@ -35,26 +42,36 @@ namespace Tests.Integration
         [Test]
         public void UpdateAddTest()
         {
+            //employeeService.CreateAccount(new Employee() { PersoNumber = "001", FirstName="Test", LastName="nach", Password="001" });
+            Employee toBeUpdated2 = sut.ShowAllProfiles().ToArray()[0];
             var skills = skillService.GetAllSkills();
             var levels = skillService.GetAllLevel();
-
+            var roles = roleService.GetAllRoles();
+            
             // PreCondition
-            var skill1 = skills.First();
-            skill1.Level = levels[2];
-            var skill2 = skills.Last();
-            skill2.Level = levels[3];
+            /*var skill = skills.Take(1).ToArray()[0];
+            skill.Level = levels[2];
+            var role = roles.Take(1).ToArray()[0];*/
+            string firstname = "FirstName";
+            string lastname = "lastname";
 
             // Act
-            toBeUpdated.Abilities.Add(skill1);
-            toBeUpdated.Abilities.Add(skill2);
-            sut.UpdateProfile(toBeUpdated);
-
+            //toBeUpdated2.Abilities.Add(skill);
+            //toBeUpdated2.Roles.Add(role);
+            toBeUpdated2.FirstName = firstname;
+            toBeUpdated2.LastName = lastname;
+            
+            sut.UpdateProfile(toBeUpdated2);
+            //Assert.True(1 == 0, changeRes.ErrorMessages.First());
             // Assert
-            var requestAgain = sut.ShowProfile(toBeUpdated.PersoNumber);
+            var requestAgain = sut.ShowProfile(toBeUpdated2.PersoNumber);
 
             Assert.NotNull(requestAgain);
-            Assert.Contains(skill1, requestAgain.Abilities.ToList(), "Skill wasn't updated");
-            Assert.Contains(skill2, requestAgain.Abilities.ToList(), "Skill wasn't updated");
+            //Assert.True(1 == 0,requestAgain.FirstName);
+            //Assert.Contains(skill, requestAgain.Abilities.ToList(), "Skill wasn't updated");
+            //Assert.Contains(role, requestAgain.Roles.ToList(), "Role wasn't updated");
+            Assert.True(firstname == requestAgain.FirstName, "FirstName wasn't updated");
+            Assert.True(lastname == requestAgain.LastName, "LastName wasn't updated");
         }
 
 
