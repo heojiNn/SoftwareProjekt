@@ -40,7 +40,7 @@
             <div class="card-body">
                 <h5 class="card-title">@myProfile.FirstName &nbsp; @myProfile.LastName</h5>
                 <p class="card-text" style="min-height: 150px;">
-                    <pre>@myProfile.Description</pre>
+                    <pre style="font-family: sans-serif;">@myProfile.Description</pre>
                 </p>
                 <p>Rate Card Level: @myProfile.RCL </p>
                 @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
@@ -57,7 +57,7 @@
                 <div class="scroll">
                     @foreach (Role role in myProfile.Roles)
                     {
-                        <p class="ml-2"><b>@role</b> @if (myProfile.RCL == 8 && role.RCL != 8)
+                        <p class="ml-2">@role @if (myProfile.RCL == 8 && role.RCL != 8)
                         {<span> runtergestuft auf RCL (@role.RCL)</span>}</p>
                     }
                 </div>
