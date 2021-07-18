@@ -66,7 +66,7 @@
     }
   ],
   "languages": {
-    "levels": ["Anfänger","Grundlagen","fortgeschritten","verhandlungssicher","Primärsprache"],
+    "levels": ["Anfänger","Grundlagen","fortgeschritten","verhandlungssicher","Primärsprache", "super"],
     "elements": ["Arabisch",  "Deutsch",  "Englisch",  "Französisch",  "Italienisch",  "Japanisch",  "Mandarin",  "Russisch",  "Spanisch",  "Türkisch" ]
   },
   "skills": {

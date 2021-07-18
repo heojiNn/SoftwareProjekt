@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "W0+TP5As+ep1sCZqg/DWoxbbfM9UMwe3PVj7hj+uOA0V9z+xUxttzMHq27k3wAnCJgUHsolEIqP3Z9LIAOZG5w==",
+  "dgSpecHash": "onx3KLv/3Aoj6fMWxTcX4QA91kuHXfCa74YxhJQPKCZAxHLmrm4qFE7oA8NXduI5Un6pob9z5G72TCGqRfDZ5g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Jonat\\Desktop\\Git Repositories\\SoPro\\CICD_DIr\\tutorium-g-team-14\\Team14-XCV\\XCV.csproj",
+  "projectFilePath": "C:\\Users\\Jonat\\Desktop\\Git Repositories\\SoPro\\CICD_DIr\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Jonat\\.nuget\\packages\\azure.core\\1.6.0\\azure.core.1.6.0.nupkg.sha512",
     "C:\\Users\\Jonat\\.nuget\\packages\\azure.identity\\1.3.0\\azure.identity.1.3.0.nupkg.sha512",
