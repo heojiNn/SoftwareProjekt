@@ -50,6 +50,7 @@ namespace XCV.Data
         public string[] GetAllLevel();
 
 
+
         /// <summary>
         ///         UpdateAllSkills in persistence.
         /// </summary>
@@ -67,7 +68,7 @@ namespace XCV.Data
         ///
         /// <param name="levels">
         ///         a correctly order array of size 4
-        ///         for each element (.lenght > 1 && lenght < 30)  &&  uniqe(caseinsensitve)
+        ///         for each element (.lenght &lt 1 && lenght &lt 30)  &amp&amp  uniqe(caseinsensitve)
         /// </param>
         public int UpdateAllLevels(string[] levels, bool justValidate = false);
         public int InsertSkill(Skill skill, bool justValidate = false);

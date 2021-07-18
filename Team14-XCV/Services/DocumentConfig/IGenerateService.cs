@@ -21,7 +21,7 @@ namespace XCV.Data
         /// Generates a Worddocument with the content of a single Employee profile
         /// </summary>
         /// <param name="e"></param>
-        /// <returns></returns>
+        /// <returns>A byte-Array with the document</returns>
         public byte[] GenerateSingleProfile(Employee e);
 
         /// <summary>
@@ -30,14 +30,14 @@ namespace XCV.Data
         /// </summary>
         /// <param name="o"></param>
         /// <param name="config"></param>
-        /// <returns></returns>
+        /// <returns>A byte-Array with the document</returns>
         public byte[] GenerateDocumentConfig(Offer o, DocumentConfig config);
 
         /// <summary>
         /// Blueprint which can be modified to output anything.
         /// </summary>
         /// <param name="o"></param>
-        /// <returns></returns>
+        /// <returns>A byte-Array with the document</returns>
         public byte[] Anything(Object o);
 
         /// Additions:

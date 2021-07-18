@@ -23,12 +23,44 @@ namespace XCV.Data
         /// Validates the Creation of a new offer
         /// </summary>
         /// <param name="newVersion"></param>
+        /// <event cref="OnChange">
+        ///         <para>Error:  Mindestens ein HardSkill hat keine Level Angabe. </para>
+        ///         <para>Error:  Der Titel sollte aus mindestens einem Zeichen bestehen. </para>
+        ///         <para>Error:  Das Enddatum sollte in der Zukunft liegen. </para>
+        ///         <para>Error:  Das Enddatum sollte noch in diesem Jahrtausend liegen. </para>
+        ///         <para>Error:  Das Startdatum sollte noch in diesem Jahrtausend liegen. </para>
+        ///         <para>Error:  Das Startdatum sollte nicht zu weit in der Vergangenheit liegen. </para>
+        ///         <para>Error:  Consultant hat aktuell mindestens RCL 4. </para>
+        ///         <para>Error:  RCL sollte im Bereich [1,8] liegen. </para>
+        ///         <para>Error:  Der Stundenlohn ist momentan auf 9999.99 begrenzt. </para>
+        ///         <para>Error:  Die maximale Anzahl an Arbeitsstunden pro Tag ist überschritten. </para>
+        ///         <para>Error:  EinE MitarbeiterIn hat mehr Arbeitstage als die Projektgesamtlaufzeit besitzt. </para>
+        ///         <para>Error:  Die Rabattangabe bitte als ganze Zahl zwischen 0 - 100 (%), ohne das Prozentsymbol. </para>     
+        ///         <para>Error:  Rolle von FirstName wurde geändert. </para>
+        ///         <para>Error:  RCL von FirstName wurde geändert. </para>
+        ///         <para>Error:  Stundenlohn von FirstName wurde geändert. </para>
+        ///         <para>Error:  Arbeitsstunden von FirstName wurde geändert. </para>
+        ///         <para>Error:  Arbeitstage von FirstName wurde geändert. </para>
+        ///         <para>Error:  Rabattangabe von FirstName wurde geändert. </para>
         public void ValidateCreate(Offer newVersion);
         /// <summary>
         /// Returns end - start in Days (int)
         /// </summary>
         /// <param name="start"></param>
         /// <param name="end"></param>
+        /// <event cref="OnChange">
+        ///         <para>Error:  Mindestens ein HardSkill hat keine Level Angabe. </para>
+        ///         <para>Error:  Der Titel sollte aus mindestens einem Zeichen bestehen. </para>
+        ///         <para>Error:  Das Enddatum sollte in der Zukunft liegen. </para>
+        ///         <para>Error:  Das Enddatum sollte noch in diesem Jahrtausend liegen. </para>
+        ///         <para>Error:  Das Startdatum sollte noch in diesem Jahrtausend liegen. </para>
+        ///         <para>Error:  Das Startdatum sollte nicht zu weit in der Vergangenheit liegen. </para>
+        ///         <para>Error:  Consultant hat aktuell mindestens RCL 4. </para>
+        ///         <para>Error:  RCL sollte im Bereich [1,8] liegen. </para>
+        ///         <para>Error:  Der Stundenlohn ist momentan auf 9999.99 begrenzt. </para>
+        ///         <para>Error:  Die maximale Anzahl an Arbeitsstunden pro Tag ist überschritten. </para>
+        ///         <para>Error:  EinE MitarbeiterIn hat mehr Arbeitstage als die Projektgesamtlaufzeit besitzt. </para>
+        ///         <para>Error:  Die Rabattangabe bitte als ganze Zahl zwischen 0 - 100 (%), ohne das Prozentsymbol </para>     
         /// <returns></returns>
         public int Runtime(DateTime end, DateTime start);
 
@@ -42,26 +74,26 @@ namespace XCV.Data
         /// <summary>
         /// Returns a Collection which contains the existing Offer(s) in the database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Collection of offers</returns>
         public IEnumerable<Offer> ShowAllOffers();
 
         /// <summary>
         /// Returns a Collection which contains all the skills all exisitng Offer(s) have combined.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of offers</returns>
         public List<Skill> ShowAllOfferSkills();
 
         /// <summary>
         /// Returns a Collection which contains all the fields all exisitng Offer(s) have combined.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of fields</returns>
         public List<Field> ShowAllOfferFields();
 
         /// <summary>
         /// Returns an existing Offer with the specified id.
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>an offer with id "id"</returns>
         public Offer ShowOffer(int id);
 
         /// <summary>
@@ -75,12 +107,12 @@ namespace XCV.Data
         /// <summary>
         /// Returns the Id of the most recently created offer
         /// </summary>
-        /// <returns></returns>
+        /// <returns>int</returns>
         public int GetLastId();
         /// <summary>
         /// Returns the Id of the Offer which would be created next
         /// </summary>
-        /// <returns></returns>
+        /// <returns>int</returns>
         public int GetNextId();
 
         /// <summary>
@@ -143,13 +175,13 @@ namespace XCV.Data
         /// <param name="offerEmp"></param>
         public void Remove(Offer o, Employee offerEmp);
         /// <summary>
-        /// TODO
+        /// implemented in update
         /// </summary>
         /// <param name="o"></param>
         /// <param name="s"></param>
         public void Remove(Offer o, Skill s);
         /// <summary>
-        /// TODO
+        /// implemented in update
         /// </summary>
         /// <param name="o"></param>
         /// <param name="f"></param>

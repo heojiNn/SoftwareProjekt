@@ -140,7 +140,7 @@ namespace XCV.Data
 
 
         /// <summary>
-        ///         Validates against DataAnotation(.Name.Length <50 && >1)
+        ///         Validates against DataAnotation(.Name.Length &lt50 &amp&amp >1)
         /// </summary>
         /// <remarks>
         ///         used by Update and Create

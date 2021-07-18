@@ -173,7 +173,7 @@ namespace XCV.Data
                                 selectedHardSkills = skills.Where(s => s.Type == SkillGroup.Hardskill).ToHashSet(),
                                 selectedProjects = projects,
                                 order = ordA
-                        };
+                            };
 
                             cfg.employeeConfigs.Add(employeeConfig);
                         }
@@ -344,7 +344,7 @@ namespace XCV.Data
         {
             DocumentConfig defaultcfg = new DocumentConfig() { offerId = parent.Id, Name = name, employeeConfigs = new List<EmployeeConfig>()};
             if (parent.participants.Count == 0)
-                return defaultcfg; // Kann in weiterer Fehlerbehandlung abgehandelt werden. -> ValidateUpdate
+                return defaultcfg;
             errorMessages = new();
             ValidateUpdate(parent, defaultcfg, null);
             if (!errorMessages.Any())
