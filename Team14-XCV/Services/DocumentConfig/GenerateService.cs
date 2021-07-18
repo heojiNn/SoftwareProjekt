@@ -62,7 +62,7 @@ namespace XCV.Data
                     if (e.Image.Length != 0)
                     {
                         ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                        using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot", e.Image), FileMode.Open))
+                        using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot/profile", e.Image), FileMode.Open))
                         {
                             imagePart.FeedData(stream);
                         }
@@ -324,7 +324,7 @@ namespace XCV.Data
                                             if (e.Image.Length != 0)
                                             {
                                                 ImagePart imagePart = mainPart.AddImagePart(ImagePartType.Jpeg);
-                                                using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot", e.Image), FileMode.Open))
+                                                using (FileStream stream = new FileStream(Path.Combine(Environment.CurrentDirectory, @"wwwroot/profile", e.Image), FileMode.Open))
                                                 {
                                                     imagePart.FeedData(stream);
                                                 }

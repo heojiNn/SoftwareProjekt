@@ -38,7 +38,7 @@ namespace XCV.Data
         public int RCL { get; set; }
         public DateTime? Experience { get; set; }
 
-        public DateTime EmployedSince { get; init; }
+        public DateTime EmployedSince { get; set; }
 
         public ISet<Role> Roles { get; set; } = new SortedSet<Role>();
         public ISet<Field> Fields { get; set; } = new SortedSet<Field>();

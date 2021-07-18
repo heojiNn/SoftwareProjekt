@@ -94,6 +94,8 @@ namespace XCV.Data
                 infoMessages.Add("Das Rate Card Level wurde verändert.");
             if (!oldVersion.Experience.Equals(newVersion.Experience))
                 infoMessages.Add("Die Berufserfahrung wurde verändert.");
+            if (!oldVersion.EmployedSince.Equals(newVersion.EmployedSince))
+                infoMessages.Add("Dein Arbeitsantritt wurde verändert.");
             if (newVersion.Image.StartsWith("TEMP"))
                 infoMessages.Add("Der upload ihres Bildes wurde noch nicht bestätigt");
 
@@ -373,7 +375,7 @@ namespace XCV.Data
             {
                 con.Open();
                 con.Execute(@"Update [Employee] Set [FirstName]=@FirstName, [LastName]=@LastName, [Description]=@Description, [Image]=@Image, [Rcl]=@Rcl,
-                                                    [Experience]=@Experience, [MadeFirstChangesOnProfile]=1   Where [PersoNumber]=@PersoNumber ", e);
+                                                    [Experience]=@Experience, [EmployedSince] = @EmployedSince, [MadeFirstChangesOnProfile]=1   Where [PersoNumber]=@PersoNumber ", e);
 
                 con.Execute($"Delete From [EmployeeHasField] Where employee='{e.PersoNumber}'");
                 foreach (var field in e.Fields)

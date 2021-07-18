@@ -86,7 +86,7 @@
                     <div class="row">
                         <div class="wrap-collabsible ml-3">
 
-                            @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
+                            @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 365 : 0;}
                             <input id="collapsible" class="toggle" type="checkbox">
                             <label for="collapsible" class="lbl-toggle" style="margin-bottom:0">
                                 <tag>Relevante Berufserfahrung:</tag> @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2")} Jahre" )
@@ -116,7 +116,7 @@
                     <div class="row">
                         <label class="col col-form-label" for="employedSince" style="max-width: max-content">Bei Xitaso angestellt seit:</label>
                         <div class="col">
-                            <input type="date" class="form-control" id="employedSince" style="max-width: max-content;" placeholder="@myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")">
+                            <input type="date" class="form-control" id="employedSince" style="max-width: max-content;" @bind="myProfile.EmployedSince" placeholder="@myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")">
                         </div>
                     </div>
                 </div>
@@ -178,14 +178,9 @@
         <div class="col-sm-6 mb-3" style="min-height: 100px;">
             <CollapsibleCard2 CardHeaderTitle="Hardskills">
                 <CardBody>
-                    <input class="ml-2" id="onlm" type="checkbox" @bind="@onlySele" /><b> nur bereits Ausgewählte anzeigen</b>
-                    <br >
                     <input class="form-control" id="skiSer" placeholder="oder suchen" @bind="@skillSearch" @bind:event="oninput" />
                     <br>
-                    @if (onlySele)
-                    {
-                        <CheckBoxList Data="@myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill)" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" /> }
-                    else if (skillSearch == "")
+                    @if (skillSearch == "")
                     {
                         var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
                         if (skills.Any())

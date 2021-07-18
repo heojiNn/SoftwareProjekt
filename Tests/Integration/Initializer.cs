@@ -130,18 +130,6 @@ namespace Tests.Integration
             var sut = new OfferService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService());
             return sut;
         }
-        public static ConfigService GetConfigService()
-        {
-            var sLogger = Mock.Of<ILogger<ConfigService>>();
-            var sut = new ConfigService(GetTestConfig(), sLogger, GetSkillService(), GetEmployeeService(), GetProjectService());
-            return sut;
-        }
-        public static GenerateService GetGenerateService()
-        {
-            var sLogger = Mock.Of<ILogger<GenerateService>>();
-            var sut = new GenerateService(GetOfferService(), GetProjectService(), GetEmployeeService());
-            return sut;
-        }
 
         public static void DoJsonUpdate()
         {
