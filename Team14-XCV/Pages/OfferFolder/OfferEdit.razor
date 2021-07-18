@@ -214,12 +214,29 @@
                                     </select>
 
                                     <br />
-                                    Stundensatz <input type="number" min="0" max="9999" @bind="@em.offerWage">
-                                    Std/Tag <input type="number" min="0" max="24" @bind="@em.hoursPerDay" />
-                                    <br />
-                                    Tage/Laufzeit <input type="number" min="0" max="@offerService.Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun"/>
-                                    Rabatt(0-100) <input type="number" min="0" max="100" @bind="@em.discount" />
-                                </div>
+                                    <div class="row">
+                                        <div class="col mb-3">
+                                            <p>Stundensatz</p> 
+                                            <input type="number" min="0" max="9999" @bind="@em.offerWage" style="width:60px;">
+                                            </div>
+                                            <div class="col mb-3" style="text-align:right">
+                                                <p>Std/Tag</p> 
+                                                <input type="number" min="0" max="24" @bind="@em.hoursPerDay" style="width:60px;"/>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    <div class="row">
+                                        <div class="col mb-3"  >
+                                            <p>Tage/Laufzeit</p> <input type="number" min="0" max="@offerService.Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun" style="width:60px; "/>
+                                        </div>
+                                        <div class="col mb-3" style="text-align:right">
+                                            <p>Rabatt</p> <input type="number" min="0" max="100" @bind="@em.discount" style="width:60px;" />
+                                            <p>(0-100)</p>
+                                        </div>
+                                    </div>
+                                    
+                                        
+                                    </div>
                             </div>
                          }
                     }

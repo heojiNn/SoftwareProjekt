@@ -9,6 +9,7 @@ namespace XCV.Pages.ProjectFolder
 {
     public partial class ProjectEdit
     {
+        //Parameters and References:
         [Parameter]
         public string Id { get; set; }
 
@@ -18,14 +19,18 @@ namespace XCV.Pages.ProjectFolder
 
         private Project updateProject;
 
+        //Purposes and Activities can be added and removed dynamically.
         private List<string> purposes = new();
         private List<string> activities = new();
+        //Employees and Skills can be added to the activities.
         private Dictionary<string, (List<Employee> employees, List<Skill> requirements)> activityInfo = new();
 
+        // Lists of all selected Employees, Hardskills, Softskills.
         private IList<Employee> SelectedEmployees = new List<Employee>();
         private IList<Skill> SelectedHardskills = new List<Skill>();
         private IList<Skill> SelectedSoftskills = new List<Skill>();
 
+        // All Emplyees, Skills and Fields for the search.
         private IEnumerable<Employee> allEmployees;
         private IEnumerable<Field> allFields;
         private IEnumerable<Skill> allSkills;
@@ -73,7 +78,10 @@ namespace XCV.Pages.ProjectFolder
             if (activityInfo.ContainsKey(activity)) activityInfo.Remove(activity);
 
         }
-
+        /// <summary>
+        ///  Opens a modal dialogue to add or remove employees or skills from an activity "act".
+        /// </summary>
+        /// <param name="act"></param>
         private void Change(string act)
         {
             selectedActivity = act;
@@ -86,6 +94,9 @@ namespace XCV.Pages.ProjectFolder
             }
             activityModal.Open();
         }
+        /// <summary>
+        ///        Removes the selected employees and skills for the next search.
+        /// </summary>
         private void Close()
         {
             SelectedEmployees = new List<Employee>();
@@ -98,6 +109,9 @@ namespace XCV.Pages.ProjectFolder
             validationModal.Close();
             changeInfo = new();
         }
+        /// <summary>
+        /// Saves the selected collaborators and skills in a dictionary associated with the activity.
+        /// </summary>
         private void Save()
         {
             if (!activityInfo.ContainsKey(selectedActivity)) activityInfo.Add(selectedActivity, (new List<Employee>(SelectedEmployees), new List<Skill>(SelectedHardskills.Concat(SelectedSoftskills))));
@@ -108,7 +122,9 @@ namespace XCV.Pages.ProjectFolder
             }
             Close();
         }
-
+        /// <summary>
+        /// Validates input's correctness (within Projectservice), and outputs an according Modal pop-up.
+        /// </summary>
         private void Validate()
         {
 
@@ -123,16 +139,15 @@ namespace XCV.Pages.ProjectFolder
             if (!updateProject.Activities.ContainsKey(withoutActivity)) updateProject.Activities.Add(withoutActivity, (activityInfo[withoutActivity].employees.Select(x => x.PersoNumber).ToList(), activityInfo[withoutActivity].requirements));
 
             projectService.ValidateUpdate(updateProject);
-
-
-
             if (changeInfo.ErrorMessages.Any() || changeInfo.InfoMessages.Any() )
             {
                 validationModal.Open();
             }
 
         }
-
+        /// <summary>
+        /// Updates the project if valid data has been entered.
+        /// </summary>
         private void UpdateProject()
         {
             if (!changeInfo.ErrorMessages.Any())

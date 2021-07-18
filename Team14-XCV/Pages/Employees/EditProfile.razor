@@ -175,12 +175,13 @@
 
 
 
-        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
+        <div class="col-sm-6 mb-3" style="min-height: 100px;">
             <CollapsibleCard2 CardHeaderTitle="Hardskills">
                 <CardBody>
-                    <input id="onlm" type="checkbox" @bind="@onlySele" /> nur zuvor ausgewählte anzeien  &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp;
-                    <input id="skiSer" placeholder="oder suchen" @bind="@skillSearch" @bind:event="oninput" />
-                    <br><br>
+                    <input class="ml-2" id="onlm" type="checkbox" @bind="@onlySele" /><b> nur bereits Ausgewählte anzeigen</b>
+                    <br >
+                    <input class="form-control" id="skiSer" placeholder="oder suchen" @bind="@skillSearch" @bind:event="oninput" />
+                    <br>
                     @if (onlySele)
                     {
                         <CheckBoxList Data="@myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill)" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="myProfile.Abilities" /> }

@@ -9,15 +9,6 @@ namespace XCV.Pages.Employees
 {
     public partial class EmployeeSearch
     {
-        //===========================================================================================================================================//
-
-        // Suche: TODO:  
-        // Soll ein Hinweis ausgegeben werden, wenn ein Mitarbeiter alle Suchkriterien erfüllt, oder reicht die Abwesenheit des "Kein/Keine MitarbeiterIn erfüllt alle Kriterien." Textes? 
-        // Statt des Hinweises kann eine prozentuale Eignung des Mitarbeiters angegeben werden, auch wenn sie bei gewichteten Suchkriterien kontrainduktiv wirkt? S. EmployeeSeach.razor Z.244
-        // Alternativ könnten natürlich auch nur die Mitarbeiter ausgegeben werden, die alle Suchkriterien erfüllen, das fände ich als Nutzer aber unpraktisch.
-
-        //===========================================================================================================================================//
-
 
         // Searchresult: a Dictionary sorted in EmployeeSearch.razor, key = PersoNumber, value = a tuple of the score and a list of all fulfilled properties.
         private Dictionary<string, Tuple<int, List<String>>> results = new();

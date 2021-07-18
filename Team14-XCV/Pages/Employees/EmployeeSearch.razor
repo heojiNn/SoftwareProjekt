@@ -240,7 +240,6 @@
                                     {
                                         <p> erfüllt alle Kriterien</p>
                                      }
-                                    <!-- Alternative: prozentuale Eignung angeben, diese könnte jedoch bei gewichteten Suchkriterien kontraintuitiv wirken -->
                                     @if (kvp.Value.Item1 < numberOfSelectedAttributes)
                                     {@(kvp.Value.Item1 * 100/numberOfSelectedAttributes) @("%")}
 
