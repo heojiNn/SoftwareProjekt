@@ -37,7 +37,6 @@ namespace XCV.Data
             Offer oldVersion = ShowOffer(newVersion.Id);
             if (newVersion == null || oldVersion == null)
                 return;
-
             //-------------------------------------------------------------------------------------infoMessages
             if (!oldVersion.Title.Equals(newVersion.Title))
                 infoMessages.Add("Der Titel wurde geändert.");
@@ -45,16 +44,8 @@ namespace XCV.Data
                 infoMessages.Add("Die Beschreibung wurde geändert.");
             if (!oldVersion.Start.Equals(newVersion.Start))
                 infoMessages.Add("Das Projekt-startdatum wurde geändert.");
-            if (!oldVersion.Start.Equals(newVersion.End))
+            if (!oldVersion.End.Equals(newVersion.End))
                 infoMessages.Add("Das Projekt-enddatum wurde geändert.");
-            
-
-
-            // TODO ROLES AND WAGES foreach
-            //if (oldVersion.RCL != newVersion.RCL)
-            //    infoMessages.Add("Dein Rate Card Level würde geändert werden.");
-            //if (!oldVersion.Roles.SetEquals(newVersion.Roles)) inlineWords.Add("Rollen");
-
             
 
             if (!oldVersion.Requirements.SetEquals(newVersion.Requirements)) inlineWords.Add("Skills");
@@ -71,9 +62,8 @@ namespace XCV.Data
             if (!softSetOld.SetEquals(softSetNew)) inlineWords.Add("Soft-Skills");
             if (!oldVersion.Fields.All(newVersion.Fields.Contains))
                 inlineWords.Add("Tätigkeitsfeldern");
-            if (!oldVersion.participants.All(newVersion.participants.Contains))
+            if (oldVersion.participants.Count != newVersion.participants.Count)
                 inlineWords.Add("MitarbeiterInnen");
-
 
             if (inlineWords.Any())
                 infoMessages.Add($"Änderungen an {String.Join(", ", inlineWords)} wurden vorgenommen.");
@@ -83,8 +73,6 @@ namespace XCV.Data
             if (!Validator.TryValidateObject(newVersion, new ValidationContext(newVersion), results, true))
                 errorMessages = results.Select(e => e.ErrorMessage).ToList();
 
-            //if (newVersion.Roles.Where(x => x.Name == "Consultant").Any() && newVersion.RCL < 4)
-            //    errorMessages.Add("Consultant wird erst ab RCL:4 freigeschaltet");
             if (newVersion.Requirements.Where(x => !ofSkillService.GetAllLevel().Contains(x.Level) && x.Type == SkillGroup.Hardskill).Any())
                 errorMessages.Add("Mindestens ein HardSkill hat keine Level Angabe.");
             if (newVersion.Title.Length == 0)
@@ -106,6 +94,19 @@ namespace XCV.Data
                 if (e.hoursPerDay > 24) errorMessages.Add("Die maximale Anzahl an Arbeitsstunden pro Tag ist überschritten.");
                 if (e.daysPerRun > (newVersion.End-newVersion.Start).Days) errorMessages.Add("EinE MitarbeiterIn hat mehr Arbeitstage als die Projektgesamtlaufzeit besitzt.");
                 if (e.discount > 100 || e.discount < 0) errorMessages.Add("Die Rabattangabe bitte als ganze Zahl zwischen 0 - 100 (%), ohne das Prozentsymbol");
+
+                foreach (Employee eo in oldVersion.participants)
+                {
+                    if (e.PersoNumber.Equals(eo.PersoNumber))
+                    {
+                        if (!e.offerRole.Equals(eo.offerRole)) infoMessages.Add($"Rolle von {e.FirstName} wurde geändert");
+                        if (!e.offerRCL.Equals(eo.offerRCL)) infoMessages.Add($"RCL von {e.FirstName} wurde geändert");
+                        if (!e.offerWage.Equals(eo.offerWage)) infoMessages.Add($"Stundenlohn von {e.FirstName} wurde geändert");
+                        if (!e.hoursPerDay.Equals(eo.hoursPerDay)) infoMessages.Add($"Arbeitsstunden von {e.FirstName} wurde geändert");
+                        if (!e.daysPerRun.Equals(eo.daysPerRun)) infoMessages.Add($"Arbeitstage von {e.FirstName} wurde geändert");
+                        if (!e.discount.Equals(eo.discount)) infoMessages.Add($"Rabattangabe von {e.FirstName} wurde geändert");
+                    }
+                }
             }
 
             //-------------------------------------------------------------------------------------
@@ -148,11 +149,17 @@ namespace XCV.Data
             foreach (Employee e in newVersion.participants)
             {
                 if (e.offerRole.Equals("Consultant") && e.offerRCL < 4) errorMessages.Add("Consultant hat aktuell mindestens RCL 4.");
+
                 if (0 == e.offerRCL || e.offerRCL > 8) errorMessages.Add("RCL sollte im Bereich [1,8] liegen.");
+
                 if (e.offerWage > 9999.99) errorMessages.Add("Der Stundenlohn ist momentan auf 9999.99 begrenzt.");
+
                 if (e.hoursPerDay > 24) errorMessages.Add("Die maximale Anzahl an Arbeitsstunden pro Tag ist überschritten.");
+
                 if (e.daysPerRun > (newVersion.End - newVersion.Start).Days) errorMessages.Add("EinE MitarbeiterIn hat mehr Arbeitstage als die Projektgesamtlaufzeit besitzt.");
+
                 if (e.discount > 100 || e.discount < 0) errorMessages.Add("Die Rabattangabe bitte als ganze Zahl zwischen 0 - 100 (%), ohne das Prozentsymbol");
+
             }
             //-------------------------------------------------------------------------------------
             if (errorMessages.Count == 0)
