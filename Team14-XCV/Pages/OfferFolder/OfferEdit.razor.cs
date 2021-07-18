@@ -25,6 +25,7 @@ namespace XCV.Pages.OfferNamespace
         private bool[] showB = new bool[100];
         private int sBi = 0;
         private string error = "";
+        private bool onlySele = false;
 
         // Values in/out the page (like OfferCreate)
         private string title { get; set; } = "";
