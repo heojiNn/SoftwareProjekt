@@ -95,7 +95,7 @@ namespace XCV.Data
 
 
         /// <summary>
-        ///         Validates against DataAnotation(.Name.Length <50 && <2)
+        ///         Validates against DataAnotation(.Name.Length &lt50 &amp&amp &lt2)
         /// </summary>
         /// <remarks>
         ///         used by Update

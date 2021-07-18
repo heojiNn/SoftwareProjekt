@@ -99,12 +99,12 @@ namespace XCV.Data
                 {
                     if (e.PersoNumber.Equals(eo.PersoNumber))
                     {
-                        if (!e.offerRole.Equals(eo.offerRole)) infoMessages.Add($"Rolle von {e.FirstName} wurde geändert");
-                        if (!e.offerRCL.Equals(eo.offerRCL)) infoMessages.Add($"RCL von {e.FirstName} wurde geändert");
-                        if (!e.offerWage.Equals(eo.offerWage)) infoMessages.Add($"Stundenlohn von {e.FirstName} wurde geändert");
-                        if (!e.hoursPerDay.Equals(eo.hoursPerDay)) infoMessages.Add($"Arbeitsstunden von {e.FirstName} wurde geändert");
-                        if (!e.daysPerRun.Equals(eo.daysPerRun)) infoMessages.Add($"Arbeitstage von {e.FirstName} wurde geändert");
-                        if (!e.discount.Equals(eo.discount)) infoMessages.Add($"Rabattangabe von {e.FirstName} wurde geändert");
+                        if (!e.offerRole.Equals(eo.offerRole)) infoMessages.Add($"Rolle von {e.FirstName} wurde geändert.");
+                        if (!e.offerRCL.Equals(eo.offerRCL)) infoMessages.Add($"RCL von {e.FirstName} wurde geändert.");
+                        if (!e.offerWage.Equals(eo.offerWage)) infoMessages.Add($"Stundenlohn von {e.FirstName} wurde geändert.");
+                        if (!e.hoursPerDay.Equals(eo.hoursPerDay)) infoMessages.Add($"Arbeitsstunden von {e.FirstName} wurde geändert.");
+                        if (!e.daysPerRun.Equals(eo.daysPerRun)) infoMessages.Add($"Arbeitstage von {e.FirstName} wurde geändert.");
+                        if (!e.discount.Equals(eo.discount)) infoMessages.Add($"Rabattangabe von {e.FirstName} wurde geändert.");
                     }
                 }
             }

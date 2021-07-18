@@ -9,7 +9,7 @@ namespace XCV.Data
     {
         public int Id { get; set; }
 
-        [RegularExpression(@"^[A-Za-z0-9_\-,.]{1,50}$",
+        [RegularExpression(@"^[A-Za-z0-9_\-,.äöü]{1,50}$",
             ErrorMessage = "darf nur Buchstaben Zahlen oder -_,. enthalten")]
         public string Title { get; set; } = "";
         [MaxLength(140, ErrorMessage = "Beschreibung nicht über 140 Zeichen")]

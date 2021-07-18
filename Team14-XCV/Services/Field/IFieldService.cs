@@ -32,7 +32,7 @@ namespace XCV.Data
         /// <event cref="OnChange">
         ///         Succes: {toAdd}, wurde zur Liste der Brachen hinzugefügt.
         /// or
-        ///static   Error:  Name.Length war nicht (<50 && <1) {newField}
+        ///static   Error:  Name.Length war nicht (&lt50 && &lt1) {newField}
         ///dyn      Error:  {toAdd}, kann nicht hinzugefügt werden, da es schon enthalten ist.
         /// </event>
         public int CreateField(Field toAdd, bool justValidate = false);

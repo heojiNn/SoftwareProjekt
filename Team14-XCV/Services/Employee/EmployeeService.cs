@@ -407,7 +407,7 @@ namespace XCV.Data
         }
 
         /// <summary>
-        ///         Workes with SQL Server
+        ///         Works with SQL Server
         /// </summary>
         private void DeleteEmployee(string id)
         {
@@ -443,7 +443,7 @@ namespace XCV.Data
     //-----------------------------------------------------------------------------------------
 
     /// <summary>
-    ///         to create Sets in which the level is consinderd too
+    ///         to create Sets in which the level is considered too
     /// </summary>
     class LangComparerWithLevel : IEqualityComparer<Language>
     {
@@ -459,7 +459,7 @@ namespace XCV.Data
     }
 
     /// <summary>
-    ///         to create Sets in which the level is consinderd too
+    ///         to create Sets in which the level is considered too
     /// </summary>
     class SkillComparerWithLevel : IEqualityComparer<Skill>
     {

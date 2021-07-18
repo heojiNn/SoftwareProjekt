@@ -64,7 +64,7 @@ namespace XCV.Data
         ///     Info:  Dein Vor- oder Nachname würde geändert werden
         ///     Info:  Deine Beschreibung würde geändert werden.
         ///     Info:  Dein Berufserfahrung würde geändert werden.
-        ///     Info:  Deine  ("Soft Skils", "Hard Skills", "Rollen"
+        ///     Info:  Deine  ("Soft Skills", "Hard Skills", "Rollen"
         ///                   "Tätigeitfelder", "Sprachfähigkeiten") würden geändert werden.
         ///
         ///     Error: Mindesetens ein Sprache hat keine Level Angabe.

@@ -41,7 +41,7 @@ namespace XCV.Data
         /// <event cref="OnChange">
         ///         Succes: {toAdd}, wurde zur Liste der Sprachen hinzugefügt.
         /// or
-        ///static   Error:  Name.Length war nicht (<50 && <1) {newField}
+        ///static   Error:  Name.Length war nicht (&lt50 &amp&amp &lt1) {newField}
         ///dyn      Error:  {toAdd}, kann nicht hinzugefügt werden, da es schon enthalten ist.
         /// </event>
         public int CreateLanguage(Language toAdd, bool justValidate = false);
@@ -85,7 +85,7 @@ namespace XCV.Data
         ///
         /// <param name="levels">
         ///         a correctly order array of size 6
-        ///         for each element (.lenght > 1 && lenght < 30)  &&  uniqe(caseinsensitve)
+        ///         for each element (.lenght &gt 1 &amp&&amp& lenght &lt 30)  &&  uniqe(caseinsensitve)
         /// </param>
         public int UpdateAllLevels(string[] levels, bool justValidate = false);
 

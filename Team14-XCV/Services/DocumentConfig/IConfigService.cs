@@ -2,40 +2,32 @@
 using System;
 using System.Collections.Generic;
 
-
-
 namespace XCV.Data
 {
     public interface IConfigService
     {
-        //=======================================================
-        //============= Methods for DocumentConfigs =============
-        //=======================================================
+        ///=======================================================
+        ///============= Methods for DocumentConfigs =============
+        ///=======================================================
 
-        // General ideas:
+        /// General ideas:
 
-        // States:
-        // User must have at least one active DocumentConfig in order to generate a Document or enter the OfferEmployeeConfigEdit page.
-        // User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
-        // Upon entering the OfferPage, a "favorite"/active, previously selected DocumentConfig should be selected
+        /// States:
+        /// User must have at least one active DocumentConfig in order to generate a Document or enter the OfferEmployeeConfigEdit page.
+        /// User with at least one DocumentConfig must have a DocumentConfig selected in order to download/edit it aswell.
+        /// Upon entering the OfferPage, a "favorite"/active, previously selected DocumentConfig should be selected
 
-        // Functions:
-        // User can selected/deselect/delete/create/download a configuration for each single offer (many configs may exists parallel in one offer)
-        // select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
-        // deselect: deactivate the prior config -> in this state no config is selected
-        // delete: removes an item from the "DocumentConfigurationList"
-        // create: creates a new DocumentConfig instance within "DocumentConfigurationList"
+        /// Functions:
+        /// User can selected/deselect/delete/create/download a configuration for each single offer (many configs may exists parallel in one offer)
+        /// select: activates this configuration to be "active" (for generating the document); implies "deselect" for the prior config
+        /// deselect: deactivate the prior config -> in this state no config is selected
+        /// delete: removes an item from the "DocumentConfigurationList"
+        /// create: creates a new DocumentConfig instance within "DocumentConfigurationList"
 
-        //Possible future additions:
+        ///=======================================================
 
-        // copy: copies a certain DocumentConfig with a default description of "<name> (1)" or "<name> (2)", as long as the previous copynumber doesn't exist/ is unique
-        // rename: change of the description of DocumentConfig, must be unique
-
-        //=======================================================
-        /// <summary>
-        /// Manages Changevents and Messaging
-        /// </summary>
         public event EventHandler<ChangeResult> ChangeEventHandel;
+
         /// <summary>
         /// Validates wheather or not update can be made to a document/employeeconfig
         /// </summary>
@@ -74,19 +66,20 @@ namespace XCV.Data
         /// </summary>
         /// <param name="o"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
+        /// <returns>DocumentConfig</returns>
         public DocumentConfig GetDocumentConfig(Offer o, string name);
         /// <summary>
         /// Returns all DocumentConfigs of the specified offer o
         /// </summary>
         /// <param name="o"></param>
-        /// <returns></returns>
+        /// <returns>Collection of DocumentConfigs</returns>
         public IEnumerable<DocumentConfig> GetAllDocumentConfigs(Offer o);
         /// <summary>
         /// Adds all the data to the config - State: After Initialization
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="name"></param>
+        /// <returns>The created DocumentConfig</returns>
         public DocumentConfig CreateDefaultDocumentConfig(Offer parent, string name);
         /// <summary>
         /// Deletes a DocumentConfig and all its childcomponent data from an Offer 
@@ -113,28 +106,24 @@ namespace XCV.Data
         /// <param name="toRemove"></param>
         public void Remove(Offer o, Employee toRemove);
 
+        ///=======================================================
+        ///============= Methods for EmployeeConfigs =============
+        ///=======================================================
 
-        //=======================================================
-        //============= Methods for EmployeeConfigs =============
-        //=======================================================
+        /// Access:
+        /// On the Offer page access should've been recognised and a DocumentConfig selected for the offer with the current offer id.
+        /// If User has no DocumentConfig created/selected he must add/select one on the Offer page
 
-        // Dokumentenkonfiguration - EmployeeConfig: TODO:
+        /// Precondition:
+        /// A DocumentConfig has to be created and selected to edit a EmployeeConfig
 
-
-        // Access:
-        // On the Offer page access should've been recognised and a DocumentConfig selected for the offer with the current offer id.
-        // If User has no DocumentConfig created/selected he must add/select one on the Offer page
-
-        // Precondition:
-        // So we are within the correct DocumentConfig and the path over the EmployeeDetailView should give the information about which employee we selected.
-        // The selected Employee needs to be linked to an EmployeeConfig within the DocumentConfig.
-
-        // Functions:
-        // selection-methods
-        //  buttons: cancel, confirm
-        // (optional) buttons: clear/unfill, default/fill, redo (restore), undo (discard)
-
-
+        /// <summary>
+        /// Updates the EmployeeConfiguration
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="c"></param>
+        /// <param name="persnr"></param>
+        /// <param name="cfg"></param>
         public void UpdateEmployeeConfig(Offer o, DocumentConfig c, string persnr, EmployeeConfig cfg);
     }
 }

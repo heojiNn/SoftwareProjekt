@@ -13,7 +13,7 @@ namespace Tests.Integration
     class IGenerateService_Test : Initializer
     {
    
-        private GenerateService sut;  //=System under Test
+        private GenerateService sut;
 
         [OneTimeSetUp]
         public void GetSut()
