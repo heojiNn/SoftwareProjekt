@@ -3,75 +3,111 @@
 
 <div class="col-12 mb-3  @(SWidth ? "col-xl-12" : "col-xl-6") " style="min-height: 100px;" @onclick="@(e => changeInfo = new())">
     <div class="card mr-0 my-0">
-        <div class="card-header" style= "padding: 10px;" @onclick="Toggle">
-            <span style= "color: #7A212E; font-size: 1.5rem;"> Rollen</span>
+        <div class="card-header" style="padding: 10px;" @onclick="Toggle">
+            <span style="color: #7A212E; font-size: 1.5rem;"> Rollen</span>
             <span class="@BtnClass"></span>
         </div>
 
         @if (ShowCardBody.Value)
         {
-        <div @onclick="WidthToggle">
-            <span class="@WidthClass" style= "font-size: 1.5rem;"></span>
-        </div>
-        <table class="table table-sm">
-            @{ var roleNames = newRoles.Select(x => x.Name).Distinct();
-            <tr>
-                <th></th>
-                @foreach (var header in roleNames) 
-                { 
-                    <th>@header
-                    @if (!(new[] {"Agile Coach", "Consultant", "EntwicklerIn", "ProjektmanagerIn", "UI/UX ExpertIn"}).Contains(header) )
-                    {
-                    <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveRole(@header) )">
-                        <span class="oi oi-minus"></span>
-                    </button>
+            <div @onclick="WidthToggle">
+                <span class="@WidthClass" style="font-size: 1.5rem;"></span>
+            </div>
+            <table class="table table-sm">
+                @{ var roleNames = newRoles.Select(x => x.Name).Distinct();
+                    <tr>
+                        <th></th>
+                        @foreach (var header in roleNames)
+                        {
+                            <th>
+                                @header
+                            @if (!(new[] { "Agile Coach", "Consultant", "EntwicklerIn", "ProjektmanagerIn", "UI/UX ExpertIn" }).Contains(header))
+                            {
+                                <button class="btn btn-outline-danger btn-sm" @onclick="@(e => RemoveRole(@header) )">
+                                    <span class="oi oi-minus"></span>
+                                </button>
+                            }
+                        </th>
+
                     }
-                    </th> 
+                    </tr>
+                    @for (int i = 1; i <= 8; i++)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            @foreach (var name in roleNames)
+                            {
+                                <td>
+                                    @if (newRoles.Any(x => x.RCL == i && x.Name == name))
+                                    {
+                                        var role = newRoles.First(x => x.RCL == i && x.Name == name);
+                                        <span><input id="inputExpir" style="width: 60px;" type="number" step="any" max="999" @bind="@(role.Wage)" @bind:event="oninput"> &euro;</span>}
+                            </td>
+                        }
+                        </tr>
+                    }
                 }
-            </tr>
-            @for (int i = 1; i <= 8; i++)
-            {
-            <tr>
-                <td>@i</td>
-                @foreach (var name in roleNames)
-                {
-                <td>@if(newRoles.Any(x => x.RCL == i && x.Name == name) ){ var role = newRoles.First(x => x.RCL == i && x.Name == name);
-                    <span><input id="inputExpir" style="width: 60px;" type="number" step="any" max="999" @bind="@(role.Wage)" @bind:event="oninput"> &euro;</span> }
-                </td>
-                }
-            </tr>
-            }
-            }
-        </table>
-        <button class="btn btn-sm btn-secondary mx-4 my-2" @onclick="UpdateRoles" @onmouseover="VUpdateRoles" @onmouseout="VUpdateRoles" >Löhne aktuallisieren</button>
+            </table>
+            <button class="btn btn-sm btn-secondary mx-4 my-2" @onclick="UpdateRoles" @onmouseover="VUpdateRoles" @onmouseout="VUpdateRoles">Löhne aktuallisieren</button>
+            <br>
+
+
+            <div class="row">
+                <div class="wrap-collabsible ml-3" style="width:95%">
+
+                    
+                    <input id="collapsible" class="toggle" type="checkbox">
+                    <label for="collapsible" class="lbl-toggle" style="margin-bottom:0">
+                        <tag>Neue Rolle hinzufügen</tag>
+                    </label>
+
+                    <div class="collapsible-content">
+                        <div class="form-row">
+                            <div class="col-5">
+                                <label><b>neue Rolle</b></label><br>
+                                <input id="newRole" placeholder="Name" @bind="@newRole" @bind:event="oninput">
+                            </div>
+                            <div class="col">
+                                <label>min RCL</label>
+                                <input type="number" class="form-control form-control-sm" min="0" max="8" @bind="@newRoleLowerRC" @bind:event="oninput">
+                            </div>
+                            <div class="col">
+                                <label>max RCL</label>
+                                <input type="number" class="form-control form-control-sm" min="0" max="8" @bind="@newRoleUpperRC" @bind:event="oninput">
+                            </div>
+                            <div class="col">
+                                <label>   </label><br>
+                                <button class="btn btn-sm btn-secondary "  style="margin-top:0.5rem" @onclick="CreateRole" @onmouseover="VCreateRole" @onmouseout="VCreateRole">Rolle hinzufügen</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                            <ul class="alert alert-danger" role="alert">
+                                @foreach (string line in changeInfo.ErrorMessages)
+                                {
+                                    <li>
+                                        <pre>@line</pre>
+                                    </li>
+                                }
+                            </ul>
+                        }
         <br>
-            <div class="form-row">
-            <div class="col-5">
-                <label>neue Rolle</label><br>
-                <input id="newRole"  placeholder="Name" @bind="@newRole" @bind:event="oninput" >
-            </div>
-            <div class="col">
-                <label>min RCL</label>
-                <input type="number" class="form-control form-control-sm"  min ="0" max="8" @bind="@newRoleLowerRC" @bind:event="oninput" >
-            </div>
-            <div class="col">
-                <label>max RCL</label>
-                <input type="number" class="form-control form-control-sm"  min ="0" max="8" @bind="@newRoleUpperRC" @bind:event="oninput" >
-            </div>
-            <div class="col">
-                <label>   </label><br>
-                <button class="btn btn-sm btn-secondary m-1" @onclick="CreateRole" @onmouseover="VCreateRole" @onmouseout="VCreateRole" >hinzufügen</button>
-            </div>
-        </div>
-        <ul class="alert alert-danger" role="alert">
-            @foreach (string line in changeInfo.ErrorMessages)
-            {
-            <li>
-                <pre>@line</pre>
-            </li>
-            }
-        </ul>
-        }
     </div>
 </div>
 
