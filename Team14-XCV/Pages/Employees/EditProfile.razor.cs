@@ -85,7 +85,8 @@ namespace XCV.Pages.Employees
 
         private async Task JustUpload(InputFileChangeEventArgs eventArgs)
         {
-            await profileService.UploadImage(myProfile.PersoNumber, eventArgs.File);
+            var TempPath = await profileService.UploadImage(myProfile.PersoNumber, eventArgs.File);
+            myProfile.Image = TempPath;
         }
 
         private void AddMe(Project p, string act)
