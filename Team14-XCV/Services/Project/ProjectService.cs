@@ -121,20 +121,18 @@ namespace XCV.Data
                 errorMessages.Add("Das Enddatum muss hinter den Beginn liegen.");
             if (newVersion.End > new DateTime(2100, 1, 1))
                 errorMessages.Add("Das Projekt muss vor dem Jahr 2100 beendet werden.");
-            newVersion.Purpose.ForEach(x => x = x.Trim());
             foreach (var pur in newVersion.Purpose)
             {
-                if (pur.Length < 2)
+                if (pur.Trim().Length < 2)
                     errorMessages.Add($"Die Beschreibung des Zwecks:({pur}) ist zu kurz.");
-                if (pur.Length > 200)
+                if (pur.Trim().Length > 200)
                     errorMessages.Add($"Die Beschreibung des Zwecks:({pur}) ist zu lang.");
             }
             foreach (var key in newVersion.Activities.Keys)
             {
-                key.Trim();
-                if (key.Length < 2)
+                if (key.Trim().Length < 2)
                     errorMessages.Add($"Die Beschreibung der Tätigkeit:({key}) ist zu kurz");
-                if (key.Length > 50)
+                if (key.Trim().Length > 50)
                     errorMessages.Add($"Die Beschreibung der Tätigkeit:({key}) ist zu lang");
             }
             OnChange(new()
@@ -159,20 +157,18 @@ namespace XCV.Data
                 errorMessages.Add("Das Enddatum muss hinter dem Beginn liegen.");
             if (newVersion.End > new DateTime(2100, 1, 1))
                 errorMessages.Add("Das Projekt muss vor dem Jahr 2100 beendet werden.");
-            newVersion.Purpose.ForEach(x => x = x.Trim());
             foreach (var pur in newVersion.Purpose)
             {
-                if (pur.Length < 2)
+                if (pur.Trim().Length < 2)
                     errorMessages.Add($"Die Beschreibung des Zwecks:({pur}) ist zu kurz.");
                 if (pur.Length > 200)
                     errorMessages.Add($"Die Beschreibung des Zwecks:({pur}) ist zu lang.");
             }
             foreach (var key in newVersion.Activities.Keys)
             {
-                key.Trim();
-                if (key.Length < 2)
+                if (key.Trim().Length < 2)
                     errorMessages.Add($"Die Beschreibung der Tätigkeit:({key}) ist zu kurz.");
-                if (key.Length > 50)
+                if (key.Trim().Length > 50)
                     errorMessages.Add($"Die Beschreibung der Tätigkeit:({key}) ist zu lang.");
             }
             OnChange(new()
@@ -287,7 +283,6 @@ namespace XCV.Data
         {
             errorMessages = new();
             infoMessages = new();
-            Project oldVersion = ShowProject(newP.Id);
             ValidateUpdate(newP);
             if (errorMessages.Any())
             {
