@@ -86,11 +86,16 @@
 
     <br />
     <div class="row gutters-sm">
-        <div class="col-sm-6 mb-3" style="min-height: 100px;">
+        <div class="col-12 col-xl-6 mb-3" style="min-height: 100px;">
             <CollapsibleCard CardHeaderTitle="Hardskills">
                 <CardBody>
-                    <input class="form-control" id="skiSer" placeholder="suche" @bind="@skillSearch" @bind:event="oninput" />
-                    @if (skillSearch == "")
+                    <input id="onlm" type="checkbox" @bind="@onlySele" /> nur zuvor ausgewählte anzeien  &nbsp;  &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp;
+                    <input id="skiSer" placeholder="oder suchen" @bind="@skillSearch" @bind:event="oninput" />
+                    <br><br>
+                    @if (onlySele)
+                    {
+                        <CheckBoxList Data="@myOffer.Requirements.Where(x => x.Type == SkillGroup.Hardskill)" TextField="@(x=> ($"{((Skill)(x)).Name} in ({((Skill)(x)).Category.Name})"  )  )" SelectedValues="SelectedHardskills" /> }
+                    else if (skillSearch == "")
                     {
                         var skills = skillService.GetAllSkills().Where(x => x.Type == SkillGroup.Hardskill).ToList();
                         if (skills.Any())
@@ -101,23 +106,20 @@
                             foreach (SkillCategory cat1 in root.Children)
                             {
                                 var isSkill = (cat1.Children.First() is Skill);
-                                sBi++;
-                                <CollapsibleCard CardHeaderTitle="@cat1.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                    <CardHeader> @(isSkill ? $"{cat1.Children.Count()} enthalten" : "")</CardHeader>
+                                <CollapsibleCard CardHeaderTitle="@cat1.Name" SmallInner="true">
+                                    <CardHeader> @(isSkill ? $"{cat1.Children.Count()} Skills" : $"{cat1.Children.Count()} Kategorien" )</CardHeader>
                                     <CardBody>
                                         @if (isSkill)
                                         {
                                             var skills = cat1.Children.Cast<Skill>().OrderBy(x => x);
-                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="SelectedHardskills" />
-                                        }
+                                            <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())" SelectedValues="SelectedHardskills" /> }
                                         else
                                         {
                                             foreach (SkillCategory cat in cat1.Children)
                                             {
                                                 var skills = cat.Children.Cast<Skill>().OrderBy(x => x);
-                                                sBi++;
-                                                <CollapsibleCard CardHeaderTitle="@cat.Name" ShowCardBody="showB[sBi]" SmallInner="true">
-                                                    <CardHeader> @cat.Children.Count() enthalten</CardHeader>
+                                                <CollapsibleCard CardHeaderTitle="@cat.Name" SmallInner="true">
+                                                    <CardHeader> @cat.Children.Count() Skills</CardHeader>
                                                     <CardBody>
                                                         <CheckBoxList Data="@skills" TextField="@((item)=>item.ToString())"
                                                                       SelectedValues="SelectedHardskills" />
@@ -212,12 +214,29 @@
                                     </select>
 
                                     <br />
-                                    Stundensatz <input type="number" min="0" max="9999" @bind="@em.offerWage">
-                                    Std/Tag <input type="number" min="0" max="24" @bind="@em.hoursPerDay" />
-                                    <br />
-                                    Tage/Laufzeit <input type="number" min="0" max="@offerService.Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun"/>
-                                    Rabatt(0-100) <input type="number" min="0" max="100" @bind="@em.discount" />
-                                </div>
+                                    <div class="row">
+                                        <div class="col mb-3">
+                                            <p>Stundensatz</p> 
+                                            <input type="number" min="0" max="9999" @bind="@em.offerWage" style="width:60px;">
+                                            </div>
+                                            <div class="col mb-3" style="text-align:right">
+                                                <p>Std/Tag</p> 
+                                                <input type="number" min="0" max="24" @bind="@em.hoursPerDay" style="width:60px;"/>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    <div class="row">
+                                        <div class="col mb-3"  >
+                                            <p>Tage/Laufzeit</p> <input type="number" min="0" max="@offerService.Runtime(myOffer.End, myOffer.Start)" @bind="@em.daysPerRun" style="width:60px; "/>
+                                        </div>
+                                        <div class="col mb-3" style="text-align:right">
+                                            <p>Rabatt</p> <input type="number" min="0" max="100" @bind="@em.discount" style="width:60px;" />
+                                            <p>(0-100)</p>
+                                        </div>
+                                    </div>
+                                    
+                                        
+                                    </div>
                             </div>
                          }
                     }

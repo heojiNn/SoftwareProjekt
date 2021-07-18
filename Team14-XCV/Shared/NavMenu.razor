@@ -37,7 +37,7 @@
                 <NavLink class="nav-link" href="projects">
                     <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
                 </NavLink>
-                
+
             </li>
             <li class="nav-item px-3 pb-4">
                 <NavLink class="nav-link" href="employee-search">
@@ -45,15 +45,12 @@
                 </NavLink>
             </li>
             <li class="nav-item px-3 pb-4">
-               
+
                 <NavLink class="nav-link" href="offers">
                     <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
                 </NavLink>
 
             </li>
-        </AuthorizeView>
-
-        <AuthorizeView Roles="admin">
             <li class="nav-item px-3 pb-1">
                 <NavLink class="nav-link" href="change-data-set">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis ändern
@@ -61,21 +58,26 @@
                 <NavLink class="nav-link" href="change-json">
                     <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis .json
                 </NavLink>
-                <NavLink class="nav-link" href="create-employee">
-                    <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
-                </NavLink>
+                
             </li>
         </AuthorizeView>
 
+        <AuthorizeView Roles="admin">
+            <li class="nav-item px-3 pb-1">
+                <NavLink class="nav-link" href="create-employee">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
+                </NavLink>
+                </li>
+        </AuthorizeView>
 
-        <li class="nav-item px-3">
-           
-            <NavLink class="nav-link" href="#" @onclick="Logout">
-                <span class="oi oi-account-logout"></span>Logout
+            <li class="nav-item px-3">
 
-            </NavLink>
-        </li>
-    </ul>
+                <NavLink class="nav-link" href="#" @onclick="Logout">
+                    <span class="oi oi-account-logout"></span>Logout
+
+                </NavLink>
+            </li>
+</ul>
 </div>
 
 
