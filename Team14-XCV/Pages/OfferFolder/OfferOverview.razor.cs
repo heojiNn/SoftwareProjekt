@@ -35,8 +35,16 @@ namespace XCV.Pages.OfferNamespace
             offers = offerService.ShowAllOffers();
             foreach (Offer o in offers)
             {
-                foreach (Skill s in o.Requirements) skills.Add(s);
-                foreach (Field f in o.Fields) fields.Add(f);
+                foreach (Skill s in o.Requirements)
+                {
+                    if(!skills.Contains(s))
+                        skills.Add(s);
+                }
+                foreach (Field f in o.Fields)
+                {
+                    if(!fields.Contains(f))
+                        fields.Add(f);
+                }
             }
             //Currently not working, better as squared 
             //skills = offerService.ShowAllOfferSkills();
