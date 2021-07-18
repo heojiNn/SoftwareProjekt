@@ -66,17 +66,17 @@ namespace XCV.Data
                 _accountService.CreateAccount(register);
                 List<Employee> employyes10 = new()
                 {
-                    new Employee() { PersoNumber = "000", FirstName = "Admin", LastName = "admin", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "001", FirstName = "Arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "002", FirstName = "Brad", LastName = "Pitt", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "003", FirstName = "Daniel", LastName = "Craig", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "004", FirstName = "Linus", LastName = "Torvalds", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "008", FirstName = "Hubert", LastName = "Wolfe­schlegel­stein", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "009", FirstName = " Uvuvwevwevwe ", LastName = "onyetenyevwe ugwemuhwem osas", EmployedSince = DateTime.Now },
-                    new Employee() { PersoNumber = "010", FirstName = "Rainer", LastName = "Wahnsinn", EmployedSince = DateTime.Now },
+                    new Employee() { PersoNumber = "000", FirstName = "Admin", LastName = "admin", EmployedSince = DateTime.Now, Experience=DateTime.Now.AddYears(-2).AddMonths(9) },
+                    new Employee() { PersoNumber = "001", FirstName = "Arnold", LastName = "schwarzenegger", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-1), Languages=new HashSet<Language>() { new Language() { Name = "Deutsch", Level = "Anfänger" }, new Language() { Name = "Englisch", Level = "super" } }, Fields = new HashSet<Field>() { new Field() { Name = "Chemie" }, new Field() { Name = "Dienstleistung" } }, Abilities= _skillService.GetAllSkills().ToHashSet()  },
+                    new Employee() { PersoNumber = "002", FirstName = "Brad", LastName = "Pitt", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-3).AddMonths(7), Languages = new HashSet<Language>() { new Language() { Name = "Deutsch", Level = "super" }, new Language() { Name = "Englisch", Level = "super" } }, Fields = new HashSet<Field>() { new Field() {Name = "Chemie" }, new Field() {Name = "Dienstleistung" } } },
+                    new Employee() { PersoNumber = "003", FirstName = "Daniel", LastName = "Craig", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-4) },
+                    new Employee() { PersoNumber = "004", FirstName = "Linus", LastName = "Torvalds", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-5).AddMonths(2) },
+                    new Employee() { PersoNumber = "005-0", FirstName = "Anaïs", LastName = "Boucher", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-3).AddMonths(5) },
+                    new Employee() { PersoNumber = "006_0", FirstName = "Aimée", LastName = "Bisset", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-6) },
+                    new Employee() { PersoNumber = "007", FirstName = "Sean", LastName = "Zardoz", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-10) },
+                    new Employee() { PersoNumber = "008", FirstName = "Hubert", LastName = "Wolfe­schlegel­stein", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-9) },
+                    new Employee() { PersoNumber = "009", FirstName = " Uvuvwevwevwe ", LastName = "onyetenyevwe ugwemuhwem osas", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-7) },
+                    new Employee() { PersoNumber = "010", FirstName = "Rainer", LastName = "Wahnsinn", EmployedSince = DateTime.Now, Experience = DateTime.Now.AddYears(-8) },
                 };
                 foreach (var e in employyes10)
                     e.AcRoles.Add(AccessRole.Employee);
@@ -86,12 +86,16 @@ namespace XCV.Data
                 employyes10[2].AcRoles.Add(AccessRole.Sales);
                 employyes10[3].AcRoles.Add(AccessRole.Sales);
 
+                var lvls = _skillService.GetAllLevel();
+                foreach(Skill sk in employyes10[1].Abilities.Where(a => a.Type == SkillGroup.Hardskill))
+                {
+                    sk.Level = lvls[1];
+                }
 
                 foreach (var e in employyes10)
                     _accountService.CreateAccount(e);               //creates 10 accounts
                 foreach (var e in employyes10)
                     UpdateWithRandom(e);               // adds radom rolles fields skills to the 6
-
 
 
 
