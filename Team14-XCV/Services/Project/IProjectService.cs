@@ -41,14 +41,14 @@ namespace XCV.Data
         ///         <para>Error:  Der Projektanfang kann nicht vor dem Jahr 2011 liegen. </para>
         ///         <para>Error:  Das Enddatum muss hinter dem Beginn liegen. </para>
         ///         <para>Error:  Das Projekt muss vor dem Jahr 2100 beendet werden. </para>
-        ///         <para>Error:  Die Beschreibung des Zwecks ist zu kurz. (length < 2)</para>
-        ///         <para>Error:  Die Beschreibung des Zwecks ist zu lang. (length > 200) </para>
-        ///         <para>Error:  Die Beschreibung der Tätigkeit ist zu kurz. (length < 2) </para>
-        ///         <para>Error:  Die Beschreibung der Tätigkeit:({key}) ist zu lang. (length > 50) </para>
+        ///         <para>Error:  Die Beschreibung des Zwecks ist zu kurz. (min: 2) </para>
+        ///         <para>Error:  Die Beschreibung des Zwecks ist zu lang. (max: 200) </para>
+        ///         <para>Error:  Die Beschreibung der Tätigkeit ist zu kurz. (min: 2) </para>
+        ///         <para>Error:  Die Beschreibung der Tätigkeit:({key}) ist zu lang. (max: 50) </para>
         ///         <para>Error:  Der Titel darf nicht leer sein. </para>
         ///         <para>Error:  Es existiert schon ein Projekt mit diesem Titel. </para>
         ///         <para>Error:  Der Titel darf nicht länger als 20 Zeichen sein. </para>
-        ///         <para>Error:  Die Beschreibung darf nicht länger als 1000 Zeichen sein. </para>
+        ///         <para>Error:  Die Beschreibung darf nicht länger als 400 Zeichen sein. </para>
         ///         <para>Error:  Es trat ein Fehler in der Persistenz auf {e.Message}. </para>     
         ///
         ///   or    <para>Success: Das Projekt:{p.Title} wurde mit der Id: {newId} erstellt.</para>
@@ -75,14 +75,14 @@ namespace XCV.Data
         ///         <para>Error:  Der Projektanfang kann nicht vor dem Jahr 2011 liegen. </para>
         ///         <para>Error:  Das Enddatum muss hinter dem Beginn liegen. </para>
         ///         <para>Error:  Das Projekt muss vor dem Jahr 2100 beendet werden. </para>
-        ///         <para>Error:  Die Beschreibung des Zwecks ist zu kurz. (length < 2)</para>
-        ///         <para>Error:  Die Beschreibung des Zwecks ist zu lang. (length > 200) </para>
-        ///         <para>Error:  Die Beschreibung der Tätigkeit ist zu kurz. (length < 2) </para>
-        ///         <para>Error:  Die Beschreibung der Tätigkeit:({key}) ist zu lang. (length > 50) </para>
+        ///         <para>Error:  Die Beschreibung des Zwecks ist zu kurz. (min: 2)</para>
+        ///         <para>Error:  Die Beschreibung des Zwecks ist zu lang. (max: 200) </para>
+        ///         <para>Error:  Die Beschreibung der Tätigkeit ist zu kurz. (min: 2) </para>
+        ///         <para>Error:  Die Beschreibung der Tätigkeit:({key}) ist zu lang. (max: 50) </para>
         ///         <para>Error:  Der Titel darf nicht leer sein. </para>
         ///         <para>Error:  Es existiert schon ein Projekt mit diesem Titel. </para>
         ///         <para>Error:  Der Titel darf nicht länger als 20 Zeichen sein. </para>
-        ///         <para>Error:  Die Beschreibung darf nicht länger als 1000 Zeichen sein. </para>
+        ///         <para>Error:  Die Beschreibung darf nicht länger als 400 Zeichen sein. </para>
         ///         <para>Error:  Es trat ein Fehler in der Persistenz auf {e.Message}. </para>     
         ///  or
         ///         <para>Success: Das Projekt:{p.Title} wurde mit der Id: {newId} erstellt.</para>

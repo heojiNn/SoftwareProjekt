@@ -39,12 +39,13 @@
         <div class="col-md-8">
             <div class="card-body">
                 <h5 class="card-title">@myProfile.FirstName &nbsp; @myProfile.LastName</h5>
-                <p class="card-text" style="min-height: 150px;">
+                <p>Angestellt seit @myProfile.EmployedSince.Date.ToString("dd.MM.yyyy")</p>
+                <p class="card-text" style="min-height: 150px; font-size:1rem;">
                     <pre style="font-family: sans-serif;">@myProfile.Description</pre>
                 </p>
                 <p>Rate Card Level: @myProfile.RCL </p>
                 @{var yearsE = myProfile.Experience != null ? (float)(DateTime.Now.Subtract(myProfile.Experience.Value).Days) / 356 : 0;}
-                <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
+                <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") } Jahre" ) </p>
             </div>
         </div>
     </div>
@@ -114,7 +115,7 @@
 
 
     <div class="col-sm-6 mb-3 " style="min-height: 200px;">
-        <CollapsibleCard2 CardHeaderTitle="Hardskills" ShowCardBody="@ColabseState[4]">
+        <CollapsibleCard2 CardHeaderTitle="Hardskills" ShowCardBody="@ColabseState[4]"             >
             <CardBody>
                 <div class="scroll2">
                     @{ var hSkills = myProfile.Abilities.Where(x => x.Type == SkillGroup.Hardskill);

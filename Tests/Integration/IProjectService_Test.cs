@@ -81,6 +81,11 @@ namespace Tests.Integration
             Assert.True(changeRes.ErrorMessages.Contains("Es existiert schon ein Projekt mit diesem Titel."));
             sut.Create(new Project() { Title = "" });
             Assert.True(changeRes.ErrorMessages.Contains("Der Titel darf nicht leer sein."));
+            sut.Create(new Project() { Title = new string('a', 41)});
+            Assert.True(changeRes.ErrorMessages.Contains("Der Titel darf nicht länger als 40 Zeichen sein."));
+
+            sut.Create(new Project() { Title = "valid", Description = new string('a', 401)});
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung darf nicht länger als 400 Zeichen sein."));
 
             sut.Create(new Project() { Title = "valid", Start = new DateTime(2009, 01, 01) });
             Assert.True(changeRes.ErrorMessages.Contains("Der Projektanfang kann nicht vor dem Jahr 2011 liegen."));
@@ -91,13 +96,25 @@ namespace Tests.Integration
 
             sut.Create(new Project() { Title = "valid", Purpose = { "a" } });
             Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:(a) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Purpose = { " a" } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:( a) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Purpose = { "a " } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:(a ) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Purpose = { " a " } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:( a ) ist zu kurz."));
 
             sut.Create(new Project() { Title = "valid", Activities = { {"a", new() } } });
             Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:(a) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Activities = { { " a", new() } } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:( a) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Activities = { { "a ", new() } } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:(a ) ist zu kurz."));
+            sut.Create(new Project() { Title = "valid", Activities = { { " a ", new() } } });
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:( a ) ist zu kurz."));
         }
 
         // Vorbedingung:
-        // Nutzer hat Rechte zum bearbeiten eines Projekts
+        // Nutzer hat Rechte zum Bearbeiten eines Projekts
         //Die Daten wurden an das Modell mit dessen Validierung Notizen gebunden
         //es existiert ein Projekt mit angegebenem Namen
         //Eingabe entsprechend passendem Format(bestehend aus Buchstaben und Zahlen und den erlaubten Zusatzzeichen: '-', '/', '&', '_', '#', '+')
@@ -147,7 +164,13 @@ namespace Tests.Integration
             project.Start = new DateTime(2010, 01, 01);
             project.End = new DateTime(2009, 01, 01);
             project.Purpose.Add("a");
+            project.Purpose.Add(" a");
+            project.Purpose.Add("a ");
+            project.Purpose.Add(" a ");
             project.Activities.Add("a", (new List<string>(), new List<Skill>()));
+            project.Activities.Add(" a", (new List<string>(), new List<Skill>()));
+            project.Activities.Add("a ", (new List<string>(), new List<Skill>()));
+            project.Activities.Add(" a ", (new List<string>(), new List<Skill>()));
             project.Activities.Add("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", (new List<string>(), new List<Skill>()));
 
             sut.ValidateUpdate(project);
@@ -155,7 +178,13 @@ namespace Tests.Integration
             Assert.True(changeRes.ErrorMessages.Contains("Der Projektanfang kann nicht vor dem Jahr 2011 liegen."));
             Assert.True(changeRes.ErrorMessages.Contains("Das Enddatum muss hinter den Beginn liegen."));
             Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:(a) ist zu kurz."));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:( a) ist zu kurz."));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:(a ) ist zu kurz."));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung des Zwecks:( a ) ist zu kurz."));
             Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:(a) ist zu kurz"));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:( a) ist zu kurz"));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:(a ) ist zu kurz"));
+            Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:( a ) ist zu kurz"));
             Assert.True(changeRes.ErrorMessages.Contains("Die Beschreibung der Tätigkeit:(aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) ist zu lang"));
 
             changeRes = new();

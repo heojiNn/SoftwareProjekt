@@ -46,7 +46,7 @@
                         <p>Rate Card Level: @employee.RCL </p>
                         @{var yearsE = employee.Experience != null ? (float)(DateTime.Now.Subtract(employee.Experience.Value).Days) / 356 : 0;}
                         <p>Berufserfahrung: @(yearsE == 0 ? "noch nicht gesetzt" :  $"{yearsE.ToString("N2") }Jahre" ) </p>
-                        <p><b>Rolle:</b> @employee.Roles.FirstOrDefault() mit RCL (@employee.Roles.FirstOrDefault().RCL)</p>
+                        <p>Rolle: @employee.Roles.FirstOrDefault() mit RCL (@employee.Roles.FirstOrDefault().RCL)</p>
 
                     </div>
                 </div>
