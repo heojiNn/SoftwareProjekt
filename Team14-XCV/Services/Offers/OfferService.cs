@@ -143,9 +143,9 @@ namespace XCV.Data
             if (newVersion.End.Year > 3000)
                 errorMessages.Add($"{newVersion.End.Year}: Das Enddatum sollte noch in diesem Jahrtausend liegen.");
             if (newVersion.Start.Year > 3000)
-                errorMessages.Add($"{newVersion.End.Year}: Das Startdatum sollte noch in diesem Jahrtausend liegen.");
+                errorMessages.Add($"{newVersion.Start.Year}: Das Startdatum sollte noch in diesem Jahrtausend liegen.");
             if (newVersion.Start.Year < 2000)
-                errorMessages.Add($"{newVersion.End.Year}: Das Startdatum sollte nicht zu weit in der Vergangenheit liegen.");
+                errorMessages.Add($"{newVersion.Start.Year}: Das Startdatum sollte nicht zu weit in der Vergangenheit liegen.");
             foreach (Employee e in newVersion.participants)
             {
                 if (e.offerRole.Equals("Consultant") && e.offerRCL < 4) errorMessages.Add("Consultant hat aktuell mindestens RCL 4.");
