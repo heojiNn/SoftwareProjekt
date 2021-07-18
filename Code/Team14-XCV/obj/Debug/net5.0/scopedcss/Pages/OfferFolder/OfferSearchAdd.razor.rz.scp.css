@@ -1,0 +1,37 @@
+
+*[b-bhude2fpv4] {
+    box-sizing: border-box;
+}
+
+#myInput[b-bhude2fpv4] {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+#myTable[b-bhude2fpv4] {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+
+    #myTable th[b-bhude2fpv4],
+    #myTable td[b-bhude2fpv4] {
+        text-align: left;
+        padding: 12px;
+    }
+
+    #myTable tr[b-bhude2fpv4] {
+        border-bottom: 1px solid #ddd;
+    }
+
+        #myTable tr.header[b-bhude2fpv4],
+        #myTable tr:hover[b-bhude2fpv4] {
+            background-color: #f1f1f1;
+        }

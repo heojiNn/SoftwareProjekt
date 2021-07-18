@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/" Path="/src/obj/Debug/net5.0/scopedcss/bundle/" />
+  <ContentRoot BasePath="_content/Blazored.Typeahead" Path="/root/.nuget/packages/blazored.typeahead/4.6.0/staticwebassets/" />
+</StaticWebAssets>

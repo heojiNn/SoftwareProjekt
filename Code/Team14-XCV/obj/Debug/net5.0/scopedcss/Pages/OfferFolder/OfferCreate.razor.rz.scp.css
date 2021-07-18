@@ -1,0 +1,18 @@
+#textInput1[b-6vo9semm2y], #textInput2[b-6vo9semm2y], #textInput3[b-6vo9semm2y], #textInput4[b-6vo9semm2y] {
+    display: inline;
+    background-color: white;
+    border-style: none;
+    font-weight: bold;
+    color: black;
+}
+
+.btnhover[b-6vo9semm2y] {
+    background-color: white;
+    color: black;
+}
+
+btnhover:hover[b-6vo9semm2y] {
+    background-color: gray;
+    color: black;
+}
+

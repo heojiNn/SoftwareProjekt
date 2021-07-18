@@ -1,0 +1,274 @@
+@page "/employee-search"
+@attribute [Authorize(Roles = "sales, admin")]
+
+@inject IProfileService profileService
+@inject ISkillService skillService
+@inject IRoleService roleService
+@inject IFieldService fieldService
+@inject ILanguageService languageService
+
+@inject NavigationManager navigationManager
+
+
+@using Blazored.Typeahead
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+    <div class="card my-1">
+        <div class="card-header text-center">
+            <h3>Mitarbeitersuche</h3>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="card">
+        <div class="card-header" style="background-color:white; color:black">
+            <div class="container-fluid">
+                <br />
+                <br />
+                <BlazoredTypeahead SearchMethod="SearchName"
+                                   @bind-Value="selectedEmployee"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Name">
+                    <SelectedTemplate>
+                        @context.FirstName @context.LastName
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.FirstName @context.LastName (@context.PersoNumber)
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+
+                <BlazoredTypeahead SearchMethod="SearchRoles"
+                                   @bind-Values="selectedRoles"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Rollen">
+                    <SelectedTemplate>
+                        @context.Name
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.Name
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+
+                <BlazoredTypeahead SearchMethod="SearchHardskills"
+                                   @bind-Values="selectedHardskills"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Hardskills">
+                    <SelectedTemplate>
+                        @context.Name (@context.Category.Name)
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.Name (@context.Category.Name)
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+
+                <BlazoredTypeahead SearchMethod="SearchSoftskills"
+                                   @bind-Values="selectedSoftskills"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Softskills">
+                    <SelectedTemplate>
+                        @context.Name
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.Name
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+
+                <BlazoredTypeahead SearchMethod="SearchFields"
+                                   @bind-Values="selectedFields"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Branchen">
+                    <SelectedTemplate>
+                        @context.Name
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.Name
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+
+                <BlazoredTypeahead SearchMethod="SearchLanguages"
+                                   @bind-Values="selectedLanguages"
+                                   EnableDropDown="true"
+                                   MaximumSuggestions="100"
+                                   placeholder="Sprachen">
+                    <SelectedTemplate>
+                        @context.Name
+                    </SelectedTemplate>
+                    <ResultTemplate>
+                        @context.Name
+                    </ResultTemplate>
+                </BlazoredTypeahead>
+            </div>
+            <input type="button" class="btn btn-secondary" value="Suchen" style="float:right; margin: 1em 1em" @onclick="SearchEmployee">
+            <input type="button" class="btn btn-secondary" value="Erweitert" style="float:right; margin: 1em 1em" @onclick="SearchToggle" />
+        </div>
+        @if (advancedSearch)
+        {
+            <div class="card-body">
+                <div class="container-fluid">
+                    Bitte wählen Sie weitere, besonders wichtige Suchkriterien aus:
+                    <br />
+                    <br />
+                    <BlazoredTypeahead SearchMethod="SearchRoles"
+                           @bind-Values="advancedSelectedRoles"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Rollen">
+                        <SelectedTemplate>
+                            @context.Name
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.Name
+                        </ResultTemplate>
+                    </BlazoredTypeahead>
+                    
+                    <BlazoredTypeahead SearchMethod="SearchHardskills"
+                           @bind-Values="advancedSelectedHardskills"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Hardskills">
+                        <SelectedTemplate>
+                            @context.Name (@context.Category.Name)
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.Name (@context.Category.Name)
+                        </ResultTemplate>
+                    </BlazoredTypeahead>
+                    
+                    <BlazoredTypeahead SearchMethod="SearchSoftskills"
+                           @bind-Values="advancedSelectedSoftskills"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Softskills">
+                        <SelectedTemplate>
+                            @context.Name
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.Name
+                        </ResultTemplate>
+                    </BlazoredTypeahead>
+                    
+                    <BlazoredTypeahead SearchMethod="SearchFields"
+                           @bind-Values="advancedSelectedFields"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Branchen">
+                        <SelectedTemplate>
+                            @context.Name
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.Name
+                        </ResultTemplate>
+                    </BlazoredTypeahead>
+                    
+                    <BlazoredTypeahead SearchMethod="SearchLanguages"
+                           @bind-Values="advancedSelectedLanguages"
+                           EnableDropDown="true"
+                           MaximumSuggestions="100"
+                           placeholder="Sprachen">
+                        <SelectedTemplate>
+                            @context.Name
+                        </SelectedTemplate>
+                        <ResultTemplate>
+                            @context.Name
+                        </ResultTemplate>
+                    </BlazoredTypeahead>
+                </div>
+            </div>
+         }
+    </div>
+    
+    @if (showSearch)
+    {
+        <div class="container-fluid">
+            @if (maxScore != 0)
+            {
+                @if (numberOfSelectedAttributes > maxScore)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        Kein/Keine MitarbeiterIn erfüllt alle Kriterien.
+                    </div>
+                 }
+                <div> <input type="button" class="btn btn-secondary" value="Neue Suche" style="float:right; margin: 1em 1em" @onclick="NewSearch"> </div>
+                <table id="myTable">
+                    <tr class="header">
+                        <th style="width:20%;">MitarbeiterIn</th>
+                        <th style="width:65%;"> Erfüllte Suchkriterien </th>
+                        <th style="width:15%">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">@((numberOfColumns < results.Count)? numberOfColumns:results.Count) von @results.Count </label>
+                                </div>
+                                <select class="form-control" @onchange="HandleChange">
+                                    <option value=10>10</option>
+                                    <option value=25>25</option>
+                                    <option value=50>50</option>
+                                    <option value=@results.Count>alle</option>
+                                </select>
+                            </div>
+                        </th>
+                    </tr>
+                    <tbody>
+                        @foreach (var kvp in results.OrderByDescending(item => item.Value.Item1)
+                                                    .ThenByDescending(item => profileService.ShowProfile(item.Key).RCL)
+                                                    .ThenByDescending(item => DateTime.Now.Ticks - profileService.ShowProfile(item.Key).EmployedSince.Ticks)
+                                                    .Take(numberOfColumns))
+                         {
+                            <tr>
+                                <td>
+                                    <a href="employee-detail-view/@profileService.ShowProfile(kvp.Key).PersoNumber" style="color: #7A212E; text-decoration: none"> @profileService.ShowProfile(kvp.Key).FirstName @profileService.ShowProfile(kvp.Key).LastName </a>
+                                </td>
+                                <td>
+                                    @for (int i = 0; i < numberOfAttributes && i < kvp.Value.Item2.Count; i++)
+                                    {
+                                        @results[kvp.Key].Item2[i] @(" ")}
+                                </td>
+                                <td>
+                                    @if (kvp.Value.Item1 == numberOfSelectedAttributes)
+                                    {
+                                        <p> erfüllt alle Kriterien</p>
+                                     }
+                                    @if (kvp.Value.Item1 < numberOfSelectedAttributes)
+                                    {@(kvp.Value.Item1 * 100/numberOfSelectedAttributes) @("%")}
+
+
+
+
+                                </td>
+                            </tr>
+                         }
+                    </tbody>
+                </table>
+                <br />
+                <br /> 
+             }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    Kein/Keine MitarbeiterIn erfüllt mindestens ein gesuchtes Kriterium.
+                </div>
+                <div> 
+                    <input type="button" class="btn btn-secondary" value="Neue Suche" style="float:right; margin: 1em 1em" @onclick="NewSearch"> 
+                </div>
+             }
+        </div> 
+     }
+
+
+</body>
+
+</html>
+
+

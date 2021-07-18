@@ -1,0 +1,38 @@
+
+*[b-pgn79c9vkt] {
+    box-sizing: border-box;
+}
+
+#myInput[b-pgn79c9vkt] {
+    background-image: url('/css/searchicon.png');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px;
+}
+
+#myTable[b-pgn79c9vkt] {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ddd;
+    font-size: 18px;
+}
+
+    #myTable th[b-pgn79c9vkt],
+    #myTable td[b-pgn79c9vkt] {
+        text-align: left;
+        padding: 12px;
+    }
+
+    #myTable tr[b-pgn79c9vkt] {
+        border-bottom: 1px solid #ddd;
+    }
+
+        #myTable tr.header[b-pgn79c9vkt],
+        #myTable tr:hover[b-pgn79c9vkt] {
+            background-color: #f1f1f1;
+        }
+

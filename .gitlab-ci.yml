@@ -9,7 +9,7 @@ build:
   tags:
     - sopro
   script:
-     - dotnet build Team14-XCV/XCV.csproj
+     - dotnet build Code/Team14-XCV/XCV.csproj
 
 # Baut eine Release-Version des Projekts und ein DockerImage
 #deploy:
@@ -36,7 +36,7 @@ test:
       SA_PASSWORD: "Pa55w0rd2021"
       MSSQL_PID: Express
   script:
-    - dotnet test Tests/Tests.csproj
+    - dotnet test Code/Tests/Tests.csproj
 
 
 

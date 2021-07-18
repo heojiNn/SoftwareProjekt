@@ -1,0 +1,14 @@
+@using Microsoft.AspNetCore.Components.Web
+@typeparam TItem
+@namespace XCV.Shared.Misc
+<a class="dropdown-item" Item="@Item" @onclick="e=> Dropdown.HandleSelect(Item, ChildContent)">@ChildContent(Item)</a>
+
+@code {
+    [CascadingParameter(Name = "Dropdown")]
+    public DropDown<TItem> Dropdown { get; set; }
+
+    [Parameter]
+    public TItem Item { get; set; }
+    [Parameter]
+    public RenderFragment<TItem> ChildContent { get; set; }
+}

@@ -1,0 +1,65 @@
+@using Microsoft.AspNetCore.Components
+
+<style>
+    .small-inner {
+        padding: 0;
+    }
+
+    .nomall {
+        padding: 10px;
+    }
+</style>
+
+
+<div class="card mr-0 my-0">
+
+    <div class="card-header @(SmallInner ? "small-inner" : "nomall")" @onclick="@Toggle">
+        <h4 style="@(SmallInner ? "color: #7A212E; font-size: 0.7rem;" : "color: #7A212E; font-size: 1.5rem;")">
+            @CardHeaderTitle
+            @if (ShowCardBody)
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     width="24" height="24">
+                    <path d="M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z">
+                    </path>
+                </svg>
+            }
+
+            @if (!ShowCardBody)
+            {
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     width="24" height="24">
+                    <path d="M12.354 8.854l5.792 5.792a.5.5 0 01-.353.854H6.207a.5.5 0 01-.353-.854l5.792-5.792a.5.5 0 01.708 0z">
+                    </path>
+                </svg>
+            }
+        </h4>
+        <span class="float-right" style="font-size: 0.6rem;"> @CardHeader </span>
+
+    </div>
+
+    @if (ShowCardBody)
+    {
+        <div class="card-body p-0">
+            @CardBody
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string CardHeaderTitle { get; set; }
+    [Parameter] public RenderFragment CardHeader { get; set; }
+
+    [Parameter] public RenderFragment CardBody { get; set; }
+
+
+    [Parameter] public bool SmallInner { get; set; } = false;
+    [Parameter] public bool ShowCardBody { get; set; } = false;
+    
+    //public string BtnClass => ShowCardBody ? "oi oi-caret-top" : "oi oi- oi-caret-bottom"; - unterscheidet sich von anderen Karten sonst
+
+    public void Toggle()
+    {
+        ShowCardBody = !ShowCardBody;
+    }
+}

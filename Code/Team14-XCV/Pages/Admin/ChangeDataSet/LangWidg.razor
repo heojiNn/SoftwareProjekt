@@ -1,0 +1,111 @@
+@using Microsoft.AspNetCore.Components
+
+
+<div class="col-12 col-xl-6 mb-3" style="min-height: 100px;"  @onclick="@(e => changeInfo = new())">
+    <div class="card mr-0 my-0">
+        <div class="card-header" style="padding: 10px;" @onclick="Toggle">
+            <span style="color: #7A212E; font-size: 1.5rem;"> Sprachen</span>
+            <span class="@BtnClass"></span>
+        </div>
+
+        @if (ShowCardBody.Value)
+        {
+            <div class="card-body p-0">
+                @foreach (var lang in laService.GetAllLanguages())
+                {
+                    <span style="white-space:nowrap; margin-right: 15px;  line-height: 2.3rem;">
+                        <button class="btn btn-outline-primary btn-sm" disabled>@lang.Name </button>
+                        <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveLang(lang) )">
+                            <span class="oi oi-minus"></span>
+                        </button>
+                    </span> <span style="white-space:normal;"></span>
+                }
+                <br>
+
+
+
+
+                <span style="font-size: 1.3rem;">aktuelle Level-Bezeichnungen:</span>
+                <br>
+                1 <input id="llvl1" @bind="@langLevel[0]" @bind:event="oninput">
+                2 <input id="llvl2" @bind="@langLevel[1]" @bind:event="oninput">
+                <br>
+                3 <input id="llvl3" @bind="@langLevel[2]" @bind:event="oninput">
+                4 <input id="llvl4" @bind="@langLevel[3]" @bind:event="oninput">
+                <br>
+                5 <input id="llvl5" @bind="@langLevel[4]" @bind:event="oninput">
+                6 <input id="llvl6" @bind="@langLevel[5]" @bind:event="oninput">
+                <br>
+                <button class="btn btn-sm btn-secondary " style="margin-left:5px; margin-top:5px;" @onclick="UpdateLangLevels" @onmouseover="VUpdateLangLevels" @onmouseout="VUpdateLangLevels">Sprachlevel umbenennen </button>
+                <ul class="alert alert-danger" role="alert">
+                    @foreach (string line in changeInfo.ErrorMessages)
+                    {
+                        <li>
+                            <pre>@line</pre>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        <br>
+
+
+        <div class="row">
+            <div class="wrap-collabsible2 ml-3" style="width:95%">
+
+
+                <input id="collapsible2" class="toggle2" type="checkbox">
+                <label for="collapsible2" class="lbl-toggle2" style="margin-bottom:0">
+                    <tag>Neue Sprache hinzufügen</tag>
+                </label>
+
+                <div class="collapsible-content">
+                    <div class="form-row">
+
+                        <input id="newLang" class="mx-2 my-4" placeholder="Name" @bind="@newLang.Name" @bind:event="oninput">
+                        <button class="btn btn-sm btn-secondary " style="margin-left:5px; margin-top:1.5rem; height:20%" @onclick="CreateLang" @onmouseover="VCreateLang" @onmouseout="VCreateLang">Sprache hinzufügen</button>
+
+                    </div>
+            </div>
+        </div>
+
+
+
+
+        
+    </div>
+</div>
+    </div>
+
+@code {
+    [Parameter] public ILanguageService laService { get; set; }
+    [Parameter] public ValueWrapper<bool> ShowCardBody { get; set; } = new ValueWrapper<bool>(false);
+
+
+    private Language newLang = new();
+    private string[] langLevel = new string[6];
+
+    protected override void OnInitialized()
+    {
+        laService.ChangeEventHandel += OnChange;
+        langLevel = laService.GetAllLevel();
+    }
+
+
+    private void CreateLang() => laService.CreateLanguage(newLang);
+    private void VCreateLang() => laService.CreateLanguage(newLang, justValidate:true);
+    private void RemoveLang(Language la) => laService.DeleteLanguage(la);
+
+    private void UpdateLangLevels() => laService.UpdateAllLevels(langLevel);
+    private void VUpdateLangLevels() => laService.UpdateAllLevels(langLevel, justValidate:true);
+
+
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e) => changeInfo = e;
+
+
+
+    public string BtnClass => ShowCardBody.Value ? "oi oi-caret-top" : "oi oi- oi-caret-bottom";
+    public void Toggle() => ShowCardBody.Value = !ShowCardBody.Value;
+
+}

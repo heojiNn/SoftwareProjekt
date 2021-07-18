@@ -1,0 +1,65 @@
+#textInput1[b-kr74yzu4bq], #textInput2[b-kr74yzu4bq], #textInput3[b-kr74yzu4bq], #textInput4[b-kr74yzu4bq], #textInput5[b-kr74yzu4bq], #textInput6[b-kr74yzu4bq], #textInput7[b-kr74yzu4bq], #textInput8[b-kr74yzu4bq], #textInput9[b-kr74yzu4bq] {
+    display: inline;
+    background-color: white;
+    border-style: none;
+    font-weight: bold;
+    color: black;
+}
+
+.avatar-links[b-kr74yzu4bq] {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/43/Minimalist_info_Icon.png');
+    background-size: cover;
+    position: absolute;
+    right: 1.5%;
+    margin-top: -23px;
+    z-index: 3;
+}
+
+    .avatar-links[b-kr74yzu4bq]::before,
+    .avatar-links[b-kr74yzu4bq]::after {
+        --scale: 0;
+        --tooltipcolor: white;
+        --arrow-size: 5px;
+        position: absolute;
+        top: 50%;
+        right: 30px;
+        transform: translateY(-50%) scale(var(--scale));
+        transition: 250ms transform;
+        transform-origin: right;
+        z-index: 3;
+    }
+
+    .avatar-links[b-kr74yzu4bq]::before {
+        content: attr(data-tooltip);
+        color: black;
+        width: 200px;
+        padding: .5rem;
+        text-align: center;
+        border-radius: .4rem;
+        border-style: solid;
+        border-width: thin;
+        border-color: grey;
+        background: var(--tooltipcolor);
+        z-index: 3;
+    }
+
+    .avatar-links:hover[b-kr74yzu4bq]::before,
+    .avatar-links:hover[b-kr74yzu4bq]::after {
+        --scale: 1;
+        z-index: 3;
+        position: absolute;
+        font-size: 14px;
+    }
+
+    .avatar-links[b-kr74yzu4bq]::after {
+        content: " ";
+        right: 100%;
+        border: var(--arrow-size) solid transparent;
+        border-left-color: grey;
+        transform-origin: left;
+        z-index: 3;
+        position: absolute;
+    }

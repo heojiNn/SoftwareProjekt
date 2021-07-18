@@ -1,0 +1,71 @@
+
+/*login*/
+.logMain-head {
+    height: 150px;
+}
+
+.sidenav {
+    height: 100%;
+    background-color: #5E6B7A;
+    color: white;
+    overflow-x: hidden;
+    padding-top: 20px;
+    width: 40%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+}
+
+.logMain {
+    padding: 0px 10px;
+    margin-left: 40%;
+    margin-top: 10%;
+    text-align: center;
+}
+
+.login-form {
+    text-align: left;
+}
+
+.register-form {
+    margin-top: 20%;
+}
+
+.login-main-text {
+    height: 60%;
+    margin-top: 10%;
+    padding: 60px;
+    vertical-align: central;
+}
+
+.jumbotron {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    background-color: white;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.label {
+    text-align: left;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.button {
+    background-color: #7A212E;
+    border: 1px solid #5E6B7A;
+    border-radius: 8px;
+    color: white;
+    padding: 8px 27px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}

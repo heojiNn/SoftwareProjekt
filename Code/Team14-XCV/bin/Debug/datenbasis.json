@@ -1,0 +1,119 @@
+{
+  "fields": ["Architektur/Bau/Immobilien",  "Automobil",  "Banken/Finanzsektor/Versicherung",  "Beratung",  "Bildung",  "Chemie",  "Dienstleistung",  "Druck/Verpackung",  "Elektro/Elektronik",  "Energie",  "Forschung/Entwicklung",  "Gastronomie",  "Gesundheit/Soziales/Pflege",  "IT",  "Kunst/Kultur",  "Landwirtschaft/Nahrungsmittel",  "Logistik/Transport/Verkehr",  "Luft- und Raumfahrt",  "Marketing/Werbung/PR",  "Maschinen- und Anlagenbau",  "Medizin/Pharma",  "Medizintechnik",  "Optik",  "Robotik",  "Sport",  "Steuerberatung/Wirtschaftsprüfung",  "Tourismus" ],
+  "roles": [  
+    {
+      "name": "Agile Coach",
+      "wages": [ 
+      {"RCL": 0, "PerHour": 0   },
+      {"RCL": 1, "PerHour": 80  },
+      {"RCL": 2, "PerHour": 95  },
+      {"RCL": 3, "PerHour": 105 },
+      {"RCL": 4, "PerHour": 120 },
+      {"RCL": 5, "PerHour": 135 },
+      {"RCL": 6, "PerHour": 155 },
+      {"RCL": 7, "PerHour": 195 }
+      ]
+    },
+    {
+      "name": "Consultant",
+      "wages": [ 
+      {"RCL": 0, "PerHour": 0   },
+      {"RCL": 4, "PerHour": 120 },
+      {"RCL": 5, "PerHour": 135 },
+      {"RCL": 6, "PerHour": 155 },
+      {"RCL": 7, "PerHour": 195 },
+      {"RCL": 8, "PerHour": 260 }
+      ]
+    },
+    {
+      "name": "ProjektmanagerIn",
+      "wages": [ 
+      {"RCL": 0, "PerHour": 0   },
+      {"RCL": 1, "PerHour": 80  },
+      {"RCL": 2, "PerHour": 95  },
+      {"RCL": 3, "PerHour": 105 },
+      {"RCL": 4, "PerHour": 120 },
+      {"RCL": 5, "PerHour": 135 },
+      {"RCL": 6, "PerHour": 155 },
+      {"RCL": 7, "PerHour": 195 }
+      ]
+    },
+    {
+      "name": "EntwicklerIn",
+      "wages": [ 
+      {"RCL": 0, "PerHour": 0   },
+      {"RCL": 1, "PerHour": 80  },
+      {"RCL": 2, "PerHour": 95  },
+      {"RCL": 3, "PerHour": 105 },
+      {"RCL": 4, "PerHour": 120 },
+      {"RCL": 5, "PerHour": 135 },
+      {"RCL": 6, "PerHour": 155 },
+      {"RCL": 7, "PerHour": 195 }
+      ]
+    },
+    {
+      "name": "UI/UX ExpertIn",
+      "wages": [ 
+      {"RCL": 0, "PerHour": 0   },
+      {"RCL": 1, "PerHour": 80  },
+      {"RCL": 2, "PerHour": 95  },
+      {"RCL": 3, "PerHour": 105 },
+      {"RCL": 4, "PerHour": 120 },
+      {"RCL": 5, "PerHour": 135 },
+      {"RCL": 6, "PerHour": 155 },
+      {"RCL": 7, "PerHour": 195 }
+      ]
+    }
+  ],
+  "languages": {
+    "levels": ["Anfänger","Grundlagen","fortgeschritten","verhandlungssicher","Primärsprache"],
+    "elements": ["Arabisch",  "Deutsch",  "Englisch",  "Französisch",  "Italienisch",  "Japanisch",  "Mandarin",  "Russisch",  "Spanisch",  "Türkisch" ]
+  },
+  "skills": {
+    "hardSkillLevels": ["hobby",  "produktiv",  "regelmäßige",  "Pro" ],
+    "HardSkills": {
+      "OS/Cloud/Plattformen/Hardware": {
+        "Betriebssysteme": ["Android",  "iOS",  "Linux",  "macOS",  "Mindsphere",  "Ubuntu",  "Windows" ],
+        "Cloud": ["Alibaba Cloud",  "AWS",  "Azure",  "Google Cloud Platform",  "SAP Cloud Platform" ],
+        "Hardware": ["Arduino",  "Hololens",  "HTC Vive",  "Oculus Rift",  "SPS" ],
+        "Plattformen": ["Apache Kafka",  "arcGIS",  "CloudFoundry",  "Cumulocity",  "Docker",  "IIS (Webserver)",  "Java EE",  "Kibana",  "Kubernetes",  "SAP Cloud Platform",  "SAP S/4Hana",  "Sericy",  "Sonarqube",  "Splunk",  "TABLEAU",  "Team Foundation Server" ]
+      },
+      "Datenbanken": ["AWS Aurora",  "AWS Redshift",  "MariaDB Server",  "MongoDB",  "MS SQL Server",  "NoSQL",  "Oracle",  "PostgreSQL",  "Redis",  "SQLite" ],
+      "Expertise": ["Agile Softwareentwicklung",  "Android-Entwicklung",  "Animation",  "Backend Entwicklung",  "Bildverarbeitung",  "Blockchain",  "Business Administration",  "Cloud Technology",  "Cybersecurity",  "Data Analytics",  "DevOps",  "Frontend Entwicklung",  "Fullstack Entwicklung",  "Grafikdesign",  "High availability",  "High scalability",  "Icondesign",  "iOS-Entwicklung",  "IT Consulting",  "Konzeption und Gestaltung von Workshops",  "Machine Learning",  "Mobile-Entwicklung",  "Parallel Computing",  "Product Ownership",  "Project Controlling",  "Projektdokumentation",  "Projektmanagement",  "Requirements Engineering",  "Ressourcenplanung",  "REST",  "Software Testing",  "Softwarearchitektur",  "Softwareentwicklung",  "SPS Anbindung",  "SPS Programmierung",  "Typographie",  "User Experience",  "Virtual/ Augmented Reality",  "Web Entwicklung" ],
+      "Methoden und Prozesse": {
+        "Agile Methoden": ["Adaptive Software Development",  "Crystal",  "Dynamic Systems Development",  "Extreme Programming (XP)",  "Feature Driven Development",  "Kanban",  "Lean Startup",  "Scrum",  "Scrumban" ],
+        "Agile Scaling": ["Disciplined Agile Delivery (DaD)",  "Large Scale SCRUM (LeSS)",  "Scaled Agile Framework (SAFe)" ],
+        "Modellierung": ["Business process modeling and system integration",  "Domain-driven Design" ],
+        "Projektmanagement": ["Agile Leadership",  "Agile Organisationsentwicklung",  "Change Management",  "Data Analysis",  "Design Management",  "Design Sprint",  "HR Management",  "Kosten-Nutzen-Analyse",  "Liberating Structures",  "Management 3.0",  "OKR",  "PMI Projektmanagement",  "Riskomanagement",  "Stakeholder Management",  "Systemisches Projektmanagement" ],
+        "Software Engineering": ["Agile architecture approach",  "Continuous Deployment",  "Continuous Integration",  "Entwurfsmuster (MVVM, MVC, MVP, GoF...)",  "Objektorientierte Entwicklung",  "REST API Design",  "SOLID",  "TDD" ],
+        "UI/UX": ["Design Thinking",  "Klick-Prototyp",  "Nutzungskontextanalyse",  "Personas",  "User-Interviews",  "User-Testing",  "Wireframes" ]
+      },
+      "Schnittstellen und Protokolle": ["Amazon S3",  "Bash",  "gRPC",  "Identity Server",  "MQTT",  "Oauth2",  "OPC UA",  "OpenGL",  "OpenID",  "Protocol Buffers",  "REST",  "SSL",  "WebSocket" ],
+      "Sprachen und Frameworks": {
+        "Bibliotheken": ["ARToolKit",  "AspectJ",  "Automapper",  "Bokeh",  "D3.JS",  "Deeplearning4j",  "Direct3D",  "FsCheck",  "gulp.js",  "HighCharts",  "IntelliTest",  "Jasmine",  "JMock",  "Keras",  "Matplotlib",  "MobX",  "Mockito",  "Ngrx",  "NHibernate",  "Ninject",  "OpenCV",  "Pytorch",  "Redux",  "RXJS",  "scikit-learn",  "Theano",  "Torch",  "WebGL" ],
+        "Frameworks": [".NET Core",  ".NET Framework",  "A-Frame",  "Angular",  "AngularJS",  "Apache Spark",  "ARCore",  "ARKit",  "ASP.NET",  "Caffe",  "Capacitor",  "CNTK",  "Cordova",  "Cypress",  "Django",  "Electron",  "Entity Framework",  "Enzyme",  "GatsbyJS",  "Grails",  "Hibernate",  "Ionic",  "Jest",  "JUnit",  "MxNet",  "Node.js",  "NUnit",  "PowerShell",  "Proton Native",  "Protractor",  "React",  "Ruby on Rails",  "Selenium",  "Spring .NET",  "Spring Framework",  "Swagger",  "Tensorflow",  "TestNG",  "Vue.js",  "WPF",  "Xamarin",  "xUnit" ],
+        "Sprachen": ["ASP.NET Razor",  "C",  "C#",  "C++,",  "CMPL",  "CSS",  "F#",  "Function block diagram",  "Go",  "GraphQL",  "Groovy",  "HTML 5",  "Java",  "JavaScript",  "JML",  "JQuery",  "Kotlin",  "LESS",  "MATLAB",  "Objective-C",  "Perl",  "PHP",  "Python",  "R",  "Ruby",  "RUST",  "SASS",  "Scala",  "SQL",  "Structured text",  "Swift",  "Tcl",  "TypeScript",  "Visual Basic" ]
+      },
+      "Tools": {
+        "3D-Visualisierung": ["Blender",  "Cinema4D",  "Maya",  "Unity",  "Unreal" ],
+        "Build-Management": ["Apache Ant",  "Apache Maven",  "CMake",  "Gradle",  "Grunt",  "Make",  "MSBuild",  "NAnt" ],
+        "CAD": ["AutoCAD",  "OpenSCAD",  "speedmaxx" ],
+        "CI/CD": ["Azure DevOps Services",  "Bamboo",  "Chef",  "Jenkins",  "Teamcity",  "Terraform" ],
+        "Datenbankverwaltung": ["MySQL" ],
+        "Datenvisualisierung/-analyse": ["Elasticsearch",  "Grafana",  "PowerBI" ],
+        "Digitales Design": ["Abstract Notebooks",  "Adobe Aero",  "Adobe After Effects",  "Adobe Animate",  "Adobe CC",  "Adobe Dimension",  "Adobe Dreamweaver",  "Adobe Illustrator",  "Adobe InDesign",  "Adobe Lightroom",  "Adobe Photoshop",  "Adobe Premiere Pro",  "Adobe Spark",  "Adobe XD",  "Balsamiq",  "Figma",  "InVision",  "Marvel",  "Sketch",  "Zeplin" ],
+        "IDEs": ["Atom",  "IntelliJ",  "ReSharper",  "Rider",  "RubyMine",  "Visual Studio",  "Visual Studio Code",  "WebStorm" ],
+        "Konzept- und Ideenmanagement": ["Draw.io",  "FreeMind",  "MetroRetro",  "Miro" ],
+        "Optimierung/technische Mathematik": ["Cake",  "CPLEX",  "Gurobi",  "Mathematica" ],
+        "Package-Management": ["Conan",  "npm",  "NuGet" ],
+        "Projektmanagement Tools": ["Asana",  "Bitbucket",  "Confluence",  "Crucible",  "Fisheye",  "HP ALM (Application Life Cycle Management)",  "Jira" ],
+        "QA": ["NDepend",  "PiTest",  "SonarQube" ],
+        "Server- und Infrastruktur-Management": ["Ansible",  "Apache Tomcat",  "Glassfish",  "MS SQL Server Management Studio",  "Nagios",  "Prometheus",  "Puppet",  "Saltstack" ],
+        "Simulation": ["Anylogic" ],
+        "Versionsverwaltung": ["Git",  "Gitlab",  "Mercurial",  "Perforce",  "Sourcetree",  "SVN" ],
+        "Virtualisierung": ["Hyper-V",  "Vagrant",  "VirtualBox" ]
+      }
+    },
+    "SoftSkills": ["Akquisitionsstärke",  "Analytische Fähigkeiten",  "Beratungsfähigkeit",  "Ergebnisorientiertes Handeln",  "Ganzheitliches Denken",  "Impulsgeben",  "Innovationsfreudigkeit",  "Interdisziplinärer Sachverstand",  "Interkulturelle Kompetenz",  "Kommunikationsfähigkeit",  "Konfliktlösungsfähigkeit",  "Konzeptionsstärke",  "Lehrfähigkeit",  "Marktkenntnisse",  "Methodische und strukturierte Vorgehensweise",  "Mitarbeiterförderung",  "Organisationsfähigkeit",  "Problemlösungsfähigkeit",  "Rhetorik",  "Soziale Kompetenz",  "Soziales Engagement",  "Überzeugungskraft",  "Verhandlungsgeschick",  "Zielorientiertes Führen" ]
+  }
+}

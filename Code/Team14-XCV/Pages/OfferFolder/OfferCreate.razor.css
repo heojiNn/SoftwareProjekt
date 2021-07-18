@@ -1,0 +1,18 @@
+#textInput1, #textInput2, #textInput3, #textInput4 {
+    display: inline;
+    background-color: white;
+    border-style: none;
+    font-weight: bold;
+    color: black;
+}
+
+.btnhover {
+    background-color: white;
+    color: black;
+}
+
+btnhover:hover {
+    background-color: gray;
+    color: black;
+}
+

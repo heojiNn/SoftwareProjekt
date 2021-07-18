@@ -1,0 +1,38 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+
+                <NotAuthorized>
+                </NotAuthorized>
+                <Authorizing>
+                    <h2>wird eingeloggt</h2>
+                </Authorizing>
+
+            </AuthorizeRouteView>
+        </Found>
+
+        <NotFound>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p>404 hier ist nichts</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("login");
+        }
+    }
+}

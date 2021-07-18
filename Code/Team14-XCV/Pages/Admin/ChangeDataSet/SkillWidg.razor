@@ -1,0 +1,159 @@
+@using Microsoft.AspNetCore.Components
+
+
+<div class="col-12 col-xl-6 mb-3" style="min-height: 100px;"  @onclick="@(e => changeInfo = new())">
+    <div class="card mr-0 my-0">
+        <div class="card-header" style= "padding: 10px;" @onclick="Toggle">
+            <span style= "color: #7A212E; font-size: 1.5rem;"> Skills</span>
+            <span class="@BtnClass"></span>
+        </div>
+
+        @if (ShowCardBody.Value)
+        {
+    <div class="card-body p-0">
+        <tag class="ml-2" style="font-size: 1.3rem;">Skills entfernen:</tag>
+        <input id="skillRemoSearch" placeholder="auswählen" @bind="@skillRemoSearch" @bind:event="oninput" />
+        <br>
+
+        @if (skillRemoSearch != "")
+        {
+            foreach (var skill in skService.GetAllSkills().Where(x =>
+            x.Name.ToLower().StartsWith(skillRemoSearch.ToLower())))
+            {
+                <span style="white-space:nowrap; margin-right: 15px;  line-height: 2.3rem;">
+                    <button class="btn btn-outline-primary btn-sm" disabled>@skill.Name </button>
+                    <button type="button" class="btn btn-light btn-sm" @onclick="@(e => RemoveSkill(skill) )">
+                        <span class="oi oi-minus"></span>
+                    </button>
+                </span> <span style="white-space:normal;"></span>
+            }
+        }
+        <br>
+
+
+
+
+
+        <span style="font-size: 1.3rem;">aktuelle Level-Bezeichnungen:</span>
+        <br>
+        1 <input id="lvl1" @bind="@skillLevel[0]" @bind:event="oninput">
+        2 <input id="lvl2" @bind="@skillLevel[1]" @bind:event="oninput">
+        <br>
+        3 <input id="lvl3" @bind="@skillLevel[2]" @bind:event="oninput">
+        4 <input id="lvl4" @bind="@skillLevel[3]" @bind:event="oninput">
+        <br>
+        <button class="btn btn-sm btn-secondary " style="margin-left: 5px; margin-top: 5px;" @onclick="UpdateSkillLevels" @onmouseover="VUpdateSkillLevels" @onmouseout="VUpdateSkillLevels">Skilllevel umbenennen </button>
+        <ul class="alert alert-danger" role="alert">
+            @foreach (string line in changeInfo.ErrorMessages)
+            {
+                <li>
+                    <pre>@line</pre>
+                </li>
+            }
+        </ul>
+        <br>
+        <br>
+
+
+
+        <div class="row">
+            <div class="wrap-collabsible3 ml-3" style="width:95%">
+
+
+                <input id="collapsible3" class="toggle3" type="checkbox">
+                <label for="collapsible3" class="lbl-toggle3" style="margin-bottom:0">
+                    <tag>Neuen Skill hinzufügen</tag>
+                </label>
+
+                <div class="collapsible-content">
+                    <div class="form-row">
+                        <div class="row no-gutters">
+                            <div class="col-4" style="padding-left:5px;">
+                                <input id="name" @bind="@newSkill" @bind:event="oninput" placeholder="Name" class="w-100" />
+                            </div>
+                            <div class="col-1"style="padding-left:5px;">
+                                <span> &nbsp; in</span>
+                            </div>
+                            <div class="col-4" style="padding-left:5px;">
+                                <select style="font-size: 1.1rem;" @bind="@skillCat"
+                                        class="form-control form-control-sm">
+                                    @{
+                                        var cats = skService.GetAllSkills().Select(x => x.Category).Distinct();
+                                        @foreach (var cat in cats)
+                                        {
+                                            <option value="@cat.Name"> @cat.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col" style="padding-left:5px;">
+                                <button class="btn btn-sm btn-secondary" @onclick="CreateSkill" @onmouseover="VCreateSkill" @onmouseout="VCreateSkill">einfügen</button><br>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+       
+
+
+    </div>
+        }
+                                <br >
+    </div>
+</div>
+
+@code {
+    [Parameter] public ISkillService skService { get; set; }
+    [Parameter] public ValueWrapper<bool> ShowCardBody { get; set; } = new ValueWrapper<bool>(false);
+
+
+    private string skillRemoSearch = "an";
+    private string skillCat = "";
+    private string newSkill = "";
+    private string[] skillLevel = new string[4];
+
+    protected override void OnInitialized()
+    {
+        skService.ChangeEventHandel += OnChange;
+        skillLevel = skService.GetAllLevel();
+    }
+
+
+
+
+    private void CreateSkill()
+    {
+        if (skillCat.Length > 1 && newSkill.Length > 1)
+        {
+            var cat = new SkillCategory() { Name = skillCat };
+            skService.InsertSkill(new Skill() { Name = newSkill, Category = cat });
+        }
+    }
+    private void VCreateSkill() => skService.InsertSkill(new Skill() { Name = newSkill }, justValidate:true);
+    private void RemoveSkill(Skill s) =>  skService.DeleteSkill(s);
+
+    private void UpdateSkillLevels() => skService.UpdateAllLevels(skillLevel);
+    private void VUpdateSkillLevels() => skService.UpdateAllLevels(skillLevel, justValidate:true);
+
+
+
+    private ChangeResult changeInfo = new();
+    private void OnChange(object sender, ChangeResult e) => changeInfo = e;
+
+
+
+    public string BtnClass => ShowCardBody.Value ? "oi oi-caret-top" : "oi oi- oi-caret-bottom";
+    public void Toggle() => ShowCardBody.Value = !ShowCardBody.Value;
+
+}

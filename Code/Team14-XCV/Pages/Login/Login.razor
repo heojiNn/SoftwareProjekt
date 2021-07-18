@@ -1,0 +1,82 @@
+@page "/login"
+
+@inject CustomAuthentiProvider authentiProvider
+@inject IProfileService accountService
+@inject NavigationManager NavigationManager
+
+
+<div class="container">
+    <div class="sidenav">
+        <div class="login-main-text">
+            <img src="\css\XITASO_Logo_hoch_weiss.png" />
+        </div>
+    </div>
+    <div class="logMain">
+        <div class="jumbotron container" @onclick="LoginA">
+            <div class="form login-form">
+
+                <div class="form-group">
+                    <label for="PersoNumber">PersNr</label>
+                    <input @bind="@pNum" class="form-control" id="PersoNumber" @onkeyup="LoginA" />
+                </div>
+
+                <div class="form-group">
+                    <label for="PersoNumber">Password</label>
+                    <input @bind="@password" class="form-control" id="Password" @onkeyup="LoginA" />
+                </div>
+
+                <div class="alert alert-info" role="alert">
+                    @validationInfo?.ErrorMessage
+                </div>
+
+                <button class="btn btn-secondary" @onclick="LoginA">Login</button>
+                <button class="btn btn-secondary" @onclick="Register">Registrieren</button>
+                
+            </div>
+        </div>
+        <table class="table table-sm">
+            <tr>
+                <th>Personal Number</th>
+                <th>Password</th>
+                <th>Vorname</th>
+                <th>Nachname</th>
+                <th>Zugriffs Rollen</th>
+            </tr>
+            @foreach (Employee ac in accountService.ShowAllProfiles())
+            {
+                var roles = String.Join(", ", ac.AcRoles.Where(role => role != AccessRole.Employee));
+                <tr>
+                    <td @onclick="@(e => pNum = ac.PersoNumber)"> @ac.PersoNumber </td>
+                    <td @onclick="@(e => password = ac.Password)"> @ac.Password</td>
+                    <td> @ac.FirstName</td>
+                    <td> @ac.LastName</td>
+                    <td> @roles</td>
+                </tr>
+            }
+        </table>
+        <div style="font-size: 0.7rem; text-align: left; padding: 0; line-height: 1em;">
+            <b><u> Employee.ToString()</u></b>
+            <select class="form-control" @bind="@ePersToShow" style="width: 120px;">
+                @foreach (var ePers in accountService.ShowAllProfiles().Select(x => x.PersoNumber))
+                {
+                    <option value="@ePers"> @ePers</option>
+                }
+            </select>
+            <div>
+                <pre>
+                    @if (ePersToShow != "")
+                    {
+                        @accountService.ShowProfile(ePersToShow)
+
+                    }
+                </pre>
+            </div>
+            <br><br><br> <br><br><br>
+            <br><br><br> <br><br><br>
+            <br><br><br> <br><br><br>
+            <br><br><br> <br><br><br>
+        </div>
+    </div>
+</div>
+
+

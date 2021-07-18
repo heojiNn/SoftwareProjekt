@@ -1,0 +1,102 @@
+@inject CustomAuthentiProvider CustomAuthentiProvider
+@inject NavigationManager NavigationManager
+
+<style>
+
+    .nav-item a {
+        height: 2rem !important;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg">
+    <a class="navbar-brand">
+        <img src="\css\XITASO_Logo_quer_weiss.png" width="159" height="40">
+    </a>
+
+</nav>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+    <ul class="nav flex-column">
+
+        <AuthorizeView Roles="employee">
+            <li class="nav-item px-3 pb-4">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="oi oi-home"></span> Profil
+                </NavLink>
+            </li>
+            <li class="nav-item px-3 pb-4">
+                <NavLink class="nav-link" href="my-projects">
+                    <span class="oi oi-box" aria-hidden="true"></span> Meine Projekte
+                </NavLink>
+            </li>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="sales, admin">
+            <li class="nav-item px-3 pb-4">
+                <NavLink class="nav-link" href="projects">
+                    <span class="oi oi-project" aria-hidden="true"></span> Projektübersicht
+                </NavLink>
+
+            </li>
+            <li class="nav-item px-3 pb-4">
+                <NavLink class="nav-link" href="employee-search">
+                    <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Mitarbeitersuche
+                </NavLink>
+            </li>
+            <li class="nav-item px-3 pb-4">
+
+                <NavLink class="nav-link" href="offers">
+                    <span class="oi oi-document" aria-hidden="true"></span> Angebotsübersicht
+                </NavLink>
+
+            </li>
+            <li class="nav-item px-3 pb-1">
+                <NavLink class="nav-link" href="change-data-set">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis ändern
+                </NavLink>
+                <NavLink class="nav-link" href="change-json">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Datenbasis .json
+                </NavLink>
+                
+            </li>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="admin">
+            <li class="nav-item px-3 pb-1">
+                <NavLink class="nav-link" href="create-employee">
+                    <span class="oi oi-wrench" aria-hidden="true"></span> Mitarbeiter hinzu
+                </NavLink>
+                </li>
+        </AuthorizeView>
+
+            <li class="nav-item px-3">
+
+                <NavLink class="nav-link" href="#" @onclick="Logout">
+                    <span class="oi oi-account-logout"></span>Logout
+
+                </NavLink>
+            </li>
+</ul>
+</div>
+
+
+
+
+
+@code {
+
+    private string persoNumber;
+    protected override async Task OnInitializedAsync()
+    {
+        var authstate = await CustomAuthentiProvider.GetAuthenticationStateAsync();
+        persoNumber = authstate.User.Identity.Name;
+    }
+
+
+    public async Task Logout()
+    {
+        await CustomAuthentiProvider.Logout();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}
