@@ -124,7 +124,7 @@
                             int index = i;
                             <div class="row">
                                 <div class="col-10">
-                                    <input class="form-control" type="text" @bind-value="purposes[index]" placeholder="Zweck" />
+                                    <input class="form-control" id="purpose @index" type="text" @bind-value="purposes[index]" placeholder="Zweck" />
                                 </div>
                                 <div class="col-2">
                                     <button type="button" class="btn btn-light btn-sm" @onclick="() => RemovePurpose(index)">
@@ -179,7 +179,7 @@
                             int index = i;
                             <div class="row">
                                 <div class="col-10">
-                                    <input class="form-control" type="text" @bind-value="@activities[index]" placeholder="Tätigkeit" />
+                                    <input class="form-control" id="activity @index" type="text" @bind-value="@activities[index]" placeholder="Tätigkeit" />
                                 </div>
                                 <div class="col-2">
                                     <button type="button" class="btn btn-light btn-sm" @onclick="() => RemoveActivity(index)">

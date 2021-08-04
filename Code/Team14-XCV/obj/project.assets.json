@@ -2147,25 +2147,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Jonat\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\Silke\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Jonat\\Desktop\\Git Repositories\\SoPro\\CICD_DIr\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
+      "projectUniqueName": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
       "projectName": "XCV",
-      "projectPath": "C:\\Users\\Jonat\\Desktop\\Git Repositories\\SoPro\\CICD_DIr\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
-      "packagesPath": "C:\\Users\\Jonat\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Jonat\\Desktop\\Git Repositories\\SoPro\\CICD_DIr\\tutorium-g-team-14\\Code\\Team14-XCV\\obj\\",
+      "projectPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
+      "packagesPath": "C:\\Users\\Silke\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Jonat\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\Silke\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -2233,7 +2233,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files (x86)\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
