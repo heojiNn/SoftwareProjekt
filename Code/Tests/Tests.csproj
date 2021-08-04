@@ -9,9 +9,25 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
         <PackageReference Include="Dapper" Version="2.0.90" />
         <PackageReference Include="Microsoft.Data.SqlClient" Version="3.0.0" />
-        <PackageReference Include="Moq.AutoMock" Version="3.0.0-ci0170" />
+        <PackageReference Include="Moq.AutoMock" Version="3.0.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
+        <PackageReference Include="Selenium.Firefox.WebDriver" Version="0.27.0" />
+        <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+        <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="92.0.4515.10700" />
+        <PackageReference Include="Selenium.WebDriver.IEDriver" Version="3.150.1.2" />
+        <PackageReference Include="Selenium.Support" Version="3.141.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Team14-XCV\XCV.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="MSTest.TestFramework" />
+      <None Remove="MSTest.TestAdapter" />
+      <None Remove="Selenium.Firefox.WebDriver" />
+      <None Remove="Selenium.WebDriver" />
+      <None Remove="Selenium.WebDriver.ChromeDriver" />
+      <None Remove="Selenium.WebDriver.IEDriver" />
+      <None Remove="Selenium.Support" />
     </ItemGroup>
 </Project>

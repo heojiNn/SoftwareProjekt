@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj": {}
+    "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj": {
+    "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
+        "projectUniqueName": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj",
         "projectName": "XCV",
-        "projectPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj",
-        "packagesPath": "C:\\Users\\Silke\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\obj\\",
+        "projectPath": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj",
+        "packagesPath": "/Users/moritzboche/.nuget/packages/",
+        "outputPath": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Silke\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/moritzboche/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -87,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.302/RuntimeIdentifierGraph.json"
         }
       }
     }

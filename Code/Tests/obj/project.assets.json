@@ -755,7 +755,7 @@
           "lib/netstandard2.0/Moq.dll": {}
         }
       },
-      "Moq.AutoMock/3.0.0-ci0170": {
+      "Moq.AutoMock/3.0.0": {
         "type": "package",
         "dependencies": {
           "Moq": "4.15.1"
@@ -824,7 +824,7 @@
           "lib/netstandard1.3/Newtonsoft.Json.dll": {}
         }
       },
-      "NuGet.Frameworks/5.10.0": {
+      "NuGet.Frameworks/5.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/NuGet.Frameworks.dll": {}
@@ -3224,10 +3224,10 @@
         "moq.png"
       ]
     },
-    "Moq.AutoMock/3.0.0-ci0170": {
-      "sha512": "D3LQVPAz6NZLuVQI7eomRAPMT8JxSfGs3pCECi4MtU8mtDklmL19yhrsimgh7l39bF+JR4UZpa/cj1ZL8pzT2Q==",
+    "Moq.AutoMock/3.0.0": {
+      "sha512": "VKWe6BtSiBSf7k8/ei5M37EmCL0nSsOLW8OtopqLfFhEepL4MaMSRvPT2oHLlxOTAnOUsroAGrvjXcETJjDWng==",
       "type": "package",
-      "path": "moq.automock/3.0.0-ci0170",
+      "path": "moq.automock/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3236,7 +3236,7 @@
         "lib/net461/Moq.AutoMock.xml",
         "lib/netstandard2.0/Moq.AutoMock.dll",
         "lib/netstandard2.0/Moq.AutoMock.xml",
-        "moq.automock.3.0.0-ci0170.nupkg.sha512",
+        "moq.automock.3.0.0.nupkg.sha512",
         "moq.automock.nuspec"
       ]
     },
@@ -3696,21 +3696,20 @@
         "tools/install.ps1"
       ]
     },
-    "NuGet.Frameworks/5.10.0": {
-      "sha512": "RaXCqj2ZImTVV0DhlwMkE7S7EoOxqkdpmg4YNeZc5DnFpMMC7HYj6TbNTufK25JN/QhKfftuiWf/oqaYkZhnAA==",
+    "NuGet.Frameworks/5.0.0": {
+      "sha512": "c5JVjuVAm4f7E9Vj+v09Z9s2ZsqFDjBpcsyS3M9xRo0bEdm/LVZSzLxxNvfvAwRiiE8nwe1h2G4OwiwlzFKXlA==",
       "type": "package",
-      "path": "nuget.frameworks/5.10.0",
+      "path": "nuget.frameworks/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "icon.png",
         "lib/net40/NuGet.Frameworks.dll",
         "lib/net40/NuGet.Frameworks.xml",
         "lib/net472/NuGet.Frameworks.dll",
         "lib/net472/NuGet.Frameworks.xml",
         "lib/netstandard2.0/NuGet.Frameworks.dll",
         "lib/netstandard2.0/NuGet.Frameworks.xml",
-        "nuget.frameworks.5.10.0.nupkg.sha512",
+        "nuget.frameworks.5.0.0.nupkg.sha512",
         "nuget.frameworks.nuspec"
       ]
     },
@@ -6852,10 +6851,9 @@
       "MSTest.TestFramework >= 2.2.5",
       "Microsoft.Data.SqlClient >= 3.0.0",
       "Microsoft.NET.Test.Sdk >= 16.10.0",
-      "Moq.AutoMock >= 3.0.0-ci0170",
+      "Moq.AutoMock >= 3.0.0",
       "NUnit >= 3.13.2",
       "NUnit3TestAdapter >= 4.0.0",
-      "NuGet.Frameworks >= 5.10.0",
       "Selenium.Firefox.WebDriver >= 0.27.0",
       "Selenium.Support >= 3.141.0",
       "Selenium.WebDriver >= 3.141.0",
@@ -6865,39 +6863,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Silke\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "/Users/moritzboche/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Tests\\Tests.csproj",
+      "projectUniqueName": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Tests/Tests.csproj",
       "projectName": "Tests",
-      "projectPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Tests\\Tests.csproj",
-      "packagesPath": "C:\\Users\\Silke\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Tests\\obj\\",
+      "projectPath": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Tests/Tests.csproj",
+      "packagesPath": "/Users/moritzboche/.nuget/packages/",
+      "outputPath": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Tests/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Silke\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/moritzboche/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj": {
-              "projectPath": "C:\\Users\\Silke\\Desktop\\MAAASTEEEER\\tutorium-g-team-14\\Code\\Team14-XCV\\XCV.csproj"
+            "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj": {
+              "projectPath": "/Users/moritzboche/Desktop/MAAAASTEEEEER/tutorium-g-team-14/Code/Team14-XCV/XCV.csproj"
             }
           }
         }
@@ -6934,7 +6925,7 @@
           },
           "Moq.AutoMock": {
             "target": "Package",
-            "version": "[3.0.0-ci0170, )"
+            "version": "[3.0.0, )"
           },
           "NUnit": {
             "target": "Package",
@@ -6943,10 +6934,6 @@
           "NUnit3TestAdapter": {
             "target": "Package",
             "version": "[4.0.0, )"
-          },
-          "NuGet.Frameworks": {
-            "target": "Package",
-            "version": "[5.10.0, )"
           },
           "Selenium.Firefox.WebDriver": {
             "target": "Package",
@@ -6984,7 +6971,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.302/RuntimeIdentifierGraph.json"
       }
     }
   }
