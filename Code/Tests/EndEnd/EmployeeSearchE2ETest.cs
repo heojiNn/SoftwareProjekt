@@ -184,11 +184,23 @@ namespace Tests.EndEnd
         [TestCase(new Object[] { "Agile Coach", "Consultant", "EntwicklerIn", "ProjektmanagerIn", "UI/UX ExpertIn" })]
 
         //Typ 2 - niemand erfüllt mindestens 1 Kriterium
-        [TestCase(new Object[] { "UI/UX ExpertIn" })]
+        [TestCase(new Object[] { "Testskill" })]
         public void IncompleteEmployeeSearch(Object[] role)
         {
             foreach (IWebDriver driver in drivers)
             {
+                //Hinzufügen eines neuen Skills den kein Mitarbeiter besitzt
+                if (role.Length == 1)
+                {
+                    driver.FindElement(By.LinkText("Datenbasis ändern")).Click();
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/div/div/label")).Click();
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/div/div/div/div/div/div[1]/input")).SendKeys("Testskill");
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/div/div/div/div/div/div[3]/select")).Click();
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/div/div/div/div/div/div[3]/select")).SendKeys(Keys.ArrowUp);
+                    driver.FindElement(By.XPath("/ html / body / div[1] / div[2] / div / div[3] / div[4] / div / div[2] / div / div / div / div / div / div[4] / button")).Click();
+                }
+
+
                 driver.FindElement(By.LinkText("Mitarbeitersuche")).Click();
                 Assert.AreEqual("http://localhost:5005/employee-search", driver.Url, "Could not reach EmployeeSearch page");
 
@@ -211,6 +223,12 @@ namespace Tests.EndEnd
                     IWebElement infoBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[3]/div[1]"));
                     string infoText = infoBox.Text;
                     Assert.AreEqual("Kein/Keine MitarbeiterIn erfüllt mindestens ein gesuchtes Kriterium.", infoText);
+                    //Löschen des neuen Skills
+                    driver.FindElement(By.LinkText("Datenbasis ändern")).Click();
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/input[1]")).SendKeys("Testskill");
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/span[1]/button[2]")).Click();
+
+
                 }
                 //Typ 1
                 else

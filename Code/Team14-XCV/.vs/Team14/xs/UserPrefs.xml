@@ -1,8 +1,11 @@
 ﻿<Properties StartupConfiguration="{07B8A697-21B1-4912-A997-590E270AD644}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="Pages/ProjectFolder/ProjectCreate.razor">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Pages/Admin/ChangeDataSet/SkillWidg.razor">
     <Files>
       <File FileName="../Tests/EndEnd/CreateOfferE2ETest.cs" Line="30" Column="10" />
-      <File FileName="Pages/ProjectFolder/ProjectCreate.razor" Line="1" Column="1" />
+      <File FileName="Pages/ProjectFolder/ProjectCreate.razor" Line="120" Column="31" />
+      <File FileName="../Tests/EndEnd/EmployeeSearchE2ETest.cs" Line="172" Column="46" />
+      <File FileName="Pages/Admin/ChangeDataSet/ChangeDataSet.razor" Line="1" Column="1" />
+      <File FileName="Pages/Admin/ChangeDataSet/SkillWidg.razor" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,8 +17,10 @@
             </Node>
             <Node name="XCV" expanded="True">
               <Node name="Pages" expanded="True">
-                <Node name="ProjectFolder" expanded="True">
-                  <Node name="ProjectCreate.razor" selected="True" />
+                <Node name="Admin" expanded="True">
+                  <Node name="ChangeDataSet" expanded="True">
+                    <Node name="SkillWidg.razor" expanded="True" selected="True" />
+                  </Node>
                 </Node>
               </Node>
             </Node>
