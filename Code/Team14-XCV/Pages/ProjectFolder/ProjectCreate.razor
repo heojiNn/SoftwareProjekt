@@ -114,7 +114,7 @@
                 @if (!ZweckCollapsed)
                 {
                     <div class="card-body scroll2">
-                        <button type="button" class="btn btn-light btn-sm" @onclick="@NewPurpose">
+                        <button type="button" id ="AddPurpose" class="btn btn-light btn-sm" @onclick="@NewPurpose">
                             <span class="oi oi-plus"></span>
                         </button>
                         <br />
@@ -228,7 +228,7 @@
                 <div class="card">
                     <div class="card-header">
                         @withoutActivity
-                        <button class="btn btn-secondary" @onclick="() =>Change(withoutActivity)">
+                        <button class="btn btn-secondary" @onclick="() =>Change(withoutActivity)" id="withoutActivity">
                             <span class="oi oi-plus"></span>
                         </button>
                     </div>
@@ -272,7 +272,7 @@
                     <div class="card">
                         <div class="card-header">
                             <b>@act </b>
-                            <button class="btn btn-secondary" @onclick="() =>Change(act)">
+                            <button class="btn btn-secondary" @onclick="() =>Change(act)" id="@act">
                                 <span class="oi oi-plus"></span>
                             </button>
                         </div>
@@ -307,7 +307,7 @@
                             </div>
                         </div>
                     </div>
-                 }
+                }
 
             </div>
         }

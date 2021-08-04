@@ -1,7 +1,8 @@
 ﻿<Properties StartupConfiguration="{07B8A697-21B1-4912-A997-590E270AD644}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="../Tests/EndEnd/CreateOfferE2ETest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Pages/ProjectFolder/ProjectCreate.razor">
     <Files>
-      <File FileName="../Tests/EndEnd/CreateOfferE2ETest.cs" Line="1" Column="1" />
+      <File FileName="../Tests/EndEnd/CreateOfferE2ETest.cs" Line="30" Column="10" />
+      <File FileName="Pages/ProjectFolder/ProjectCreate.razor" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -9,13 +10,13 @@
           <Node name="Team14" expanded="True">
             <Node name="Tests" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="EndEnd" expanded="True">
-                <Node name="CreateOfferE2ETest.cs" selected="True" />
-              </Node>
+              <Node name="EndEnd" expanded="True" />
             </Node>
             <Node name="XCV" expanded="True">
               <Node name="Pages" expanded="True">
-                <Node name="ProjectFolder" expanded="True" />
+                <Node name="ProjectFolder" expanded="True">
+                  <Node name="ProjectCreate.razor" selected="True" />
+                </Node>
               </Node>
             </Node>
           </Node>
