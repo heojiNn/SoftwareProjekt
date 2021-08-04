@@ -11,7 +11,7 @@ namespace Tests.EndEnd
     public class LoginE2ETest
     {
         string url = "http://localhost:5005";
-        List<IWebDriver> drivers = new List<IWebDriver>() { /*new FirefoxDriver(),*/ new ChromeDriver() };
+        List<IWebDriver> drivers = new List<IWebDriver>() { new FirefoxDriver(), new ChromeDriver() };
 
         [OneTimeSetUp]
         public void Setup()

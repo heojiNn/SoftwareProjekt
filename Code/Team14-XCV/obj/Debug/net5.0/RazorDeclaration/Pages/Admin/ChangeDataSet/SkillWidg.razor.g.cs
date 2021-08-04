@@ -123,7 +123,7 @@ using Microsoft.AspNetCore.Components;
     [Parameter] public ValueWrapper<bool> ShowCardBody { get; set; } = new ValueWrapper<bool>(false);
 
 
-    private string skillRemoSearch = "an";
+    private string skillRemoSearch = "";
     private string skillCat = "";
     private string newSkill = "";
     private string[] skillLevel = new string[4];

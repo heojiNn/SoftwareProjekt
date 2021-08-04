@@ -11,7 +11,7 @@ namespace Tests.EndEnd
     [TestFixture]
     public class CreateOfferE2ETest
     {
-        List<IWebDriver> drivers = new List<IWebDriver>() { /*new FirefoxDriver(),*/ new ChromeDriver() };
+        List<IWebDriver> drivers = new List<IWebDriver>() { new FirefoxDriver(), new ChromeDriver() };
         string url = "http://localhost:5005";
 
         [OneTimeSetUp]
