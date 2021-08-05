@@ -177,6 +177,66 @@ namespace Tests.EndEnd
 
         [Test]
         [Order(3)]
+        [TestCase("OfferDatumTest", "22102001", "22101991")]
+        [TestCase("OfferDatumTest", "22102001", "01019999")]
+        [TestCase("OfferDatumTest", "22109999", "01012015")]
+        [TestCase("OfferDatumTest", "22101600", "01012015")]
+
+        public void InvalidDateCreateOffer(string title, string startdate, string enddate)
+        {
+            foreach (IWebDriver driver in drivers)
+            {
+                driver.FindElement(By.LinkText("Angebotsübersicht")).Click();
+                Assert.AreEqual("http://localhost:5005/offers", driver.Url, "Could not reach offer overview page");
+                driver.FindElement(By.LinkText("Angebot erstellen")).Click();
+                Assert.AreEqual("http://localhost:5005/offer-create", driver.Url, "Could not reach offer-create page");
+
+                //Titel angeben
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div/div/div/div[2]/h3/input")).SendKeys(title);
+
+                //Zeitraum
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[2]/div/div/div[1]/input")).SendKeys(startdate);
+
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[2]/div/div/div[2]/input")).SendKeys(enddate);
+
+                //Angebot erstellen
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/button")).Click();
+
+                //Sicherstellen, dass richtige Fehlermeldung angezeigt wird
+                if (enddate == "22101991")
+                {
+                    IWebElement errorBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[7]/div/div/div[2]/ul/li/pre"));
+                    string error = errorBox.Text;
+                    Assert.IsTrue(error.EndsWith("Das Enddatum sollte in der Zukunft liegen."));
+                }
+                else if (enddate == "01019999")
+                {
+                    IWebElement errorBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[7]/div/div/div[2]/ul/li/pre"));
+                    string error = errorBox.Text;
+                    Assert.IsTrue(error.EndsWith("Das Enddatum sollte noch in diesem Jahrtausend liegen."));
+                }
+                else if (startdate == "22109999")
+                {
+                    IWebElement errorBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[7]/div/div/div[2]/ul/li/pre"));
+                    string error = errorBox.Text;
+                    Assert.IsTrue(error.EndsWith("Das Startdatum sollte noch in diesem Jahrtausend liegen."));
+                }
+                else if (startdate == "22101600")
+                {
+                    IWebElement errorBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[7]/div/div/div[2]/ul/li/pre"));
+                    string error = errorBox.Text;
+                    Assert.IsTrue(error.EndsWith("Das Startdatum sollte nicht zu weit in der Vergangenheit liegen."));
+                }
+
+                //Modal schließen
+                driver.FindElement(By.XPath("/ html / body / div[1] / div[2] / div / div[7] / div / div / div[3] / button")).Click();
+
+
+            }
+        }
+
+        [Test]
+        [Order(4)]
         [TestCase("Angebot-Apple", "Beschreibung")]
         public void InvalidDescriptionCreateOffer(string title, string description)
         {
@@ -214,7 +274,7 @@ namespace Tests.EndEnd
         }
 
         [Test]
-        [Order(4)]
+        [Order(5)]
         [TestCase("Angebot-Test2", "100000", "25", "34", "500")]
         public void InvalidEmployeeCreateOffer(string title, string stundensatz, string stundenprotag, string laufzeit, string rabatt)
         {
@@ -323,6 +383,45 @@ namespace Tests.EndEnd
                 //Angebot löschen
                 driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[6]/div/div[1]/h4/div/button")).Click();
                 driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[6]/div/div[1]/h4/div/div/a[4]/a")).Click();
+            }
+        }
+
+        [Test]
+        [Order(6)]
+        [TestCase("Angebot-Test", "22102014", "22102016", "MS SQL")]
+        public void InvalidHardskillCreateOffer(string title, string startDate, string endDate, string hardskill)
+        {
+            foreach (IWebDriver driver in drivers)
+            {
+                //ZUr Angebotsübersicht Seite
+                driver.FindElement(By.LinkText("Angebotsübersicht")).Click();
+                Assert.AreEqual("http://localhost:5005/offers", driver.Url, "Could not reach offer overview page");
+
+                //Neues Angebot erstellen
+                driver.FindElement(By.LinkText("Angebot erstellen")).Click();
+                Assert.AreEqual("http://localhost:5005/offer-create", driver.Url, "Could not reach offer-create page");
+
+                //Titel angeben
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[2]/div/div/div/div[2]/h3/input")).SendKeys(title);
+
+                //Zeitraum
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[2]/div/div/div[1]/input")).SendKeys(startDate);
+
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[2]/div/div/div[2]/input")).SendKeys(endDate);
+                //Hardskills
+
+                driver.FindElement(By.XPath("/ html / body / div[1] / div[2] / div / div[5] / div[1] / div / div / h4")).Click();
+                driver.FindElement(By.XPath("/ html / body / div[1] / div[2] / div / div[5] / div[1] / div / div[2] / input[@placeholder='suche']")).SendKeys(hardskill);
+                driver.FindElement(By.XPath("/ html / body / div[1] / div[2] / div / div[5] / div[1] / div / div[2] / div / div[1] / div[1] / label / input")).Click();
+
+                //Angebot erstellen
+                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/button")).Click();
+
+                //Sicherstellen, dass Infobox-Modal angezeigt wird
+                IWebElement infoBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[7]/div/div/div[2]/ul/li/pre"));
+                string infoText = infoBox.Text;
+                Assert.AreEqual("Mindestens ein HardSkill hat keine Level Angabe.", infoText);
+
             }
         }
 

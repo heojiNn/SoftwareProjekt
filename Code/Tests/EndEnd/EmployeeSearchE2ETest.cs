@@ -185,12 +185,12 @@ namespace Tests.EndEnd
 
         //Typ 2 - niemand erfüllt mindestens 1 Kriterium
         [TestCase(new Object[] { "Testskill" })]
-        public void IncompleteEmployeeSearch(Object[] role)
+        public void IncompleteEmployeeSearch(Object[] data)
         {
             foreach (IWebDriver driver in drivers)
             {
                 //Hinzufügen eines neuen Skills den kein Mitarbeiter besitzt
-                if (role.Length == 1)
+                if (data.Length == 1)
                 {
                     driver.FindElement(By.LinkText("Datenbasis ändern")).Click();
                     driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/div/div/label")).Click();
@@ -206,33 +206,23 @@ namespace Tests.EndEnd
 
                 driver.Navigate().Refresh();
 
-                //Rollen (= Suchkriterien) eingeben 
-                for (int i = 0; i < role.Length; i++)
-                {
-                    driver.FindElement(By.XPath("//input[@placeholder='Rollen']")).SendKeys((string)role[i]);
-                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/div/div[2]/div[2]/div")).Click();
-                }
-
-                //Suchen Button
-                driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/input[1]")).Click();
-
-                //Typ 2
-                if (role.Length == 1)
-                {
-                    //Sicherstellen, dass richtige Fehlermeldung angezeigt wird
-                    IWebElement infoBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[3]/div[1]"));
-                    string infoText = infoBox.Text;
-                    Assert.AreEqual("Kein/Keine MitarbeiterIn erfüllt mindestens ein gesuchtes Kriterium.", infoText);
-                    //Löschen des neuen Skills
-                    driver.FindElement(By.LinkText("Datenbasis ändern")).Click();
-                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/input[1]")).SendKeys("Testskill");
-                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/span[1]/button[2]")).Click();
 
 
-                }
+
                 //Typ 1
-                else
+                if (data.Length > 1)
                 {
+
+                    //(= Suchkriterien) eingeben 
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        driver.FindElement(By.XPath("//input[@placeholder='Rollen']")).SendKeys((string)data[i]);
+                        driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/div/div[2]/div[2]/div")).Click();
+                    }
+
+                    //Suchen Button
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/input[1]")).Click();
+
                     //Sicherstellen, dass richtige Fehlermeldung angezeigt wird
                     IWebElement infoBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[3]/div[1]"));
                     string infoText = infoBox.Text;
@@ -244,6 +234,34 @@ namespace Tests.EndEnd
                     string searchResult = tableCell.Text;
                     Assert.AreEqual("Arnold schwarzenegger", searchResult);
                 }
+
+                //Typ 2
+                else if (data.Length == 1)
+                {
+
+                    //(= Suchkriterien) eingeben 
+                    for (int i = 0; i < data.Length; i++)
+                    {
+                        driver.FindElement(By.XPath("//input[@placeholder='Hardskills']")).SendKeys((string)data[i]);
+                        driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/div/div[3]/div[2]/div[1]")).Click();
+                    }
+
+                    //Suchen Button
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[2]/div/input[1]")).Click();
+
+
+                    //Sicherstellen, dass richtige Fehlermeldung angezeigt wird
+                    IWebElement infoBox = driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/html/body/div[3]/div[1]"));
+                    string infoText = infoBox.Text;
+                    Assert.AreEqual("Kein/Keine MitarbeiterIn erfüllt mindestens ein gesuchtes Kriterium.", infoText);
+                    //Löschen des neuen Skills
+                    driver.FindElement(By.LinkText("Datenbasis ändern")).Click();
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/input[1]")).SendKeys("Testskill");
+                    driver.FindElement(By.XPath("/html/body/div[1]/div[2]/div/div[3]/div[4]/div/div[2]/span[1]/button[2]")).Click();
+
+
+                }
+
             }
         }
 

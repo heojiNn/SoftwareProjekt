@@ -1,4 +1,4 @@
 ﻿<StaticWebAssets Version="1.0">
-  <ContentRoot BasePath="/" Path="C:\Users\Jonat\Desktop\Git Repositories\SoPro\CICD_DIr\tutorium-g-team-14\Code\Team14-XCV\obj\Debug\net5.0\scopedcss\bundle\" />
-  <ContentRoot BasePath="_content/Blazored.Typeahead" Path="C:\Users\Jonat\.nuget\packages\blazored.typeahead\4.6.0\build\..\staticwebassets\" />
+  <ContentRoot BasePath="/" Path="C:\Users\Silke\Desktop\Master2\tutorium-g-team-14\Code\Team14-XCV\obj\Debug\net5.0\scopedcss\bundle\" />
+  <ContentRoot BasePath="_content/Blazored.Typeahead" Path="C:\Users\Silke\.nuget\packages\blazored.typeahead\4.6.0\build\..\staticwebassets\" />
 </StaticWebAssets>
