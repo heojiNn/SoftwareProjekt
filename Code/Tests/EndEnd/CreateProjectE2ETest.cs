@@ -68,7 +68,7 @@ namespace Tests.EndEnd
                 //Zwecke
                 for (int i = 0; i < purpose.Length; i++)
                 {
-                    driver.FindElement(By.Id("purpose " + i)).SendKeys(purpose[0]);
+                    driver.FindElement(By.Id("purpose " + i)).SendKeys(purpose[i]);
                     driver.FindElement(By.Id("AddPurpose")).Click();
                 }
 
